@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BLT Entropy Patcher — Visualisation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0f1117;
+    --surface: #1a1d27;
+    --border:  #2e3144;
+    --text:    #d4d6e4;
+    --muted:   #7b7f9a;
+    --accent:  #4a90d9;
+    --font:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page-header {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.2rem;
+  }
+  .page-header h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #e8eaf0;
+  }
+  .page-header .subtitle {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
+  .result-card {
+    max-width: 860px;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.65rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .label-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(74,144,217,0.18);
+    color: var(--accent);
+    border: 1px solid rgba(74,144,217,0.35);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .stats {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+
+  .text-preview {
+    padding: 0.55rem 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .patch-display {
+    padding: 0.85rem 1rem;
+    line-height: 2.2;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+  }
+
+  .patch-token {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 2px 2px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: default;
+    transition: transform 0.1s, box-shadow 0.1s;
+    white-space: pre;
+  }
+  .patch-token:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+    z-index: 1;
+    position: relative;
+  }
+
+  .chart-wrap {
+    padding: 0.75rem 1rem 1rem;
+    height: 220px;
+    position: relative;
+  }
+  .chart-wrap canvas {
+    width: 100% !important;
+  }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>BLT Entropy Patcher &mdash; Output Visualisation</h1>
+  <p class="subtitle">Colour-coded patch boundaries &amp; per-patch entropy &middot; hover a token for details</p>
+</header>
+
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">repetitive_sanity_check</span>
+            <span class="stats">
+              <b>7</b> patches &middot; <b>40</b> bytes &middot; avg <b>5.71</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 1 chars">a</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 1 chars">a</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 1 chars">a</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 1 chars">a</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 1 chars">a</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 1 chars">a</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 34 chars">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-0" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-0').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["a", "a", "a", "a", "a", "a", "a", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7"], "datasets": [{"label": "Entropy", "data": [2.7793, 2.7461, 2.748, 2.3496, 2.0781, 1.8398, 1.6211, 1.4316, 1.2793, 1.1777, 1.1025, 1.0479, 0.9897, 0.9238, 0.8511, 0.7739, 0.71, 0.6587, 0.6191, 0.5845, 0.5444, 0.5068, 0.4778, 0.4561, 0.4407, 0.4253, 0.4058, 0.3855, 0.3682, 0.3584, 0.3555, 0.3545, 0.3486, 0.3381, 0.3293, 0.3254, 0.3259, 0.3259, 0.3237, 0.3154], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">repetitive_sanity_check_2</span>
+            <span class="stats">
+              <b>29</b> patches &middot; <b>229</b> bytes &middot; avg <b>7.90</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">I have potato blood in my veins. My life is potato. In your working life and in your livin…</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 1 chars">I</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 1 chars">&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 5 chars">have&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 1 chars">p</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 6 chars">otato&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 1 chars">b</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 5 chars">lood&#95;</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8: 3 chars">in&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9: 3 chars">my&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10: 7 chars">veins.&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11: 3 chars">My&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12: 5 chars">life&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13: 3 chars">is&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14: 8 chars">potato.&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 15: 3 chars">In&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 16: 5 chars">your&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 17: 8 chars">working&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 18: 5 chars">life&#95;</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 19: 1 chars">a</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 20: 3 chars">nd&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 21: 3 chars">in&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 22: 5 chars">your&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 23: 8 chars">living,&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 24: 5 chars">it&#x27;s&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 25: 7 chars">always&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 26: 10 chars">potatoes.&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 27: 2 chars">I&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 28: 5 chars">have&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 29: 107 chars">potato&#95;blood&#95;in&#95;my&#95;veins.&#95;My&#95;life&#95;is&#95;potato.&#95;In&#95;your&#95;working&#95;life&#95;and&#95;in&#95;your&#95;living,&#95;it&#x27;s&#95;always&#95;potatoes.</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-1" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-1').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["I", "_", "h", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "p", "o", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "b", "l", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "m", "\u00b7", "\u00b7", "v", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "M", "\u00b7", "\u00b7", "l", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "p", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "I", "\u00b7", "\u00b7", "y", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "w", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "l", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "a", "n", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "y", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "l", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "a"], "datasets": [{"label": "Entropy", "data": [2.2402, 2.8809, 0.4568, 0.6973, 0.0029, 0.2117, 2.5527, 1.8467, 0.4497, 1.3242, 0.2111, 0.0195, 0.9009, 2.5156, 1.9355, 1.3311, 1.5771, 0.5796, 1.4854, 2.8379, 0.3113, 0.4006, 2.0762, 0.2874, 0.02, 2.8594, 1.043, 1.2754, 0.0801, 0.4895, 1.3359, 0.8335, 2.3789, 0.8726, 0.0225, 3.0371, 1.5693, 1.7471, 0.033, 0.3953, 2.0137, 0.1803, 0.1003, 2.8887, 1.6191, 1.6846, 0.2213, 0.1044, 0.0093, 0.4348, 0.8257, 2.4238, 1.0371, 0.4651, 2.7754, 0.7554, 0.4573, 0.4597, 0.1985, 2.9434, 1.376, 0.3909, 0.9712, 1.6572, 0.0196, 0.0086, 0.3047, 2.7324, 0.2507, 0.186, 0.0024, 0.9644, 2.2871, 1.8018, 0.3794, 0.0199, 2.5137, 0.184, 0.165, 2.0508, 0.006, 0.003, 0.0602, 0.0834, 2.8965, 1.1309, 1.1113, 0.584, 0.0032, 0.009, 0.2866, 0.0436, 2.5723, 1.1318, 0.8188, 0.0371, 0.0244, 2.8379, 1.3896], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">common_english</span>
+            <span class="stats">
+              <b>14</b> patches &middot; <b>44</b> bytes &middot; avg <b>3.14</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">The quick brown fox jumps over the lazy dog.</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 4 chars">The&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 3 chars">qui</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 3 chars">ck&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 1 chars">b</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 5 chars">rown&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 1 chars">f</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 1 chars">o</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8: 2 chars">x&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9: 6 chars">jumps&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10: 5 chars">over&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11: 4 chars">the&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12: 2 chars">la</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13: 3 chars">zy&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14: 4 chars">dog.</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-2" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-2').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["T", "\u00b7", "\u00b7", "\u00b7", "q", "\u00b7", "\u00b7", "c", "\u00b7", "\u00b7", "b", "r", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "f", "o", "x", "\u00b7", "j", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "o", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "t", "\u00b7", "\u00b7", "\u00b7", "l", "\u00b7", "z", "\u00b7", "\u00b7", "d", "\u00b7", "\u00b7", "\u00b7"], "datasets": [{"label": "Entropy", "data": [1.4492, 0.7329, 0.4177, 3.7695, 0.0264, 1.0596, 1.7656, 0.0198, 1.1689, 2.5723, 1.8115, 1.2041, 0.6465, 0.6025, 0.9155, 3.0801, 1.8691, 1.9209, 0.9971, 2.8027, 1.2939, 1.2236, 0.0358, 1.2979, 0.7231, 2.5195, 1.3682, 0.0045, 0.0009, 0.168, 2.3203, 0.4333, 0.119, 0.0726, 3.041, 1.4043, 2.1035, 0.3152, 0.2649, 3.0527, 1.5732, 0.6543, 1.7275, 0.8413], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">proper_nouns</span>
+            <span class="stats">
+              <b>16</b> patches &middot; <b>79</b> bytes &middot; avg <b>4.94</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">Daenerys Targaryen is in Game of Thrones, a fantasy epic by George R.R. Martin.</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 1 chars">D</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 1 chars">a</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 1 chars">e</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 16 chars">nerys&#95;Targaryen&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 3 chars">is&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 3 chars">in&#95;</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 1 chars">G</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8: 4 chars">ame&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9: 12 chars">of&#95;Thrones,&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10: 2 chars">a&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11: 2 chars">fa</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12: 6 chars">ntasy&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13: 5 chars">epic&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14: 3 chars">by&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 15: 1 chars">G</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 16: 18 chars">eorge&#95;R.R.&#95;Martin.</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-3" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-3').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["D", "a", "e", "n", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "G", "a", "\u00b7", "\u00b7", "\u00b7", "o", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "a", "\u00b7", "f", "\u00b7", "n", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "e", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "b", "\u00b7", "\u00b7", "G", "e", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7"], "datasets": [{"label": "Entropy", "data": [2.1738, 2.3203, 2.8184, 1.5146, 0.0384, 0.0898, 0.0575, 0.3496, 1.0488, 0.2244, 0.1284, 0.0557, 0.0014, 0.0053, 0.0055, 0.0011, 0.001, 1.0225, 3.6895, 0.4556, 0.0497, 2.2734, 0.3689, 0.9937, 2.916, 1.8828, 1.376, 0.3762, 0.262, 1.7744, 0.0135, 0.0054, 0.5498, 0.2079, 0.0051, 0.0006, 0.0007, 0.0004, 0.0054, 1.2158, 0.0242, 3.123, 1.3916, 3.0469, 1.6992, 1.874, 1.4697, 0.0047, 0.0274, 0.6567, 0.3181, 2.8457, 1.1582, 0.0518, 0.3479, 0.4031, 2.5449, 1.3486, 0.0238, 3.4512, 1.8555, 0.7915, 0.6797, 0.065, 0.2114, 0.1, 0.1731, 0.4219, 0.5654, 0.1014, 0.0203, 0.0014, 0.001, 0.0002, 0.0078, 0.0004, 0.0008, 1.2412, 0.4504], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">high_entropy_garbage</span>
+            <span class="stats">
+              <b>33</b> patches &middot; <b>33</b> bytes &middot; avg <b>1.00</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">x7Kq#mP2$nL9@wR4!vB6&amp;jF0^hD3*cN8%</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 1 chars">x</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 1 chars">7</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 1 chars">K</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 1 chars">q</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 1 chars">#</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 1 chars">m</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 1 chars">P</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8: 1 chars">2</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9: 1 chars">$</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10: 1 chars">n</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11: 1 chars">L</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12: 1 chars">9</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13: 1 chars">@</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14: 1 chars">w</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 15: 1 chars">R</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 16: 1 chars">4</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 17: 1 chars">!</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 18: 1 chars">v</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 19: 1 chars">B</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 20: 1 chars">6</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 21: 1 chars">&amp;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 22: 1 chars">j</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 23: 1 chars">F</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 24: 1 chars">0</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 25: 1 chars">^</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 26: 1 chars">h</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 27: 1 chars">D</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 28: 1 chars">3</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 29: 1 chars">*</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 30: 1 chars">c</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 31: 1 chars">N</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 32: 1 chars">8</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 33: 1 chars">%</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-4" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-4').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["x", "7", "K", "q", "#", "m", "P", "2", "$", "n", "L", "9", "@", "w", "R", "4", "!", "v", "B", "6", "&", "j", "F", "0", "^", "h", "D", "3", "*", "c", "N", "8", "%"], "datasets": [{"label": "Entropy", "data": [3.8184, 3.5332, 4.0664, 4.2305, 4.0859, 4.2109, 4.2734, 4.2734, 4.293, 4.3125, 4.3555, 4.3594, 4.3398, 4.0117, 4.2305, 4.3594, 4.3281, 4.2852, 4.332, 4.3672, 4.3047, 4.2852, 4.3164, 4.3672, 4.3711, 4.2891, 4.3594, 4.418, 4.4375, 4.2891, 4.3555, 4.2812, 4.1758], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">code</span>
+            <span class="stats">
+              <b>14</b> patches &middot; <b>92</b> bytes &middot; avg <b>6.57</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview">def fibonacci(n):
+    if n &lt;= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-…</p>
+          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1: 1 chars">d</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2: 1 chars">e</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3: 2 chars">f&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4: 1 chars">f</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5: 2 chars">ib</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6: 7 chars">onacci(</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7: 1 chars">n</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8: 7 chars">):
+&#95;&#95;&#95;&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9: 5 chars">if&#95;n&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10: 3 chars">&lt;=&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11: 18 chars">1:
+&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;return&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12: 13 chars">n
+&#95;&#95;&#95;&#95;return&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13: 15 chars">fibonacci(n-1)&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14: 16 chars">+&#95;fibonacci(n-2)</span></div>
+          
+            <div class="chart-wrap">
+              <canvas id="chart-5" height="180"></canvas>
+            </div>
+            <script>
+              (function(){
+                var ctx = document.getElementById('chart-5').getContext('2d');
+                var cfg = {"type": "line", "data": {"labels": ["d", "e", "f", "\u00b7", "f", "i", "\u00b7", "o", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "n", ")", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "i", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "<", "\u00b7", "\u00b7", "1", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "n", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "f", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "+", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7", "\u00b7"], "datasets": [{"label": "Entropy", "data": [1.9668, 1.835, 1.167, 3.1191, 2.0215, 1.3975, 2.4258, 0.3713, 0.0898, 0.0977, 0.1687, 0.0066, 1.5938, 2.9766, 2.0742, 0.3254, 0.2935, 0.2397, 0.0061, 0.1891, 0.0674, 2.375, 1.1621, 0.1141, 0.6611, 1.2568, 2.0293, 0.5894, 0.0664, 2.1309, 1.3994, 0.3411, 0.0171, 0.0002, 0.0003, 0.0018, 0.0103, 0.0008, 0.0111, 0.0143, 1.3984, 0.2344, 0.0316, 0.0259, 0.0002, 0.0005, 0.0981, 2.2227, 1.4229, 0.3806, 0.0026, 0.0009, 0.0085, 1.667, 0.0793, 0.0385, 0.0601, 0.0003, 0.0007, 0.0094, 2.3535, 0.4099, 0.0563, 0.1833, 0.0173, 0.0283, 0.0752, 0.0297, 0.0051, 0.5542, 0.7773, 0.9268, 0.6343, 0.4482, 0.8755, 1.9775, 0.0571, 1.6943, 0.2134, 0.0127, 0.0151, 0.0069, 0.0056, 0.0043, 0.0127, 0.0023, 0.1746, 0.3938, 0.9619, 0.8101, 0.0329, 0.6011], "borderColor": "#1f78b4", "backgroundColor": "rgba(31,120,180,0.15)", "pointRadius": 2, "pointHoverRadius": 4, "tension": 0, "fill": true, "borderWidth": 1.5}, {"label": "Threshold (1.75)", "data": [1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75, 1.75], "borderColor": "#e31a1c", "borderDash": [5, 4], "borderWidth": 1, "pointRadius": 0, "fill": false}]}, "options": {"responsive": true, "maintainAspectRatio": false, "animation": {"duration": 400}, "plugins": {"legend": {"display": true, "position": "top", "labels": {"font": {"size": 11}, "boxWidth": 12}}, "tooltip": {"mode": "index", "intersect": false}}, "scales": {"x": {"title": {"display": true, "text": "Character", "font": {"size": 11}}, "ticks": {"autoSkip": false, "maxRotation": 0, "font": {"size": 8}}, "grid": {"color": "rgba(128,128,128,0.15)"}}, "y": {"title": {"display": true, "text": "Entropy", "font": {"size": 11}}, "ticks": {"font": {"size": 10}}, "grid": {"color": "rgba(128,128,128,0.15)"}}}}};
+                new Chart(ctx, cfg);
+              })();
+            </script>
+        </section>
+
+</body>
+</html>
