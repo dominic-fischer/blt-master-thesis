@@ -1,65 +1,70 @@
-
 import os
-
-from bytelatent.transformer import LMTransformer
-from bytelatent.model.blt import ByteLatentTransformer
+import torch
 from bytelatent.hf import BltTokenizerAndPatcher
 
-# Load tokenizer and patcher without model
-repo = "facebook/blt-1b"  # Adjust if needed; assumes HF access
+repo = "facebook/blt-1b"
 tok_and_patcher = BltTokenizerAndPatcher.from_pretrained(repo)
-
 entropy_repo = "hf-weights/entropy_model"
 
-# Get tokenizer and patcher
 tokenizer = tok_and_patcher.tokenizer_args.build()
-
 tok_and_patcher.patcher_args.entropy_model_checkpoint_dir = entropy_repo
+tok_and_patcher.patcher_args.patching_mode = "entropy"
 tok_and_patcher.patcher_args.realtime_patching = True
+tok_and_patcher.patcher_args.monotonicity = False
 patcher = tok_and_patcher.patcher_args.build()
 
-print("Patching mode:", patcher.patcher_args.patching_mode)
-print("Realtime:", patcher.patcher_args.realtime_patching)
-print("Entropy model:", patcher.entropy_model)
+OFFSET = tokenizer.offsetting_special_char  # 4
+BOS_ID = tokenizer.bos_id                   # 1
 
-# Test with a simple byte sequence
-text = "A BLT is a bacon, lettuce and tomato sandwich."
-byte_seq = text.encode('utf-8')
-print(f"Input bytes: {byte_seq}")
+print(f"BOS_ID: {BOS_ID}, OFFSET: {OFFSET}")
+print(f"Threshold: {patcher.threshold}")
+print()
 
-# Convert bytes to torch tensor first (expects 1D uint8 tensor)
-import torch
-tokens = torch.tensor(list(byte_seq), dtype=torch.long).unsqueeze(0)
+def text_to_tokens(text, device='cuda'):
+    byte_seq = text.encode('utf-8')
+    ids = [b + OFFSET for b in byte_seq]
+    tokens = torch.tensor([ids], dtype=torch.long, device=device)
+    return tokens, byte_seq
 
-# Apply patcher
-patch_lengths, scores = patcher.patch(tokens)
+def patch_text(text, label=""):
+    tokens, byte_seq = text_to_tokens(text)
 
-# --- Decode patches into readable chunks ---
-bytes_list = list(byte_seq)
+    bos = torch.tensor([[BOS_ID]], dtype=torch.long, device=tokens.device)
+    tokens_input = torch.cat([bos, tokens], dim=1)
 
-patches = []
-idx = 0
+    patch_lengths, scores = patcher.patch(tokens_input)
 
-for length in patch_lengths[0].tolist():
-    patch_bytes = bytes_list[idx:idx + length]
-    patch_text = bytes(patch_bytes).decode("utf-8", errors="replace")
-    patches.append(patch_text)
-    idx += length
+    # drop the BOS patch
+    patch_lengths = patch_lengths[:, 1:]
+    if scores is not None:
+        scores = scores[:, 1:]
 
-print("\n--- PATCHES ---")
-for i, p in enumerate(patches):
-    print(f"{i:02d}: '{p}'")
+    bytes_list = list(byte_seq)
+    patches = []
+    idx = 0
+    for length in patch_lengths[0].tolist():
+        chunk = bytes(bytes_list[idx:idx + length]).decode('utf-8', errors='replace')
+        patches.append((chunk, length))
+        idx += length
 
-# Optional: show scores alongside
-if scores is not None:
-    print("\n--- PATCH SCORES ---")
-    for i, (p, s) in enumerate(zip(patches, scores[0].tolist())):
-        print(f"{i:02d}: '{p}'  score={s:.4f}")
+    print(f"\n{'='*60}")
+    print(f"TEXT: {text!r}  [{label}]")
+    print(f"{'='*60}")
+    if scores is not None:
+        for i, ((p, l), s) in enumerate(zip(patches, scores[0].tolist())):
+            print(f"  {i:02d}: {p!r:20s}  len={l}  entropy={s:.4f}")
+    else:
+        for i, (p, l) in enumerate(patches):
+            print(f"  {i:02d}: {p!r:20s}  len={l}")
+    n = len(patches)
+    b = len(byte_seq)
+    print(f"  → {n} patches for {b} bytes  (avg {b/max(n,1):.2f} bytes/patch)")
 
-print(f"Patch lengths shape: {patch_lengths.shape}")
-print(f"Patch lengths: {patch_lengths}")
 
-if scores is not None:
-    print(f"Scores shape: {scores.shape}")
+patch_text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", label="repetitive_sanity_check")
+patch_text("The quick brown fox jumps over the lazy dog.", label="common_english")
+patch_text("Daenerys Targaryen is in Game of Thrones, a fantasy epic by George R.R. Martin.", label="proper_nouns")
+patch_text("x7Kq#mP2$nL9@wR4!vB6&jF0^hD3*cN8%", label="high_entropy_garbage")
+patch_text("def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)", label="code")
 
-print("Patcher test completed successfully!")
+print("\nDone.")
