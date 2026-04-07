@@ -21,6 +21,26 @@ tok_and_patcher.patcher_args.entropy_model_checkpoint_dir = entropy_repo
 tok_and_patcher.patcher_args.patching_mode, tok_and_patcher.patcher_args.realtime_patching = patching_modes[0]
 tok_and_patcher.patcher_args.monotonicity = False
 tok_and_patcher.patcher_args.threshold = 1.75
+#tok_and_patcher.patcher_args.threshold_add = 1.0
+
+# Three options:
+"""
+1. monotonicity=True 
+→ patch_start_mask_from_entropy_with_monotonicity(entropies, threshold)
+# New patch if current_entropy - previous_entropy > threshold
+
+# Presumably their "Entropy + Monotonicity" in the paper
+2. monotonicity=False + threshold_add is not None 
+→ patch_start_mask_global_and_monotonicity(entropies, threshold, threshold_add)
+# New patch if current_entropy > t                   (global threshold)
+#          AND H(t) - H(t-1) > t_add                 (locally rising)
+#          AND previous byte was NOT a boundary      (no consecutive boundaries)
+
+# Their "Entropy" mode in the paper
+3. monotonicity=False + threshold_add is None
+→ entropies > threshold (plain global threshold)
+# New patch if current_entropy > threshold
+"""
 
 if tok_and_patcher.patcher_args.patching_mode == "static":
     tok_and_patcher.patcher_args.patch_size = 4
