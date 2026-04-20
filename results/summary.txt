@@ -1,0 +1,22 @@
+Language              Code          Sentences  Total patches  Total bytes  Avg b/patch  Avg patches/sent
+--------------------------------------------------------------------------------------------------------
+English               eng_Latn            500          12442        62363       5.0123           24.8840
+Russian               rus_Cyrl            500          14306       123587       8.6388           28.6120
+Serbian               srp_Cyrl            500          16153       113045       6.9984           32.3060
+French                fra_Latn            500          18739        76339       4.0738           37.4780
+German                deu_Latn            500          20116        73629       3.6602           40.2320
+Korean                kor_Hang            500          21974        74783       3.4032           43.9480
+Romanian              ron_Latn            500          28174        73651       2.6141           56.3480
+Croatian              hrv_Latn            500          31041        63540       2.0470           62.0820
+Chinese (Traditional) cmn_Hant            500          32292        55652       1.7234           64.5840
+Chinese (Simplified)  cmn_Hans            500          32605        59448       1.8233           65.2100
+Arabic                arb_Arab            500          34740        99103       2.8527           69.4800
+Hindi                 hin_Deva            500          37903       158242       4.1749           75.8060
+Minangkabau (Latin)   min_Latn            500          37904        65173       1.7194           75.8080
+Kashmiri (Devanagari) kas_Deva            500          40845       150355       3.6811           81.6900
+Minangkabau (Arabic)  min_Arab            500          40971       106883       2.6087           81.9420
+Tamil                 tam_Taml            500          43344       194339       4.4836           86.6880
+Kashmiri (Arabic)     kas_Arab            500          46876       107727       2.2981           93.7520
+Thai                  tha_Thai            500          49328       171814       3.4831           98.6560
+Chichewa              nya_Latn            500          53843        70843       1.3157          107.6860
+Shan                  shn_Mymr            500          76265       245417       3.2180          152.5300

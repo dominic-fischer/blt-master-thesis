@@ -62,12 +62,21 @@ def main():
     )
     print("\n" + header)
     print("-" * len(header))
+    lines = [header, "-" * len(header)]
     for s in summary:
-        print(
+        lines.append(
             f"{s['lang_name']:<{max_name_len}} {s['lang_code']:<12} {s['n_sentences']:>10} "
             f"{s['total_patches']:>14} {s['total_bytes']:>12} "
             f"{s['avg_bytes_per_patch']:>12.4f} {s['avg_patches_per_sentence']:>17.4f}"
         )
+
+    table = "\n".join(lines)
+    print("\n" + table)
+
+    txt_path = os.path.join(RESULTS_DIR, "summary.txt")
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write(table + "\n")
+    print(f"\nSaved → {txt_path}")
 
     # Save JSON
     out_path = os.path.join(RESULTS_DIR, "summary.json")
