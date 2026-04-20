@@ -6,7 +6,8 @@
     "total_patches": 12442,
     "total_bytes": 62363,
     "avg_bytes_per_patch": 5.0123,
-    "avg_patches_per_sentence": 24.884
+    "avg_patches_per_sentence": 24.884,
+    "patch_premium": 1.0
   },
   {
     "lang_code": "rus_Cyrl",
@@ -15,7 +16,8 @@
     "total_patches": 14306,
     "total_bytes": 123587,
     "avg_bytes_per_patch": 8.6388,
-    "avg_patches_per_sentence": 28.612
+    "avg_patches_per_sentence": 28.612,
+    "patch_premium": 1.1498
   },
   {
     "lang_code": "srp_Cyrl",
@@ -24,7 +26,8 @@
     "total_patches": 16153,
     "total_bytes": 113045,
     "avg_bytes_per_patch": 6.9984,
-    "avg_patches_per_sentence": 32.306
+    "avg_patches_per_sentence": 32.306,
+    "patch_premium": 1.2983
   },
   {
     "lang_code": "fra_Latn",
@@ -33,7 +36,8 @@
     "total_patches": 18739,
     "total_bytes": 76339,
     "avg_bytes_per_patch": 4.0738,
-    "avg_patches_per_sentence": 37.478
+    "avg_patches_per_sentence": 37.478,
+    "patch_premium": 1.5061
   },
   {
     "lang_code": "deu_Latn",
@@ -42,7 +46,8 @@
     "total_patches": 20116,
     "total_bytes": 73629,
     "avg_bytes_per_patch": 3.6602,
-    "avg_patches_per_sentence": 40.232
+    "avg_patches_per_sentence": 40.232,
+    "patch_premium": 1.6168
   },
   {
     "lang_code": "kor_Hang",
@@ -51,7 +56,8 @@
     "total_patches": 21974,
     "total_bytes": 74783,
     "avg_bytes_per_patch": 3.4032,
-    "avg_patches_per_sentence": 43.948
+    "avg_patches_per_sentence": 43.948,
+    "patch_premium": 1.7661
   },
   {
     "lang_code": "ron_Latn",
@@ -60,7 +66,8 @@
     "total_patches": 28174,
     "total_bytes": 73651,
     "avg_bytes_per_patch": 2.6141,
-    "avg_patches_per_sentence": 56.348
+    "avg_patches_per_sentence": 56.348,
+    "patch_premium": 2.2644
   },
   {
     "lang_code": "hrv_Latn",
@@ -69,7 +76,8 @@
     "total_patches": 31041,
     "total_bytes": 63540,
     "avg_bytes_per_patch": 2.047,
-    "avg_patches_per_sentence": 62.082
+    "avg_patches_per_sentence": 62.082,
+    "patch_premium": 2.4949
   },
   {
     "lang_code": "cmn_Hant",
@@ -78,7 +86,8 @@
     "total_patches": 32292,
     "total_bytes": 55652,
     "avg_bytes_per_patch": 1.7234,
-    "avg_patches_per_sentence": 64.584
+    "avg_patches_per_sentence": 64.584,
+    "patch_premium": 2.5954
   },
   {
     "lang_code": "cmn_Hans",
@@ -87,7 +96,8 @@
     "total_patches": 32605,
     "total_bytes": 59448,
     "avg_bytes_per_patch": 1.8233,
-    "avg_patches_per_sentence": 65.21
+    "avg_patches_per_sentence": 65.21,
+    "patch_premium": 2.6206
   },
   {
     "lang_code": "arb_Arab",
@@ -96,7 +106,8 @@
     "total_patches": 34740,
     "total_bytes": 99103,
     "avg_bytes_per_patch": 2.8527,
-    "avg_patches_per_sentence": 69.48
+    "avg_patches_per_sentence": 69.48,
+    "patch_premium": 2.7922
   },
   {
     "lang_code": "hin_Deva",
@@ -105,7 +116,8 @@
     "total_patches": 37903,
     "total_bytes": 158242,
     "avg_bytes_per_patch": 4.1749,
-    "avg_patches_per_sentence": 75.806
+    "avg_patches_per_sentence": 75.806,
+    "patch_premium": 3.0464
   },
   {
     "lang_code": "min_Latn",
@@ -114,7 +126,8 @@
     "total_patches": 37904,
     "total_bytes": 65173,
     "avg_bytes_per_patch": 1.7194,
-    "avg_patches_per_sentence": 75.808
+    "avg_patches_per_sentence": 75.808,
+    "patch_premium": 3.0465
   },
   {
     "lang_code": "kas_Deva",
@@ -123,7 +136,8 @@
     "total_patches": 40845,
     "total_bytes": 150355,
     "avg_bytes_per_patch": 3.6811,
-    "avg_patches_per_sentence": 81.69
+    "avg_patches_per_sentence": 81.69,
+    "patch_premium": 3.2828
   },
   {
     "lang_code": "min_Arab",
@@ -132,7 +146,8 @@
     "total_patches": 40971,
     "total_bytes": 106883,
     "avg_bytes_per_patch": 2.6087,
-    "avg_patches_per_sentence": 81.942
+    "avg_patches_per_sentence": 81.942,
+    "patch_premium": 3.293
   },
   {
     "lang_code": "tam_Taml",
@@ -141,7 +156,8 @@
     "total_patches": 43344,
     "total_bytes": 194339,
     "avg_bytes_per_patch": 4.4836,
-    "avg_patches_per_sentence": 86.688
+    "avg_patches_per_sentence": 86.688,
+    "patch_premium": 3.4837
   },
   {
     "lang_code": "kas_Arab",
@@ -150,7 +166,8 @@
     "total_patches": 46876,
     "total_bytes": 107727,
     "avg_bytes_per_patch": 2.2981,
-    "avg_patches_per_sentence": 93.752
+    "avg_patches_per_sentence": 93.752,
+    "patch_premium": 3.7676
   },
   {
     "lang_code": "tha_Thai",
@@ -159,7 +176,8 @@
     "total_patches": 49328,
     "total_bytes": 171814,
     "avg_bytes_per_patch": 3.4831,
-    "avg_patches_per_sentence": 98.656
+    "avg_patches_per_sentence": 98.656,
+    "patch_premium": 3.9646
   },
   {
     "lang_code": "nya_Latn",
@@ -168,7 +186,8 @@
     "total_patches": 53843,
     "total_bytes": 70843,
     "avg_bytes_per_patch": 1.3157,
-    "avg_patches_per_sentence": 107.686
+    "avg_patches_per_sentence": 107.686,
+    "patch_premium": 4.3275
   },
   {
     "lang_code": "shn_Mymr",
@@ -177,6 +196,7 @@
     "total_patches": 76265,
     "total_bytes": 245417,
     "avg_bytes_per_patch": 3.218,
-    "avg_patches_per_sentence": 152.53
+    "avg_patches_per_sentence": 152.53,
+    "patch_premium": 6.1296
   }
 ]
