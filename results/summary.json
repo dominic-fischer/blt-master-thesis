@@ -1,0 +1,182 @@
+[
+  {
+    "lang_code": "eng_Latn",
+    "lang_name": "English",
+    "n_sentences": 500,
+    "total_patches": 12442,
+    "total_bytes": 62363,
+    "avg_bytes_per_patch": 5.0123,
+    "avg_patches_per_sentence": 24.884
+  },
+  {
+    "lang_code": "rus_Cyrl",
+    "lang_name": "Russian",
+    "n_sentences": 500,
+    "total_patches": 14306,
+    "total_bytes": 123587,
+    "avg_bytes_per_patch": 8.6388,
+    "avg_patches_per_sentence": 28.612
+  },
+  {
+    "lang_code": "srp_Cyrl",
+    "lang_name": "Serbian",
+    "n_sentences": 500,
+    "total_patches": 16153,
+    "total_bytes": 113045,
+    "avg_bytes_per_patch": 6.9984,
+    "avg_patches_per_sentence": 32.306
+  },
+  {
+    "lang_code": "fra_Latn",
+    "lang_name": "French",
+    "n_sentences": 500,
+    "total_patches": 18739,
+    "total_bytes": 76339,
+    "avg_bytes_per_patch": 4.0738,
+    "avg_patches_per_sentence": 37.478
+  },
+  {
+    "lang_code": "deu_Latn",
+    "lang_name": "German",
+    "n_sentences": 500,
+    "total_patches": 20116,
+    "total_bytes": 73629,
+    "avg_bytes_per_patch": 3.6602,
+    "avg_patches_per_sentence": 40.232
+  },
+  {
+    "lang_code": "kor_Hang",
+    "lang_name": "Korean",
+    "n_sentences": 500,
+    "total_patches": 21974,
+    "total_bytes": 74783,
+    "avg_bytes_per_patch": 3.4032,
+    "avg_patches_per_sentence": 43.948
+  },
+  {
+    "lang_code": "ron_Latn",
+    "lang_name": "Romanian",
+    "n_sentences": 500,
+    "total_patches": 28174,
+    "total_bytes": 73651,
+    "avg_bytes_per_patch": 2.6141,
+    "avg_patches_per_sentence": 56.348
+  },
+  {
+    "lang_code": "hrv_Latn",
+    "lang_name": "Croatian",
+    "n_sentences": 500,
+    "total_patches": 31041,
+    "total_bytes": 63540,
+    "avg_bytes_per_patch": 2.047,
+    "avg_patches_per_sentence": 62.082
+  },
+  {
+    "lang_code": "cmn_Hant",
+    "lang_name": "Chinese (Traditional)",
+    "n_sentences": 500,
+    "total_patches": 32292,
+    "total_bytes": 55652,
+    "avg_bytes_per_patch": 1.7234,
+    "avg_patches_per_sentence": 64.584
+  },
+  {
+    "lang_code": "cmn_Hans",
+    "lang_name": "Chinese (Simplified)",
+    "n_sentences": 500,
+    "total_patches": 32605,
+    "total_bytes": 59448,
+    "avg_bytes_per_patch": 1.8233,
+    "avg_patches_per_sentence": 65.21
+  },
+  {
+    "lang_code": "arb_Arab",
+    "lang_name": "Arabic",
+    "n_sentences": 500,
+    "total_patches": 34740,
+    "total_bytes": 99103,
+    "avg_bytes_per_patch": 2.8527,
+    "avg_patches_per_sentence": 69.48
+  },
+  {
+    "lang_code": "hin_Deva",
+    "lang_name": "Hindi",
+    "n_sentences": 500,
+    "total_patches": 37903,
+    "total_bytes": 158242,
+    "avg_bytes_per_patch": 4.1749,
+    "avg_patches_per_sentence": 75.806
+  },
+  {
+    "lang_code": "min_Latn",
+    "lang_name": "Minangkabau (Latin)",
+    "n_sentences": 500,
+    "total_patches": 37904,
+    "total_bytes": 65173,
+    "avg_bytes_per_patch": 1.7194,
+    "avg_patches_per_sentence": 75.808
+  },
+  {
+    "lang_code": "kas_Deva",
+    "lang_name": "Kashmiri (Devanagari)",
+    "n_sentences": 500,
+    "total_patches": 40845,
+    "total_bytes": 150355,
+    "avg_bytes_per_patch": 3.6811,
+    "avg_patches_per_sentence": 81.69
+  },
+  {
+    "lang_code": "min_Arab",
+    "lang_name": "Minangkabau (Arabic)",
+    "n_sentences": 500,
+    "total_patches": 40971,
+    "total_bytes": 106883,
+    "avg_bytes_per_patch": 2.6087,
+    "avg_patches_per_sentence": 81.942
+  },
+  {
+    "lang_code": "tam_Taml",
+    "lang_name": "Tamil",
+    "n_sentences": 500,
+    "total_patches": 43344,
+    "total_bytes": 194339,
+    "avg_bytes_per_patch": 4.4836,
+    "avg_patches_per_sentence": 86.688
+  },
+  {
+    "lang_code": "kas_Arab",
+    "lang_name": "Kashmiri (Arabic)",
+    "n_sentences": 500,
+    "total_patches": 46876,
+    "total_bytes": 107727,
+    "avg_bytes_per_patch": 2.2981,
+    "avg_patches_per_sentence": 93.752
+  },
+  {
+    "lang_code": "tha_Thai",
+    "lang_name": "Thai",
+    "n_sentences": 500,
+    "total_patches": 49328,
+    "total_bytes": 171814,
+    "avg_bytes_per_patch": 3.4831,
+    "avg_patches_per_sentence": 98.656
+  },
+  {
+    "lang_code": "nya_Latn",
+    "lang_name": "Chichewa",
+    "n_sentences": 500,
+    "total_patches": 53843,
+    "total_bytes": 70843,
+    "avg_bytes_per_patch": 1.3157,
+    "avg_patches_per_sentence": 107.686
+  },
+  {
+    "lang_code": "shn_Mymr",
+    "lang_name": "Shan",
+    "n_sentences": 500,
+    "total_patches": 76265,
+    "total_bytes": 245417,
+    "avg_bytes_per_patch": 3.218,
+    "avg_patches_per_sentence": 152.53
+  }
+]
