@@ -20,22 +20,10 @@ import json
 import os
 
 from blt_visualize import BLTPatchVisualizer
+from eval_flores import LANGUAGES
 
 RESULTS_DIR = "results"
-VIZ_DIR = "viz"
-
-LANGUAGES = {
-    "eng_Latn": "English",
-    "deu_Latn": "German",
-    "rus_Cyrl": "Russian",
-    "arb_Arab": "Arabic",
-    "zho_Hans": "Chinese",
-    "hin_Deva": "Hindi",
-    "tha_Thai":  "Thai",
-    "kor_Hang": "Korean",
-    "tam_Taml": "Tamil",
-    "shn_Mymr": "Shan",
-}
+VIZ_DIR = "visualizations"
 
 
 def load_results(lang_code: str) -> list:
@@ -48,7 +36,7 @@ def load_results(lang_code: str) -> list:
 
 def entries_to_patches(entry: dict) -> list:
     """Convert JSON patch dicts back to (chunk, length) tuples for the visualizer."""
-    return [(p["text"], p["length"]) for p in entry["patches"]]
+    return [(p["text"], p["bytes"], p["length"]) for p in entry["patches"]]
 
 
 def build_viz(entries: list, lang_code: str) -> BLTPatchVisualizer:

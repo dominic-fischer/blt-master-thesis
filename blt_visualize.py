@@ -8,22 +8,23 @@ Usage:
     viz.add(text, patches, scores=scores)   # call once per text
     viz.save("blt_output.html")             # write self-contained HTML
     # or: html_str = viz.render()
+
+Note: patches should be (chunk_str, chunk_bytes_list, byte_length) tuples
+      as produced by blt_patcher.patch_text().
 """
 
-import json
-import math
 import html as html_lib
-from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+import json
+from dataclasses import dataclass
+from typing import List, Optional
 
-# ─── colour palette (12 hues, evenly spaced; matches lucalp's HF space) ──────
+
+# ─── colour palette ───────────────────────────────────────────────────────────
 PATCH_COLORS = [
     "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
     "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
     "#cab2d6", "#6a3d9a", "#ffff99", "#b15928",
 ]
-
-# Readable dark text colours for each background above
 PATCH_TEXT = [
     "#1a4a6b", "#e8f4fb", "#2e5a0e", "#e8f7e8",
     "#7a1010", "#ffe8e8", "#7a4400", "#fff4e0",
@@ -35,65 +36,52 @@ PATCH_TEXT = [
 class PatchResult:
     text: str
     label: str
-    patches: List[Tuple[str, int]]           # (chunk_text, byte_length)
-    scores: Optional[List[float]] = None     # per-patch entropy (may be None)
+    patches: list
+    scores: Optional[List[float]] = None
     threshold: Optional[float] = None
 
 
 class BLTPatchVisualizer:
-    """Accumulate patch results and render them as a single HTML page."""
 
     def __init__(self):
         self._results: List[PatchResult] = []
 
-    # ── public API ────────────────────────────────────────────────────────────
-
-    def add(
-        self,
-        text: str,
-        patches: List[Tuple[str, int]],
-        scores: Optional[List[float]] = None,
-        label: str = "",
-        threshold: Optional[float] = None,
-    ) -> None:
-        """Register one text + its patch decomposition for later rendering."""
+    def add(self, text, patches, scores=None, label="", threshold=None):
         self._results.append(PatchResult(text, label, patches, scores, threshold))
 
     def render(self) -> str:
-        """Return a self-contained HTML string."""
         sections = "\n".join(self._render_section(r, i) for i, r in enumerate(self._results))
         return _HTML_TEMPLATE.format(sections=sections)
 
-    def save(self, path: str = "blt_output.html") -> None:
-        """Write the HTML to *path* and print a confirmation."""
+    def save(self, path="blt_output.html"):
         with open(path, "w", encoding="utf-8") as f:
             f.write(self.render())
         print(f"[blt_visualize] Saved → {path}")
 
-    # ── internals ─────────────────────────────────────────────────────────────
+    # ── normalise patch tuple ─────────────────────────────────────────────────
+
+    @staticmethod
+    def _norm(p):
+        """(chunk, bytes, length) or (chunk, length) → (chunk, bytes_list, length)"""
+        if len(p) == 3:
+            return p[0], list(p[1]), p[2]
+        chunk, length = p
+        return chunk, list(chunk.encode("utf-8", errors="replace")), length
+
+    # ── section ───────────────────────────────────────────────────────────────
 
     def _render_section(self, r: PatchResult, idx: int) -> str:
-        patch_html = self._build_patch_html(r.patches)
-        chart_json = self._build_chart_json(r.patches, r.scores, r.threshold)
-        n_patches = len(r.patches)
-        n_bytes = sum(l for _, l in r.patches)
-        avg = n_bytes / max(n_patches, 1)
-        label_text = html_lib.escape(r.label) if r.label else f"sample {idx+1}"
-        text_preview = html_lib.escape(r.text[:90] + ("…" if len(r.text) > 90 else ""))
+        patches = [self._norm(p) for p in r.patches]
 
-        chart_block = ""
-        if chart_json:
-            chart_block = f"""
-            <div class="chart-wrap">
-              <canvas id="chart-{idx}" height="180"></canvas>
-            </div>
-            <script>
-              (function(){{
-                var ctx = document.getElementById('chart-{idx}').getContext('2d');
-                var cfg = {chart_json};
-                new Chart(ctx, cfg);
-              }})();
-            </script>"""
+        patch_html   = self._build_patch_html(patches)
+        combined_svg = self._build_combined_svg(patches, r.scores, r.threshold)
+
+        n_patches = len(patches)
+        n_bytes   = sum(ln for _, _, ln in patches)
+        avg       = n_bytes / max(n_patches, 1)
+
+        label_text   = html_lib.escape(r.label) if r.label else f"sample {idx+1}"
+        text_preview = html_lib.escape(r.text[:120] + ("…" if len(r.text) > 120 else ""))
 
         return f"""
         <section class="result-card">
@@ -105,107 +93,261 @@ class BLTPatchVisualizer:
           </div>
           <p class="text-preview">{text_preview}</p>
           <div class="patch-display">{patch_html}</div>
-          {chart_block}
+          <div class="svg-wrap">{combined_svg}</div>
         </section>"""
 
+    # ── coloured patch tokens ─────────────────────────────────────────────────
+
     @staticmethod
-    def _build_patch_html(patches: List[Tuple[str, int]]) -> str:
+    def _build_patch_html(patches) -> str:
         parts = []
-        for i, (chunk, _) in enumerate(patches):
-            color_idx = i % len(PATCH_COLORS)
-            bg = PATCH_COLORS[color_idx]
-            fg = PATCH_TEXT[color_idx]
-            # Replace spaces with visible underscore (matches reference app)
-            display = html_lib.escape(chunk).replace(" ", "&#95;")
+        for i, (chunk, _, _) in enumerate(patches):
+            bg = PATCH_COLORS[i % len(PATCH_COLORS)]
+            fg = PATCH_TEXT[i % len(PATCH_TEXT)]
+            display = html_lib.escape(chunk).replace(" ", "&#95;") or \
+                      "<span style='opacity:.35'>∅</span>"
             parts.append(
-                f'<span class="patch-token" '
-                f'style="background:{bg};color:{fg}" '
-                f'title="patch {i+1}: {len(chunk)} chars">'
-                f'{display}</span>'
+                f'<span class="patch-token" style="background:{bg};color:{fg}" '
+                f'title="patch {i+1}">{display}</span>'
             )
         return "".join(parts)
 
-    @staticmethod
-    def _build_chart_json(patches, scores, threshold):
-        if not scores:
-            return None
+    # ── combined SVG: entropy line chart + aligned byte/char table ────────────
 
-        MAX_BYTES = 100
-        x_labels = []  # BOS
+    def _build_combined_svg(self, patches, scores, threshold) -> str:
+        # ── layout constants ──────────────────────────────────────────────────
+        CELL_W      = 28       # px per byte column
+        MARGIN_L    = 52       # left margin (y-axis labels)
+        MARGIN_R    = 16
+        CHART_H     = 180      # height of the entropy chart area
+        AXIS_H      = 18       # x-axis tick label row
+        ROW_IDX_H   = 18       # byte index row
+        ROW_VAL_H   = 22       # byte value row
+        ROW_CHR_H   = 24       # character row
+        PAD_TOP     = 16
+        PAD_BOT     = 8
+
+        # Flatten bytes
+        flat_bytes = []   # (byte_val, patch_idx)
+        for pi, (_, blist, _) in enumerate(patches):
+            for bv in blist:
+                flat_bytes.append((bv, pi))
+
+        N = len(flat_bytes)
+        if N == 0:
+            return ""
+
+        W = MARGIN_L + N * CELL_W + MARGIN_R
+        TABLE_TOP = PAD_TOP + CHART_H + AXIS_H
+        H = TABLE_TOP + ROW_IDX_H + ROW_VAL_H + ROW_CHR_H + PAD_BOT
+
+        # x coordinate of byte i (centre of column)
+        def cx(i):
+            return MARGIN_L + i * CELL_W + CELL_W / 2
+
+        # ── entropy chart ─────────────────────────────────────────────────────
+        elements = []
+
+        # Background
+        elements.append(
+            f'<rect x="0" y="0" width="{W}" height="{H}" fill="#f8f9fc" rx="0"/>'
+        )
+
+        # Chart area background
+        chart_x = MARGIN_L
+        chart_y = PAD_TOP
+        chart_w = N * CELL_W
+        elements.append(
+            f'<rect x="{chart_x}" y="{chart_y}" width="{chart_w}" height="{CHART_H}" '
+            f'fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>'
+        )
+
+        if scores:
+            visible_scores = scores[:N]
+            s_min = min(visible_scores)
+            s_max = max(visible_scores)
+            s_range = max(s_max - s_min, 0.01)
+
+            def sy(v):
+                norm = (v - s_min) / s_range
+                return chart_y + CHART_H - norm * (CHART_H - 10) - 5
+
+            # Gridlines (5 levels)
+            for k in range(6):
+                frac = k / 5
+                gv = s_min + frac * s_range
+                gy = sy(gv)
+                elements.append(
+                    f'<line x1="{chart_x}" y1="{gy:.1f}" x2="{chart_x+chart_w}" y2="{gy:.1f}" '
+                    f'stroke="#e0e4f0" stroke-width="0.8"/>'
+                )
+                elements.append(
+                    f'<text x="{chart_x - 4}" y="{gy + 4:.1f}" text-anchor="end" '
+                    f'font-size="9" fill="#888">{gv:.2f}</text>'
+                )
+
+            # Threshold line
+            if threshold is not None:
+                ty = sy(threshold)
+                elements.append(
+                    f'<line x1="{chart_x}" y1="{ty:.1f}" x2="{chart_x+chart_w}" y2="{ty:.1f}" '
+                    f'stroke="#c0392b" stroke-width="1.2" stroke-dasharray="5,4"/>'
+                )
+                elements.append(
+                    f'<text x="{chart_x + chart_w + 3}" y="{ty + 4:.1f}" '
+                    f'font-size="9" fill="#c0392b">t={threshold:.2f}</text>'
+                )
+
+            # Patch boundary vertical lines
+            cursor = 0
+            for pi, (_, _, length) in enumerate(patches[:-1]):
+                cursor += length
+                bx = MARGIN_L + cursor * CELL_W
+                elements.append(
+                    f'<line x1="{bx}" y1="{chart_y}" x2="{bx}" y2="{chart_y + CHART_H}" '
+                    f'stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>'
+                )
+
+            # Filled area under curve
+            pts = " ".join(f"{cx(i):.1f},{sy(v):.1f}" for i, v in enumerate(visible_scores))
+            first_x = cx(0)
+            last_x  = cx(len(visible_scores) - 1)
+            base_y  = chart_y + CHART_H
+            elements.append(
+                f'<polygon points="{first_x:.1f},{base_y} {pts} {last_x:.1f},{base_y}" '
+                f'fill="rgba(42,109,181,0.08)"/>'
+            )
+
+            # Line
+            polyline_pts = " ".join(f"{cx(i):.1f},{sy(v):.1f}" for i, v in enumerate(visible_scores))
+            elements.append(
+                f'<polyline points="{polyline_pts}" fill="none" '
+                f'stroke="#2a6db5" stroke-width="1.5" stroke-linejoin="round"/>'
+            )
+
+            # Dots
+            for i, v in enumerate(visible_scores):
+                elements.append(
+                    f'<circle cx="{cx(i):.1f}" cy="{sy(v):.1f}" r="2" '
+                    f'fill="#2a6db5" opacity="0.7"/>'
+                )
+
+        # Y-axis label
+        elements.append(
+            f'<text x="10" y="{chart_y + CHART_H//2}" '
+            f'text-anchor="middle" font-size="10" fill="#444" '
+            f'transform="rotate(-90, 10, {chart_y + CHART_H//2})">Entropy</text>'
+        )
+
+        # X-axis tick labels (every N bytes to avoid crowding)
+        tick_every = max(1, N // 40)
+        axis_y = chart_y + CHART_H + 13
+        for i in range(0, N, tick_every):
+            elements.append(
+                f'<text x="{cx(i):.1f}" y="{axis_y}" text-anchor="middle" '
+                f'font-size="8" fill="#555">{i}</text>'
+            )
+
+        # ── byte table ────────────────────────────────────────────────────────
+        row_idx_y = TABLE_TOP
+        row_val_y = row_idx_y + ROW_IDX_H
+        row_chr_y = row_val_y + ROW_VAL_H
+
+        # Column backgrounds (alternating subtle stripe per patch)
         cursor = 0
+        for pi, (_, blist, length) in enumerate(patches):
+            bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
+            col_x = MARGIN_L + cursor * CELL_W
+            # byte value row background
+            elements.append(
+                f'<rect x="{col_x}" y="{row_val_y}" width="{length * CELL_W}" '
+                f'height="{ROW_VAL_H}" fill="{bg}" opacity="0.85"/>'
+            )
+            cursor += length
 
-        for (chunk, length) in patches:
-            for i in range(length):
-                if cursor >= MAX_BYTES - 1:
-                    break
-                if i == 0:
-                    char = chunk[0] if chunk else '?'
-                    char = '_' if char == ' ' else char
-                else:
-                    char = '·'
-                x_labels.append(char)
-                cursor += 1
-            if cursor >= MAX_BYTES - 1:
-                break
+        # Row separator lines
+        for row_y in [row_idx_y, row_val_y, row_chr_y, row_chr_y + ROW_CHR_H]:
+            elements.append(
+                f'<line x1="{MARGIN_L}" y1="{row_y}" x2="{MARGIN_L + N*CELL_W}" y2="{row_y}" '
+                f'stroke="#d0d5e8" stroke-width="0.8"/>'
+            )
 
-        y_vals = [round(s, 4) for s in scores[:len(x_labels)]]
+        # Row labels
+        for label, row_y, row_h in [
+            ("idx",  row_idx_y,  ROW_IDX_H),
+            ("byte", row_val_y,  ROW_VAL_H),
+            ("char", row_chr_y,  ROW_CHR_H),
+        ]:
+            mid_y = row_y + row_h / 2 + 4
+            elements.append(
+                f'<text x="{MARGIN_L - 5}" y="{mid_y:.1f}" text-anchor="end" '
+                f'font-size="9" fill="#888" font-weight="bold">{label}</text>'
+            )
 
-        datasets = [
-            {
-                "label": "Entropy",
-                "data": y_vals,
-                "borderColor": "#1f78b4",
-                "backgroundColor": "rgba(31,120,180,0.15)",
-                "pointRadius": 2,
-                "pointHoverRadius": 4,
-                "tension": 0,
-                "fill": True,
-                "borderWidth": 1.5,
-            }
-        ]
+        # Byte index row
+        for i, (_, _) in enumerate(flat_bytes):
+            elements.append(
+                f'<text x="{cx(i):.1f}" y="{row_idx_y + 13}" text-anchor="middle" '
+                f'font-size="8" fill="#aaa">{i}</text>'
+            )
 
-        if threshold is not None:
-            thr = round(threshold, 4)
-            datasets.append({
-                "label": f"Threshold ({thr})",
-                "data": [thr] * len(y_vals),
-                "borderColor": "#e31a1c",
-                "borderDash": [5, 4],
-                "borderWidth": 1,
-                "pointRadius": 0,
-                "fill": False,
-            })
+        # Byte value row
+        for i, (bv, pi) in enumerate(flat_bytes):
+            fg = PATCH_TEXT[pi % len(PATCH_TEXT)]
+            elements.append(
+                f'<text x="{cx(i):.1f}" y="{row_val_y + 15}" text-anchor="middle" '
+                f'font-size="9" font-weight="600" fill="{fg}">{bv}</text>'
+            )
 
-        cfg = {
-            "type": "line",
-            "data": {"labels": x_labels, "datasets": datasets},
-            "options": {
-                "responsive": True,
-                "maintainAspectRatio": False,
-                "animation": {"duration": 400},
-                "plugins": {
-                    "legend": {"display": True, "position": "top",
-                            "labels": {"font": {"size": 11}, "boxWidth": 12}},
-                    "tooltip": {"mode": "index", "intersect": False},
-                },
-                "scales": {
-                    "x": {
-                        "title": {"display": True, "text": "Character",
-                                "font": {"size": 11}},
-                        "ticks": {"autoSkip": False, "maxRotation": 0,
-                                "font": {"size": 8}},
-                        "grid": {"color": "rgba(128,128,128,0.15)"},
-                    },
-                    "y": {
-                        "title": {"display": True, "text": "Entropy",
-                                "font": {"size": 11}},
-                        "ticks": {"font": {"size": 10}},
-                        "grid": {"color": "rgba(128,128,128,0.15)"},
-                    },
-                },
-            },
-        }
-        return json.dumps(cfg)
+        # Character row — each char spans its UTF-8 byte width
+        cursor = 0
+        for pi, (chunk, _, length) in enumerate(patches):
+            bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
+            fg = PATCH_TEXT[pi % len(PATCH_TEXT)]
+            # background for char row
+            col_x = MARGIN_L + cursor * CELL_W
+            elements.append(
+                f'<rect x="{col_x}" y="{row_chr_y}" width="{length * CELL_W}" '
+                f'height="{ROW_CHR_H}" fill="{bg}" opacity="0.6"/>'
+            )
+            if chunk:
+                byte_offset = 0
+                for ch in chunk:
+                    ch_bytes = len(ch.encode("utf-8"))
+                    char_cx = MARGIN_L + (cursor + byte_offset) * CELL_W + ch_bytes * CELL_W / 2
+                    display = html_lib.escape(ch) if ch != " " else "·"
+                    elements.append(
+                        f'<text x="{char_cx:.1f}" y="{row_chr_y + 17}" text-anchor="middle" '
+                        f'font-size="11" font-weight="600" fill="{fg}">{display}</text>'
+                    )
+                    byte_offset += ch_bytes
+            else:
+                # empty chunk (partial byte boundary)
+                char_cx = MARGIN_L + cursor * CELL_W + length * CELL_W / 2
+                elements.append(
+                    f'<text x="{char_cx:.1f}" y="{row_chr_y + 17}" text-anchor="middle" '
+                    f'font-size="10" fill="{fg}" opacity="0.5">∅</text>'
+                )
+            cursor += length
+
+        # Column dividers between patches
+        cursor = 0
+        for pi, (_, _, length) in enumerate(patches[:-1]):
+            cursor += length
+            div_x = MARGIN_L + cursor * CELL_W
+            elements.append(
+                f'<line x1="{div_x}" y1="{row_idx_y}" x2="{div_x}" y2="{row_chr_y + ROW_CHR_H}" '
+                f'stroke="rgba(0,0,0,0.2)" stroke-width="1"/>'
+            )
+
+        svg = (
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+            f'style="display:block;overflow:visible;">'
+            + "\n".join(elements)
+            + "</svg>"
+        )
+        return svg
+
 
 # ─── HTML shell ───────────────────────────────────────────────────────────────
 
@@ -216,17 +358,16 @@ _HTML_TEMPLATE = """\
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>BLT Entropy Patcher — Visualisation</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
   :root {{
-    --bg:      #0f1117;
-    --surface: #1a1d27;
-    --border:  #2e3144;
-    --text:    #d4d6e4;
-    --muted:   #7b7f9a;
-    --accent:  #4a90d9;
+    --bg:      #f0f2f8;
+    --surface: #ffffff;
+    --border:  #d0d5e8;
+    --text:    #1a1d2e;
+    --muted:   #5a5f7a;
+    --accent:  #2a6db5;
     --font:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
   }}
 
@@ -240,16 +381,15 @@ _HTML_TEMPLATE = """\
   }}
 
   .page-header {{
-    max-width: 860px;
+    max-width: 98vw;
     margin: 0 auto 2.5rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
     padding-bottom: 1.2rem;
   }}
   .page-header h1 {{
     font-size: 1.3rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: #e8eaf0;
+    font-weight: 700;
+    color: var(--text);
   }}
   .page-header .subtitle {{
     color: var(--muted);
@@ -258,12 +398,13 @@ _HTML_TEMPLATE = """\
   }}
 
   .result-card {{
-    max-width: 860px;
+    max-width: 98vw;
     margin: 0 auto 2rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }}
 
   .card-header {{
@@ -271,20 +412,20 @@ _HTML_TEMPLATE = """\
     align-items: center;
     gap: 1rem;
     padding: 0.65rem 1rem;
-    background: rgba(255,255,255,0.03);
+    background: #e8ecf7;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
   }}
 
   .label-badge {{
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: rgba(74,144,217,0.18);
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(42,109,181,0.12);
     color: var(--accent);
-    border: 1px solid rgba(74,144,217,0.35);
+    border: 1px solid rgba(42,109,181,0.3);
     border-radius: 4px;
     padding: 2px 8px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }}
 
@@ -306,16 +447,16 @@ _HTML_TEMPLATE = """\
 
   .patch-display {{
     padding: 0.85rem 1rem;
-    line-height: 2.2;
+    line-height: 2.4;
     border-bottom: 1px solid var(--border);
     word-break: break-all;
   }}
 
   .patch-token {{
     display: inline-block;
-    padding: 2px 6px;
-    margin: 2px 2px;
-    border-radius: 4px;
+    padding: 2px 5px;
+    margin: 2px 1px;
+    border-radius: 3px;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: default;
@@ -324,25 +465,21 @@ _HTML_TEMPLATE = """\
   }}
   .patch-token:hover {{
     transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
     z-index: 1;
     position: relative;
   }}
 
-  .chart-wrap {{
-    padding: 0.75rem 1rem 1rem;
-    height: 220px;
-    position: relative;
-  }}
-  .chart-wrap canvas {{
-    width: 100% !important;
+  .svg-wrap {{
+    overflow-x: auto;
+    padding: 1rem;
   }}
 </style>
 </head>
 <body>
 <header class="page-header">
-  <h1>BLT Entropy Patcher &mdash; Output Visualisation</h1>
-  <p class="subtitle">Colour-coded patch boundaries &amp; per-patch entropy &middot; hover a token for details</p>
+  <h1>BLT Entropy Patcher &mdash; Visualisation</h1>
+  <p class="subtitle">Per-byte entropy &middot; patch boundaries &middot; byte↔character alignment</p>
 </header>
 
 {sections}
@@ -352,17 +489,9 @@ _HTML_TEMPLATE = """\
 """
 
 
-# ─── convenience: build from your patch_text() output ────────────────────────
+# ─── convenience ─────────────────────────────────────────────────────────────
 
 def visualize_patch_results(results, output_path="blt_output.html"):
-    """
-    results: list of dicts, each with keys:
-        text      str
-        patches   list of (chunk_str, byte_len)  ← your patches list
-        scores    list of float | None
-        label     str
-        threshold float | None
-    """
     viz = BLTPatchVisualizer()
     for r in results:
         viz.add(
