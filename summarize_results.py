@@ -63,8 +63,9 @@ def main():
 
     # Print table
     max_name_len = max(len(s["lang_name"]) for s in summary)
+    max_code_len = max(len(s["lang_code"]) for s in summary)
     header = (
-        f"{'Language':<{max_name_len}} {'Code':<12} {'Sentences':>10} "
+        f"{'Language':<{max_name_len}} {'Code':<{max_code_len}} {'Sentences':>10} "
         f"{'Total patches':>14} {'Total bytes':>12} "
         f"{'Avg b/patch':>12} {'Avg patches/sent':>17} {'Premium vs EN':>14}"
     )
@@ -72,7 +73,7 @@ def main():
     for s in summary:
         premium_str = f"{s['patch_premium']:.4f}" if s["patch_premium"] is not None else "N/A"
         lines.append(
-            f"{s['lang_name']:<{max_name_len}} {s['lang_code']:<12} {s['n_sentences']:>10} "
+            f"{s['lang_name']:<{max_name_len}} {s['lang_code']:<{max_code_len}} {s['n_sentences']:>10} "
             f"{s['total_patches']:>14} {s['total_bytes']:>12} "
             f"{s['avg_bytes_per_patch']:>12.4f} {s['avg_patches_per_sentence']:>17.4f} "
             f"{premium_str:>14}"

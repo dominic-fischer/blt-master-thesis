@@ -1,22 +1,227 @@
-Language              Code          Sentences  Total patches  Total bytes  Avg b/patch  Avg patches/sent  Premium vs EN
------------------------------------------------------------------------------------------------------------------------
-English               eng_Latn            500          12442        62363       5.0123           24.8840         1.0000
-Russian               rus_Cyrl            500          14306       123587       8.6388           28.6120         1.1498
-Serbian               srp_Cyrl            500          16153       113045       6.9984           32.3060         1.2983
-French                fra_Latn            500          18739        76339       4.0738           37.4780         1.5061
-German                deu_Latn            500          20116        73629       3.6602           40.2320         1.6168
-Korean                kor_Hang            500          21974        74783       3.4032           43.9480         1.7661
-Romanian              ron_Latn            500          28174        73651       2.6141           56.3480         2.2644
-Croatian              hrv_Latn            500          31041        63540       2.0470           62.0820         2.4949
-Chinese (Traditional) cmn_Hant            500          32292        55652       1.7234           64.5840         2.5954
-Chinese (Simplified)  cmn_Hans            500          32605        59448       1.8233           65.2100         2.6206
-Arabic                arb_Arab            500          34740        99103       2.8527           69.4800         2.7922
-Hindi                 hin_Deva            500          37903       158242       4.1749           75.8060         3.0464
-Minangkabau (Latin)   min_Latn            500          37904        65173       1.7194           75.8080         3.0465
-Kashmiri (Devanagari) kas_Deva            500          40845       150355       3.6811           81.6900         3.2828
-Minangkabau (Arabic)  min_Arab            500          40971       106883       2.6087           81.9420         3.2930
-Tamil                 tam_Taml            500          43344       194339       4.4836           86.6880         3.4837
-Kashmiri (Arabic)     kas_Arab            500          46876       107727       2.2981           93.7520         3.7676
-Thai                  tha_Thai            500          49328       171814       3.4831           98.6560         3.9646
-Chichewa              nya_Latn            500          53843        70843       1.3157          107.6860         4.3275
-Shan                  shn_Mymr            500          76265       245417       3.2180          152.5300         6.1296
+Language                       Code               Sentences  Total patches  Total bytes  Avg b/patch  Avg patches/sent  Premium vs EN
+-------------------------------------------------------------------------------------------------------------------------------------
+English                        eng_Latn                 997          24165       125290       5.1848           24.2377         1.0000
+Russian                        rus_Cyrl                 997          28513       252298       8.8485           28.5988         1.1799
+Ukrainian                      ukr_Cyrl                 997          29733       235478       7.9198           29.8225         1.2304
+Bulgarian                      bul_Cyrl                 997          31035       237296       7.6461           31.1284         1.2843
+Serbian                        srp_Cyrl                 997          31960       226435       7.0849           32.0562         1.3226
+French                         fra_Latn                 997          36819       154573       4.1982           36.9298         1.5237
+Macedonian                     mkd_Cyrl                 997          36866       237676       6.4470           36.9769         1.5256
+Spanish                        spa_Latn                 997          39210       152078       3.8786           39.3280         1.6226
+German                         deu_Latn                 997          40170       148936       3.7076           40.2909         1.6623
+Italian                        ita_Latn                 997          40961       148188       3.6178           41.0843         1.6951
+Portuguese                     por_Latn                 997          41055       139900       3.4076           41.1785         1.6989
+Vietnamese                     vie_Latn                 997          42341       174819       4.1288           42.4684         1.7522
+Korean                         kor_Hang                 997          42916       150918       3.5166           43.0451         1.7760
+Japanese                       jpn_Jpan                 997          45093       160048       3.5493           45.2287         1.8660
+Catalan                        cat_Latn                 997          46611       140954       3.0241           46.7513         1.9289
+Dutch                          nld_Latn                 997          47162       139278       2.9532           47.3039         1.9517
+Indonesian                     ind_Latn                 997          47653       136386       2.8621           47.7964         1.9720
+Asturian                       ast_Latn                 997          48091       132761       2.7606           48.2357         1.9901
+Galician                       glg_Latn                 997          48246       142116       2.9457           48.3912         1.9965
+Polish                         pol_Latn                 997          49922       141830       2.8410           50.0722         2.0659
+Standard Malay                 zsm_Latn                 997          50139       141021       2.8126           50.2899         2.0749
+Swedish                        swe_Latn                 997          50677       131624       2.5973           50.8295         2.0971
+Aragonese                      arg_Latn                 997          53854       148208       2.7520           54.0160         2.2286
+Czech                          ces_Latn                 997          54486       135980       2.4957           54.6499         2.2547
+Norwegian Bokmål               nob_Latn                 997          54701       127253       2.3263           54.8656         2.2636
+Danish                         dan_Latn                 997          55561       131700       2.3704           55.7282         2.2992
+Norwegian Bokmål (Radical)     nob_Latn_radical         997          55773       127125       2.2793           55.9408         2.3080
+Occitan                        oci_Latn                 997          56444       146870       2.6020           56.6138         2.3358
+Hungarian                      hun_Latn                 997          56566       144968       2.5628           56.7362         2.3408
+Belarusian                     bel_Cyrl                 997          57047       262573       4.6027           57.2187         2.3607
+Romanian                       ron_Latn                 997          57531       148896       2.5881           57.7041         2.3808
+Croatian                       hrv_Latn                 997          62050       127130       2.0488           62.2367         2.5678
+Norwegian Nynorsk              nno_Latn                 997          62119       130560       2.1018           62.3059         2.5706
+Chinese (Simplified)           cmn_Hans                 997          63249       117254       1.8538           63.4393         2.6174
+Chinese (Traditional)          cmn_Hant                 997          63381       111458       1.7585           63.5717         2.6228
+Bosnian                        bos_Latn                 997          63676       130083       2.0429           63.8676         2.6351
+Erzya                          myv_Cyrl                 997          64028       248513       3.8813           64.2207         2.6496
+Finnish                        fin_Latn                 997          64576       139165       2.1551           64.7703         2.6723
+South Levantine Arabic         apc_Arab_sout3123        997          65734       186781       2.8415           65.9318         2.7202
+North Levantine Arabic         apc_Arab_nort3139        997          66224       186923       2.8226           66.4233         2.7405
+Slovenian                      slv_Latn                 997          67749       128278       1.8934           67.9529         2.8036
+Central Kanuri (Arabic)        knc_Arab                 997          67867       201126       2.9635           68.0712         2.8085
+Afrikaans                      afr_Latn                 997          67868       134424       1.9807           68.0722         2.8085
+Tunisian Arabic                aeb_Arab                 997          67913       193780       2.8534           68.1174         2.8104
+Egyptian Arabic                arz_Arab                 997          68389       196098       2.8674           68.5948         2.8301
+Mesopotamian Arabic            acm_Arab                 997          68393       196519       2.8734           68.5988         2.8303
+Taizzi-Adeni Arabic            acq_Arab                 997          68987       198303       2.8745           69.1946         2.8548
+Moroccan Arabic                ary_Arab                 997          69264       195424       2.8214           69.4724         2.8663
+Modern Standard Arabic         arb_Arab                 997          69626       200576       2.8808           69.8355         2.8813
+Najdi Arabic                   ars_Arab                 997          69728       200865       2.8807           69.9378         2.8855
+Cantonese                      yue_Hant                 997          69866       110765       1.5854           70.0762         2.8912
+Dari                           prs_Arab                 997          70570       204963       2.9044           70.7823         2.9203
+Wu Chinese                     wuu_Hans                 997          71216       117446       1.6492           71.4303         2.9471
+Venetian                       vec_Latn                 997          71321       132160       1.8530           71.5356         2.9514
+Banjar (Latin)                 bjn_Latn                 997          72003       132177       1.8357           72.2197         2.9796
+Greek                          ell_Grek                 997          72029       273289       3.7942           72.2457         2.9807
+Aranese Occitan                oci_Latn_aran1260        997          72404       147862       2.0422           72.6219         2.9962
+Eastern Mari                   mhr_Cyrl                 997          73359       241034       3.2857           73.5797         3.0358
+Slovak                         slk_Latn                 997          74809       137701       1.8407           75.0341         3.0958
+Urdu                           urd_Arab                 997          75618       221970       2.9354           75.8455         3.1292
+Hindi                          hin_Deva                 997          76179       322253       4.2302           76.4082         3.1525
+Western Persian                pes_Arab                 997          76287       214646       2.8137           76.5165         3.1569
+Magahi                         mag_Deva                 997          76718       310320       4.0449           76.9488         3.1748
+Bhojpuri                       bho_Deva                 997          77132       310444       4.0248           77.3641         3.1919
+Minangkabau (Latin)            min_Latn                 997          77407       133317       1.7223           77.6399         3.2033
+Chhattisgarhi                  hne_Deva                 997          77748       310580       3.9947           77.9819         3.2174
+South Azerbaijani              azb_Arab                 997          77935       204336       2.6219           78.1695         3.2251
+Ligurian                       lij_Latn                 997          78124       146052       1.8695           78.3591         3.2329
+Hebrew                         heb_Hebr                 997          78200       174464       2.2310           78.4353         3.2361
+Southern Pashto                pbt_Arab                 997          78630       213300       2.7127           78.8666         3.2539
+Limburgish                     lim_Latn                 997          79378       133846       1.6862           79.6169         3.2848
+Awadhi                         awa_Deva                 997          79424       315956       3.9781           79.6630         3.2867
+Sindhi (Arabic)                snd_Arab                 997          79841       200920       2.5165           80.0812         3.3040
+Silesian                       szl_Latn                 997          79920       138312       1.7306           80.1605         3.3073
+Nepali                         npi_Deva                 997          79982       323081       4.0394           80.2227         3.3098
+Friulian                       fur_Latn                 997          80104       142201       1.7752           80.3450         3.3149
+Sicilian                       scn_Latn                 997          81158       139648       1.7207           81.4022         3.3585
+Kashmiri (Devanagari)          kas_Deva                 997          81205       302085       3.7200           81.4493         3.3604
+Goan Konkani                   gom_Deva                 997          81235       319430       3.9322           81.4794         3.3617
+Sanskrit                       san_Deva                 997          81832       333339       4.0735           82.0782         3.3864
+Maithili                       mai_Deva                 997          82111       318194       3.8752           82.3581         3.3979
+Minangkabau (Arabic)           min_Arab                 997          82706       218096       2.6370           82.9549         3.4226
+Banjar (Arabic)                bjn_Arab                 997          82926       211916       2.5555           83.1755         3.4317
+Marathi                        mar_Deva                 997          83476       335677       4.0212           83.7272         3.4544
+Bengali                        ben_Beng                 997          83817       329572       3.9320           84.0692         3.4685
+Javanese                       jav_Latn                 997          83935       130556       1.5554           84.1876         3.4734
+Dogri                          dgo_Deva                 997          84635       341326       4.0329           84.8897         3.5024
+Kabuverdianu                   kea_Latn                 997          84659       127590       1.5071           84.9137         3.5034
+Assamese                       asm_Beng                 997          85093       321904       3.7830           85.3490         3.5213
+Turkish                        tur_Latn                 997          85432       139979       1.6385           85.6891         3.5354
+Sindhi (Devanagari)            snd_Deva                 997          85520       334570       3.9122           85.7773         3.5390
+Kyrgyz                         kir_Cyrl                 997          86079       235680       2.7380           86.3380         3.5621
+Sardinian                      srd_Latn                 997          86991       150234       1.7270           87.2528         3.5999
+Tamil                          tam_Taml                 997          87724       398801       4.5461           87.9880         3.6302
+Lombard                        lmo_Latn                 997          87793       145484       1.6571           88.0572         3.6331
+Acehnese (Arabic)              ace_Arab                 997          88016       189579       2.1539           88.2808         3.6423
+Gujarati                       guj_Gujr                 997          88282       314723       3.5650           88.5476         3.6533
+Cebuano                        ceb_Latn                 997          88592       150264       1.6961           88.8586         3.6661
+Sundanese                      sun_Latn                 997          88824       132313       1.4896           89.0913         3.6757
+Balinese                       ban_Latn                 997          88972       140691       1.5813           89.2397         3.6819
+Dargwa                         dar_Cyrl                 997          89079       268396       3.0130           89.3470         3.6863
+Pangasinan                     pag_Latn                 997          89270       126206       1.4138           89.5386         3.6942
+Morisyen                       mfe_Latn                 997          89745       117892       1.3136           90.0150         3.7138
+Filipino                       fil_Latn                 997          89754       157727       1.7573           90.0241         3.7142
+Papiamento                     pap_Latn                 997          89923       135496       1.5068           90.1936         3.7212
+Odia                           ory_Orya                 997          90118       345806       3.8373           90.3892         3.7293
+Luxembourgish                  ltz_Latn                 997          90580       144824       1.5989           90.8526         3.7484
+Tajik                          tgk_Cyrl                 997          90777       253637       2.7941           91.0502         3.7566
+Waray                          war_Latn                 997          91017       156419       1.7186           91.2909         3.7665
+Khakas                         kjh_Cyrl                 997          91069       251751       2.7644           91.3430         3.7686
+Telugu                         tel_Telu                 997          91209       338816       3.7147           91.4835         3.7744
+Bodo                           brx_Deva                 997          91526       352347       3.8497           91.8014         3.7875
+Meitei (Bengali)               mni_Beng                 997          91971       347444       3.7778           92.2477         3.8060
+Kashmiri (Arabic)              kas_Arab                 997          92640       216843       2.3407           92.9188         3.8336
+Ladin                          lld_Latn                 997          93308       137633       1.4750           93.5888         3.8613
+Tuvinian                       tyv_Cyrl                 997          93535       264479       2.8276           93.8164         3.8707
+Esperanto                      epo_Latn                 997          93874       127618       1.3595           94.1565         3.8847
+Halh Mongolian (Cyrillic)      khk_Cyrl                 997          93884       241785       2.5754           94.1665         3.8851
+Nigerian Fulfulde              fuv_Latn                 997          94095       120829       1.2841           94.3781         3.8939
+Crimean Tatar                  crh_Latn                 997          94680       141842       1.4981           94.9649         3.9181
+Ladin (Gardena)                lld_Latn_gard1241        997          94700       138244       1.4598           94.9850         3.9189
+Kannada                        kan_Knda                 997          94953       357459       3.7646           95.2387         3.9294
+Lingala                        lin_Latn                 997          96069       135557       1.4110           96.3581         3.9755
+Kazakh                         kaz_Cyrl                 997          96318       236955       2.4601           96.6078         3.9858
+Acehnese (Latin)               ace_Latn                 997          96901       136827       1.4120           97.1926         4.0100
+Tatar                          tat_Cyrl                 997          97031       233150       2.4028           97.3230         4.0154
+Punjabi                        pan_Guru                 997          97420       326052       3.3469           97.7131         4.0315
+Haitian Creole                 hat_Latn                 997          97665       118826       1.2167           97.9589         4.0416
+Luba-Kasai                     lua_Latn                 997          97706       134901       1.3807           98.0000         4.0433
+Kanuri (Latin)                 ktu_Latn                 997          98019       142987       1.4588           98.3139         4.0562
+Ayacucho Quechua               quy_Latn                 997          98070       134793       1.3745           98.3651         4.0584
+Thai                           tha_Thai                 997          98395       346502       3.5215           98.6911         4.0718
+Buginese                       bug_Latn                 997          99317       138285       1.3924           99.6158         4.1100
+Swahili                        swh_Latn                 997          99347       131845       1.3271           99.6459         4.1112
+Malayalam                      mal_Mlym                 997          99465       391356       3.9346           99.7643         4.1161
+Standard Moroccan Tamazight    zgh_Tfng                 997          99857       286187       2.8660          100.1575         4.1323
+Kamba                          kam_Latn                 997          99916       127523       1.2763          100.2166         4.1347
+Chokwe                         cjk_Latn                 997         100230       136284       1.3597          100.5316         4.1477
+Mizo                           lus_Latn                 997         100436       136932       1.3634          100.7382         4.1563
+Estonian                       ekk_Latn                 997         100615       126904       1.2613          100.9178         4.1637
+Sinhala                        sin_Sinh                 997         100782       335674       3.3307          101.0853         4.1706
+Tamasheq (Tifinagh)            taq_Tfng                 997         100888       288609       2.8607          101.1916         4.1750
+Southern Uzbek                 uzs_Arab                 997         101096       239010       2.3642          101.4002         4.1836
+Sango                          sag_Latn                 997         101455       140688       1.3867          101.7603         4.1984
+Luo                            luo_Latn                 997         101516       131934       1.2996          101.8215         4.2010
+Southwestern Dinka             dik_Latn                 997         101811       121595       1.1943          102.1174         4.2132
+Ganda                          lug_Latn                 997         101861       129453       1.2709          102.1675         4.2152
+Umbundu                        umb_Latn                 997         102313       130262       1.2732          102.6209         4.2339
+Wolof                          wol_Latn                 997         102493       124590       1.2156          102.8014         4.2414
+Central Aymara                 ayr_Latn                 997         102744       134408       1.3082          103.0532         4.2518
+Māori                          mri_Latn                 997         103576       145173       1.4016          103.8877         4.2862
+Tok Pisin                      tpi_Latn                 997         103836       160301       1.5438          104.1484         4.2970
+Kimbundu                       kmb_Latn                 997         103977       139665       1.3432          104.2899         4.3028
+Tibetan                        bod_Tibt                 997         105083       418753       3.9850          105.3992         4.3486
+Ilocano                        ilo_Latn                 997         106210       152021       1.4313          106.5296         4.3952
+Fijian                         fij_Latn                 997         106235       146344       1.3775          106.5547         4.3962
+Tamasheq (Latin)               taq_Latn                 997         106259       127393       1.1989          106.5787         4.3972
+Paraguayan Guaraní             gug_Latn                 997         106609       136756       1.2828          106.9298         4.4117
+Faroese                        fao_Latn                 997         107066       137496       1.2842          107.3882         4.4306
+Hausa                          hau_Latn                 997         107483       137707       1.2812          107.8064         4.4479
+Mossi                          mos_Latn                 997         107610       130902       1.2164          107.9338         4.4531
+Lithuanian                     lit_Latn                 997         108035       134578       1.2457          108.3601         4.4707
+Xhosa                          xho_Latn                 997         108255       133902       1.2369          108.5807         4.4798
+Chichewa                       nya_Latn                 997         109161       141777       1.2988          109.4895         4.5173
+Dyula                          dyu_Latn                 997         109241       134515       1.2314          109.5697         4.5206
+Eastern Yiddish                ydd_Hebr                 997         109275       243984       2.2328          109.6038         4.5220
+Basque                         eus_Latn                 997         109480       133948       1.2235          109.8094         4.5305
+Latgalian                      ltg_Latn                 997         109559       131761       1.2026          109.8887         4.5338
+Rundi                          run_Latn                 997         110509       140346       1.2700          110.8415         4.5731
+Shona                          sna_Latn                 997         110731       140602       1.2698          111.0642         4.5823
+Bambara                        bam_Latn                 997         110875       131109       1.1825          111.2086         4.5882
+Akuapem Twi                    twi_Latn_akua1239        997         111060       132468       1.1928          111.3942         4.5959
+Swati                          ssw_Latn                 997         111491       140848       1.2633          111.8265         4.6137
+Kinyarwanda                    kin_Latn                 997         111694       143205       1.2821          112.0301         4.6221
+Central Kanuri (Latin)         knc_Latn                 997         111989       139286       1.2437          112.3260         4.6344
+Jingpho                        kac_Latn                 997         112019       158191       1.4122          112.3561         4.6356
+Icelandic                      isl_Latn                 997         112197       137283       1.2236          112.5346         4.6430
+Zulu                           zul_Latn                 997         112865       140368       1.2437          113.2046         4.6706
+Somali                         som_Latn                 997         113487       142420       1.2549          113.8285         4.6963
+Georgian                       kat_Geor                 997         113798       372658       3.2747          114.1404         4.7092
+Tsonga                         tso_Latn                 997         113849       151171       1.3278          114.1916         4.7113
+Dzongkha                       dzo_Tibt                 997         114034       463530       4.0648          114.3771         4.7190
+Latvian                        lvs_Latn                 997         114060       140378       1.2307          114.4032         4.7201
+Amharic                        amh_Ethi                 997         114724       218396       1.9037          115.0692         4.7475
+Ewe                            ewe_Latn                 997         115092       134720       1.1705          115.4383         4.7628
+Asante Twi                     twi_Latn_asan1239        997         115120       137325       1.1929          115.4664         4.7639
+Samoan                         smo_Latn                 997         115158       153273       1.3310          115.5045         4.7655
+Lao                            lao_Laoo                 997         115578       344878       2.9839          115.9258         4.7829
+Southern Sotho                 sot_Latn                 997         115926       151687       1.3085          116.2748         4.7973
+Northern Uzbek                 uzn_Latn                 997         115930       141988       1.2248          116.2788         4.7974
+Tigrinya                       tir_Ethi                 997         115941       220338       1.9004          116.2899         4.7979
+Northern Sotho                 nso_Latn                 997         116258       148215       1.2749          116.6078         4.8110
+Chuvash                        chv_Cyrl                 997         116378       241245       2.0729          116.7282         4.8160
+Bemba                          bem_Latn                 997         116726       155724       1.3341          117.0772         4.8304
+Kabyle                         kab_Latn                 997         117063       132753       1.1340          117.4152         4.8443
+Igbo                           ibo_Latn                 997         117074       149769       1.2793          117.4263         4.8448
+Modern Standard Arabic (Latin) arb_Latn                 997         117393       146403       1.2471          117.7462         4.8580
+North Azerbaijani              azj_Latn                 997         117448       158394       1.3486          117.8014         4.8603
+Armenian                       hye_Armn                 997         117766       257750       2.1887          118.1204         4.8734
+Central Kurdish                ckb_Arab                 997         117853       232262       1.9708          118.2076         4.8770
+Northern Kurdish               kmr_Latn                 997         118515       138907       1.1721          118.8716         4.9044
+Welsh                          cym_Latn                 997         118752       134117       1.1294          119.1093         4.9142
+Bashkir                        bak_Cyrl                 997         119022       233577       1.9625          119.3801         4.9254
+Makhuwa                        vmw_Latn                 997         119453       147904       1.2382          119.8124         4.9432
+West Central Oromo             gaz_Latn                 997         119675       151153       1.2630          120.0351         4.9524
+Maltese                        mlt_Latn                 997         120218       145371       1.2092          120.5797         4.9749
+Tosk Albanian                  als_Latn                 997         120562       151911       1.2600          120.9248         4.9891
+Plateau Malagasy               plt_Latn                 997         120868       158252       1.3093          121.2317         5.0018
+Turkmen                        tuk_Latn                 997         121078       146397       1.2091          121.4423         5.0105
+Tswana                         tsn_Latn                 997         123376       157993       1.2806          123.7472         5.1056
+Tumbuka                        tum_Latn                 997         124629       165550       1.3283          125.0040         5.1574
+Santali                        sat_Olck                 997         125145       352168       2.8141          125.5216         5.1788
+Uyghur                         uig_Arab                 997         129462       248124       1.9166          129.8516         5.3574
+Yoruba                         yor_Latn                 997         129820       161334       1.2428          130.2106         5.3722
+Meitei (Meitei Mayek)          mni_Mtei                 997         130403       323782       2.4829          130.7954         5.3964
+Khmer                          khm_Khmr                 997         131592       427210       3.2465          131.9880         5.4456
+Irish                          gle_Latn                 997         132352       154606       1.1681          132.7503         5.4770
+Fon                            fon_Latn                 997         133828       158067       1.1811          134.2307         5.5381
+Kikuyu                         kik_Latn                 997         134756       163569       1.2138          135.1615         5.5765
+Scottish Gaelic                gla_Latn                 997         135417       161658       1.1938          135.8245         5.6039
+Burmese                        mya_Mymr                 997         138500       443775       3.2042          138.9168         5.7314
+Nuer                           nus_Latn                 997         145615       165666       1.1377          146.0532         6.0259
+Kabiyè                         kbp_Latn                 997         148423       173445       1.1686          148.8696         6.1421
+Shan                           shn_Mymr                 997         152634       496505       3.2529          153.0933         6.3163
+N'Ko                           nqo_Nkoo                 997         287188       288510       1.0046          288.0522        11.8845

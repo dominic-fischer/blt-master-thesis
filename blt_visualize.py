@@ -319,7 +319,7 @@ class BLTPatchVisualizer:
         for ch in full_text:
             ch_bytes = len(ch.encode("utf-8"))
             char_cx = MARGIN_L + byte_cursor * CELL_W + ch_bytes * CELL_W / 2
-            display = html_lib.escape(ch) if ch != " " else "·"
+            display = html_lib.escape(ch) if ch != " " else "_"
             elements.append(
                 f'<rect x="{MARGIN_L + byte_cursor * CELL_W}" y="{row_chr_y}" '
                 f'width="{ch_bytes * CELL_W}" height="{ROW_CHR_H}" '
