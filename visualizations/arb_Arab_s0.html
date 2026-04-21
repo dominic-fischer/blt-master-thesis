@@ -75,6 +75,38 @@
     text-transform: uppercase;
   }
 
+    .char-group {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        border: 1px solid #d0d5e8;
+        border-radius: 4px;
+        padding: 3px 5px;
+        background: #ffffff;
+        margin: 2px 1px;
+        vertical-align: bottom;
+    }
+
+    .byte-row {
+        display: flex;
+        flex-direction: row;
+        gap: 1px;
+    }
+
+    .byte-sq {
+        width: 8px;
+        height: 8px;
+        border-radius: 1px;
+    }
+
+    .char-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+    }
+
   .stats {
     font-size: 0.78rem;
     color: var(--muted);
@@ -137,7 +169,7 @@
             </span>
           </div>
           <p class="text-preview">في يوم الاثنين، أعلن علماء من كلية الطب بجامعة ستانفورد عن اختراع أداة تشخيصية جديدة يمكنها تصنيف الخلايا حسب النوع: شري…</p>
-          <div class="patch-display"><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 1"><span style='opacity:.35'>∅</span></span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 2">ف</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 3">ي&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 4"><span style='opacity:.35'>∅</span></span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 5">ي</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 6">و</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 7">م&#95;</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 8"><span style='opacity:.35'>∅</span></span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 9">ال</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 10">ا</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 11">ث</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 12">ن</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 13">ي</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 14">ن</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 15">،&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 16">أ</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 17">ع</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 18">لن&#95;</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 19">علما</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 20">ء&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 21">من&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 22">ك</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 23">ل</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 24">ي</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 25">ة&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 26">ال</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 27">ط</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 28">ب&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 29">ب</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 30">ج</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 31">ام</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 32">عة&#95;س</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 33">ت</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 34">ا</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 35">نفورد&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 36">عن&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 37">ا</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 38">خت</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 39">را</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 40">ع&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 41">أ</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 42">د</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 43">ا</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 44">ة&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 45">ت</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 46">ش</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 47">خ</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 48">ي</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 49">ص</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 50">ية&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 51">ج</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 52">دي</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 53">دة&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 54">يم</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 55">كن</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 56">ها&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 57">ت</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 58">ص</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 59">ن</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 60">ي</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 61">ف&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 62">ال</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 63">خ</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 64">لا</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 65">يا&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 66">ح</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 67">سب&#95;</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 68">ال</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 69">ن</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 70">و</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 71">ع:&#95;</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 72"><span style='opacity:.35'>∅</span></span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 73">ش</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 74">ر</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 75">ي</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 76">حة&#95;</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 77">ص</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 78">غيرة&#95;</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 79">ق</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 80">ا</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 81">بلة&#95;</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 82">ل</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 83">ل</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 84">طب</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 85">ا</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 86">عة&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 87">يمكن&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 88">ت</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 89">صني</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 90">عها&#95;</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 91">ب</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 92">ا</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 93">س</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 94">ت</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 95">خ</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 96">دا</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 97">م&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 98">ط</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 99">ا</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 100">ب</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 101">عات&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 102">ن</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 103">ف</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 104">ا</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 105">ث</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 106">ة&#95;</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 107">لل</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 108">ح</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 109">بر&#95;</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 110">قي</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 111">ا</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 112">س</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 113">ية&#95;</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 114">مقا</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 115">بل&#95;</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 116">ح</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 117">و</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 118">ا</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 119">ل</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 120">ي&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 121">س</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 122">ن</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 123">ت&#95;</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 124">أ</span><span class="patch-token" style="background:#fb9a99;color:#7a1010" title="patch 125">م</span><span class="patch-token" style="background:#e31a1c;color:#ffe8e8" title="patch 126">ري</span><span class="patch-token" style="background:#fdbf6f;color:#7a4400" title="patch 127">ك</span><span class="patch-token" style="background:#ff7f00;color:#fff4e0" title="patch 128">ي&#95;</span><span class="patch-token" style="background:#cab2d6;color:#3a1a5a" title="patch 129">و</span><span class="patch-token" style="background:#6a3d9a;color:#f0e8ff" title="patch 130">ا</span><span class="patch-token" style="background:#ffff99;color:#7a7a00" title="patch 131">ح</span><span class="patch-token" style="background:#b15928;color:#7a3010" title="patch 132">د&#95;</span><span class="patch-token" style="background:#a6cee3;color:#1a4a6b" title="patch 133">لك</span><span class="patch-token" style="background:#1f78b4;color:#e8f4fb" title="patch 134">ل&#95;</span><span class="patch-token" style="background:#b2df8a;color:#2e5a0e" title="patch 135">من</span><span class="patch-token" style="background:#33a02c;color:#e8f7e8" title="patch 136">ها.</span></div>
+          <div class="patch-display"><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ف</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">و</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ث</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">،</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">أ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ء</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ك</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ط</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ج</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">س</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ف</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">و</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">خ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">أ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ش</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">خ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ص</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ج</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ك</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ه</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ص</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ف</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">خ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ح</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">س</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">و</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">:</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ش</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ح</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ص</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">غ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ق</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ط</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ك</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ص</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ه</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">س</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">خ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ط</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ع</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ف</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ث</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ح</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ق</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">س</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ة</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ق</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ب</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ح</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">و</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">س</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ت</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">أ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ر</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ك</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ي</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">و</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ح</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">د</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ك</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ل</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">م</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ن</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ه</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ا</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">.</span></span></div>
           <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="11744" height="286" style="display:block;overflow:visible;"><rect x="0" y="0" width="11744" height="286" fill="#f8f9fc" rx="0"/>
 <rect x="52" y="16" width="11676" height="180" fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>
 <line x1="52" y1="191.0" x2="11728" y2="191.0" stroke="#e0e4f0" stroke-width="0.8"/>
@@ -706,7 +738,7 @@
 <circle cx="11658.0" cy="108.8" r="2" fill="#2a6db5" opacity="0.7"/>
 <circle cx="11686.0" cy="138.2" r="2" fill="#2a6db5" opacity="0.7"/>
 <circle cx="11714.0" cy="140.8" r="2" fill="#2a6db5" opacity="0.7"/>
-<text x="10" y="106" text-anchor="middle" font-size="10" fill="#444" transform="rotate(-90, 10, 106)">Entropy</text>
+<text x="10" y="106" text-anchor="middle" font-size="10" fill="#444" transform="rotate(-90, 10, 106)">Entropy of NEXT byte</text>
 <text x="66.0" y="209" text-anchor="middle" font-size="8" fill="#555">0</text>
 <text x="346.0" y="209" text-anchor="middle" font-size="8" fill="#555">10</text>
 <text x="626.0" y="209" text-anchor="middle" font-size="8" fill="#555">20</text>
@@ -1726,509 +1758,597 @@
 <text x="11658.0" y="247" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">216</text>
 <text x="11686.0" y="247" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">167</text>
 <text x="11714.0" y="247" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">46</text>
-<rect x="52" y="254" width="28" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="66.0" y="271" text-anchor="middle" font-size="10" fill="#1a4a6b" opacity="0.5">∅</text>
-<rect x="80" y="254" width="56" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="108.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ف</text>
-<rect x="136" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="164.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ي</text>
-<text x="206.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">·</text>
-<rect x="192" y="254" width="28" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="206.0" y="271" text-anchor="middle" font-size="10" fill="#e8f7e8" opacity="0.5">∅</text>
-<rect x="220" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="248.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ي</text>
-<rect x="276" y="254" width="56" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="304.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">و</text>
-<rect x="332" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="360.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">م</text>
-<text x="402.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">·</text>
-<rect x="388" y="254" width="28" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="402.0" y="271" text-anchor="middle" font-size="10" fill="#fff4e0" opacity="0.5">∅</text>
-<rect x="416" y="254" width="112" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="444.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ا</text>
-<text x="500.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ل</text>
-<rect x="528" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="556.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ا</text>
-<rect x="584" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="612.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ث</text>
-<rect x="640" y="254" width="56" height="24" fill="#b15928" opacity="0.6"/>
-<text x="668.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ن</text>
-<rect x="696" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="724.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ي</text>
-<rect x="752" y="254" width="56" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="780.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ن</text>
-<rect x="808" y="254" width="84" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="836.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">،</text>
-<text x="878.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">·</text>
-<rect x="892" y="254" width="56" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="920.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">أ</text>
-<rect x="948" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="976.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ع</text>
-<rect x="1004" y="254" width="140" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="1032.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ل</text>
-<text x="1088.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ن</text>
-<text x="1130.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">·</text>
-<rect x="1144" y="254" width="224" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="1172.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ع</text>
-<text x="1228.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ل</text>
-<text x="1284.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">م</text>
-<text x="1340.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ا</text>
-<rect x="1368" y="254" width="84" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="1396.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ء</text>
-<text x="1438.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">·</text>
-<rect x="1452" y="254" width="140" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="1480.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">م</text>
-<text x="1536.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ن</text>
-<text x="1578.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">·</text>
-<rect x="1592" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="1620.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ك</text>
-<rect x="1648" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="1676.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ل</text>
-<rect x="1704" y="254" width="56" height="24" fill="#b15928" opacity="0.6"/>
-<text x="1732.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ي</text>
-<rect x="1760" y="254" width="84" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="1788.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ة</text>
-<text x="1830.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">·</text>
-<rect x="1844" y="254" width="112" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="1872.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ا</text>
-<text x="1928.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ل</text>
-<rect x="1956" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="1984.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ط</text>
-<rect x="2012" y="254" width="84" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="2040.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ب</text>
-<text x="2082.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">·</text>
-<rect x="2096" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="2124.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ب</text>
-<rect x="2152" y="254" width="56" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="2180.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ج</text>
-<rect x="2208" y="254" width="112" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="2236.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ا</text>
-<text x="2292.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">م</text>
-<rect x="2320" y="254" width="196" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="2348.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ع</text>
-<text x="2404.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ة</text>
-<text x="2446.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">·</text>
-<text x="2488.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">س</text>
-<rect x="2516" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="2544.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ت</text>
-<rect x="2572" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="2600.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ا</text>
-<rect x="2628" y="254" width="308" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="2656.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ن</text>
-<text x="2712.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ف</text>
-<text x="2768.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">و</text>
-<text x="2824.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ر</text>
-<text x="2880.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">د</text>
-<text x="2922.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">·</text>
-<rect x="2936" y="254" width="140" height="24" fill="#b15928" opacity="0.6"/>
-<text x="2964.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ع</text>
-<text x="3020.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ن</text>
-<text x="3062.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">·</text>
-<rect x="3076" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="3104.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ا</text>
-<rect x="3132" y="254" width="112" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="3160.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">خ</text>
-<text x="3216.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ت</text>
-<rect x="3244" y="254" width="112" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="3272.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ر</text>
-<text x="3328.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ا</text>
-<rect x="3356" y="254" width="84" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="3384.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ع</text>
-<text x="3426.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">·</text>
-<rect x="3440" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="3468.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">أ</text>
-<rect x="3496" y="254" width="56" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="3524.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">د</text>
-<rect x="3552" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="3580.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ا</text>
-<rect x="3608" y="254" width="84" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="3636.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ة</text>
-<text x="3678.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">·</text>
-<rect x="3692" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="3720.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ت</text>
-<rect x="3748" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="3776.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ش</text>
-<rect x="3804" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="3832.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">خ</text>
-<rect x="3860" y="254" width="56" height="24" fill="#b15928" opacity="0.6"/>
-<text x="3888.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ي</text>
-<rect x="3916" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="3944.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ص</text>
-<rect x="3972" y="254" width="140" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="4000.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ي</text>
-<text x="4056.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ة</text>
-<text x="4098.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">·</text>
-<rect x="4112" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="4140.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ج</text>
-<rect x="4168" y="254" width="112" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="4196.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">د</text>
-<text x="4252.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ي</text>
-<rect x="4280" y="254" width="140" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="4308.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">د</text>
-<text x="4364.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ة</text>
-<text x="4406.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">·</text>
-<rect x="4420" y="254" width="112" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="4448.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ي</text>
-<text x="4504.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">م</text>
-<rect x="4532" y="254" width="112" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="4560.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ك</text>
-<text x="4616.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ن</text>
-<rect x="4644" y="254" width="140" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="4672.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ه</text>
-<text x="4728.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ا</text>
-<text x="4770.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">·</text>
-<rect x="4784" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="4812.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ت</text>
-<rect x="4840" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="4868.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ص</text>
-<rect x="4896" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="4924.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ن</text>
-<rect x="4952" y="254" width="56" height="24" fill="#b15928" opacity="0.6"/>
-<text x="4980.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ي</text>
-<rect x="5008" y="254" width="84" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="5036.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ف</text>
-<text x="5078.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">·</text>
-<rect x="5092" y="254" width="112" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="5120.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ا</text>
-<text x="5176.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ل</text>
-<rect x="5204" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="5232.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">خ</text>
-<rect x="5260" y="254" width="112" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="5288.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ل</text>
-<text x="5344.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ا</text>
-<rect x="5372" y="254" width="140" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="5400.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ي</text>
-<text x="5456.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ا</text>
-<text x="5498.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">·</text>
-<rect x="5512" y="254" width="56" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="5540.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ح</text>
-<rect x="5568" y="254" width="140" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="5596.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">س</text>
-<text x="5652.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ب</text>
-<text x="5694.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">·</text>
-<rect x="5708" y="254" width="112" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="5736.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ا</text>
-<text x="5792.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ل</text>
-<rect x="5820" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="5848.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ن</text>
-<rect x="5876" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="5904.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">و</text>
-<rect x="5932" y="254" width="84" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="5960.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ع</text>
-<text x="6002.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">:</text>
-<text x="6030.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">·</text>
-<rect x="6016" y="254" width="28" height="24" fill="#b15928" opacity="0.6"/>
-<text x="6030.0" y="271" text-anchor="middle" font-size="10" fill="#7a3010" opacity="0.5">∅</text>
-<rect x="6044" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="6072.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ش</text>
-<rect x="6100" y="254" width="56" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="6128.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ر</text>
-<rect x="6156" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="6184.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ي</text>
-<rect x="6212" y="254" width="140" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="6240.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ح</text>
-<text x="6296.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ة</text>
-<text x="6338.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">·</text>
-<rect x="6352" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="6380.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ص</text>
-<rect x="6408" y="254" width="252" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="6436.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">غ</text>
-<text x="6492.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ي</text>
-<text x="6548.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ر</text>
-<text x="6604.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ة</text>
-<text x="6646.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">·</text>
-<rect x="6660" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="6688.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ق</text>
-<rect x="6716" y="254" width="56" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="6744.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ا</text>
-<rect x="6772" y="254" width="196" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="6800.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ب</text>
-<text x="6856.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ل</text>
-<text x="6912.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ة</text>
-<text x="6954.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">·</text>
-<rect x="6968" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="6996.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ل</text>
-<rect x="7024" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="7052.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ل</text>
-<rect x="7080" y="254" width="112" height="24" fill="#b15928" opacity="0.6"/>
-<text x="7108.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ط</text>
-<text x="7164.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ب</text>
-<rect x="7192" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="7220.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ا</text>
-<rect x="7248" y="254" width="140" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="7276.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ع</text>
-<text x="7332.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ة</text>
-<text x="7374.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">·</text>
-<rect x="7388" y="254" width="252" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="7416.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ي</text>
-<text x="7472.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">م</text>
-<text x="7528.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ك</text>
-<text x="7584.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ن</text>
-<text x="7626.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">·</text>
-<rect x="7640" y="254" width="56" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="7668.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ت</text>
-<rect x="7696" y="254" width="168" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="7724.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ص</text>
-<text x="7780.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ن</text>
-<text x="7836.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ي</text>
-<rect x="7864" y="254" width="196" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="7892.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ع</text>
-<text x="7948.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ه</text>
-<text x="8004.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ا</text>
-<text x="8046.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">·</text>
-<rect x="8060" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="8088.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ب</text>
-<rect x="8116" y="254" width="56" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="8144.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ا</text>
-<rect x="8172" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="8200.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">س</text>
-<rect x="8228" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="8256.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ت</text>
-<rect x="8284" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="8312.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">خ</text>
-<rect x="8340" y="254" width="112" height="24" fill="#b15928" opacity="0.6"/>
-<text x="8368.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">د</text>
-<text x="8424.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ا</text>
-<rect x="8452" y="254" width="84" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="8480.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">م</text>
-<text x="8522.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">·</text>
-<rect x="8536" y="254" width="56" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="8564.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ط</text>
-<rect x="8592" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="8620.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ا</text>
-<rect x="8648" y="254" width="56" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="8676.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ب</text>
-<rect x="8704" y="254" width="196" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="8732.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ع</text>
-<text x="8788.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ا</text>
-<text x="8844.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ت</text>
-<text x="8886.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">·</text>
-<rect x="8900" y="254" width="56" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="8928.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ن</text>
-<rect x="8956" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="8984.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ف</text>
-<rect x="9012" y="254" width="56" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="9040.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ا</text>
-<rect x="9068" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="9096.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">ث</text>
-<rect x="9124" y="254" width="84" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="9152.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ة</text>
-<text x="9194.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">·</text>
-<rect x="9208" y="254" width="112" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="9236.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ل</text>
-<text x="9292.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ل</text>
-<rect x="9320" y="254" width="56" height="24" fill="#b15928" opacity="0.6"/>
-<text x="9348.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ح</text>
-<rect x="9376" y="254" width="140" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="9404.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ب</text>
-<text x="9460.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ر</text>
-<text x="9502.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">·</text>
-<rect x="9516" y="254" width="112" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="9544.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ق</text>
-<text x="9600.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ي</text>
-<rect x="9628" y="254" width="56" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="9656.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ا</text>
-<rect x="9684" y="254" width="56" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="9712.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">س</text>
-<rect x="9740" y="254" width="140" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="9768.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ي</text>
-<text x="9824.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">ة</text>
-<text x="9866.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">·</text>
-<rect x="9880" y="254" width="168" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="9908.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">م</text>
-<text x="9964.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ق</text>
-<text x="10020.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ا</text>
-<rect x="10048" y="254" width="140" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="10076.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ب</text>
-<text x="10132.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ل</text>
-<text x="10174.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">·</text>
-<rect x="10188" y="254" width="56" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="10216.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ح</text>
-<rect x="10244" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="10272.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">و</text>
-<rect x="10300" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="10328.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ا</text>
-<rect x="10356" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="10384.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ل</text>
-<rect x="10412" y="254" width="84" height="24" fill="#b15928" opacity="0.6"/>
-<text x="10440.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">ي</text>
-<text x="10482.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">·</text>
-<rect x="10496" y="254" width="56" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="10524.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">س</text>
-<rect x="10552" y="254" width="56" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="10580.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ن</text>
-<rect x="10608" y="254" width="84" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="10636.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ت</text>
-<text x="10678.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">·</text>
-<rect x="10692" y="254" width="56" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="10720.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">أ</text>
-<rect x="10748" y="254" width="56" height="24" fill="#fb9a99" opacity="0.6"/>
-<text x="10776.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a1010">م</text>
-<rect x="10804" y="254" width="112" height="24" fill="#e31a1c" opacity="0.6"/>
-<text x="10832.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ر</text>
-<text x="10888.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#ffe8e8">ي</text>
-<rect x="10916" y="254" width="56" height="24" fill="#fdbf6f" opacity="0.6"/>
-<text x="10944.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a4400">ك</text>
-<rect x="10972" y="254" width="84" height="24" fill="#ff7f00" opacity="0.6"/>
-<text x="11000.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">ي</text>
-<text x="11042.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#fff4e0">·</text>
-<rect x="11056" y="254" width="56" height="24" fill="#cab2d6" opacity="0.6"/>
-<text x="11084.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#3a1a5a">و</text>
-<rect x="11112" y="254" width="56" height="24" fill="#6a3d9a" opacity="0.6"/>
-<text x="11140.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#f0e8ff">ا</text>
-<rect x="11168" y="254" width="56" height="24" fill="#ffff99" opacity="0.6"/>
-<text x="11196.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a7a00">ح</text>
-<rect x="11224" y="254" width="84" height="24" fill="#b15928" opacity="0.6"/>
-<text x="11252.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">د</text>
-<text x="11294.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#7a3010">·</text>
-<rect x="11308" y="254" width="112" height="24" fill="#a6cee3" opacity="0.6"/>
-<text x="11336.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ل</text>
-<text x="11392.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4a6b">ك</text>
-<rect x="11420" y="254" width="84" height="24" fill="#1f78b4" opacity="0.6"/>
-<text x="11448.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">ل</text>
-<text x="11490.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f4fb">·</text>
-<rect x="11504" y="254" width="112" height="24" fill="#b2df8a" opacity="0.6"/>
-<text x="11532.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">م</text>
-<text x="11588.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#2e5a0e">ن</text>
-<rect x="11616" y="254" width="112" height="24" fill="#33a02c" opacity="0.6"/>
-<text x="11644.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ه</text>
-<text x="11700.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">ا</text>
-<text x="11742.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#e8f7e8">.</text>
-<line x1="80" y1="214" x2="80" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="136" y1="214" x2="136" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="192" y1="214" x2="192" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="220" y1="214" x2="220" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="276" y1="214" x2="276" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="332" y1="214" x2="332" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="388" y1="214" x2="388" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="416" y1="214" x2="416" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="528" y1="214" x2="528" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="584" y1="214" x2="584" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="640" y1="214" x2="640" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="696" y1="214" x2="696" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="752" y1="214" x2="752" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="808" y1="214" x2="808" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="892" y1="214" x2="892" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="948" y1="214" x2="948" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1004" y1="214" x2="1004" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1144" y1="214" x2="1144" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1368" y1="214" x2="1368" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1452" y1="214" x2="1452" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1592" y1="214" x2="1592" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1648" y1="214" x2="1648" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1704" y1="214" x2="1704" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1760" y1="214" x2="1760" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1844" y1="214" x2="1844" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="1956" y1="214" x2="1956" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2012" y1="214" x2="2012" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2096" y1="214" x2="2096" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2152" y1="214" x2="2152" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2208" y1="214" x2="2208" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2320" y1="214" x2="2320" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2516" y1="214" x2="2516" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2572" y1="214" x2="2572" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2628" y1="214" x2="2628" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="2936" y1="214" x2="2936" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3076" y1="214" x2="3076" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3132" y1="214" x2="3132" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3244" y1="214" x2="3244" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3356" y1="214" x2="3356" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3440" y1="214" x2="3440" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3496" y1="214" x2="3496" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3552" y1="214" x2="3552" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3608" y1="214" x2="3608" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3692" y1="214" x2="3692" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3748" y1="214" x2="3748" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3804" y1="214" x2="3804" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3860" y1="214" x2="3860" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3916" y1="214" x2="3916" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="3972" y1="214" x2="3972" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4112" y1="214" x2="4112" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4168" y1="214" x2="4168" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4280" y1="214" x2="4280" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4420" y1="214" x2="4420" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4532" y1="214" x2="4532" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4644" y1="214" x2="4644" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4784" y1="214" x2="4784" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4840" y1="214" x2="4840" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4896" y1="214" x2="4896" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="4952" y1="214" x2="4952" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5008" y1="214" x2="5008" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5092" y1="214" x2="5092" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5204" y1="214" x2="5204" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5260" y1="214" x2="5260" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5372" y1="214" x2="5372" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5512" y1="214" x2="5512" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5568" y1="214" x2="5568" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5708" y1="214" x2="5708" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5820" y1="214" x2="5820" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5876" y1="214" x2="5876" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="5932" y1="214" x2="5932" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6016" y1="214" x2="6016" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6044" y1="214" x2="6044" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6100" y1="214" x2="6100" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6156" y1="214" x2="6156" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6212" y1="214" x2="6212" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6352" y1="214" x2="6352" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6408" y1="214" x2="6408" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6660" y1="214" x2="6660" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6716" y1="214" x2="6716" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6772" y1="214" x2="6772" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="6968" y1="214" x2="6968" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7024" y1="214" x2="7024" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7080" y1="214" x2="7080" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7192" y1="214" x2="7192" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7248" y1="214" x2="7248" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7388" y1="214" x2="7388" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7640" y1="214" x2="7640" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7696" y1="214" x2="7696" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="7864" y1="214" x2="7864" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8060" y1="214" x2="8060" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8116" y1="214" x2="8116" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8172" y1="214" x2="8172" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8228" y1="214" x2="8228" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8284" y1="214" x2="8284" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8340" y1="214" x2="8340" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8452" y1="214" x2="8452" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8536" y1="214" x2="8536" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8592" y1="214" x2="8592" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8648" y1="214" x2="8648" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8704" y1="214" x2="8704" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8900" y1="214" x2="8900" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="8956" y1="214" x2="8956" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9012" y1="214" x2="9012" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9068" y1="214" x2="9068" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9124" y1="214" x2="9124" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9208" y1="214" x2="9208" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9320" y1="214" x2="9320" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9376" y1="214" x2="9376" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9516" y1="214" x2="9516" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9628" y1="214" x2="9628" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9684" y1="214" x2="9684" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9740" y1="214" x2="9740" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="9880" y1="214" x2="9880" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10048" y1="214" x2="10048" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10188" y1="214" x2="10188" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10244" y1="214" x2="10244" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10300" y1="214" x2="10300" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10356" y1="214" x2="10356" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10412" y1="214" x2="10412" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10496" y1="214" x2="10496" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10552" y1="214" x2="10552" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10608" y1="214" x2="10608" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10692" y1="214" x2="10692" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10748" y1="214" x2="10748" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10804" y1="214" x2="10804" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10916" y1="214" x2="10916" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="10972" y1="214" x2="10972" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11056" y1="214" x2="11056" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11112" y1="214" x2="11112" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11168" y1="214" x2="11168" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11224" y1="214" x2="11224" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11308" y1="214" x2="11308" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11420" y1="214" x2="11420" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11504" y1="214" x2="11504" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-<line x1="11616" y1="214" x2="11616" y2="278" stroke="rgba(0,0,0,0.2)" stroke-width="1"/></svg></div>
+<rect x="52" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="80.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ف</text>
+<rect x="108" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="136.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="164" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="178.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="192" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="220.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="248" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="276.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">و</text>
+<rect x="304" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="332.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="360" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="374.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="388" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="416.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="444" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="472.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="500" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="528.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="556" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="584.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ث</text>
+<rect x="612" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="640.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="668" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="696.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="724" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="752.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="780" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="808.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">،</text>
+<rect x="836" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="850.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="864" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="892.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">أ</text>
+<rect x="920" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="948.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="976" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1004.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="1032" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1060.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="1088" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1102.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="1116" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1144.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="1172" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1200.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="1228" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1256.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="1284" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1312.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="1340" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1368.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ء</text>
+<rect x="1396" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1410.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="1424" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1452.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="1480" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1508.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="1536" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1550.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="1564" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1592.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ك</text>
+<rect x="1620" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1648.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="1676" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1704.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="1732" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1760.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="1788" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1802.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="1816" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1844.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="1872" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1900.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="1928" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1956.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ط</text>
+<rect x="1984" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2012.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="2040" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2054.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="2068" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2096.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="2124" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2152.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ج</text>
+<rect x="2180" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2208.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="2236" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2264.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="2292" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2320.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="2348" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2376.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="2404" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2418.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="2432" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2460.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">س</text>
+<rect x="2488" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2516.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="2544" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2572.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="2600" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2628.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="2656" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2684.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ف</text>
+<rect x="2712" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2740.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">و</text>
+<rect x="2768" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2796.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="2824" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2852.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="2880" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2894.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="2908" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2936.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="2964" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2992.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="3020" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3034.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="3048" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3076.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="3104" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3132.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">خ</text>
+<rect x="3160" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3188.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="3216" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3244.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="3272" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3300.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="3328" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3356.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="3384" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3398.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="3412" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3440.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">أ</text>
+<rect x="3468" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3496.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="3524" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3552.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="3580" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3608.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="3636" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3650.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="3664" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3692.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="3720" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3748.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ش</text>
+<rect x="3776" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3804.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">خ</text>
+<rect x="3832" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3860.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="3888" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3916.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ص</text>
+<rect x="3944" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3972.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="4000" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4028.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="4056" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4070.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="4084" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4112.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ج</text>
+<rect x="4140" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4168.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="4196" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4224.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="4252" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4280.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="4308" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4336.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="4364" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4378.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="4392" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4420.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="4448" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4476.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="4504" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4532.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ك</text>
+<rect x="4560" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4588.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="4616" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4644.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ه</text>
+<rect x="4672" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4700.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="4728" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4742.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="4756" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4784.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="4812" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4840.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ص</text>
+<rect x="4868" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4896.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="4924" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4952.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="4980" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5008.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ف</text>
+<rect x="5036" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5050.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="5064" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5092.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="5120" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5148.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="5176" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5204.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">خ</text>
+<rect x="5232" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5260.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="5288" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5316.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="5344" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5372.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="5400" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5428.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="5456" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5470.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="5484" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5512.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ح</text>
+<rect x="5540" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5568.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">س</text>
+<rect x="5596" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5624.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="5652" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5666.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="5680" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5708.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="5736" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5764.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="5792" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5820.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="5848" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5876.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">و</text>
+<rect x="5904" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5932.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="5960" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5974.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">:</text>
+<rect x="5988" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6002.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="6016" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6044.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ش</text>
+<rect x="6072" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6100.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="6128" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6156.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="6184" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6212.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ح</text>
+<rect x="6240" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6268.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="6296" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6310.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="6324" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6352.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ص</text>
+<rect x="6380" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6408.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">غ</text>
+<rect x="6436" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6464.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="6492" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6520.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="6548" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6576.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="6604" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6618.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="6632" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6660.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ق</text>
+<rect x="6688" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6716.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="6744" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6772.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="6800" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6828.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="6856" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6884.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="6912" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6926.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="6940" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6968.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="6996" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7024.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="7052" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7080.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ط</text>
+<rect x="7108" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7136.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="7164" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7192.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="7220" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7248.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="7276" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7304.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="7332" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7346.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="7360" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7388.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="7416" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7444.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="7472" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7500.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ك</text>
+<rect x="7528" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7556.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="7584" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7598.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="7612" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7640.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="7668" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7696.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ص</text>
+<rect x="7724" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7752.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="7780" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7808.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="7836" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7864.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="7892" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7920.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ه</text>
+<rect x="7948" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7976.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="8004" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8018.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="8032" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8060.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="8088" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8116.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="8144" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8172.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">س</text>
+<rect x="8200" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8228.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="8256" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8284.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">خ</text>
+<rect x="8312" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8340.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="8368" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8396.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="8424" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8452.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="8480" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8494.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="8508" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8536.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ط</text>
+<rect x="8564" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8592.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="8620" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8648.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="8676" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8704.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ع</text>
+<rect x="8732" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8760.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="8788" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8816.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="8844" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8858.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="8872" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8900.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="8928" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8956.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ف</text>
+<rect x="8984" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9012.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="9040" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9068.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ث</text>
+<rect x="9096" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9124.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="9152" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9166.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="9180" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9208.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="9236" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9264.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="9292" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9320.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ح</text>
+<rect x="9348" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9376.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="9404" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9432.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="9460" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9474.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="9488" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9516.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ق</text>
+<rect x="9544" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9572.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="9600" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9628.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="9656" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9684.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">س</text>
+<rect x="9712" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9740.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="9768" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9796.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ة</text>
+<rect x="9824" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9838.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="9852" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9880.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="9908" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9936.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ق</text>
+<rect x="9964" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9992.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="10020" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10048.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ب</text>
+<rect x="10076" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10104.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="10132" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10146.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="10160" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10188.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ح</text>
+<rect x="10216" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10244.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">و</text>
+<rect x="10272" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10300.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="10328" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10356.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="10384" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10412.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="10440" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10454.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="10468" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10496.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">س</text>
+<rect x="10524" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10552.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="10580" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10608.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ت</text>
+<rect x="10636" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10650.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="10664" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10692.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">أ</text>
+<rect x="10720" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10748.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="10776" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10804.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ر</text>
+<rect x="10832" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10860.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="10888" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10916.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ك</text>
+<rect x="10944" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="10972.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ي</text>
+<rect x="11000" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11014.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="11028" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11056.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">و</text>
+<rect x="11084" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11112.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="11140" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11168.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ح</text>
+<rect x="11196" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11224.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">د</text>
+<rect x="11252" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11266.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="11280" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11308.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="11336" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11364.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ك</text>
+<rect x="11392" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11420.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ل</text>
+<rect x="11448" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11462.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">·</text>
+<rect x="11476" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11504.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">م</text>
+<rect x="11532" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11560.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ن</text>
+<rect x="11588" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11616.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ه</text>
+<rect x="11644" y="254" width="56" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11672.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ا</text>
+<rect x="11700" y="254" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="11714.0" y="271" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">.</text>
+<line x1="80" y1="214" x2="80" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="136" y1="214" x2="136" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="192" y1="214" x2="192" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="220" y1="214" x2="220" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="276" y1="214" x2="276" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="332" y1="214" x2="332" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="388" y1="214" x2="388" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="416" y1="214" x2="416" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="528" y1="214" x2="528" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="584" y1="214" x2="584" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="640" y1="214" x2="640" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="696" y1="214" x2="696" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="752" y1="214" x2="752" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="808" y1="214" x2="808" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="892" y1="214" x2="892" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="948" y1="214" x2="948" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1004" y1="214" x2="1004" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1144" y1="214" x2="1144" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1368" y1="214" x2="1368" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1452" y1="214" x2="1452" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1592" y1="214" x2="1592" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1648" y1="214" x2="1648" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1704" y1="214" x2="1704" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1760" y1="214" x2="1760" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1844" y1="214" x2="1844" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1956" y1="214" x2="1956" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2012" y1="214" x2="2012" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2096" y1="214" x2="2096" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2152" y1="214" x2="2152" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2208" y1="214" x2="2208" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2320" y1="214" x2="2320" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2516" y1="214" x2="2516" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2572" y1="214" x2="2572" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2628" y1="214" x2="2628" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2936" y1="214" x2="2936" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3076" y1="214" x2="3076" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3132" y1="214" x2="3132" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3244" y1="214" x2="3244" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3356" y1="214" x2="3356" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3440" y1="214" x2="3440" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3496" y1="214" x2="3496" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3552" y1="214" x2="3552" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3608" y1="214" x2="3608" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3692" y1="214" x2="3692" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3748" y1="214" x2="3748" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3804" y1="214" x2="3804" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3860" y1="214" x2="3860" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3916" y1="214" x2="3916" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3972" y1="214" x2="3972" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4112" y1="214" x2="4112" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4168" y1="214" x2="4168" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4280" y1="214" x2="4280" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4420" y1="214" x2="4420" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4532" y1="214" x2="4532" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4644" y1="214" x2="4644" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4784" y1="214" x2="4784" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4840" y1="214" x2="4840" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4896" y1="214" x2="4896" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4952" y1="214" x2="4952" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5008" y1="214" x2="5008" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5092" y1="214" x2="5092" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5204" y1="214" x2="5204" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5260" y1="214" x2="5260" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5372" y1="214" x2="5372" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5512" y1="214" x2="5512" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5568" y1="214" x2="5568" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5708" y1="214" x2="5708" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5820" y1="214" x2="5820" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5876" y1="214" x2="5876" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5932" y1="214" x2="5932" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6016" y1="214" x2="6016" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6044" y1="214" x2="6044" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6100" y1="214" x2="6100" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6156" y1="214" x2="6156" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6212" y1="214" x2="6212" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6352" y1="214" x2="6352" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6408" y1="214" x2="6408" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6660" y1="214" x2="6660" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6716" y1="214" x2="6716" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6772" y1="214" x2="6772" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6968" y1="214" x2="6968" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7024" y1="214" x2="7024" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7080" y1="214" x2="7080" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7192" y1="214" x2="7192" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7248" y1="214" x2="7248" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7388" y1="214" x2="7388" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7640" y1="214" x2="7640" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7696" y1="214" x2="7696" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7864" y1="214" x2="7864" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8060" y1="214" x2="8060" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8116" y1="214" x2="8116" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8172" y1="214" x2="8172" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8228" y1="214" x2="8228" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8284" y1="214" x2="8284" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8340" y1="214" x2="8340" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8452" y1="214" x2="8452" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8536" y1="214" x2="8536" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8592" y1="214" x2="8592" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8648" y1="214" x2="8648" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8704" y1="214" x2="8704" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8900" y1="214" x2="8900" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8956" y1="214" x2="8956" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9012" y1="214" x2="9012" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9068" y1="214" x2="9068" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9124" y1="214" x2="9124" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9208" y1="214" x2="9208" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9320" y1="214" x2="9320" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9376" y1="214" x2="9376" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9516" y1="214" x2="9516" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9628" y1="214" x2="9628" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9684" y1="214" x2="9684" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9740" y1="214" x2="9740" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9880" y1="214" x2="9880" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10048" y1="214" x2="10048" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10188" y1="214" x2="10188" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10244" y1="214" x2="10244" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10300" y1="214" x2="10300" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10356" y1="214" x2="10356" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10412" y1="214" x2="10412" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10496" y1="214" x2="10496" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10552" y1="214" x2="10552" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10608" y1="214" x2="10608" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10692" y1="214" x2="10692" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10748" y1="214" x2="10748" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10804" y1="214" x2="10804" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10916" y1="214" x2="10916" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="10972" y1="214" x2="10972" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11056" y1="214" x2="11056" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11112" y1="214" x2="11112" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11168" y1="214" x2="11168" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11224" y1="214" x2="11224" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11308" y1="214" x2="11308" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11420" y1="214" x2="11420" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11504" y1="214" x2="11504" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="11616" y1="214" x2="11616" y2="254" stroke="rgba(0,0,0,0.2)" stroke-width="1"/></svg></div>
         </section>
 
 </body>

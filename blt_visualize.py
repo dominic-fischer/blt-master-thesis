@@ -62,11 +62,8 @@ class BLTPatchVisualizer:
 
     @staticmethod
     def _norm(p):
-        """(chunk, bytes, length) or (chunk, length) → (chunk, bytes_list, length)"""
-        if len(p) == 3:
-            return p[0], list(p[1]), p[2]
-        chunk, length = p
-        return chunk, list(chunk.encode("utf-8", errors="replace")), length
+        blist, length = p
+        return list(blist), length
 
     # ── section ───────────────────────────────────────────────────────────────
 
@@ -77,7 +74,7 @@ class BLTPatchVisualizer:
         combined_svg = self._build_combined_svg(patches, r.scores, r.threshold)
 
         n_patches = len(patches)
-        n_bytes   = sum(ln for _, _, ln in patches)
+        n_bytes   = sum(ln for _, ln in patches)
         avg       = n_bytes / max(n_patches, 1)
 
         label_text   = html_lib.escape(r.label) if r.label else f"sample {idx+1}"
@@ -97,20 +94,37 @@ class BLTPatchVisualizer:
         </section>"""
 
     # ── coloured patch tokens ─────────────────────────────────────────────────
-
     @staticmethod
     def _build_patch_html(patches) -> str:
+        flat_bytes = []
+        for pi, (blist, _) in enumerate(patches):
+            for b in blist:
+                flat_bytes.append((b, pi))
+
+        full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+
         parts = []
-        for i, (chunk, _, _) in enumerate(patches):
-            bg = PATCH_COLORS[i % len(PATCH_COLORS)]
-            fg = PATCH_TEXT[i % len(PATCH_TEXT)]
-            display = html_lib.escape(chunk).replace(" ", "&#95;") or \
-                      "<span style='opacity:.35'>∅</span>"
+        byte_cursor = 0
+        for ch in full_text:
+            ch_bytes = len(ch.encode("utf-8"))
+            display = html_lib.escape(ch) if ch != " " else "_"
+
+            squares = ""
+            for i in range(ch_bytes):
+                pi = flat_bytes[byte_cursor + i][1]
+                bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
+                squares += f'<span class="byte-sq" style="background:{bg}"></span>'
+
             parts.append(
-                f'<span class="patch-token" style="background:{bg};color:{fg}" '
-                f'title="patch {i+1}">{display}</span>'
+                f'<span class="char-group">'
+                f'<span class="byte-row">{squares}</span>'
+                f'<span class="char-label">{display}</span>'
+                f'</span>'
             )
+            byte_cursor += ch_bytes
+
         return "".join(parts)
+    
 
     # ── combined SVG: entropy line chart + aligned byte/char table ────────────
 
@@ -129,7 +143,7 @@ class BLTPatchVisualizer:
 
         # Flatten bytes
         flat_bytes = []   # (byte_val, patch_idx)
-        for pi, (_, blist, _) in enumerate(patches):
+        for pi, (blist, _) in enumerate(patches):
             for bv in blist:
                 flat_bytes.append((bv, pi))
 
@@ -200,7 +214,7 @@ class BLTPatchVisualizer:
 
             # Patch boundary vertical lines
             cursor = 0
-            for pi, (_, _, length) in enumerate(patches[:-1]):
+            for pi, (_, length) in enumerate(patches[:-1]):
                 cursor += length
                 bx = MARGIN_L + cursor * CELL_W
                 elements.append(
@@ -236,7 +250,7 @@ class BLTPatchVisualizer:
         elements.append(
             f'<text x="10" y="{chart_y + CHART_H//2}" '
             f'text-anchor="middle" font-size="10" fill="#444" '
-            f'transform="rotate(-90, 10, {chart_y + CHART_H//2})">Entropy</text>'
+            f'transform="rotate(-90, 10, {chart_y + CHART_H//2})">Entropy of NEXT byte</text>'
         )
 
         # X-axis tick labels (every N bytes to avoid crowding)
@@ -255,7 +269,7 @@ class BLTPatchVisualizer:
 
         # Column backgrounds (alternating subtle stripe per patch)
         cursor = 0
-        for pi, (_, blist, length) in enumerate(patches):
+        for pi, (blist, length) in enumerate(patches):
             bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
             col_x = MARGIN_L + cursor * CELL_W
             # byte value row background
@@ -299,44 +313,31 @@ class BLTPatchVisualizer:
                 f'font-size="9" font-weight="600" fill="{fg}">{bv}</text>'
             )
 
-        # Character row — each char spans its UTF-8 byte width
-        cursor = 0
-        for pi, (chunk, _, length) in enumerate(patches):
-            bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
-            fg = PATCH_TEXT[pi % len(PATCH_TEXT)]
-            # background for char row
-            col_x = MARGIN_L + cursor * CELL_W
+        # Character row — built from full text, ignoring patch boundaries
+        full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+        byte_cursor = 0
+        for ch in full_text:
+            ch_bytes = len(ch.encode("utf-8"))
+            char_cx = MARGIN_L + byte_cursor * CELL_W + ch_bytes * CELL_W / 2
+            display = html_lib.escape(ch) if ch != " " else "·"
             elements.append(
-                f'<rect x="{col_x}" y="{row_chr_y}" width="{length * CELL_W}" '
-                f'height="{ROW_CHR_H}" fill="{bg}" opacity="0.6"/>'
+                f'<rect x="{MARGIN_L + byte_cursor * CELL_W}" y="{row_chr_y}" '
+                f'width="{ch_bytes * CELL_W}" height="{ROW_CHR_H}" '
+                f'fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>'
             )
-            if chunk:
-                byte_offset = 0
-                for ch in chunk:
-                    ch_bytes = len(ch.encode("utf-8"))
-                    char_cx = MARGIN_L + (cursor + byte_offset) * CELL_W + ch_bytes * CELL_W / 2
-                    display = html_lib.escape(ch) if ch != " " else "·"
-                    elements.append(
-                        f'<text x="{char_cx:.1f}" y="{row_chr_y + 17}" text-anchor="middle" '
-                        f'font-size="11" font-weight="600" fill="{fg}">{display}</text>'
-                    )
-                    byte_offset += ch_bytes
-            else:
-                # empty chunk (partial byte boundary)
-                char_cx = MARGIN_L + cursor * CELL_W + length * CELL_W / 2
-                elements.append(
-                    f'<text x="{char_cx:.1f}" y="{row_chr_y + 17}" text-anchor="middle" '
-                    f'font-size="10" fill="{fg}" opacity="0.5">∅</text>'
-                )
-            cursor += length
+            elements.append(
+                f'<text x="{char_cx:.1f}" y="{row_chr_y + 17}" text-anchor="middle" '
+                f'font-size="11" font-weight="600" fill="#1a1d2e">{display}</text>'
+            )
+            byte_cursor += ch_bytes
 
         # Column dividers between patches
         cursor = 0
-        for pi, (_, _, length) in enumerate(patches[:-1]):
+        for pi, (_, length) in enumerate(patches[:-1]):
             cursor += length
             div_x = MARGIN_L + cursor * CELL_W
             elements.append(
-                f'<line x1="{div_x}" y1="{row_idx_y}" x2="{div_x}" y2="{row_chr_y + ROW_CHR_H}" '
+                f'<line x1="{div_x}" y1="{row_idx_y}" x2="{div_x}" y2="{row_chr_y}" '
                 f'stroke="rgba(0,0,0,0.2)" stroke-width="1"/>'
             )
 
@@ -428,6 +429,38 @@ _HTML_TEMPLATE = """\
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }}
+
+    .char-group {{
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        border: 1px solid #d0d5e8;
+        border-radius: 4px;
+        padding: 3px 5px;
+        background: #ffffff;
+        margin: 2px 1px;
+        vertical-align: bottom;
+    }}
+
+    .byte-row {{
+        display: flex;
+        flex-direction: row;
+        gap: 1px;
+    }}
+
+    .byte-sq {{
+        width: 8px;
+        height: 8px;
+        border-radius: 1px;
+    }}
+
+    .char-label {{
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+    }}
 
   .stats {{
     font-size: 0.78rem;

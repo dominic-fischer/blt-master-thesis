@@ -131,8 +131,7 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
         raw = bytes(bytes_list[byte_cursor: byte_cursor + length])
         start_char = b2c.get(byte_cursor, 0)
         end_char = b2c.get(byte_cursor + length, len(full_text))
-        chunk = full_text[start_char:end_char]
-        patches.append((chunk, list(raw), length))
+        patches.append((list(raw), length))
         byte_cursor += length
 
     score_list = scores[0].tolist() if scores is not None else None
