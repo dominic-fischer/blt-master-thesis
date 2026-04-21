@@ -78,7 +78,7 @@ class BLTPatchVisualizer:
         avg       = n_bytes / max(n_patches, 1)
 
         label_text   = html_lib.escape(r.label) if r.label else f"sample {idx+1}"
-        text_preview = html_lib.escape(r.text[:120] + ("…" if len(r.text) > 120 else ""))
+        text_preview = html_lib.escape(r.text)
 
         return f"""
         <section class="result-card">
@@ -88,7 +88,7 @@ class BLTPatchVisualizer:
               <b>{n_patches}</b> patches &middot; <b>{n_bytes}</b> bytes &middot; avg <b>{avg:.2f}</b> b/patch
             </span>
           </div>
-          <p class="text-preview">{text_preview}</p>
+          <p class="text-preview" dir="auto" ondblclick="this.classList.toggle(\'expanded\')">{text_preview}</p>
           <div class="patch-display">{patch_html}</div>
           <div class="svg-wrap">{combined_svg}</div>
         </section>"""
@@ -477,6 +477,12 @@ _HTML_TEMPLATE = """\
     overflow: hidden;
     text-overflow: ellipsis;
   }}
+
+  .text-preview.expanded {{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    }}
 
   .patch-display {{
     padding: 0.85rem 1rem;
