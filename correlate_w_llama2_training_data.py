@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
+from config import SCRIPT_LABELS, SCRIPT_COLORS
 
-# Language data from the Llama 2 paper (Table 10), tokens in billions
 llama2_tokens = {
     'de': 3.4, 'fr': 3.2, 'sv': 3.0, 'zh': 2.6, 'es': 2.6,
     'ru': 2.6, 'nl': 2.4, 'it': 2.2, 'ja': 2.0, 'pl': 1.8,
@@ -12,16 +12,32 @@ llama2_tokens = {
     'no': 0.6, 'ro': 0.6, 'bg': 0.4, 'da': 0.4, 'sl': 0.2, 'hr': 0.2
 }
 
+# code -> (iso, script_key)
 code_map = {
-    'deu_Latn': 'de', 'fra_Latn': 'fr', 'swe_Latn': 'sv',
-    'cmn_Hans': 'zh', 'cmn_Hant': 'zh', 'spa_Latn': 'es',
-    'rus_Cyrl': 'ru', 'nld_Latn': 'nl', 'ita_Latn': 'it',
-    'jpn_Jpan': 'ja', 'pol_Latn': 'pl', 'por_Latn': 'pt',
-    'vie_Latn': 'vi', 'ukr_Cyrl': 'uk', 'kor_Hang': 'ko',
-    'cat_Latn': 'ca', 'srp_Cyrl': 'sr', 'ind_Latn': 'id',
-    'ces_Latn': 'cs', 'fin_Latn': 'fi', 'hun_Latn': 'hu',
-    'nob_Latn': 'no', 'ron_Latn': 'ro', 'bul_Cyrl': 'bg',
-    'dan_Latn': 'da', 'slv_Latn': 'sl', 'hrv_Latn': 'hr',
+    'deu_Latn': ('de', 'Latn'), 'fra_Latn': ('fr', 'Latn'),
+    'swe_Latn': ('sv', 'Latn'), 'cmn_Hans': ('zh', 'Hans'),
+    'spa_Latn': ('es', 'Latn'), 'rus_Cyrl': ('ru', 'Cyrl'),
+    'nld_Latn': ('nl', 'Latn'), 'ita_Latn': ('it', 'Latn'),
+    'jpn_Jpan': ('ja', 'Jpan'), 'pol_Latn': ('pl', 'Latn'),
+    'por_Latn': ('pt', 'Latn'), 'vie_Latn': ('vi', 'Latn'),
+    'ukr_Cyrl': ('uk', 'Cyrl'), 'kor_Hang': ('ko', 'Hang'),
+    'cat_Latn': ('ca', 'Latn'), 'srp_Cyrl': ('sr', 'Cyrl'),
+    'ind_Latn': ('id', 'Latn'), 'ces_Latn': ('cs', 'Latn'),
+    'fin_Latn': ('fi', 'Latn'), 'hun_Latn': ('hu', 'Latn'),
+    'nob_Latn': ('no', 'Latn'), 'ron_Latn': ('ro', 'Latn'),
+    'bul_Cyrl': ('bg', 'Cyrl'), 'dan_Latn': ('da', 'Latn'),
+    'slv_Latn': ('sl', 'Latn'), 'hrv_Latn': ('hr', 'Latn'),
+}
+
+# full language names for the abbreviation legend
+full_names = {
+    'de': 'German', 'fr': 'French', 'sv': 'Swedish', 'zh': 'Chinese',
+    'es': 'Spanish', 'ru': 'Russian', 'nl': 'Dutch', 'it': 'Italian',
+    'ja': 'Japanese', 'pl': 'Polish', 'pt': 'Portuguese', 'vi': 'Vietnamese',
+    'uk': 'Ukrainian', 'ko': 'Korean', 'ca': 'Catalan', 'sr': 'Serbian',
+    'id': 'Indonesian', 'cs': 'Czech', 'fi': 'Finnish', 'hu': 'Hungarian',
+    'no': 'Norwegian', 'ro': 'Romanian', 'bg': 'Bulgarian', 'da': 'Danish',
+    'sl': 'Slovenian', 'hr': 'Croatian',
 }
 
 rows = []
@@ -36,13 +52,21 @@ with open('results/summary.txt', 'r') as f:
                 lang_code = field
                 break
         if lang_code and lang_code in code_map:
-            iso = code_map[lang_code]
+            iso, script_key = code_map[lang_code]
             tokens = llama2_tokens.get(iso)
             if tokens:
                 try:
                     premium = float(parts[-1])
-                    rows.append({'language': parts[0], 'code': iso,
-                                 'tokens_B': tokens, 'premium': premium})
+                    script_label = SCRIPT_LABELS.get(script_key, script_key)
+                    color = SCRIPT_COLORS.get(script_label, '#333333')
+                    rows.append({
+                        'language': full_names.get(iso, iso),
+                        'code': iso,
+                        'tokens_B': tokens,
+                        'premium': premium,
+                        'script': script_label,
+                        'color': color,
+                    })
                 except ValueError:
                     continue
 
@@ -55,30 +79,55 @@ slope, intercept, r, p, se = stats.linregress(log_tokens, df['premium'])
 x_fit = np.linspace(df['tokens_B'].min(), df['tokens_B'].max(), 200)
 y_fit = slope * np.log(x_fit) + intercept
 
-fig, ax = plt.subplots(figsize=(9, 6))
-
-ax.scatter(df['tokens_B'], df['premium'],
-           color='steelblue', edgecolors='white',
-           linewidths=0.6, s=70, zorder=3, alpha=0.85)
-
-ax.plot(x_fit, y_fit, color='tomato', linewidth=1.8,
-        linestyle='--', label=f'Log fit  (r={r:.2f}, p={p:.3f})')
+fig = plt.figure(figsize=(13, 7))
+# main plot on left, abbreviation legend on right
+ax = fig.add_axes([0.05, 0.08, 0.62, 0.84])
+ax_leg = fig.add_axes([0.69, 0.08, 0.30, 0.84])
+ax_leg.axis('off')
 
 for _, row in df.iterrows():
+    ax.scatter(row['tokens_B'], row['premium'],
+               color=row['color'], edgecolors='white',
+               linewidths=0.6, s=75, zorder=3, alpha=0.9)
     ax.annotate(row['code'], (row['tokens_B'], row['premium']),
                 fontsize=7.5, ha='left', va='bottom',
-                xytext=(3, 3), textcoords='offset points', color='#444')
+                xytext=(3, 3), textcoords='offset points', color='#333')
+
+ax.plot(x_fit, y_fit, color='tomato', linewidth=1.8,
+        linestyle='--', label=f'Log fit  (r={r:.2f}, p={p:.3f})', zorder=2)
+
+# script colour legend (only scripts present in data)
+present_scripts = df['script'].unique()
+script_handles = [
+    plt.Line2D([0], [0], marker='o', color='w',
+               markerfacecolor=SCRIPT_COLORS[s], markersize=8, label=s)
+    for s in present_scripts if s in SCRIPT_COLORS
+]
+script_handles.append(
+    plt.Line2D([0], [1], color='tomato', linewidth=1.8,
+               linestyle='--', label=f'Log fit (r={r:.2f}, p={p:.3f})')
+)
+ax.legend(handles=script_handles, title='Script', fontsize=8,
+          title_fontsize=9, loc='lower left', framealpha=0.9)
 
 ax.set_xlabel('Training data in Llama 2 (billions of tokens)', fontsize=11)
 ax.set_ylabel('Tokenisation premium vs. English', fontsize=11)
 ax.set_title('More training data → lower tokenisation premium?', fontsize=12, fontweight='bold')
-ax.legend(fontsize=10)
 ax.grid(True, alpha=0.3, linestyle='--')
 ax.set_xscale('log')
 
-plt.tight_layout()
-plt.savefig('results/premium_vs_tokens.png', dpi=150, bbox_inches='tight')
+# abbreviation legend (right panel)
+ax_leg.set_title('Language codes', fontsize=10, fontweight='bold', loc='left', pad=4)
+abbrev_rows = df.sort_values('code')[['code', 'language', 'color']].values
+y_start = 0.97
+line_h = 0.97 / len(abbrev_rows)
+for i, (code, name, color) in enumerate(abbrev_rows):
+    y = y_start - i * line_h
+    ax_leg.plot(0.02, y, 'o', color=color, markersize=6,
+                transform=ax_leg.transAxes, clip_on=False)
+    ax_leg.text(0.10, y, f'{code} — {name}', fontsize=8,
+                va='center', transform=ax_leg.transAxes, color='#222')
+
+plt.savefig('results/premium_vs_tokens_scripts.png', dpi=150, bbox_inches='tight')
 plt.show()
-print(f"\nPearson r (log tokens vs premium): {r:.3f}, p={p:.4f}")
-print(f"N = {len(df)} languages")
-print(df[['language', 'code', 'tokens_B', 'premium']].to_string(index=False))
+print(f"Pearson r (log tokens vs premium): {r:.3f}, p={p:.4f}, N={len(df)}")
