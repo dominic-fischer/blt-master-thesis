@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 from pathlib import Path
+from config import SCRIPT_LABELS
 
 # ── 1. Parse the summary file ───────────────────────────────────────────────
 
@@ -162,7 +163,7 @@ for script in script_order:
 
 stats = []
 for s in script_order:
-    prems = [r["premium"] for r in script_groups[s]]
+    prems = [r["premium"] for r in script_groups[s] if not r["code"].startswith("eng_")]
     stats.append({
         "script": s,
         "min":    min(prems),
