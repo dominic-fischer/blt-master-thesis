@@ -23,7 +23,7 @@ LIMIT = None # set to an int for quick testing
 REPO = "facebook/blt-1b"
 ENTROPY_REPO = "hf-weights/entropy_model"
 SPLIT = "dev"
-OUTPUT_DIR = "results"
+OUTPUT_DIR = "results/eval"
 
 FLORES_DATASET = "openlanguagedata/flores_plus"
 

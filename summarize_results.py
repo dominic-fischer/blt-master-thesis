@@ -12,7 +12,8 @@ import json
 import os
 from eval_flores import LANGUAGES
 
-RESULTS_DIR = "results"
+RESULTS_DIR = "results/eval"
+RESULTS_DIR_OUT = "results"
 
 def summarize_language(lang_code: str) -> dict | None:
     path = os.path.join(RESULTS_DIR, f"{lang_code}.json")
@@ -83,13 +84,13 @@ def main():
     print("\n" + table)
 
     # Save JSON
-    out_path = os.path.join(RESULTS_DIR, "summary.json")
+    out_path = os.path.join(RESULTS_DIR_OUT, "summary.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
     print(f"\nSaved → {out_path}")
 
     # Save TXT
-    txt_path = os.path.join(RESULTS_DIR, "summary.txt")
+    txt_path = os.path.join(RESULTS_DIR_OUT, "summary.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write(table + "\n")
     print(f"Saved → {txt_path}")

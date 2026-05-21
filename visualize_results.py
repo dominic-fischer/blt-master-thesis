@@ -22,8 +22,8 @@ import os
 from blt_visualize import BLTPatchVisualizer
 from eval_flores import LANGUAGES
 
-RESULTS_DIR = "results"
-VIZ_DIR = "visualizations"
+RESULTS_DIR = "results/eval"
+VIZ_DIR = "results/visualizations"
 
 
 def load_results(lang_code: str) -> list:
