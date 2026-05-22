@@ -73,6 +73,16 @@ script_groups = defaultdict(list)
 for row in data:
     script_groups[row["script"]].append(row)
 
+# ── Merge singleton scripts into "Other" ────────────────────────────────────
+merged_other = []
+singleton_scripts = [s for s, rows in script_groups.items() if len(rows) == 1]
+for s in singleton_scripts:
+    merged_other.extend(script_groups.pop(s))
+
+if merged_other:
+    # If there's already an "Other" group, extend it; otherwise create it
+    script_groups["Other"].extend(merged_other)
+
 # Sort within each group by premium ascending
 for g in script_groups.values():
     g.sort(key=lambda r: r["premium"])
@@ -164,6 +174,8 @@ for script in script_order:
 stats = []
 for s in script_order:
     prems = [r["premium"] for r in script_groups[s] if not r["code"].startswith("eng_")]
+    if not prems:
+        continue
     stats.append({
         "script": s,
         "min":    min(prems),
