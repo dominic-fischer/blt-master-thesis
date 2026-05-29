@@ -200,7 +200,7 @@ const SCRIPT_TYPES = {
   "Mlym":"Abugida","Sinh":"Abugida","Thai":"Abugida","Laoo":"Abugida",
   "Tibt":"Abugida","Mymr":"Abugida","Khmr":"Abugida","Ethi":"Abugida",
   "Olck":"Abugida","Mtei":"Abugida",
-  "Hans":"Logographic","Hant":"Logographic","Jpan":"Logographic","Hang":"Logographic",
+  "Hans":"Logographic","Hant":"Logographic","Jpan":"Logographic","Hang":"Alphabet",
 };
 const TIER_LABELS = { 1:'1 byte', 2:'2 bytes', 3:'3 bytes' };
 const TYPE_BASE_COLORS = {
@@ -279,7 +279,8 @@ const SCRIPT_DATA = [
   // ── Logographic ───────────────────────────────────────────────────────────
   { code:"Hans",            label:"Han (Simplified)",  type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hans"] },
   { code:"Hant",            label:"Han (Traditional)", type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hant"] },
-  { code:"Logographic_other",label:"Logographic · other",type:"Logographic",tier:3, fams: {"Japonic":["Japanese"],"Koreanic":["Korean"]}, scripts:"Japanese, Hangul" },
+  { code:"Hang", label:"Hangul",   type:"Alphabet",    tier:3, fams: SCRIPT_FAM_LANGS["Hang"] },
+  { code:"Jpan", label:"Japanese", type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Jpan"] },
 ];
 
 function lighten(hex, f) {
