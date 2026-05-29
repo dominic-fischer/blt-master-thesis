@@ -9,8 +9,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: system-ui, -apple-system, sans-serif;
-    background: #1a1a1a;
-    color: #fff;
+    background: #fff;
+    color: #1a1a1a;
     padding: 1.5rem;
     max-width: 100%;
     margin: 0 auto;
@@ -83,19 +83,24 @@
   }
   #tt {
     position: fixed;
-    background: #1a1a1a;
-    border: 1px solid #444;
+    background: #fff;
+    border: 1px solid #ddd;
     border-radius: 8px;
     padding: 8px 12px;
     font-size: 12px;
     pointer-events: none;
     opacity: 0;
-    max-width: 320px;
+    max-width: 300px;
     z-index: 999;
     line-height: 1.6;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     transition: opacity 0.12s;
-    color: #e0e0e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e8e8e8; }
+    #tt { background: #2a2a2a; border-color: #444; }
+    .controls label { color: #aaa; }
+    .subtitle { color: #888; }
   }
 </style>
 </head>
@@ -365,7 +370,7 @@ function render() {
           let html = `<div style="font-weight:600;font-size:13px;margin-bottom:2px;">${label}</div>`;
           html += `<div style="font-size:10px;color:#888;margin-bottom:4px;">${type} · ${tier}-byte UTF-8</div>`;
           html += `<div style="font-size:12px;font-weight:500;margin-bottom:5px;">${count} language${count!==1?'s':''}${scripts ? ' / ' + scripts.split(', ').length + ' scripts' : ''} · ${pct}%</div>`;
-          html += `<div style="font-size:10px;color:#555;border-top:1px solid #eee;padding-top:4px;">${allLangs.join(', ')}</div>`;
+          html += `<div style="font-size:10px;color:#a8a7a7;border-top:1px solid #eee;padding-top:4px;">${allLangs.join(', ')}</div>`;
           tt.innerHTML = html; tt.style.opacity = '1';
           tt.style.left = (ev.clientX+16)+'px'; tt.style.top = (ev.clientY-10)+'px';
         })
@@ -425,7 +430,7 @@ function render() {
           let html = `<div style="font-weight:600;font-size:13px;margin-bottom:2px;">${fam}</div>`;
           html += `<div style="font-size:10px;color:#888;margin-bottom:4px;">in ${label} · ${type} · ${tier}-byte UTF-8</div>`;
           html += `<div style="font-size:12px;font-weight:500;margin-bottom:5px;">${langs.length} language${langs.length!==1?'s':''} · ${pct}%</div>`;
-          html += `<div style="font-size:10px;color:#555;border-top:1px solid #eee;padding-top:4px;">${langs.join(', ')}</div>`;
+          html += `<div style="font-size:10px;color:#a8a7a7;border-top:1px solid #eee;padding-top:4px;">${langs.join(', ')}</div>`;
           tt.innerHTML = html; tt.style.opacity = '1';
           tt.style.left = (ev.clientX+16)+'px'; tt.style.top = (ev.clientY-10)+'px';
         })
@@ -451,7 +456,7 @@ function render() {
   // ── 3. Centre hole ─────────────────────────────────────────────────────────
   const TOTAL_SCRIPTS = Object.keys(SCRIPT_FAM_LANGS).length;
   g.append('circle').attr('r', holeR-1)
-    .attr('fill','#fff').attr('stroke','#444').attr('stroke-width',0.5);
+    .attr('fill','#fff').attr('stroke','#ccc').attr('stroke-width',0.5);
   g.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle')
     .attr('font-size',13).attr('font-weight',600).attr('fill','#1a1a1a').text(TOTAL_SCRIPTS);
   g.append('text').attr('y',14).attr('text-anchor','middle').attr('dominant-baseline','middle')

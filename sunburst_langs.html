@@ -238,7 +238,7 @@ function render(pct) {
         // Build language list: bold if terminal here, normal otherwise
         const langHTML = langs.map(l =>
           tlangsSet.has(l)
-            ? `<b style="color:#fff;">${l}</b>`
+            ? `<b style="color:#aaa;">${l}</b>`
             : `<span style="color:#a8a7a7;">${l}</span>`
         ).join(', ');
 
@@ -367,7 +367,7 @@ function render(pct) {
       .attr('y', ty + (topHalf ? -3 : 3))
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', topHalf ? 'auto' : 'hanging')
-      .attr('font-size', fs8).attr('fill', '#fff')
+      .attr('font-size', fs8).attr('fill', '#aaa')
       .attr('pointer-events', 'none').text(lbl);
   });
 
