@@ -22,7 +22,7 @@
     margin: 1.2rem auto 0;
     max-width: 960px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 0 28px;
   }
   .leg-section { min-width: 0; }
@@ -260,10 +260,11 @@ const SCRIPT_FAM_LANGS = {"Nkoo":{"Artificial Language":["Nko"]},"Ethi":{"Afro-A
 // Teal shades by script TYPE (not byte cost)
 // Alphabet=lightest, Abjad=light-mid, Abugida=dark-mid, Logographic=darkest
 const TEAL = {
-  "Alphabet":    "#b8dde8",
-  "Abjad":       "#6aaec4",
-  "Abugida":     "#2e6b8b",
-  "Logographic": "#1a3a4a",
+  "Alphabet":      "#b8dde8",  // step 0/4
+  "Abjad":         "#86bdd0",  // step 1/4
+  "Abugida":       "#559db8",  // step 2/4
+  "Logosyllabary": "#315d6b",
+  "Logographic":   "#1c353d",
 };
 
 const SCRIPT_DATA = [
@@ -286,7 +287,7 @@ const SCRIPT_DATA = [
   { code:"Hans",            label:"Han (Simplified)",  type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hans"] },
   { code:"Hant",            label:"Han (Traditional)", type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hant"] },
   { code:"Hang", label:"Hangul",   type:"Alphabet",    tier:3, fams: SCRIPT_FAM_LANGS["Hang"] },
-  { code:"Jpan", label:"Japanese", type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Jpan"] },
+  { code:"Jpan", label:"Japanese", type:"Logosyllabary", tier:3, fams: SCRIPT_FAM_LANGS["Jpan"] },
 ];
 
 function lighten(hex, f) {
@@ -321,7 +322,7 @@ function render() {
   const totalLangs = SCRIPT_DATA.reduce((s,d) => s + Object.values(d.fams).reduce((a,l)=>a+l.length,0), 0);
 
   // Sort within each type group by count descending
-  const typeOrder = ['Alphabet','Abjad','Abugida','Logographic'];
+  const typeOrder = ['Alphabet','Abjad','Abugida','Logosyllabary','Logographic'];
   const sortedScriptData = typeOrder.flatMap(type =>
     SCRIPT_DATA
       .filter(d => d.type === type)
@@ -467,7 +468,7 @@ function render() {
 
   const maxCount = Math.max(...SCRIPT_DATA.map(d => Object.values(d.fams).reduce((s,l)=>s+l.length,0)));
 
-  const TYPE_ORDER_LEG = ['Alphabet','Abugida', 'Abjad', 'Logographic'];
+  const TYPE_ORDER_LEG = ['Alphabet','Abugida', 'Abjad', 'Logographic', 'Logosyllabary'];
   TYPE_ORDER_LEG.forEach(type => {
     const sec = document.createElement('div');
     sec.className = 'leg-section';
