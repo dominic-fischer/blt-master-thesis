@@ -104,7 +104,7 @@ def calculate_entropies(
         concat_entropies = torch.cat(entropies, dim=0)
         concat_entropies = concat_entropies.reshape(tokens.shape)
         concat_preds = torch.cat(preds, dim=0)
-        concat_preds = concat_preds.reshape(tokens.shape[0], -1)
+        concat_preds = concat_preds.reshape(tokens.shape[0], tokens.shape[1], -1)
     return concat_entropies, concat_preds
 
 
@@ -562,7 +562,7 @@ class Patcher:
                 scores = entropy(preds)
             else:
                 start_entropies = time.time()
-                scores, _ = calculate_entropies(
+                scores, preds = calculate_entropies(
                     tokens,
                     self.entropy_model,
                     self.patching_batch_size,
@@ -642,4 +642,4 @@ class Patcher:
         if self.log_time:
             self.log["postprocessing_patch_lengths"] += time.time() - s
             self.log["tokens"] += patch_lengths.sum().item()
-        return patch_lengths, scores
+        return patch_lengths, scores, preds

@@ -111,12 +111,14 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
     else:
         tokens_input = tokens
 
-    patch_lengths, scores = patcher.patch(tokens_input)
+    patch_lengths, scores, preds = patcher.patch(tokens_input)
 
     if patcher.patching_mode in NEEDS_BOS:
         patch_lengths = patch_lengths[:, 1:]
         if scores is not None:
             scores = scores[:, 1:]
+        if preds is not None:
+            preds = preds[:, 1:]
 
     # Decode full sequence once (guaranteed valid) and build byte→char map
     full_text = byte_seq.decode("utf-8")
@@ -135,12 +137,14 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
         byte_cursor += length
 
     score_list = scores[0].tolist() if scores is not None else None
+    pred_list = preds[0].cpu().tolist() if preds is not None else None
     n = len(patches)
     b = len(byte_seq)
 
     return {
         "patches": patches,
         "scores": score_list,
+        "preds": pred_list,
         "n_patches": n,
         "n_bytes": b,
         "text_bytes": list(byte_seq),
