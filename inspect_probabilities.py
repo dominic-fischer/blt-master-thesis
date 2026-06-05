@@ -13,10 +13,7 @@ TOP_K = 1  # set to 1-5
 W_BITS   = 33
 W_SCRIPT = 50
 
-from bytelatent.data.patcher import (
-    find_entropy_patch_start_ids,
-    patch_lengths_from_start_ids,
-)
+from bytelatent.data.patcher import patch_lengths_from_start_ids
 
 THRESHOLD = 1.75
 THRESHOLD_ADD = 0.5  # tune this
@@ -28,19 +25,19 @@ MODES = {
 }
 
 texts = {
-    "English":  "Daenerys Targaryen is in Game of Thrones, a fantasy epic by Gerge R.R. Martin.",
-    # "German":   "Der schnelle braune Fuchs springt über den faulen Hund.",
-    # "Finnish":  "Nopea ruskea kettu hyppää laiskan koiran yli.",
-    # "Latvian":  "Ātrais brūnais lapsa lec pāri slinkajam sunim.",
-    # "Hindi":    "तेज़ लोमड़ी आलसी कुत्ते के ऊपर कूदती है।",
-    # "Chinese":  "敏捷的棕色狐狸跳过了懒狗。",
-    # "Arabic":   "الثعلب البني السريع يقفز فوق الكلب الكسول.",
-    # "Georgian": "სწრაფი მოყავისფერი მელა ზარმაც ძაღლს გადაახტა.",
-    # "Armenian": "Արագ շագանակագույն աղվեսը ցատկում է ծույլ շան վրայով։",
-    # "Tibetan":  "རྒྱང་མགྱོགས་པའི་བོང་བུ་གཉིད་ལོག་པའི་ཁྱི་ལ་མཆོང་།",
-    # "Lao":      "ຫມາກໄມ້ສີນ້ຳຕານໄວລອຍຢູ່ເທິງໝາຄ້ານ.",
-    # "Khmer":    "សត្វក្តាន់ពណ៌ត្នោតលឿនលោតឆ្លងពីលើឆ្កែខ្ជិល།",
-    # "Amharic":  "ፈጣኑ ቡናማ ቀበሮ ሰነፍ ውሻውን ዘለለ།",
+    "English":  "The quick brown fox jumps over the lazy dog.",
+    "German":   "Der schnelle braune Fuchs springt über den faulen Hund.",
+    "Finnish":  "Nopea ruskea kettu hyppää laiskan koiran yli.",
+    "Latvian":  "Ātrais brūnais lapsa lec pāri slinkajam sunim.",
+    "Hindi":    "तेज़ लोमड़ी आलसी कुत्ते के ऊपर कूदती है।",
+    "Chinese":  "敏捷的棕色狐狸跳过了懒狗。",
+    "Arabic":   "الثعلب البني السريع يقفز فوق الكلب الكسول.",
+    "Georgian": "სწრაფი მოყავისფერი მელა ზარმაც ძაღლს გადაახტა.",
+    "Armenian": "Արագ շագանակագույն աղվեսը ցատկում է ծույլ շան վրայով։",
+    "Tibetan":  "རྒྱང་མགྱོགས་པའི་བོང་བུ་གཉིད་ལོག་པའི་ཁྱི་ལ་མཆོང་།",
+    "Lao":      "ຫມາກໄມ້ສີນ້ຳຕານໄວລອຍຢູ່ເທິງໝາຄ້ານ.",
+    "Khmer":    "សត្វក្តាន់ពណ៌ត្នោតលឿនលោតឆ្លងពីលើឆ្កែខ្ជិល།",
+    "Amharic":  "ፈጣኑ ቡናማ ቀበሮ ሰነፍ ውሻውን ዘለለ།"
 }
 
 SCRIPT_RANGES = [
@@ -280,14 +277,22 @@ for lang, text in texts.items():
             output_lines.append("")
 
     # --- Visualisations (one file per mode, all three share the same scores) ---
-    scores_tensor = torch.tensor([result['scores']])
+    byte_seq = text.encode("utf-8")
+    ids = [b + offset for b in byte_seq]
+    tokens = torch.tensor([ids], dtype=torch.long, device="cuda")
+    bos = torch.tensor([[tokenizer.bos_id]], dtype=torch.long, device="cuda")
+    tokens_input = torch.cat([bos, tokens], dim=1)
 
     for mode_name, kwargs in MODES.items():
-        patch_start_ids = find_entropy_patch_start_ids(scores_tensor, **kwargs)
+        patcher.threshold = kwargs['threshold']
+        patcher.threshold_add = kwargs.get('threshold_add')
+        patcher.monotonicity = kwargs.get('monotonicity', False)
+
+        patch_lengths, _, _ = patcher.patch(tokens_input)
+        patch_lengths = patch_lengths[:, 1:]  # strip BOS
+
         print(f"\n{lang} — {mode_name}")
-        print(f"  patch_start_ids: {patch_start_ids[0].tolist()}")
-        print(f"  n_patches: {(patch_start_ids[0] > 0).sum().item() + 1}")
-        patch_lengths = patch_lengths_from_start_ids(patch_start_ids, len(context_bytes))
+        print(f"  n_patches: {patch_lengths.shape[1]}")
 
         patches = []
         cursor = 0
