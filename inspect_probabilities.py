@@ -1,5 +1,9 @@
 import torch
 from blt_patcher import load_patcher, patch_text
+from blt_visualize import BLTPatchVisualizer
+import os
+
+os.makedirs("example_viz", exist_ok=True)
 
 REPO = "facebook/blt-1b"
 ENTROPY_REPO = "hf-weights/entropy_model"
@@ -9,31 +13,48 @@ TOP_K = 1  # set to 1-5
 W_BITS   = 33
 W_SCRIPT = 50
 
+from bytelatent.data.patcher import (
+    find_entropy_patch_start_ids,
+    patch_lengths_from_start_ids,
+)
+
+THRESHOLD = 1.75
+THRESHOLD_ADD = 0.5  # tune this
+
+MODES = {
+    "entropy":      dict(threshold=THRESHOLD, threshold_add=None,          monotonicity=False),
+    "monotonicity": dict(threshold=THRESHOLD_ADD, threshold_add=None,          monotonicity=True),
+    "combined":     dict(threshold=THRESHOLD, threshold_add=THRESHOLD_ADD, monotonicity=False),
+}
+
 texts = {
-    "English":  "The quick brown fox jumps over the lazy dog.",
-    "Hindi":    "तेज़ लोमड़ी आलसी कुत्ते के ऊपर कूदती है।",
-    "Chinese":  "敏捷的棕色狐狸跳过了懒狗。",
-    "Arabic":   "الثعلب البني السريع يقفز فوق الكلب الكسول.",
-    "Georgian": "სწრაფი მოყავისფერი მელა ზარმაც ძაღლს გადაახტა.",
-    "Armenian": "Արագ շագանակագույն աղվեսը ցատկում է ծույլ շան վրայով։",
-    "Tibetan":  "རྒྱང་མགྱོགས་པའི་བོང་བུ་གཉིད་ལོག་པའི་ཁྱི་ལ་མཆོང་།",
-    "Lao":      "ຫມາກໄມ້ສີນ້ຳຕານໄວລອຍຢູ່ເທິງໝາຄ້ານ.",
-    "Khmer":    "សត្វក្តាន់ពណ៌ត្នោតលឿនលោតឆ្លងពីលើឆ្កែខ្ជិល།",
-    "Amharic":  "ፈጣኑ ቡናማ ቀበሮ ሰነፍ ውሻውን ዘለለ།",
+    "English":  "Daenerys Targaryen is in Game of Thrones, a fantasy epic by Gerge R.R. Martin.",
+    # "German":   "Der schnelle braune Fuchs springt über den faulen Hund.",
+    # "Finnish":  "Nopea ruskea kettu hyppää laiskan koiran yli.",
+    # "Latvian":  "Ātrais brūnais lapsa lec pāri slinkajam sunim.",
+    # "Hindi":    "तेज़ लोमड़ी आलसी कुत्ते के ऊपर कूदती है।",
+    # "Chinese":  "敏捷的棕色狐狸跳过了懒狗。",
+    # "Arabic":   "الثعلب البني السريع يقفز فوق الكلب الكسول.",
+    # "Georgian": "სწრაფი მოყავისფერი მელა ზარმაც ძაღლს გადაახტა.",
+    # "Armenian": "Արագ շագանակագույն աղվեսը ցատկում է ծույլ շան վրայով։",
+    # "Tibetan":  "རྒྱང་མགྱོགས་པའི་བོང་བུ་གཉིད་ལོག་པའི་ཁྱི་ལ་མཆོང་།",
+    # "Lao":      "ຫມາກໄມ້ສີນ້ຳຕານໄວລອຍຢູ່ເທິງໝາຄ້ານ.",
+    # "Khmer":    "សត្វក្តាន់ពណ៌ត្នោតលឿនលោតឆ្លងពីលើឆ្កែខ្ជិល།",
+    # "Amharic":  "ፈጣኑ ቡናማ ቀበሮ ሰነፍ ውሻውን ዘለለ།",
 }
 
 SCRIPT_RANGES = [
     (0,     127,   "ASCII"),
     (128,   591,   "Latin-Ext"),
     (592,   687,   "IPA"),
-    (688,   879,   "Other_1"),
+    (688,   879,   "Other_a"),
     (880,   1023,  "Greek"),
     (1024,  1327,  "Cyrillic"),
     (1328,  1423,  "Armenian"),
     (1424,  1535,  "Hebrew"),
     (1536,  1791,  "Arabic"),
     (1792,  1871,  "Syriac"),
-    (1872,  2303,  "Other_2"),
+    (1872,  2303,  "Other_b"),
     (2304,  2431,  "Devanagari"),
     (2432,  2559,  "Bengali"),
     (2560,  2687,  "Gurmukhi"),
@@ -51,24 +72,24 @@ SCRIPT_RANGES = [
     (4256,  4351,  "Georgian"),
     (4352,  4607,  "Hangul-Jamo"),
     (4608,  5119,  "Ethiopic"),
-    (5120,  6015,  "Other_3"),
+    (5120,  6015,  "Other_c"),
     (6016,  6143,  "Khmer"),
     (6144,  6319,  "Mongolian"),
-    (6320,  11903, "Other_4"),
+    (6320,  11903, "Other_d"),
     (11904, 12031, "CJK-Rad"),
-    (12032, 12287, "Other_5"),
+    (12032, 12287, "Other_e"),
     (12288, 12351, "CJK-Sym"),
     (12352, 12447, "Hiragana"),
     (12448, 12543, "Katakana"),
-    (12544, 13311, "Other_6"),
+    (12544, 13311, "Other_f"),
     (13312, 19903, "CJK-ExtA"),
-    (19904, 19967, "Other_7"),
+    (19904, 19967, "Other_g"),
     (19968, 40959, "CJK"),
-    (40960, 44031, "Other_8"),
+    (40960, 44031, "Other_h"),
     (44032, 55215, "Hangul"),
-    (55216, 63743, "Other_9"),
+    (55216, 63743, "Other_i"),
     (63744, 64255, "CJK-Compat"),
-    (64256, 65535, "Other_10"),
+    (64256, 65535, "Other_j"),
 ]
 
 SPECIAL_CHARS = {0x00: "\\0", 0x09: "\\t", 0x0A: "\\n", 0x0D: "\\r"}
@@ -158,9 +179,10 @@ def format_bits(byte_val, off, total, lead, context_bytes, pos):
             return f"{lb}+bbbbbb={cp_low}-{cp_high}", make_script_str(cp_low, cp_high)
         if byte_val < 0xF0:
             cp_low  = (byte_val & 0x0F) << 12
+            cp_low  = max(cp_low, 0x800)  # 3-byte sequences must encode U+0800 or higher
             cp_high = cp_low | 0xFFF
             lb = f"{byte_val & 0x0F:04b}"
-            return f"{lb}+bbbbbb+bbbbbb={cp_low}-{cp_high}", make_script_str(cp_low, cp_high)
+            return f"{lb}+1bbbbb+bbbbbb={cp_low}-{cp_high}", make_script_str(cp_low, cp_high)
         cp_low  = (byte_val & 0x07) << 18
         cp_high = cp_low | 0x3FFFF
         lb = f"{byte_val & 0x07:03b}"
@@ -257,10 +279,38 @@ for lang, text in texts.items():
         else:
             output_lines.append("")
 
+    # --- Visualisations (one file per mode, all three share the same scores) ---
+    scores_tensor = torch.tensor([result['scores']])
+
+    for mode_name, kwargs in MODES.items():
+        patch_start_ids = find_entropy_patch_start_ids(scores_tensor, **kwargs)
+        print(f"\n{lang} — {mode_name}")
+        print(f"  patch_start_ids: {patch_start_ids[0].tolist()}")
+        print(f"  n_patches: {(patch_start_ids[0] > 0).sum().item() + 1}")
+        patch_lengths = patch_lengths_from_start_ids(patch_start_ids, len(context_bytes))
+
+        patches = []
+        cursor = 0
+        for length in patch_lengths[0].tolist():
+            if length == 0:
+                break
+            patches.append((context_bytes[cursor:cursor + length], length))
+            cursor += length
+
+        viz = BLTPatchVisualizer()
+        viz.add(
+            text=text,
+            patches=patches,
+            scores=result['scores'],
+            label=f"{lang} — {mode_name}",
+            threshold=THRESHOLD,
+        )
+        viz.save(f"example_viz/{lang.lower()}_{mode_name}.html")
+
     output_lines.append("")
 
 output = "\n".join(output_lines)
-print(output)
+# print(output)
 
 with open("inspect_probabilities_output.txt", "w", encoding="utf-8") as f:
     f.write(output)
