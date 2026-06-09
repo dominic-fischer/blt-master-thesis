@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLORES+ Language Families & Scripts</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #fff;
+    color: #1a1a1a;
+    padding: 1.5rem;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; text-align: center; }
+  .subtitle { font-size: 0.8rem; color: #888; margin-bottom: 1rem; text-align: center; }
+  #wrap { width: 100%; }
+  #legend {
+    margin: 1.2rem auto 0;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0 28px;
+  }
+  .leg-section { min-width: 0; }
+  .leg-heading {
+    font-size: 11px;
+    font-weight: 600;
+    color: #aaa;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tier-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .leg-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+    cursor: default;
+  }
+  .leg-swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .leg-name {
+    flex: 0 0 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #ccc;
+    font-size: 11px;
+  }
+  .leg-bar-wrap {
+    flex: 1;
+    height: 7px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .leg-bar {
+    height: 100%;
+    border-radius: 4px;
+  }
+  .leg-num {
+    flex: 0 0 58px;
+    text-align: right;
+    color: #666;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+  #tt {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    max-width: 300px;
+    z-index: 999;
+    line-height: 1.6;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    transition: opacity 0.12s;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e8e8e8; }
+    #tt { background: #2a2a2a; border-color: #444; }
+    .controls label { color: #aaa; }
+    .subtitle { color: #888; }
+  }
+</style>
+</head>
+<body>
+<h1>FLORES+ — Language Families & Scripts</h1>
+<p class="subtitle">225 language variants · inner rings: writing scripts by type & UTF-8 byte cost · outer ring: language families</p>
+<div id="wrap"></div>
+<div id="legend"></div>
+<div id="tt"></div>
+
+<script>
+// ── Family data (d=1 only, total counts) ────────────────────────────────────
+const FAMILIES = [
+  { id:"Atlantic-Congo",    v:35, langs:["Bemba","Chokwe","Ewe","Fon","Nigerian Fulfulde","Igbo","Kamba","Kabiyè","Kikuyu","Kinyarwanda","Kimbundu","Kituba (DRC)","Lingala","Luba-Kasai","Ganda","Mossi","Northern Sotho","Nyanja","Rundi","Sango","Shona","Southern Sotho","Swati","Swahili","Tswana","Tsonga","Tumbuka","Akuapem Twi","Asante Twi","Umbundu","Emakhuwa (Central)","Wolof","Xhosa","Yoruba","Zulu"] },
+  { id:"Mande",             v:2,  langs:["Bambara","Dyula"] },
+  { id:"Nilotic",           v:3,  langs:["Southwestern Dinka","Luo","Nuer"] },
+  { id:"Saharan",           v:2,  langs:["Central Kanuri (Arabic script)","Central Kanuri (Latin script)"] },
+  { id:"Afro-Asiatic",      v:21, langs:["Mesopotamian Arabic","Taʽizzi-Adeni Arabic","Tunisian Arabic","Levantine Arabic (North)","Levantine Arabic (South)","Modern Standard Arabic","Najdi Arabic","Moroccan Arabic","Egyptian Arabic","Amharic","Tigrinya","Modern Standard Arabic (Romanized)","West Central Oromo","Hausa","Kabyle","Maltese","Somali","Tamasheq (Latin script)","Hebrew","Tamasheq (Tifinagh script)","Standard Moroccan Tamazight"] },
+  { id:"Indo-European",     v:89, langs:["Afrikaans","Albanian (Tosk)","Aragonese","Asturian","Bosnian","Catalan","Czech","Welsh","Danish","German","English","Faroese","French","Friulian","Scottish Gaelic","Irish","Galician","Haitian Creole","Croatian","Icelandic","Italian","Kabuverdianu","Northern Kurdish","Ligurian (Genoese)","Limburgish","Lithuanian","Ladin (Val Badia)","Ladin (Gherdëina)","Lombard","Latgalian","Luxembourgish","Standard Latvian","Mauritian Creole","Dutch","Norwegian Nynorsk","Norwegian Bokmål, moderate variety","Norwegian Bokmål, radical variety","Occitan","Aranese","Papiamento","Polish","Portuguese (Brazilian)","Romanian","Sicilian","Slovak","Slovenian","Spanish (Latin American)","Sardinian","Swedish","Silesian","Tok Pisin","Venetian","Assamese","Bengali","Awadhi","Bhojpuri","Dogri","Goan Konkani","Hindi","Chhattisgarhi","Kashmiri (Devanagari script)","Magahi","Maithili","Marathi","Nepali","Sanskrit","Sindhi (Devanagari script)","Belarusian","Bulgarian","Macedonian","Russian","Serbian","Tajik","Ukrainian","Central Kurdish","Kashmiri (Arabic script)","Southern Pashto","Western Persian","Dari","Sindhi (Arabic script)","Urdu","Greek","Gujarati","Armenian","Odia","Eastern Panjabi","Sinhala","Eastern Yiddish"] },
+  { id:"Uralic",            v:5,  langs:["Estonian","Finnish","Hungarian","Meadow Mari","Erzya"] },
+  { id:"Kartvelian",        v:1,  langs:["Georgian"] },
+  { id:"Nakh-Daghestanian", v:1,  langs:["Dargwa"] },
+  { id:"Turkic",            v:15, langs:["South Azerbaijani","Uyghur","Southern Uzbek","North Azerbaijani","Crimean Tatar","Turkmen","Turkish","Northern Uzbek","Bashkir","Chuvash","Kazakh","Kyrgyz","Khakas","Tatar","Tuvan"] },
+  { id:"Mongolic-Khitan",   v:1,  langs:["Halh Mongolian (Cyrillic script)"] },
+  { id:"Sino-Tibetan",      v:12, langs:["Lhasa Tibetan","Dzongkha","Bodo","Mandarin Chinese (Standard Beijing)","Wu Chinese","Mandarin Chinese (Taiwanese)","Yue Chinese (Hong Kong Cantonese)","Jingpho","Mizo","Meitei (Manipuri, Bengali script)","Meitei (Manipuri, Meitei script)","Burmese"] },
+  { id:"Koreanic",          v:1,  langs:["Korean"] },
+  { id:"Japonic",           v:1,  langs:["Japanese"] },
+  { id:"Dravidian",         v:4,  langs:["Kannada","Malayalam","Tamil","Telugu"] },
+  { id:"Tai-Kadai",         v:3,  langs:["Lao","Shan","Thai"] },
+  { id:"Austroasiatic",     v:3,  langs:["Khmer (Central)","Santali","Vietnamese"] },
+  { id:"Austronesian",      v:21, langs:["Acehnese (Jawi script)","Banjar (Jawi script)","Minangkabau (Jawi script)","Acehnese (Latin script)","Balinese","Banjar (Latin script)","Buginese","Cebuano","Fijian","Filipino","Ilocano","Indonesian","Javanese","Minangkabau (Latin script)","Maori","Pangasinan","Plateau Malagasy","Samoan","Sundanese","Waray","Standard Malay"] },
+  { id:"Aymaran",           v:1,  langs:["Central Aymara"] },
+  { id:"Quechuan",          v:1,  langs:["Ayacucho Quechua"] },
+  { id:"Tupian",            v:1,  langs:["Paraguayan Guaraní"] },
+  { id:"Isolate",           v:1,  langs:["Basque"] },
+  { id:"Artificial Language",v:2, langs:["Esperanto","Nko"] },
+];
+
+const TOTAL = 225;
+
+const GEO_ORDER = [
+  "Atlantic-Congo","Mande","Nilotic","Saharan","Afro-Asiatic",
+  "Indo-European","Uralic","Kartvelian","Nakh-Daghestanian",
+  "Turkic","Mongolic-Khitan","Sino-Tibetan","Koreanic","Japonic","Dravidian",
+  "Tai-Kadai","Austroasiatic","Austronesian",
+  "Aymaran","Quechuan","Tupian","Isolate","Artificial Language"
+];
+
+const FAM_COLORS = {
+  "Atlantic-Congo":     "#d85d5d",
+  "Mande":              "#d87b5d",
+  "Nilotic":            "#d89a5d",
+  "Saharan":            "#d8b95d",
+  "Afro-Asiatic":       "#d8d85d",
+  "Indo-European":      "#bad85d",
+  "Uralic":             "#9bd85d",
+  "Kartvelian":         "#7cd85d",
+  "Nakh-Daghestanian":  "#5ed85d",
+  "Turkic":             "#5dd87a",
+  "Mongolic-Khitan":    "#5dd899",
+  "Sino-Tibetan":       "#5dd8b8",
+  "Koreanic":           "#5dd8d7",
+  "Japonic":            "#5dbbd8",
+  "Dravidian":          "#5d9cd8",
+  "Tai-Kadai":          "#5d7dd8",
+  "Austroasiatic":      "#5d5fd8",
+  "Austronesian":       "#795dd8",
+  "Aymaran":            "#985dd8",
+  "Quechuan":           "#b75dd8",
+  "Tupian":             "#d65dd8",
+  "Isolate":            "#a89070",
+  "Artificial Language":"#9aa0a0"
+};
+
+// Script colours: Alphabet=amber, Abjad=green, Abugida=grey, Logographic=brown
+// Uniform shade within each type+tier. Darker = lower byte tier (3B darkest).
+const SCRIPT_COLORS = {
+  "Latn": "#dcc489",  // Alphabet 1B (lightest amber)
+  "Cyrl": "#c7a040",  "Grek": "#c7a040",  "Armn": "#c7a040",
+  "Geor": "#c7a040",  "Nkoo": "#c7a040",  "Tfng": "#c7a040",  // Alphabet 2B
+  "Arab": "#6b8a57",  "Hebr": "#6b8a57",  // Abjad 2B
+  "Deva": "#6b6b6b",  "Beng": "#6b6b6b",  "Guru": "#6b6b6b",  "Gujr": "#6b6b6b",
+  "Orya": "#6b6b6b",  "Taml": "#6b6b6b",  "Telu": "#6b6b6b",  "Knda": "#6b6b6b",
+  "Mlym": "#6b6b6b",  "Sinh": "#6b6b6b",  "Thai": "#6b6b6b",  "Laoo": "#6b6b6b",
+  "Tibt": "#6b6b6b",  "Mymr": "#6b6b6b",  "Khmr": "#6b6b6b",  "Ethi": "#6b6b6b",
+  "Olck": "#6b6b6b",  "Mtei": "#6b6b6b",  // Abugida 3B
+  "Hans": "#7a5038",  "Hant": "#7a5038",
+  "Jpan": "#7a5038",  "Hang": "#7a5038",  // Logographic 3B
+};
+const SCRIPT_TIERS = {
+  "Latn":1,
+  "Cyrl":2,"Grek":2,"Armn":2,"Geor":2,"Nkoo":2,"Tfng":2,"Arab":2,"Hebr":2,
+  "Deva":3,"Beng":3,"Guru":3,"Gujr":3,"Orya":3,"Taml":3,"Telu":3,"Knda":3,
+  "Mlym":3,"Sinh":3,"Thai":3,"Laoo":3,"Tibt":3,"Mymr":3,"Khmr":3,"Ethi":3,
+  "Olck":3,"Mtei":3,"Hans":3,"Hant":3,"Jpan":3,"Hang":3,
+};
+const SCRIPT_TYPES = {
+  "Latn":"Alphabet","Cyrl":"Alphabet","Grek":"Alphabet","Armn":"Alphabet",
+  "Geor":"Alphabet","Nkoo":"Alphabet","Tfng":"Alphabet",
+  "Arab":"Abjad","Hebr":"Abjad",
+  "Deva":"Abugida","Beng":"Abugida","Guru":"Abugida","Gujr":"Abugida",
+  "Orya":"Abugida","Taml":"Abugida","Telu":"Abugida","Knda":"Abugida",
+  "Mlym":"Abugida","Sinh":"Abugida","Thai":"Abugida","Laoo":"Abugida",
+  "Tibt":"Abugida","Mymr":"Abugida","Khmr":"Abugida","Ethi":"Abugida",
+  "Olck":"Abugida","Mtei":"Abugida",
+  "Hans":"Logographic","Hant":"Logographic","Jpan":"Logographic","Hang":"Alphabet",
+};
+const TIER_LABELS = { 1:'1 byte', 2:'2 bytes', 3:'3 bytes' };
+const TYPE_BASE_COLORS = {
+  "Alphabet":    "#b8b8b8",
+  "Abugida":     "#919191",
+  "Abjad":       "#686868",
+  "Logographic": "#3a3a3a",
+};
+
+const SCRIPT_NAMES = {
+  "Arab":"Arabic","Armn":"Armenian","Beng":"Bengali","Cyrl":"Cyrillic",
+  "Deva":"Devanagari","Ethi":"Ethiopic","Geor":"Georgian","Grek":"Greek",
+  "Gujr":"Gujarati","Guru":"Gurmukhi","Hang":"Hangul","Hans":"Han (Simplified)",
+  "Hant":"Han (Traditional)","Hebr":"Hebrew","Jpan":"Japanese","Khmr":"Khmer",
+  "Knda":"Kannada","Laoo":"Lao","Latn":"Latin","Mlym":"Malayalam",
+  "Mtei":"Meitei","Mymr":"Burmese","Nkoo":"N\u2019Ko","Olck":"Ol Chiki",
+  "Orya":"Odia","Sinh":"Sinhala","Taml":"Tamil","Telu":"Telugu",
+  "Tfng":"Tifinagh","Thai":"Thai","Tibt":"Tibetan"
+};
+
+// family → script → [langs]
+const FAM_SCRIPT_LANGS = {
+  "Atlantic-Congo":    { "Latn": ["Bemba","Chokwe","Ewe","Fon","Nigerian Fulfulde","Igbo","Kamba","Kabiyè","Kikuyu","Kinyarwanda","Kimbundu","Kituba (DRC)","Lingala","Luba-Kasai","Ganda","Mossi","Northern Sotho","Nyanja","Rundi","Sango","Shona","Southern Sotho","Swati","Swahili","Tswana","Tsonga","Tumbuka","Akuapem Twi","Asante Twi","Umbundu","Emakhuwa (Central)","Wolof","Xhosa","Yoruba","Zulu"] },
+  "Mande":             { "Latn": ["Bambara","Dyula"] },
+  "Nilotic":           { "Latn": ["Southwestern Dinka","Luo","Nuer"] },
+  "Saharan":           { "Arab": ["Central Kanuri (Arabic script)"], "Latn": ["Central Kanuri (Latin script)"] },
+  "Afro-Asiatic":      { "Arab": ["Mesopotamian Arabic","Taʽizzi-Adeni Arabic","Tunisian Arabic","Levantine Arabic (North)","Levantine Arabic (South)","Modern Standard Arabic","Najdi Arabic","Moroccan Arabic","Egyptian Arabic"], "Ethi": ["Amharic","Tigrinya"], "Latn": ["Modern Standard Arabic (Romanized)","West Central Oromo","Hausa","Kabyle","Maltese","Somali","Tamasheq (Latin script)"], "Hebr": ["Hebrew"], "Tfng": ["Tamasheq (Tifinagh script)","Standard Moroccan Tamazight"] },
+  "Indo-European":     { "Latn": ["Afrikaans","Albanian (Tosk)","Aragonese","Asturian","Bosnian","Catalan","Czech","Welsh","Danish","German","English","Faroese","French","Friulian","Scottish Gaelic","Irish","Galician","Haitian Creole","Croatian","Icelandic","Italian","Kabuverdianu","Northern Kurdish","Ligurian (Genoese)","Limburgish","Lithuanian","Ladin (Val Badia)","Ladin (Gherdëina)","Lombard","Latgalian","Luxembourgish","Standard Latvian","Mauritian Creole","Dutch","Norwegian Nynorsk","Norwegian Bokmål, moderate variety","Norwegian Bokmål, radical variety","Occitan","Aranese","Papiamento","Polish","Portuguese (Brazilian)","Romanian","Sicilian","Slovak","Slovenian","Spanish (Latin American)","Sardinian","Swedish","Silesian","Tok Pisin","Venetian"], "Deva": ["Awadhi","Bhojpuri","Dogri","Goan Konkani","Hindi","Chhattisgarhi","Kashmiri (Devanagari script)","Magahi","Maithili","Marathi","Nepali","Sanskrit","Sindhi (Devanagari script)"], "Cyrl": ["Belarusian","Bulgarian","Macedonian","Russian","Serbian","Tajik","Ukrainian"], "Arab": ["Central Kurdish","Kashmiri (Arabic script)","Southern Pashto","Western Persian","Dari","Sindhi (Arabic script)","Urdu"], "Beng": ["Assamese","Bengali"], "Grek": ["Greek"], "Gujr": ["Gujarati"], "Armn": ["Armenian"], "Orya": ["Odia"], "Guru": ["Eastern Panjabi"], "Sinh": ["Sinhala"], "Hebr": ["Eastern Yiddish"] },
+  "Uralic":            { "Latn": ["Estonian","Finnish","Hungarian"], "Cyrl": ["Meadow Mari","Erzya"] },
+  "Kartvelian":        { "Geor": ["Georgian"] },
+  "Nakh-Daghestanian": { "Cyrl": ["Dargwa"] },
+  "Turkic":            { "Arab": ["South Azerbaijani","Uyghur","Southern Uzbek"], "Latn": ["North Azerbaijani","Crimean Tatar","Turkmen","Turkish","Northern Uzbek"], "Cyrl": ["Bashkir","Chuvash","Kazakh","Kyrgyz","Khakas","Tatar","Tuvan"] },
+  "Mongolic-Khitan":   { "Cyrl": ["Halh Mongolian (Cyrillic script)"] },
+  "Sino-Tibetan":      { "Tibt": ["Lhasa Tibetan","Dzongkha"], "Deva": ["Bodo"], "Hans": ["Mandarin Chinese (Standard Beijing)","Wu Chinese"], "Hant": ["Mandarin Chinese (Taiwanese)","Yue Chinese (Hong Kong Cantonese)"], "Latn": ["Jingpho","Mizo"], "Beng": ["Meitei (Manipuri, Bengali script)"], "Mtei": ["Meitei (Manipuri, Meitei script)"], "Mymr": ["Burmese"] },
+  "Koreanic":          { "Hang": ["Korean"] },
+  "Japonic":           { "Jpan": ["Japanese"] },
+  "Dravidian":         { "Knda": ["Kannada"], "Mlym": ["Malayalam"], "Taml": ["Tamil"], "Telu": ["Telugu"] },
+  "Tai-Kadai":         { "Laoo": ["Lao"], "Mymr": ["Shan"], "Thai": ["Thai"] },
+  "Austroasiatic":     { "Khmr": ["Khmer (Central)"], "Olck": ["Santali"], "Latn": ["Vietnamese"] },
+  "Austronesian":      { "Latn": ["Acehnese (Latin script)","Balinese","Banjar (Latin script)","Buginese","Cebuano","Fijian","Filipino","Ilocano","Indonesian","Javanese","Minangkabau (Latin script)","Maori","Pangasinan","Plateau Malagasy","Samoan","Sundanese","Waray","Standard Malay"], "Arab": ["Acehnese (Jawi script)","Banjar (Jawi script)","Minangkabau (Jawi script)"] },
+  "Aymaran":           { "Latn": ["Central Aymara"] },
+  "Quechuan":          { "Latn": ["Ayacucho Quechua"] },
+  "Tupian":            { "Latn": ["Paraguayan Guaraní"] },
+  "Isolate":           { "Latn": ["Basque"] },
+  "Artificial Language":{ "Latn": ["Esperanto"], "Nkoo": ["Nko"] },
+};
+
+const SCRIPT_FAM_LANGS = {"Nkoo":{"Artificial Language":["Nko"]},"Ethi":{"Afro-Asiatic":["Amharic","Tigrinya"]},"Tfng":{"Afro-Asiatic":["Tamasheq (Tifinagh script)","Standard Moroccan Tamazight"]},"Arab":{"Afro-Asiatic":["Mesopotamian Arabic","Taʽizzi-Adeni Arabic","Tunisian Arabic","Levantine Arabic (North)","Levantine Arabic (South)","Modern Standard Arabic","Najdi Arabic","Moroccan Arabic","Egyptian Arabic"],"Indo-European":["Central Kurdish","Kashmiri (Arabic script)","Southern Pashto","Western Persian","Dari","Sindhi (Arabic script)","Urdu"],"Turkic":["South Azerbaijani","Uyghur","Southern Uzbek"],"Austronesian":["Acehnese (Jawi script)","Banjar (Jawi script)","Minangkabau (Jawi script)"],"Saharan":["Central Kanuri (Arabic script)"]},"Hebr":{"Afro-Asiatic":["Hebrew"],"Indo-European":["Eastern Yiddish"]},"Grek":{"Indo-European":["Greek"]},"Latn":{"Indo-European":["Afrikaans","Albanian (Tosk)","Aragonese","Asturian","Bosnian","Catalan","Czech","Welsh","Danish","German","English","Faroese","French","Friulian","Scottish Gaelic","Irish","Galician","Haitian Creole","Croatian","Icelandic","Italian","Kabuverdianu","Northern Kurdish","Ligurian (Genoese)","Limburgish","Lithuanian","Ladin (Val Badia)","Ladin (Gherdëina)","Lombard","Latgalian","Luxembourgish","Standard Latvian","Mauritian Creole","Dutch","Norwegian Nynorsk","Norwegian Bokmål, moderate variety","Norwegian Bokmål, radical variety","Occitan","Aranese","Papiamento","Polish","Portuguese (Brazilian)","Romanian","Sicilian","Slovak","Slovenian","Spanish (Latin American)","Sardinian","Swedish","Silesian","Tok Pisin","Venetian"],"Atlantic-Congo":["Bemba","Chokwe","Ewe","Fon","Nigerian Fulfulde","Igbo","Kamba","Kabiyè","Kikuyu","Kinyarwanda","Kimbundu","Kituba (DRC)","Lingala","Luba-Kasai","Ganda","Mossi","Northern Sotho","Nyanja","Rundi","Sango","Shona","Southern Sotho","Swati","Swahili","Tswana","Tsonga","Tumbuka","Akuapem Twi","Asante Twi","Umbundu","Emakhuwa (Central)","Wolof","Xhosa","Yoruba","Zulu"],"Austronesian":["Acehnese (Latin script)","Balinese","Banjar (Latin script)","Buginese","Cebuano","Fijian","Filipino","Ilocano","Indonesian","Javanese","Minangkabau (Latin script)","Maori","Pangasinan","Plateau Malagasy","Samoan","Sundanese","Waray","Standard Malay"],"Afro-Asiatic":["Modern Standard Arabic (Romanized)","West Central Oromo","Hausa","Kabyle","Maltese","Somali","Tamasheq (Latin script)"],"Turkic":["North Azerbaijani","Crimean Tatar","Turkmen","Turkish","Northern Uzbek"],"Uralic":["Estonian","Finnish","Hungarian"],"Nilotic":["Southwestern Dinka","Luo","Nuer"],"Mande":["Bambara","Dyula"],"Sino-Tibetan":["Jingpho","Mizo"],"Austroasiatic":["Vietnamese"],"Saharan":["Central Kanuri (Latin script)"],"Isolate":["Basque"],"Aymaran":["Central Aymara"],"Quechuan":["Ayacucho Quechua"],"Tupian":["Paraguayan Guaraní"],"Artificial Language":["Esperanto"]},"Cyrl":{"Indo-European":["Belarusian","Bulgarian","Macedonian","Russian","Serbian","Tajik","Ukrainian"],"Turkic":["Bashkir","Chuvash","Kazakh","Kyrgyz","Khakas","Tatar","Tuvan"],"Uralic":["Meadow Mari","Erzya"],"Nakh-Daghestanian":["Dargwa"],"Mongolic-Khitan":["Halh Mongolian (Cyrillic script)"]},"Armn":{"Indo-European":["Armenian"]},"Geor":{"Kartvelian":["Georgian"]},"Hans":{"Sino-Tibetan":["Mandarin Chinese (Standard Beijing)","Wu Chinese"]},"Hant":{"Sino-Tibetan":["Mandarin Chinese (Taiwanese)","Yue Chinese (Hong Kong Cantonese)"]},"Jpan":{"Japonic":["Japanese"]},"Hang":{"Koreanic":["Korean"]},"Tibt":{"Sino-Tibetan":["Lhasa Tibetan","Dzongkha"]},"Deva":{"Indo-European":["Awadhi","Bhojpuri","Dogri","Goan Konkani","Hindi","Chhattisgarhi","Kashmiri (Devanagari script)","Magahi","Maithili","Marathi","Nepali","Sanskrit","Sindhi (Devanagari script)"],"Sino-Tibetan":["Bodo"]},"Guru":{"Indo-European":["Eastern Panjabi"]},"Gujr":{"Indo-European":["Gujarati"]},"Mtei":{"Sino-Tibetan":["Meitei (Manipuri, Meitei script)"]},"Olck":{"Austroasiatic":["Santali"]},"Beng":{"Indo-European":["Assamese","Bengali"],"Sino-Tibetan":["Meitei (Manipuri, Bengali script)"]},"Orya":{"Indo-European":["Odia"]},"Telu":{"Dravidian":["Telugu"]},"Knda":{"Dravidian":["Kannada"]},"Mlym":{"Dravidian":["Malayalam"]},"Taml":{"Dravidian":["Tamil"]},"Sinh":{"Indo-European":["Sinhala"]},"Mymr":{"Sino-Tibetan":["Burmese"],"Tai-Kadai":["Shan"]},"Khmr":{"Austroasiatic":["Khmer (Central)"]},"Laoo":{"Tai-Kadai":["Lao"]},"Thai":{"Tai-Kadai":["Thai"]}};
+
+// Grouped script data: singletons merged into "other" per type
+// Teal shades by script TYPE (not byte cost)
+// Alphabet=lightest, Abjad=light-mid, Abugida=dark-mid, Logographic=darkest
+const TEAL = {
+  "Alphabet":      "#b8dde8",  // step 0/4
+  "Abjad":         "#86bdd0",  // step 1/4
+  "Abugida":       "#559db8",  // step 2/4
+  "Logosyllabary": "#315d6b",
+  "Logographic":   "#1c353d",
+};
+
+const SCRIPT_DATA = [
+  // ── Alphabet ──────────────────────────────────────────────────────────────
+  { code:"Latn",            label:"Latin",             type:"Alphabet",    tier:1, fams: SCRIPT_FAM_LANGS["Latn"] },
+  { code:"Cyrl",            label:"Cyrillic",          type:"Alphabet",    tier:2, fams: SCRIPT_FAM_LANGS["Cyrl"] },
+  { code:"Tfng",            label:"Tifinagh",          type:"Alphabet",    tier:2, fams: SCRIPT_FAM_LANGS["Tfng"] },
+  { code:"Alphabet_other",  label:"Alphabet · other",  type:"Alphabet",    tier:2, fams: {"Artificial Language":["Nko"],"Indo-European":["Greek","Armenian"],"Kartvelian":["Georgian"]}, scripts:"N\u2019Ko, Greek, Armenian, Georgian" },
+  // ── Abjad ─────────────────────────────────────────────────────────────────
+  { code:"Arab",            label:"Arabic",            type:"Abjad",       tier:2, fams: SCRIPT_FAM_LANGS["Arab"] },
+  { code:"Hebr",            label:"Hebrew",            type:"Abjad",       tier:2, fams: SCRIPT_FAM_LANGS["Hebr"] },
+  // ── Abugida ───────────────────────────────────────────────────────────────
+  { code:"Ethi",            label:"Ethiopic",          type:"Abugida",     tier:3, fams: SCRIPT_FAM_LANGS["Ethi"] },
+  { code:"Tibt",            label:"Tibetan",           type:"Abugida",     tier:3, fams: SCRIPT_FAM_LANGS["Tibt"] },
+  { code:"Deva",            label:"Devanagari",        type:"Abugida",     tier:3, fams: SCRIPT_FAM_LANGS["Deva"] },
+  { code:"Beng",            label:"Bengali",           type:"Abugida",     tier:3, fams: SCRIPT_FAM_LANGS["Beng"] },
+  { code:"Mymr",            label:"Burmese",           type:"Abugida",     tier:3, fams: SCRIPT_FAM_LANGS["Mymr"] },
+  { code:"Abugida_other",   label:"Abugida · other",   type:"Abugida",     tier:3, fams: {"Indo-European":["Eastern Panjabi","Gujarati","Odia","Sinhala"],"Dravidian":["Telugu","Kannada","Malayalam","Tamil"],"Sino-Tibetan":["Meitei (Manipuri, Meitei script)"],"Austroasiatic":["Santali","Khmer (Central)"],"Tai-Kadai":["Lao","Thai"]}, scripts:"Gurmukhi, Gujarati, Odia, Tamil, Telugu, Kannada, Malayalam, Sinhala, Meitei, Ol Chiki, Khmer, Lao, Thai" },
+  // ── Logographic ───────────────────────────────────────────────────────────
+  { code:"Hans",            label:"Han (Simplified)",  type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hans"] },
+  { code:"Hant",            label:"Han (Traditional)", type:"Logographic", tier:3, fams: SCRIPT_FAM_LANGS["Hant"] },
+  { code:"Hang", label:"Hangul",   type:"Alphabet",    tier:3, fams: SCRIPT_FAM_LANGS["Hang"] },
+  { code:"Jpan", label:"Japanese", type:"Logosyllabary", tier:3, fams: SCRIPT_FAM_LANGS["Jpan"] },
+];
+
+function lighten(hex, f) {
+  const r = parseInt(hex.slice(1,3),16),
+        g = parseInt(hex.slice(3,5),16),
+        b = parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.round(r+(255-r)*f)},${Math.round(g+(255-g)*f)},${Math.round(b+(255-b)*f)})`;
+}
+
+function render() {
+  const wrap = document.getElementById('wrap');
+  wrap.innerHTML = '';
+
+  const W = wrap.clientWidth || 700;
+  const availH = window.innerHeight - wrap.getBoundingClientRect().top - 24;
+  const H = Math.min(W, Math.max(availH, 500));
+  const cx = W / 2, cy = H / 2;
+  const outerR  = Math.min(cx, cy) - 88;
+  const famR    = outerR * 0.62;   // outer edge of family ring = inner edge of script ring
+  const holeR   = outerR * 0.13;   // centre hole
+
+  const svg = d3.select(wrap).append('svg').attr('width', W).attr('height', H);
+  svg.insert('defs', ':first-child');
+  const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+  const tt = document.getElementById('tt');
+
+  // ── 1. Script ring (inner) — grouped, type-ordered, teal shades ───────────
+  const scriptZoneW = (famR - holeR) / 3;
+  function subRingInner(b) { return holeR + b * scriptZoneW; }
+  function subRingOuter(b) { return holeR + (b + 1) * scriptZoneW; }
+
+  const totalLangs = SCRIPT_DATA.reduce((s,d) => s + Object.values(d.fams).reduce((a,l)=>a+l.length,0), 0);
+
+  // Sort within each type group by count descending
+  const typeOrder = ['Alphabet','Abjad','Abugida','Logosyllabary','Logographic'];
+  const sortedScriptData = typeOrder.flatMap(type =>
+    SCRIPT_DATA
+      .filter(d => d.type === type)
+      .map(d => ({ ...d, count: Object.values(d.fams).reduce((s,l)=>s+l.length,0) }))
+      .sort((a,b) => b.count - a.count)
+  );
+
+  // Compute total angle budget: 2π minus all gaps
+  const scriptPad = 0.008;       // gap between scripts within a type
+  const typePad   = 0.048;       // larger gap between type groups
+  const nScripts = sortedScriptData.length;
+  const nTypeBoundaries = 4;
+  const totalGaps = (nScripts - nTypeBoundaries - 1) * scriptPad + nTypeBoundaries * typePad;
+  const dataAngle = 2 * Math.PI - totalGaps;
+
+  let scriptCursor = typePad / 2;
+  const scriptArcData = sortedScriptData.map((d, i) => {
+    const isNewType = i > 0 && sortedScriptData[i-1].type !== d.type;
+    if (i > 0) scriptCursor += isNewType ? typePad : scriptPad;
+    const sa = scriptCursor;
+    const ea = sa + (d.count / totalLangs) * dataAngle;
+    scriptCursor = ea;
+    return { ...d, sa, ea };
+  });
+
+  const pulledLabels = [];
+
+  scriptArcData.forEach(({ code, label, type, tier, fams, count, sa, ea, scripts }) => {
+    const col = TEAL[type];
+    const tc  = (type === 'Alphabet' || type === 'Abjad') ? '#111' : '#fff';
+    const ang = (sa + ea) / 2;
+    const span = ea - sa;
+    const allLangs = Object.values(fams).flat();
+
+    // Byte-rings: fill from outside inward
+    for (let b = 0; b < tier; b++) {
+      const ringIdx = 3 - tier + b;
+      const byteArc = d3.arc().innerRadius(subRingInner(ringIdx)).outerRadius(subRingOuter(ringIdx)).cornerRadius(1);
+      g.append('path')
+        .attr('d', byteArc({ startAngle: sa, endAngle: ea }))
+        .attr('fill', col)
+        .attr('stroke', 'rgba(255,255,255,0.7)').attr('stroke-width', 0.8)
+        .style('cursor', 'pointer')
+        .on('mousemove', ev => {
+          const pct = (count / TOTAL * 100).toFixed(1);
+          let html = `<div style="font-weight:600;font-size:13px;margin-bottom:2px;">${label}</div>`;
+          html += `<div style="font-size:10px;color:#888;margin-bottom:4px;">${type} · ${tier}-byte UTF-8</div>`;
+          html += `<div style="font-size:12px;font-weight:500;margin-bottom:5px;">${count} language${count!==1?'s':''}${scripts ? ' / ' + scripts.split(', ').length + ' scripts' : ''} · ${pct}%</div>`;
+          html += `<div style="font-size:10px;color:#a8a7a7;border-top:1px solid #eee;padding-top:4px;">${allLangs.join(', ')}</div>`;
+          tt.innerHTML = html; tt.style.opacity = '1';
+          tt.style.left = (ev.clientX+16)+'px'; tt.style.top = (ev.clientY-10)+'px';
+        })
+        .on('mouseleave', () => { tt.style.opacity = '0'; });
+    }
+
+    // Label in outermost band only if it fits — no pulled labels
+    const midR2 = (subRingInner(2) + subRingOuter(2)) / 2;
+    const arcLen2 = span * midR2;
+    const fs2 = Math.max(6, Math.min(9, arcLen2 / label.length * 1.2, scriptZoneW * 0.42));
+    if (arcLen2 > label.length * fs2 * 0.6 && scriptZoneW > fs2 * 1.2) {
+      const bh = ang >= Math.PI/2 && ang <= 3*Math.PI/2;
+      const a0 = bh ? ea : sa; const a1 = bh ? sa : ea;
+      const px0 = Math.sin(a0)*midR2, py0 = -Math.cos(a0)*midR2;
+      const px1 = Math.sin(a1)*midR2, py1 = -Math.cos(a1)*midR2;
+      const pathId = `lp-sc-${code}`;
+      svg.select('defs').append('path').attr('id', pathId)
+        .attr('d', `M ${px0},${py0} A ${midR2},${midR2} 0 ${span>Math.PI?1:0},${bh?0:1} ${px1},${py1}`);
+      g.append('text').attr('pointer-events','none')
+        .append('textPath')
+          .attr('href',`#${pathId}`).attr('startOffset','50%').attr('text-anchor','middle')
+          .style('font-size',`${fs2}px`).style('fill', tc).text(label);
+    }
+    // no pulled labels — skip silently if too small
+  });
+
+  // ── 2. Family ring (outer) — one coloured slice per family per script ──────
+  scriptArcData.forEach(({ code, label, type, tier, fams, count, sa, ea }) => {
+    const span = ea - sa;
+    const famEntries = Object.entries(fams).sort((a,b) => GEO_ORDER.indexOf(a[0]) - GEO_ORDER.indexOf(b[0]));
+    const famPad2 = 0.004;
+    let famCursor = sa + famPad2 / 2;
+
+    famEntries.forEach(([fam, langs], fi) => {
+      const frac = langs.length / count;
+      const fsa = famCursor + (fi === 0 ? 0 : famPad2 * 0.5);
+      const fea = famCursor + frac * span - (fi < famEntries.length-1 ? famPad2*0.5 : famPad2/2);
+      famCursor += frac * span;
+      const famCol = FAM_COLORS[fam] || '#aaa';
+      const outerArc = d3.arc().innerRadius(famR + 2).outerRadius(outerR).cornerRadius(2);
+      const ang3 = (fsa + fea) / 2;
+      const span3 = fea - fsa;
+      const midR3 = (famR + 2 + outerR) / 2;
+      const arcLen3 = span3 * midR3;
+      const radH3 = outerR - famR - 2;
+      const rgb3 = famCol.match(/\w\w/g).map(x=>parseInt(x,16));
+      const bright3 = (rgb3[0]*299+rgb3[1]*587+rgb3[2]*114)/1000;
+      const tc3 = bright3 > 145 ? '#111' : '#eee';
+
+      g.append('path')
+        .attr('d', outerArc({ startAngle: fsa, endAngle: fea }))
+        .attr('fill', famCol)
+        .attr('stroke', 'rgba(255,255,255,0.5)').attr('stroke-width', 0.5)
+        .style('cursor', 'pointer')
+        .on('mousemove', ev => {
+          const pct = (langs.length / TOTAL * 100).toFixed(1);
+          let html = `<div style="font-weight:600;font-size:13px;margin-bottom:2px;">${fam}</div>`;
+          html += `<div style="font-size:10px;color:#888;margin-bottom:4px;">in ${label} · ${type} · ${tier}-byte UTF-8</div>`;
+          html += `<div style="font-size:12px;font-weight:500;margin-bottom:5px;">${langs.length} language${langs.length!==1?'s':''} · ${pct}%</div>`;
+          html += `<div style="font-size:10px;color:#a8a7a7;border-top:1px solid #eee;padding-top:4px;">${langs.join(', ')}</div>`;
+          tt.innerHTML = html; tt.style.opacity = '1';
+          tt.style.left = (ev.clientX+16)+'px'; tt.style.top = (ev.clientY-10)+'px';
+        })
+        .on('mouseleave', () => { tt.style.opacity = '0'; });
+
+      const fs3 = Math.max(6, Math.min(9, arcLen3 / fam.length * 1.2, radH3 * 0.42));
+      if (arcLen3 > fam.length * fs3 * 0.6 && radH3 > fs3 * 1.2) {
+        const bh3 = ang3 >= Math.PI/2 && ang3 <= 3*Math.PI/2;
+        const a0 = bh3 ? fea : fsa; const a1 = bh3 ? fsa : fea;
+        const px0 = Math.sin(a0)*midR3, py0 = -Math.cos(a0)*midR3;
+        const px1 = Math.sin(a1)*midR3, py1 = -Math.cos(a1)*midR3;
+        const pathId = `lp-fam-${code}-${fam.replace(/[^a-zA-Z0-9]/g,'_')}`;
+        svg.select('defs').append('path').attr('id', pathId)
+          .attr('d', `M ${px0},${py0} A ${midR3},${midR3} 0 ${span3>Math.PI?1:0},${bh3?0:1} ${px1},${py1}`);
+        g.append('text').attr('pointer-events','none')
+          .append('textPath')
+            .attr('href',`#${pathId}`).attr('startOffset','50%').attr('text-anchor','middle')
+            .style('font-size',`${fs3}px`).style('fill', tc3).text(fam);
+      }
+    });
+  });
+
+  // ── 3. Centre hole ─────────────────────────────────────────────────────────
+  const TOTAL_SCRIPTS = Object.keys(SCRIPT_FAM_LANGS).length;
+  g.append('circle').attr('r', holeR-1)
+    .attr('fill','#fff').attr('stroke','#ccc').attr('stroke-width',0.5);
+  g.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle')
+    .attr('font-size',13).attr('font-weight',600).attr('fill','#1a1a1a').text(TOTAL_SCRIPTS);
+  g.append('text').attr('y',14).attr('text-anchor','middle').attr('dominant-baseline','middle')
+    .attr('font-size',8).attr('fill','#888').text('scripts');
+  // ── 5. Legend — scripts grouped by type ───────────────────────────────────
+  const leg = document.getElementById('legend');
+  leg.innerHTML = '';
+
+  const maxCount = Math.max(...SCRIPT_DATA.map(d => Object.values(d.fams).reduce((s,l)=>s+l.length,0)));
+
+  const TYPE_ORDER_LEG = ['Alphabet','Abugida', 'Abjad', 'Logographic', 'Logosyllabary'];
+  TYPE_ORDER_LEG.forEach(type => {
+    const sec = document.createElement('div');
+    sec.className = 'leg-section';
+    const h = document.createElement('div');
+    h.className = 'leg-heading';
+    const typeTotal = SCRIPT_DATA.filter(d=>d.type===type).reduce((s,d)=>s+Object.values(d.fams).reduce((a,l)=>a+l.length,0),0);
+    const typePct = (typeTotal/TOTAL*100).toFixed(1);
+    h.innerHTML = `<span class="tier-dot" style="background:${TEAL[type]}"></span>${type} <span style="color:#aaa;font-weight:400;">${typeTotal} langs · ${typePct}%</span>`;
+    sec.appendChild(h);
+
+    SCRIPT_DATA.filter(d => d.type === type)
+      .map(d => ({ ...d, count: Object.values(d.fams).reduce((s,l)=>s+l.length,0) }))
+      .sort((a,b) => b.count - a.count)
+      .forEach(d => {
+      const cnt = d.count;
+      const pct = (cnt/TOTAL*100).toFixed(1);
+      const col = TEAL[d.type];
+      const row = document.createElement('div');
+      row.className = 'leg-row';
+      row.style.flexWrap = 'wrap';
+      row.innerHTML = `
+        <div class="leg-swatch" style="background:${col}"></div>
+        <div class="leg-name">${d.label} <span style="font-size:9px;color:#aaa;">${d.tier}B</span></div>
+        <div class="leg-bar-wrap"><div class="leg-bar" style="width:${(cnt/maxCount*100).toFixed(1)}%;background:${col}"></div></div>
+        <div class="leg-num">${cnt} · ${pct}%</div>
+        ${d.scripts ? `<div style="flex:0 0 100%;padding-left:16px;font-size:9px;color:#999;margin-top:1px;">${d.scripts}</div>` : ''}
+      `;
+      sec.appendChild(row);
+    });
+    leg.appendChild(sec);
+  });
+}
+
+render();
+window.addEventListener('resize', render);
+setTimeout(render, 50);
+</script>
+</body>
+</html>
