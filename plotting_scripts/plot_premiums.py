@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parent.parent))
 from config import SCRIPT_LABELS
 
 # ── 1. Parse the summary file ───────────────────────────────────────────────
@@ -98,8 +100,8 @@ CMAP = plt.cm.RdYlGn_r
 
 # ── 4. Plot each script ───────────────────────────────────────────────────────
 
-OUT_DIR = Path("results/figures")
-OUT_DIR_OVERVIEW = Path("results")
+OUT_DIR = Path("charts/script_premiums")
+OUT_DIR_OVERVIEW = Path("charts")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 FONT_TITLE  = {"fontsize": 13, "fontweight": "bold", "color": "#1a1a2e"}

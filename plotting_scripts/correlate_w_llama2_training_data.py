@@ -2,6 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parent.parent))
 from config import SCRIPT_LABELS, SCRIPT_COLORS
 
 llama2_tokens = {
@@ -116,6 +119,6 @@ ax.spines[["top", "right"]].set_visible(False)
 ax.spines[["left", "bottom"]].set_color("#aaaaaa")
 
 plt.tight_layout()
-plt.savefig('results/premium_vs_llama2_data.png', dpi=150, bbox_inches='tight')
+plt.savefig('charts/premium_vs_llama2_data.png', dpi=150, bbox_inches='tight')
 plt.close()
 print(f"Pearson r (log tokens vs premium): {r:.3f}, p={p:.4f}, N={len(df)}")

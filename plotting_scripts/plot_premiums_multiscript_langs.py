@@ -170,7 +170,7 @@ ax.legend(handles=legend_handles, fontsize=8, framealpha=0.6, loc="upper left")
 
 plt.tight_layout()
 
-OUT = Path("results/premium_multiscript.png")
+OUT = Path("charts/premium_multiscript.png")
 OUT.parent.mkdir(parents=True, exist_ok=True)
 fig.savefig(OUT, dpi=160, bbox_inches="tight")
 plt.close(fig)

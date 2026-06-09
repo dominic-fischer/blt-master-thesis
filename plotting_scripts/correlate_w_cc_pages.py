@@ -15,6 +15,9 @@ import numpy as np
 import scipy.stats as stats
 from pathlib import Path
 
+# specify parent directory of this script to import from
+import sys
+sys.path.append(str(Path(__file__).parent.parent))
 from config import SCRIPT_LABELS, SCRIPT_COLORS
 
 # ── Paths ────────────────────────────────────────────────────────────────────
@@ -22,7 +25,7 @@ from config import SCRIPT_LABELS, SCRIPT_COLORS
 SUMMARY  = Path("results/summary.txt")
 CC_CSV   = Path("commoncrawl_stats.csv")
 CC_CRAWL = "CC-MAIN-2026-17"
-OUT_DIR  = Path("results/")
+OUT_DIR  = Path("charts/")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Style ─────────────────────────────────────────────────────────────────────
