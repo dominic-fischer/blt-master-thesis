@@ -214,7 +214,7 @@ def main():
     parser.add_argument("--top_k",    type=int, default=1,
                         help="Top-k next-byte predictions to show (default: 1)")
     parser.add_argument("--out_dir",  default=None,
-                        help="Output directory (default: inspect_{lang_code}_{index}/)")
+                        help="Output directory (default: inspect_results/inspect_{lang_code}_{index}/)")
     parser.add_argument("--restructured_dir", default=RESTRUCTURED,
                         help=f"Path to restructured results (default: {RESTRUCTURED})")
     args = parser.parse_args()
@@ -222,7 +222,7 @@ def main():
     lang_code = args.lang_code
     idx       = args.index
     top_k     = max(1, min(args.top_k, 10))
-    out_dir   = args.out_dir or f"inspect_{lang_code}_{idx}"
+    out_dir   = args.out_dir or f"inspect_results/inspect_{lang_code}_{idx}"
     os.makedirs(out_dir, exist_ok=True)
 
     # ── load restructured sentence ────────────────────────────────────────────
@@ -366,7 +366,7 @@ def main():
                 )
         lines.append("")
 
-    txt_path = os.path.join(out_dir, f"inspect_results/{lang_code}_{idx}_analysis.txt")
+    txt_path = os.path.join(out_dir, f"{lang_code}_{idx}_analysis.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 

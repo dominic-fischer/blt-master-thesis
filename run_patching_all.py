@@ -4,20 +4,21 @@ run_patching.py
 Computes patch lengths for all cases and thresholds and stores results
 in the restructured JSON files under eval_modes.
 
-Cases and thresholds (derived from find_english_bounds_all.py):
-  raw_entropy:       [1.1904, 1.3340, 1.4946, 1.7988]
-  raw_monotonicity:  [0.2359, 0.3662, 0.5928, 0.9496]
-  norm_entropy:      [0.4072, 0.5293, 0.7222, 1.0371]
-  norm_monotonicity: [0.2480, 0.3887, 0.6260, 1.0039]
-  raw_combined:      fixed threshold=1.3340, threshold_add in [0.2359, 0.3662, 0.5928, 0.9496]
-  norm_combined:     fixed threshold=0.5293, threshold_add in [0.2480, 0.3887, 0.6260, 1.0039]
+Cases and thresholds are read from calibrate_thresholds/thresholds_summary.csv.
+For standard cases, the threshold column values (t_low, t_mid, t_high, t_anchor)
+are used directly as the patching threshold.
+For the combined case, fixed_t is the entropy threshold and
+t_low/t_mid/t_high/t_anchor are threshold_add values.
 
-Output: updates results/restructured/{lang_code}.json in place
+Any eval_modes keys in the JSON that are NOT present in the CSV are removed.
+
+Output: updates results/restructured/{lang_code}.json in place (indented)
 
 Usage:
     python run_patching.py
 """
 
+import csv
 import json
 import os
 import torch
@@ -29,26 +30,58 @@ from bytelatent.data.patcher import (
 )
 
 # ── config ────────────────────────────────────────────────────────────────────
-RESULTS_DIR = "results/restructured"
+RESULTS_DIR  = "results/restructured"
+SUMMARY_CSV  = "calibrate_thresholds/thresholds_summary.csv"
 
-# only combined cases — the rest are already computed
-CASES = {
-    "raw_combined": {
-        "score_idx":       1,
-        "monotonicity":    False,
-        "fixed_threshold": 1.3340,
-        "thresholds":      [0.2359, 0.3662, 0.5928, 0.9496],  # these are threshold_add values
-    },
-    "norm_combined": {
-        "score_idx":       2,
-        "monotonicity":    False,
-        "fixed_threshold": 0.5293,
-        "thresholds":      [0.2480, 0.3887, 0.6260, 1.0039],
-    },
+# maps case name → which score index to use
+SCORE_IDX = {
+    "raw_entropy":      1,
+    "raw_monotonicity": 1,
+    "norm_entropy":     2,
+    "combined":         1,
+}
+
+# maps case name → monotonicity flag (combined uses threshold_add instead)
+MONOTONICITY = {
+    "raw_entropy":      False,
+    "raw_monotonicity": True,
+    "norm_entropy":     False,
+    "combined":         False,
 }
 
 
-# ── helpers ───────────────────────────────────────────────────────────────────
+# ── load cases from CSV ───────────────────────────────────────────────────────
+
+def load_cases(csv_path: str) -> dict:
+    """
+    Returns a dict keyed by case name. Each value is a dict with:
+      - score_idx:       int
+      - monotonicity:    bool
+      - fixed_threshold: float or None  (only for combined)
+      - thresholds:      list[float]    (t_add values for combined, else t values)
+    """
+    cases = {}
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = row["case"]
+            thresholds = sorted({
+                float(row["t_low"]),
+                float(row["t_mid"]),
+                float(row["t_high"]),
+                float(row["t_anchor"]),
+            })
+            fixed_t = float(row["fixed_t"]) if row["fixed_t"] else None
+            cases[name] = {
+                "score_idx":       SCORE_IDX[name],
+                "monotonicity":    MONOTONICITY[name],
+                "fixed_threshold": fixed_t,
+                "thresholds":      thresholds,
+            }
+    return cases
+
+
+# ── patch helper ──────────────────────────────────────────────────────────────
 
 def compute_patch_lengths(
     scores: list[float],
@@ -79,10 +112,20 @@ def threshold_key(threshold: float) -> str:
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    paths = sorted(Path(RESULTS_DIR).glob("*.json"))
-    print(f"Found {len(paths)} language files")
-    print(f"Cases: {list(CASES.keys())} (combined only)")
+    cases = load_cases(SUMMARY_CSV)
+    valid_case_names = set(cases.keys())
+
+    print(f"Loaded {len(cases)} cases from {SUMMARY_CSV}:")
+    for name, case in cases.items():
+        if case["fixed_threshold"] is not None:
+            print(f"  {name}: fixed_t={case['fixed_threshold']:.4f}, "
+                  f"t_add values={[f'{t:.4f}' for t in case['thresholds']]}")
+        else:
+            print(f"  {name}: thresholds={[f'{t:.4f}' for t in case['thresholds']]}")
     print()
+
+    paths = sorted(Path(RESULTS_DIR).glob("*.json"))
+    print(f"Found {len(paths)} language files\n")
 
     for path in paths:
         lang_code = path.stem
@@ -93,20 +136,33 @@ def main():
             if "eval_modes" not in sentence:
                 sentence["eval_modes"] = {}
 
-            for case_name, case in CASES.items():
+            # remove stale cases not present in the CSV
+            stale = [k for k in sentence["eval_modes"] if k not in valid_case_names]
+            for k in stale:
+                del sentence["eval_modes"][k]
+
+            for case_name, case in cases.items():
                 if case_name not in sentence["eval_modes"]:
                     sentence["eval_modes"][case_name] = {}
 
                 scores = [be[case["score_idx"]] for be in sentence["bytes_entropies"]]
+                is_combined = case["fixed_threshold"] is not None
 
-                for threshold_add in case["thresholds"]:
-                    key = threshold_key(threshold_add)
+                for t in case["thresholds"]:
+                    key = threshold_key(t)
                     if key in sentence["eval_modes"][case_name]:
                         continue  # already computed, skip
 
+                    if is_combined:
+                        threshold     = case["fixed_threshold"]
+                        threshold_add = t
+                    else:
+                        threshold     = t
+                        threshold_add = None
+
                     lengths = compute_patch_lengths(
                         scores,
-                        threshold=case["fixed_threshold"],
+                        threshold=threshold,
                         threshold_add=threshold_add,
                         monotonicity=case["monotonicity"],
                     )
@@ -121,7 +177,7 @@ def main():
                     }
 
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(sentences, f, ensure_ascii=False)
+            json.dump(sentences, f, ensure_ascii=False, indent=2)
 
         print(f"  {lang_code}: done")
 

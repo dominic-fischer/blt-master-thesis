@@ -173,6 +173,5 @@ hf-weights/
 # Other
 junk.py
 inspect_results/
-calibrate_thresholds/
 throwaway_scripts/
 eval_results_chart.html
