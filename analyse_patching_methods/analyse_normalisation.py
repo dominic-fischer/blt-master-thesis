@@ -74,7 +74,7 @@ print()
 BPC_LABEL = {"1 byte": "1-byte", "2 bytes": "2-byte", "3 bytes": "3-byte"}
 STYPE_ORDER = ["Alphabet", "Abjad", "Abugida", "Logographic"]
 
-with open("analyse_normalisation_effect/normalisation_analysis.txt", "w") as out:
+with open("analyse_patching_methods/analyse_normalisation.txt", "w") as out:
 
     for stype in STYPE_ORDER:
         out.write(f"\n{'═'*70}\n")
@@ -141,4 +141,4 @@ with open("analyse_normalisation_effect/normalisation_analysis.txt", "w") as out
                 out.write(f"  {b:>5}  {char:>6}  {raw_pct:>7.2f}  {norm_pct:>7.2f}  "
                           f"{norm_pct-raw_pct:>+8.2f}\n")
 
-print("Written: analyse_normalisation_effect/normalisation_analysis.txt")
+print("Written: analyse_patching_methods/analyse_normalisation.txt")

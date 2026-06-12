@@ -1,0 +1,319 @@
+
+══════════════════════════════════════════════════════════════════════
+  ALPHABET
+══════════════════════════════════════════════════════════════════════
+
+  ── 1-byte ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                        14,664,463      6,839,245           
+  mean within-patch var                  0.1936         0.5161    +0.3224
+  mean within-patch entropy              2.2785         2.1892    -0.0893
+  plateau patches %                     62.7937        49.7982   -12.9955
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Kabiyè                              kbp_Latn                   4.875      1.881   -2.994
+  Nuer                                nus_Latn                   4.679      1.846   -2.833
+  Kikuyu                              kik_Latn                   4.469      1.675   -2.795
+  Irish                               gle_Latn                   4.344      1.559   -2.784
+  Scottish Gaelic                     gla_Latn                   4.471      1.697   -2.775
+  Fon                                 fon_Latn                   4.376      1.661   -2.715
+  Welsh                               cym_Latn                   3.808      1.256   -2.552
+  Yoruba                              yor_Latn                   4.291      1.749   -2.542
+  Turkmen                             tuk_Latn                   4.034      1.527   -2.507
+  West Central Oromo                  gaz_Latn                   4.167      1.719   -2.448
+  Plateau Malagasy                    plt_Latn                   4.191      1.744   -2.447
+  Tumbuka                             tum_Latn                   4.383      1.950   -2.433
+  Tswana                              tsn_Latn                   4.278      1.846   -2.432
+  Northern Uzbek                      uzn_Latn                   3.952      1.565   -2.387
+  Kabyle                              kab_Latn                   3.765      1.398   -2.367
+  Modern Standard Arabic (Romanized)  arb_Latn                   4.017      1.655   -2.362
+  Icelandic                           isl_Latn                   3.746      1.384   -2.362
+  Emakhuwa (Central)                  vmw_Latn                   4.102      1.742   -2.360
+  Maltese                             mlt_Latn                   3.962      1.602   -2.360
+  Northern Kurdish                    kmr_Latn                   3.898      1.554   -2.343
+  Asante Twi                          twi_Latn_asan1239          3.751      1.434   -2.317
+  Ewe                                 ewe_Latn                   3.746      1.429   -2.317
+  Standard Latvian                    lvs_Latn                   3.798      1.484   -2.314
+  Swati                               ssw_Latn                   3.873      1.576   -2.296
+  Zulu                                zul_Latn                   3.856      1.560   -2.296
+  Somali                              som_Latn                   3.936      1.641   -2.295
+  Northern Sotho                      nso_Latn                   3.993      1.706   -2.288
+  Albanian (Tosk)                     als_Latn                   3.969      1.689   -2.280
+  Southern Sotho                      sot_Latn                   4.084      1.805   -2.279
+  Akuapem Twi                         twi_Latn_akua1239          3.635      1.359   -2.276
+  Basque                              eus_Latn                   3.661      1.386   -2.275
+  Bemba                               bem_Latn                   4.131      1.859   -2.272
+  Latgalian                           ltg_Latn                   3.619      1.362   -2.257
+  Shona                               sna_Latn                   3.819      1.578   -2.241
+  Bambara                             bam_Latn                   3.660      1.425   -2.235
+  Tsonga                              tso_Latn                   4.045      1.817   -2.227
+  Igbo                                ibo_Latn                   3.864      1.646   -2.218
+  Lithuanian                          lit_Latn                   3.634      1.417   -2.217
+  Faroese                             fao_Latn                   3.641      1.425   -2.216
+  Xhosa                               xho_Latn                   3.677      1.489   -2.188
+  Nyanja                              nya_Latn                   3.818      1.637   -2.181
+  Rundi                               run_Latn                   3.841      1.680   -2.161
+  Kinyarwanda                         kin_Latn                   3.871      1.717   -2.154
+  Jingpho                             kac_Latn                   4.095      1.945   -2.150
+  Central Kanuri (Latin script)       knc_Latn                   3.698      1.556   -2.142
+  Dyula                               dyu_Latn                   3.674      1.547   -2.127
+  Tamasheq (Latin script)             taq_Latn                   3.480      1.357   -2.123
+  Ilocano                             ilo_Latn                   3.903      1.786   -2.117
+  Paraguayan Guaraní                  gug_Latn                   3.579      1.466   -2.113
+  North Azerbaijani                   azj_Latn                   3.933      1.832   -2.101
+  Estonian                            ekk_Latn                   3.423      1.325   -2.098
+  Mossi                               mos_Latn                   3.552      1.488   -2.064
+  Samoan                              smo_Latn                   3.979      1.916   -2.063
+  Central Aymara                      ayr_Latn                   3.523      1.473   -2.050
+  Hausa                               hau_Latn                   3.736      1.725   -2.011
+  Kimbundu                            kmb_Latn                   3.732      1.726   -2.006
+  Ganda                               lug_Latn                   3.540      1.545   -1.995
+  Kamba                               kam_Latn                   3.448      1.454   -1.994
+  Sango                               sag_Latn                   3.651      1.659   -1.992
+  Umbundu                             umb_Latn                   3.497      1.508   -1.989
+  Luo                                 luo_Latn                   3.563      1.582   -1.981
+  Fijian                              fij_Latn                   3.822      1.850   -1.973
+  Chokwe                              cjk_Latn                   3.639      1.668   -1.971
+  Southwestern Dinka                  dik_Latn                   3.332      1.369   -1.963
+  Wolof                               wol_Latn                   3.425      1.463   -1.962
+  Tok Pisin                           tpi_Latn                   3.771      1.812   -1.958
+  Acehnese (Latin script)             ace_Latn                   3.514      1.561   -1.953
+  Mizo                                lus_Latn                   3.549      1.602   -1.947
+  Haitian Creole                      hat_Latn                   3.264      1.318   -1.946
+  Ayacucho Quechua                    quy_Latn                   3.490      1.550   -1.940
+  Buginese                            bug_Latn                   3.576      1.638   -1.938
+  Ladin (Gherdëina)                   lld_Latn_gard1241          3.481      1.544   -1.937
+  Luba-Kasai                          lua_Latn                   3.599      1.694   -1.904
+  Ladin (Val Badia)                   lld_Latn                   3.428      1.525   -1.903
+  Luxembourgish                       ltz_Latn                   3.433      1.543   -1.889
+  Maori                               mri_Latn                   3.691      1.805   -1.886
+  Esperanto                           epo_Latn                   3.303      1.436   -1.867
+  Swahili                             swh_Latn                   3.541      1.679   -1.861
+  Kituba (DRC)                        ktu_Latn                   3.633      1.811   -1.822
+  Sardinian                           srd_Latn                   3.450      1.633   -1.817
+  Balinese                            ban_Latn                   3.437      1.635   -1.803
+  Lingala                             lin_Latn                   3.474      1.680   -1.795
+  Mauritian Creole                    mfe_Latn                   3.108      1.319   -1.789
+  Nigerian Fulfulde                   fuv_Latn                   3.255      1.471   -1.784
+  Sundanese                           sun_Latn                   3.334      1.558   -1.776
+  Crimean Tatar                       crh_Latn                   3.435      1.675   -1.760
+  Papiamento                          pap_Latn                   3.297      1.562   -1.735
+  Pangasinan                          pag_Latn                   3.198      1.470   -1.728
+  Lombard                             lmo_Latn                   3.358      1.643   -1.715
+  Cebuano                             ceb_Latn                   3.469      1.765   -1.703
+  Filipino                            fil_Latn                   3.542      1.842   -1.699
+  Javanese                            jav_Latn                   3.224      1.548   -1.676
+  Waray                               war_Latn                   3.579      1.903   -1.675
+  Kabuverdianu                        kea_Latn                   3.133      1.468   -1.664
+  Friulian                            fur_Latn                   3.209      1.568   -1.642
+  Sicilian                            scn_Latn                   3.190      1.587   -1.603
+  Ligurian (Genoese)                  lij_Latn                   3.184      1.618   -1.565
+  Silesian                            szl_Latn                   3.047      1.494   -1.553
+  Limburgish                          lim_Latn                   3.087      1.541   -1.547
+  Turkish                             tur_Latn                   3.196      1.659   -1.537
+  Minangkabau (Latin script)          min_Latn                   3.086      1.583   -1.504
+  Aranese                             oci_Latn_aran1260          3.042      1.613   -1.429
+  Slovak                              slk_Latn                   2.895      1.478   -1.417
+  Venetian                            vec_Latn                   2.852      1.477   -1.375
+  Banjar (Latin script)               bjn_Latn                   2.945      1.587   -1.358
+  Slovenian                           slv_Latn                   2.738      1.392   -1.347
+  Afrikaans                           afr_Latn                   2.786      1.496   -1.291
+  Bosnian                             bos_Latn                   2.626      1.421   -1.205
+  Croatian                            hrv_Latn                   2.569      1.393   -1.176
+  Norwegian Nynorsk                   nno_Latn                   2.544      1.376   -1.169
+  Finnish                             fin_Latn                   2.636      1.470   -1.165
+  Norwegian Bokmål, radical variety   nob_Latn_radical           2.325      1.306   -1.019
+  Norwegian Bokmål, moderate variety  nob_Latn                   2.294      1.296   -0.999
+  Danish                              dan_Latn                   2.339      1.349   -0.989
+  Occitan                             oci_Latn                   2.488      1.553   -0.935
+  Hungarian                           hun_Latn                   2.471      1.559   -0.912
+  Romanian                            ron_Latn                   2.394      1.522   -0.871
+  Swedish                             swe_Latn                   2.137      1.321   -0.816
+  Czech                               ces_Latn                   2.215      1.428   -0.787
+  Aragonese                           arg_Latn                   2.360      1.577   -0.783
+  Asturian                            ast_Latn                   2.095      1.397   -0.697
+  Galician                            glg_Latn                   2.123      1.438   -0.685
+  Standard Malay                      zsm_Latn                   2.155      1.493   -0.662
+  Polish                              pol_Latn                   2.096      1.441   -0.655
+  Catalan                             cat_Latn                   2.060      1.420   -0.640
+  Dutch                               nld_Latn                   2.058      1.443   -0.614
+  Indonesian                          ind_Latn                   2.039      1.426   -0.613
+  Portuguese (Brazilian)              por_Latn                   1.808      1.323   -0.485
+  Italian                             ita_Latn                   1.842      1.412   -0.430
+  German                              deu_Latn                   1.728      1.409   -0.319
+  Vietnamese                          vie_Latn                   1.945      1.629   -0.317
+  Spanish (Latin American)            spa_Latn                   1.705      1.438   -0.267
+  French                              fra_Latn                   1.631      1.383   -0.248
+  English                             eng_Latn                   1.000      1.000   +0.000
+
+  ── 2-bytes ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                         3,048,997      2,331,932           
+  mean within-patch var                  0.4392         0.6140    +0.1748
+  mean within-patch entropy              1.8716         1.5803    -0.2913
+  plateau patches %                     28.4319        15.2518   -13.1801
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Nko                                 nqo_Nkoo                   8.808      2.271   -6.537
+  Bashkir                             bak_Cyrl                   5.226      2.655   -2.571
+  Chuvash                             chv_Cyrl                   5.184      2.788   -2.396
+  Kazakh                              kaz_Cyrl                   4.742      2.791   -1.951
+  Tatar                               tat_Cyrl                   4.609      2.753   -1.856
+  Tajik                               tgk_Cyrl                   4.734      3.043   -1.691
+  Khakas                              kjh_Cyrl                   4.521      2.974   -1.547
+  Halh Mongolian (Cyrillic script)    khk_Cyrl                   4.444      3.025   -1.419
+  Kyrgyz                              kir_Cyrl                   4.271      2.879   -1.392
+  Tuvan                               tyv_Cyrl                   4.608      3.238   -1.370
+  Armenian                            hye_Armn                   4.821      3.538   -1.283
+  Dargwa                              dar_Cyrl                   4.467      3.342   -1.125
+  Meadow Mari                         mhr_Cyrl                   3.712      2.949   -0.763
+  Tamasheq (Tifinagh script)          taq_Tfng                   3.987      3.257   -0.731
+  Erzya                               myv_Cyrl                   3.365      3.126   -0.239
+  Greek                               ell_Grek                   3.627      3.502   -0.125
+  Standard Moroccan Tamazight         zgh_Tfng                   3.463      3.468   +0.006
+  Georgian                            kat_Geor                   3.700      3.743   +0.043
+  Belarusian                          bel_Cyrl                   3.017      3.236   +0.218
+  Macedonian                          mkd_Cyrl                   1.954      2.765   +0.811
+  Serbian                             srp_Cyrl                   1.638      2.564   +0.926
+  Bulgarian                           bul_Cyrl                   1.595      2.564   +0.969
+  Ukrainian                           ukr_Cyrl                   1.420      2.448   +1.028
+  Russian                             rus_Cyrl                   1.329      2.472   +1.143
+
+  ── 3-bytes ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                            72,584         59,468           
+  mean within-patch var                  0.2526         0.3315    +0.0788
+  mean within-patch entropy              1.7671         1.6403    -0.1268
+  plateau patches %                     30.9379        27.0650    -3.8730
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Korean                              kor_Hang                   2.220      1.821   -0.399
+
+══════════════════════════════════════════════════════════════════════
+  ABJAD
+══════════════════════════════════════════════════════════════════════
+
+  ── 2-bytes ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                         3,244,825      1,990,594           
+  mean within-patch var                  0.3585         0.5998    +0.2413
+  mean within-patch entropy              1.6853         1.6093    -0.0760
+  plateau patches %                     19.3334        12.0150    -7.3184
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Central Kurdish                     ckb_Arab                   5.923      2.043   -3.880
+  Uyghur                              uig_Arab                   6.245      2.526   -3.719
+  Southern Uzbek                      uzs_Arab                   5.321      2.376   -2.945
+  Kashmiri (Arabic script)            kas_Arab                   5.162      2.219   -2.943
+  Southern Pashto                     pbt_Arab                   4.919      2.177   -2.742
+  Urdu                                urd_Arab                   4.859      2.242   -2.617
+  South Azerbaijani                   azb_Arab                   4.442      2.051   -2.391
+  Acehnese (Jawi script)              ace_Arab                   4.309      2.197   -2.112
+  Western Persian                     pes_Arab                   4.441      2.331   -2.110
+  Dari                                prs_Arab                   4.258      2.233   -2.024
+  Minangkabau (Jawi script)           min_Arab                   4.529      2.536   -1.992
+  Banjar (Jawi script)                bjn_Arab                   4.442      2.453   -1.989
+  Sindhi (Arabic script)              snd_Arab                   4.324      2.403   -1.921
+  Levantine Arabic (North)            apc_Arab_nort3139          2.940      2.392   -0.548
+  Moroccan Arabic                     ary_Arab                   3.044      2.501   -0.543
+  Mesopotamian Arabic                 acm_Arab                   3.044      2.505   -0.539
+  Taʽizzi-Adeni Arabic                acq_Arab                   3.050      2.531   -0.519
+  Levantine Arabic (South)            apc_Arab_sout3123          2.893      2.386   -0.508
+  Egyptian Arabic                     arz_Arab                   3.014      2.510   -0.504
+  Tunisian Arabic                     aeb_Arab                   2.979      2.479   -0.500
+  Najdi Arabic                        ars_Arab                   3.059      2.570   -0.489
+  Modern Standard Arabic              arb_Arab                   3.054      2.568   -0.486
+  Central Kanuri (Arabic script)      knc_Arab                   2.869      2.760   -0.108
+  Eastern Yiddish                     ydd_Hebr                   3.572      3.485   -0.087
+  Hebrew                              heb_Hebr                   2.539      2.465   -0.074
+
+══════════════════════════════════════════════════════════════════════
+  ABUGIDA
+══════════════════════════════════════════════════════════════════════
+
+  ── 3-bytes ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                         4,024,555      5,068,404           
+  mean within-patch var                  1.5791         1.0943    -0.4848
+  mean within-patch entropy              1.3546         1.3788    +0.0242
+  plateau patches %                      7.9810        16.4251    +8.4441
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Meitei (Manipuri, Meitei script)    mni_Mtei                   5.261      3.540   -1.721
+  Amharic                             amh_Ethi                   4.149      4.012   -0.137
+  Tigrinya                            tir_Ethi                   4.165      4.040   -0.125
+  Burmese                             mya_Mymr                   4.398      4.576   +0.178
+  Santali                             sat_Olck                   4.226      4.549   +0.323
+  Thai                                tha_Thai                   3.327      3.864   +0.537
+  Goan Konkani                        gom_Deva                   2.982      3.690   +0.707
+  Kashmiri (Devanagari script)        kas_Deva                   2.863      3.592   +0.728
+  Bodo                                brx_Deva                   3.311      4.049   +0.738
+  Nepali                              npi_Deva                   3.010      3.755   +0.745
+  Marathi                             mar_Deva                   3.100      3.845   +0.745
+  Odia                                ory_Orya                   3.187      3.940   +0.753
+  Sanskrit                            san_Deva                   3.050      3.810   +0.760
+  Assamese                            asm_Beng                   3.042      3.805   +0.763
+  Sindhi (Devanagari script)          snd_Deva                   3.078      3.873   +0.794
+  Chhattisgarhi                       hne_Deva                   2.834      3.631   +0.797
+  Bengali                             ben_Beng                   3.057      3.860   +0.803
+  Maithili                            mai_Deva                   2.922      3.730   +0.808
+  Meitei (Manipuri, Bengali script)   mni_Beng                   3.274      4.089   +0.814
+  Bhojpuri                            bho_Deva                   2.819      3.661   +0.842
+  Awadhi                              awa_Deva                   2.877      3.724   +0.847
+  Magahi                              mag_Deva                   2.825      3.674   +0.848
+  Dogri                               dgo_Deva                   3.082      3.950   +0.868
+  Eastern Panjabi                     pan_Guru                   3.246      4.119   +0.872
+  Hindi                               hin_Deva                   2.845      3.768   +0.923
+  Gujarati                            guj_Gujr                   3.034      3.958   +0.925
+  Sinhala                             sin_Sinh                   3.404      4.433   +1.029
+  Kannada                             kan_Knda                   3.401      4.433   +1.032
+  Lao                                 lao_Laoo                   3.793      4.885   +1.092
+  Telugu                              tel_Telu                   3.272      4.401   +1.130
+  Khmer (Central)                     khm_Khmr                   4.229      5.750   +1.521
+  Malayalam                           mal_Mlym                   3.462      5.011   +1.549
+  Tamil                               tam_Taml                   3.169      5.004   +1.835
+  Lhasa Tibetan                       bod_Tibt                   3.461      5.575   +2.114
+  Dzongkha                            dzo_Tibt                   3.778      6.543   +2.765
+  Shan                                shn_Mymr                   5.141      8.026   +2.885
+
+══════════════════════════════════════════════════════════════════════
+  LOGOGRAPHIC
+══════════════════════════════════════════════════════════════════════
+
+  ── 3-bytes ──
+
+  metric                            raw_entropy       raw_mono      delta
+  ----------------------------------------------------------------------
+  patches (n)                           396,026        260,553           
+  mean within-patch var                  0.2812         0.4796    +0.1984
+  mean within-patch entropy              2.0799         1.9726    -0.1073
+  plateau patches %                     45.4761        35.2155   -10.2606
+
+  Per-language pps premium  (sorted by mono−raw delta):
+  name                                code                    raw_prem  mono_prem    delta
+  ----------------------------------------------------------------------------------------
+  Wu Chinese                          wuu_Hans                   2.711      1.531   -1.180
+  Yue Chinese (Hong Kong Cantonese)   yue_Hant                   2.602      1.509   -1.093
+  Mandarin Chinese (Taiwanese)        cmn_Hant                   2.440      1.518   -0.922
+  Mandarin Chinese (Standard Beijing) cmn_Hans                   2.469      1.551   -0.918
+  Japanese                            jpn_Jpan                   1.889      1.867   -0.022
