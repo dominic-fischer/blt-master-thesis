@@ -128,6 +128,9 @@
     <button class="toggle-btn active" id="btn-mode-entropy" onclick="setMode('entropy')">Entropy</button>
     <button class="toggle-btn" id="btn-mode-monotonicity" onclick="setMode('monotonicity')">Monotonicity</button>
     <button class="toggle-btn" id="btn-mode-combined" onclick="setMode('combined')">Combined</button>
+    <button class="toggle-btn" id="btn-download-csv" onclick="downloadCSV()" style="margin-left: auto; background: #447b8c; color: white; border-color: #315d6b;">
+      📥 Download CSV
+    </button>
   </div>
   <hr class="ctrl-sep">
   <div class="ctrl-row">
@@ -253,6 +256,53 @@ function groupFor(p) {
   return GROUPS[GROUPS.length-1];
 }
 
+function downloadCSV() {
+  if (typeof LANG_DATA === 'undefined' || !LANG_DATA.length) {
+    alert("Data is not available for download.");
+    return;
+  }
+
+  // Define headers for the CSV file
+  const headers = ["Language Name", "Language Family", "Writing System", "Bytes Per Char", "CC Pages", "Current Metric Column", "Patching Premium Score"];
+  
+  // Get active configurations for the filename and data tracking
+  const currentMetricKey = getColName();
+  const currentModeLabel = MODES_META[getCaseKey()].label;
+  const currentThreshold = MODES_META[getCaseKey()].thresholds[curTIdx].toFixed(4);
+  
+  // Map rows from LANG_DATA
+  const rows = LANG_DATA.map(lang => {
+    const name = `"${lang.Name.replace(/"/g, '""')}"`;
+    const family = `"${(lang.Family || '').replace(/"/g, '""')}"`;
+    const script = `"${(lang.Script_Type || '').replace(/"/g, '""')}"`;
+    const bytes = `"${lang.Bytes_Per_Char || '1 byte'}"`;
+    const ccPages = lang.CC_Pages != null ? lang.CC_Pages : "no data";
+    const premium = getPremium(lang).toFixed(4);
+
+    return [name, family, script, bytes, ccPages, currentMetricKey, premium];
+  });
+
+  // Combine headers and rows into a unified string
+  const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+
+  // Create a blob and trigger browser download download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  
+  if (link.download !== undefined) { 
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    
+    // Friendly contextual filename matching current parameters
+    const filename = `blt_fairness_${currentModeLabel.toLowerCase()}_t${currentThreshold}.csv`;
+    link.setAttribute("download", filename);
+    
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
 
 function setMode(m) {
   curMode = m;
@@ -406,7 +456,7 @@ function renderYAxis() {
   yAxis.style.position='relative';
   yAxis.innerHTML='';
   // nice tick values
-  const step = MAX_VAL <= 90 ? (MAX_VAL<=50?10:20) : (MAX_VAL<=150?25:50);
+  const step = 20; // Hardcoded step size
   const ticks=[0];
   for(let v=step; v<=MAX_VAL; v+=step) ticks.push(v);
   ticks.forEach(v=>{
