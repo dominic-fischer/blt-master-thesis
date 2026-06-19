@@ -50,15 +50,23 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     transition: opacity 0.12s;
   }
-  @media (prefers-color-scheme: dark) {
-    body { background: #1a1a1a; color: #e8e8e8; }
-    #tt { background: #2a2a2a; border-color: #444; }
-    .controls label { color: #aaa; }
-    .subtitle { color: #888; }
-  }
+
+#theme-toggle {
+  position: fixed; top: 12px; right: 12px; z-index: 1000;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid #ddd; background: #fff; color: #1a1a1a;
+  font-size: 16px; cursor: pointer; line-height: 1;
+}
+html[data-theme="dark"] body { background: #1a1a1a; color: #e8e8e8; }
+html[data-theme="dark"] #tt { background: #2a2a2a; border-color: #444; }
+html[data-theme="dark"] .controls label { color: #aaa; }
+html[data-theme="dark"] .subtitle { color: #888; }
+html[data-theme="dark"] #theme-toggle { background: #2a2a2a; border-color: #444; color: #e8e8e8; }
+
 </style>
 </head>
 <body>
+<button id="theme-toggle" title="Toggle dark mode">🌙</button>
 <h1>FLORES+ — Language Family Distribution</h1>
 <p class="subtitle">225 language variants across 22 families and 1 isolate. Inverted sunburst: families on outer ring, subfamilies inward. Hover any wedge for details.</p>
 <div class="controls">
@@ -139,6 +147,8 @@ function render(pct) {
   wrap.innerHTML = '';
   const nodes = buildVisible(pct);
   const incIds = new Set(nodes.map(x => x.id));
+
+  const dark = document.documentElement.dataset.theme === 'dark';
 
   const W = wrap.clientWidth || 700;
   const availH = window.innerHeight - wrap.getBoundingClientRect().top - 24;
@@ -236,17 +246,19 @@ function render(pct) {
         const path = o.id.replace(/>/g, ' › ');
 
         // Build language list: bold if terminal here, normal otherwise
+        const langColor     = dark ? '#E3E3E3' : '#5C5C5C';   // regular entries
+        const langBoldColor = dark ? '#fff' : '#000';   // terminal (bold) entries
         const langHTML = langs.map(l =>
           tlangsSet.has(l)
-            ? `<b style="color:#aaa;">${l}</b>`
-            : `<span style="color:#a8a7a7;">${l}</span>`
+            ? `<b style="color:${langBoldColor};">${l}</b>`
+            : `<span style="color:${langColor};">${l}</span>`
         ).join(', ');
 
         let html = `<div style="font-weight:600;font-size:13px;margin-bottom:2px;">${o.n}</div>`;
         html += `<div style="font-size:10px;color:#888;margin-bottom:4px;">${path}</div>`;
         html += `<div style="font-size:12px;font-weight:500;margin-bottom:${langs.length ? '5px' : '0'};">${o.v} language${o.v !== 1 ? 's' : ''} · ${pct2}%</div>`;
         if (langs.length) {
-          html += `<div style="font-size:10px;color:#555;border-top:1px solid #eee;padding-top:4px;">${langHTML}</div>`;
+          html += `<div style="font-size:10px;color:${langColor};border-top:1px solid #eee;padding-top:4px;">${langHTML}</div>`;
         }
         tt.innerHTML = html;
         tt.style.opacity = '1';
@@ -325,7 +337,7 @@ function render(pct) {
   // Top-half: text sits above the tip. Bottom-half: text sits below.
   // Each label gets the shortest tick that avoids 2D overlap with already-placed ones.
 
-  const fs8 = 8;
+  const fs8 = 11;
   const charW = fs8 * 0.52;       // approximate character width
   const lineH = fs8 + 3;          // vertical clearance between label centres
   const tickGap  = 4;             // gap between wedge outer edge and tick start
@@ -367,15 +379,15 @@ function render(pct) {
       .attr('y', ty + (topHalf ? -3 : 3))
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', topHalf ? 'auto' : 'hanging')
-      .attr('font-size', fs8).attr('fill', '#aaa')
+      .attr('font-size', fs8).attr('fill', dark ? '#fff' : '#000')
       .attr('pointer-events', 'none').text(lbl);
   });
 
     // Centre hole
   g.append('circle').attr('r', holeR - 1)
-    .attr('fill', 'white').attr('stroke', '#ccc').attr('stroke-width', 0.5);
+    .attr('fill', dark ? '#1a1a1a' : 'white').attr('stroke', dark ? '#444' : '#ccc').attr('stroke-width', 0.5);
   g.append('text').attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
-    .attr('font-size', 13).attr('font-weight', 600).attr('fill', '#1a1a1a').text(TOTAL);
+    .attr('font-size', 13).attr('font-weight', 600).attr('fill', dark ? '#e8e8e8' : '#1a1a1a').text(TOTAL);
   g.append('text').attr('y', 14).attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
     .attr('font-size', 8).attr('fill', '#888').text('langs');
 
@@ -398,6 +410,19 @@ sl.addEventListener('input', update);
 window.addEventListener('resize', () => render(+sl.value));
 // Small delay so clientWidth is set
 setTimeout(update, 50);
+
+const themeBtn = document.getElementById('theme-toggle');
+const htmlEl = document.documentElement;   // not `root` — render() already uses that name internally
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+htmlEl.dataset.theme = prefersDark ? 'dark' : 'light';
+themeBtn.textContent = prefersDark ? '☀️' : '🌙';
+themeBtn.addEventListener('click', () => {
+  const dark = htmlEl.dataset.theme === 'dark';
+  htmlEl.dataset.theme = dark ? 'light' : 'dark';
+  themeBtn.textContent = dark ? '🌙' : '☀️';
+  render(+sl.value);   // redraw so the SVG picks up the new colors
+});
+
 </script>
 </body>
 </html>
