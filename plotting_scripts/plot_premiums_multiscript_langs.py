@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 plot_multiscript.py
-Reads results/summary.txt and plots grouped bars for languages that
-appear in multiple distinct scripts (matched on the ISO 639 part before
-the first underscore; regional variants like lld_Latn_gard1241 are
-collapsed into lld_Latn).
-Output: results/figures/premium_multiscript.png
+Reads floresplus_MASTER_CSV.csv and plots grouped bars for languages that
+appear in multiple distinct scripts (matched on the ISO 639 part before the
+first underscore of Code_Orig; regional variants like lld_Latn_gard1241 are
+collapsed into lld + Latn).
+Output: charts/premium_multiscript.png
 """
-
 import re
+import csv
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -17,35 +17,48 @@ import numpy as np
 from pathlib import Path
 from collections import defaultdict
 
-# ── 1. Parse ──────────────────────────────────────────────────────────────────
+# ── Config ────────────────────────────────────────────────────────────────────
 
-SUMMARY = Path("results/summary.txt")
-CODE_RE = re.compile(r'\b([a-z]{2,3})_([A-Z][a-z]{3})(?:_[a-zA-Z0-9]+)?\b')
+MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
+
+# Which premium column to read. Same 16 options as the other scripts — set the
+# full "<model>_t_<threshold>_pps_premium" name.
+PREMIUM_COL = "raw_entropy_t_1.3340_pps_premium"
+
+# ── 1. Parse ──────────────────────────────────────────────────────────────────
+# Match the script-tagged code (e.g. 'ace_Arab', 'lld_Latn_gard1241'),
+# capturing the ISO 639 part and the 4-letter script, dropping any suffix.
+CODE_RE = re.compile(r'^([a-z]{2,3})_([A-Z][a-z]{3})(?:_[a-zA-Z0-9]+)?$')
 
 rows = []
-with open(SUMMARY) as f:
-    for line in f:
-        line = line.strip()
-        if not line or line.startswith("Language") or line.startswith("---"):
-            continue
-        m = CODE_RE.search(line)
+with open(MASTER_CSV, newline="", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    if PREMIUM_COL not in reader.fieldnames:
+        avail = [c for c in reader.fieldnames if c.endswith("_pps_premium")]
+        raise SystemExit(
+            f"Column '{PREMIUM_COL}' not found in {MASTER_CSV}.\n"
+            "Available premium columns:\n  " + "\n  ".join(avail)
+        )
+    for row in reader:
+        code = (row.get("Code_Orig") or "").strip()
+        m = CODE_RE.match(code)
         if not m:
             continue
-        lang_iso  = m.group(1)
-        script    = m.group(2)
-        lang_name = line[:m.start()].strip()
-        nums      = line[m.end():].strip().split()
-        if len(nums) < 6:
+        prem_raw = (row.get(PREMIUM_COL) or "").strip()
+        if not prem_raw:
+            continue
+        try:
+            premium = float(prem_raw)
+        except ValueError:
             continue
         rows.append({
-            "language": lang_name,
-            "lang_iso": lang_iso,
-            "script":   script,
-            "premium":  float(nums[5]),
+            "language": (row.get("Name") or "").strip(),
+            "lang_iso": m.group(1),
+            "script":   m.group(2),
+            "premium":  premium,
         })
 
 # ── 2. Collapse regional variants, keep only multi-script languages ───────────
-
 # For each (lang_iso, script) keep the row with the shortest/simplest name
 best = {}
 for r in rows:
@@ -72,8 +85,10 @@ groups = sorted(
     key=lambda g: g["name"]
 )
 
-# ── 3. Script colors & labels ─────────────────────────────────────────────────
+if not groups:
+    raise SystemExit("No languages found in more than one script — nothing to plot.")
 
+# ── 3. Script colors & labels ─────────────────────────────────────────────────
 SCRIPT_DISPLAY = {
     "Latn": "Latin",   "Arab": "Arabic",  "Deva": "Devanagari",
     "Hans": "Han (Simp.)", "Hant": "Han (Trad.)",
@@ -90,7 +105,6 @@ def scolor(s): return SCRIPT_COLORS.get(s, "#aaaaaa")
 all_scripts = sorted({e["script"] for g in groups for e in g["entries"]})
 
 # ── 4. Plot ───────────────────────────────────────────────────────────────────
-
 BAR_W     = 0.32
 GROUP_GAP = 0.45
 
@@ -111,18 +125,15 @@ for centre, group in zip(centres, groups):
     entries = group["entries"]
     n = len(entries)
     offsets = np.linspace(-(n - 1) * BAR_W / 2, (n - 1) * BAR_W / 2, n)
-
     for e, offset in zip(entries, offsets):
         x     = centre + offset
         color = scolor(e["script"])
         ax.bar(x, e["premium"], width=BAR_W * 0.88,
                color=color, zorder=3, edgecolor="white", linewidth=0.5)
-
         # Premium value above bar
         ax.text(x, e["premium"] + 0.07, f"{e['premium']:.2f}",
                 ha="center", va="bottom",
                 fontsize=7.5, color="#222222", fontweight="500", zorder=5)
-
         # Script name inside bar (rotated)
         ax.text(x, 0.12, slabel(e["script"]),
                 ha="center", va="bottom",
@@ -130,7 +141,6 @@ for centre, group in zip(centres, groups):
                 rotation=90, zorder=5)
 
 # ── 5. Two-line italic x-axis labels (language name + script name) ────────────
-
 def strip_brackets(s):
     return re.sub(r'\s*\(.*?\)', '', s).strip()
 
@@ -169,8 +179,7 @@ legend_handles = [
 ax.legend(handles=legend_handles, fontsize=8, framealpha=0.6, loc="upper left")
 
 plt.tight_layout()
-
-OUT = Path("charts/premium_multiscript.png")
+OUT = Path(f"charts/premium_multiscript_{PREMIUM_COL.replace('_pps_premium', '')}.png")
 OUT.parent.mkdir(parents=True, exist_ok=True)
 fig.savefig(OUT, dpi=160, bbox_inches="tight")
 plt.close(fig)

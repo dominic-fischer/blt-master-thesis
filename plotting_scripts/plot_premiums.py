@@ -1,71 +1,91 @@
 #!/usr/bin/env python3
 """
 plot_premiums.py
-Reads results/summary.txt and produces per-script bar charts
-of BLT patch premiums relative to English.
+Reads floresplus_MASTER_CSV.csv and produces per-script bar charts
+of BLT patch premiums relative to English, plus an overview chart.
+Output filenames carry the premium-column tag so different configs
+don't overwrite each other.
 """
 
-import os
-import re
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
+import csv
 from pathlib import Path
+from collections import defaultdict
+
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 from config import SCRIPT_LABELS
 
-# ── 1. Parse the summary file ───────────────────────────────────────────────
+# ── Config ──────────────────────────────────────────────────────────────────
 
-SUMMARY = Path("results/summary.txt")
+MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
 
-def parse_summary(path: Path):
+# Which premium column to plot. Same 16 options as the other scripts — set the
+# full "<model>_t_<threshold>_pps_premium" name.
+PREMIUM_COL = "raw_entropy_t_1.3340_pps_premium"
+PREMIUM_TAG = PREMIUM_COL.replace("_pps_premium", "")   # appended to filenames
+
+# ── 1. Load the master CSV ──────────────────────────────────────────────────
+
+def load_data(path: Path, premium_col: str):
     rows = []
-    CODE_RE = re.compile(r'\b([a-z]{2,3}_[A-Z][a-zA-Z0-9_]+)\b')
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("Language") or line.startswith("---"):
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if premium_col not in reader.fieldnames:
+            avail = [c for c in reader.fieldnames if c.endswith("_pps_premium")]
+            raise SystemExit(
+                f"Column '{premium_col}' not found in {path}.\n"
+                "Available premium columns:\n  " + "\n  ".join(avail)
+            )
+        bpp_col = premium_col.replace("_pps_premium", "_bpp")  # matching bpp column
+        for row in reader:
+            # Code_Orig is the script-tagged code (e.g. 'ace_Arab'); keep it so
+            # script colouring and the 'eng_' filter below still work.
+            code = (row.get("Code_Orig") or row.get("Code") or "").strip()
+            if not code:
                 continue
-            m = CODE_RE.search(line)
-            if not m:
+            prem_raw = (row.get(premium_col) or "").strip()
+            if not prem_raw:
                 continue
-            lang_name = line[:m.start()].strip()
-            rest = line[m.end():].strip()
-            code = m.group(1)
-            nums = rest.split()
-            if len(nums) < 6:
+            try:
+                premium = float(prem_raw)
+            except ValueError:
                 continue
-            premium = float(nums[5])
-            avg_bpp = float(nums[3])
+            try:
+                avg_bpp = float(row.get(bpp_col) or "nan")
+            except ValueError:
+                avg_bpp = float("nan")
             rows.append({
-                "language": lang_name,
-                "code": code,
-                "premium": premium,
-                "avg_bpp": avg_bpp,
+                "language":   (row.get("Name") or "").strip(),
+                "code":       code,
+                "script_tag": (row.get("Script") or "").strip(),
+                "premium":    premium,
+                "avg_bpp":    avg_bpp,
             })
     return rows
 
-data = parse_summary(SUMMARY)
+data = load_data(MASTER_CSV, PREMIUM_COL)
 
 # ── 2. Script detection ──────────────────────────────────────────────────────
 
-def get_script(code: str) -> str:
-    parts = code.split("_")
-    if len(parts) >= 2:
-        s = parts[1]
-        for tag, label in SCRIPT_LABELS.items():
-            if s.startswith(tag):
-                return label
+def get_script(row) -> str:
+    # Prefer the explicit Script column; fall back to the tag in Code_Orig.
+    s = row.get("script_tag") or ""
+    if not s and "_" in row["code"]:
+        s = row["code"].split("_")[1]
+    for tag, label in SCRIPT_LABELS.items():
+        if s.startswith(tag):
+            return label
     return "Other"
 
 for row in data:
-    row["script"] = get_script(row["code"])
+    row["script"] = get_script(row)
 
 # Group by script
-from collections import defaultdict
 script_groups = defaultdict(list)
 for row in data:
     script_groups[row["script"]].append(row)
@@ -157,7 +177,7 @@ for script in script_order:
     plt.tight_layout()
 
     safe_name = script.replace("/", "_").replace(" ", "_").replace("(", "").replace(")", "")
-    out_path = OUT_DIR / f"premium_{safe_name}.png"
+    out_path = OUT_DIR / f"premium_{safe_name}_{PREMIUM_TAG}.png"
     fig.savefig(out_path, dpi=160, bbox_inches="tight")
     plt.close(fig)
     saved.append(out_path)
@@ -261,10 +281,10 @@ cbar.ax.tick_params(labelsize=7)
 
 plt.tight_layout()
 fig.subplots_adjust(bottom=0.22)
-overview_path = OUT_DIR_OVERVIEW / "premium_overview_by_script.png"
+overview_path = OUT_DIR_OVERVIEW / f"premium_overview_by_script_{PREMIUM_TAG}.png"
 fig.savefig(overview_path, dpi=160, bbox_inches="tight")
 plt.close(fig)
 saved.append(overview_path)
 print(f"  saved -> {overview_path}")
 
-print(f"\nDone. {len(saved)} charts saved to {OUT_DIR}/")
+print(f"\nDone. {len(saved)} charts saved.")
