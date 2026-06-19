@@ -573,23 +573,15 @@ function renderPanel(gi,filterType,filterVal) {
         ${l.Name} <span class="lang-prem">${getPremium(l).toFixed(2)}×</span></span>`).join('')}</div>`;
     return;
   }
+
   function makeRows(entries,colorFn,swatchFn,type){
-      return entries.map(([key,count])=>{
-        // ── CHANGE HERE ──
-        let sw = '';
-        if (swatchFn) {
-          sw = swatchFn(key);
-        } else {
-          const isStripe = key === 'Logosyllabary';
-          const swatchClass = isStripe ? 'class="fam-swatch stripe-swatch"' : 'class="fam-swatch"';
-          const swatchStyle = isStripe ? '' : `style="background:${colorFn(key)}"`;
-          sw = `<span ${swatchClass} ${swatchStyle}></span>`;
-        }
-        const safe=key.replace(/'/g,"\\'");
-        return `<div class="fam-row" onclick="renderPanel(${gi},'${type}','${safe}')">
-          ${sw}<span class="fam-name">${key}</span><span class="fam-count">${count}</span><span class="fam-arrow">›</span></div>`;
-      }).join('');
-    }
+    return entries.map(([key,count])=>{
+      const sw=swatchFn?swatchFn(key):`<span class="fam-swatch" style="background:${colorFn(key)}"></span>`;
+      const safe=key.replace(/'/g,"\\'");
+      return `<div class="fam-row" onclick="renderPanel(${gi},'${type}','${safe}')">
+        ${sw}<span class="fam-name">${key}</span><span class="fam-count">${count}</span><span class="fam-arrow">›</span></div>`;
+    }).join('');
+  }
 
   let cols='';
   if(showFam){
