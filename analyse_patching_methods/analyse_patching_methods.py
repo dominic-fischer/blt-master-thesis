@@ -120,7 +120,7 @@ def gainers_losers_block(label, raw_counts, cmp_counts, rt, ct, reverse):
 
 # ── Write report ──────────────────────────────────────────────────────────────
 BPC_LABEL   = {"1 byte": "1-byte", "2 bytes": "2-byte", "3 bytes": "3-byte"}
-STYPE_ORDER = ["Alphabet", "Abjad", "Abugida", "Logographic"]
+STYPE_ORDER = ["Alphabet", "Abjad", "Abugida", "Syllabary", "Logosyllabary","Logographic"]
 
 os.makedirs("analyse_patching_methods", exist_ok=True)
 out_path = "analyse_patching_methods/analyse_patching_methods.txt"
