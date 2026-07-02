@@ -226,6 +226,7 @@ class MultiprocessIterator(StatefulIterator):
             )
 
         self.base_iterator = base_iterator_state.build()
+        self.producer.join()
         self.producer.close()
         self.producer = None
         self.batch_queue = None
