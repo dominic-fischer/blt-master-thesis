@@ -98,9 +98,9 @@ if __name__ == "__main__":
     results = compare(fw2_langs, flores_codes)
 
     # Example: save results to CSV files
-    pd.Series(results["both"]).to_csv("langs_in_both.csv", index=False, header=["code"])
-    # pd.Series(results["only_fineweb2"]).to_csv("langs_only_fineweb2.csv", index=False, header=["code"])
-    # pd.Series(results["only_floresplus"]).to_csv("langs_only_floresplus.csv", index=False, header=["code"])
+    pd.Series(results["both"]).to_csv("training_setup/langs/langs_in_both.csv", index=False, header=["code"])
+    pd.Series(results["only_fineweb2"]).to_csv("training_setup/langs/langs_only_fineweb2.csv", index=False, header=["code"])
+    pd.Series(results["only_floresplus"]).to_csv("training_setup/langs/langs_only_floresplus.csv", index=False, header=["code"])
 
     # Example download (streaming, doesn't pull whole dataset to disk):
     # ds = download_fineweb2_language("eng_Latn", streaming=True)
