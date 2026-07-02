@@ -22,6 +22,15 @@
 #   distributed.matmul_allow_tf32: unchanged (false)
 #     TF32 is Ampere+ only; this setting is a no-op on Turing either way.
 #
+#   distributed.selective_activation_checkpointing: false -> true
+#     Stage-1 smoke testing (batch_size=4, seq_len=8192, no checkpointing)
+#     OOM'd at ~9.3GB for a 41M-param model -- saved activations across all
+#     12 layers dominate memory, not params/optimizer state. Checkpointing
+#     recomputes activations during backward instead of keeping them all
+#     resident, trading some step time for much lower peak memory. This is
+#     what lets batch_size/seq_len actually reach usable values on 11GB
+#     Turing cards.
+#
 #   entropy_model.*: Repo-scale (dim=768/12h/14L) -> Medium (dim=512/8h/12L)
 #     See earlier sizing discussion: Medium is the config where every
 #     language's fairness-adjusted byte requirement is comfortably covered,
@@ -43,13 +52,15 @@
 #     when training the entropy model itself (add_patches: false already
 #     signals this in the original config too).
 #
-#   data.batch_size: 2 -> 24 (starting point, TUNE THIS)
-#     The original 2 was sized for the full 768-dim/14-layer model on
-#     whatever cluster GPUs Meta used. Medium is much smaller and your
-#     2080 Tis have 11GB each with room to spare. Start at 24, watch
-#     nvidia-smi during the first ~50 steps, and increase/decrease from
-#     there -- there's no way to know the right number without testing on
-#     your actual hardware.
+#   data.batch_size: 2 -> 16 (empirically determined via smoke testing)
+#     Tested directly on the 2080 Ti: batch_size=8 and 16 both clear with
+#     comfortable headroom (mem: 56-59%% peak, per training logs). 24 OOMs
+#     during loss.backward() (activation recompute + gradient memory);
+#     32 OOMs in the NCCL gradient all-reduce. Given the sharp cliff between
+#     16 (safe) and 24 (fails), and that a 5-step smoke test doesn't capture
+#     the document-length variance or occasional allocator spikes a real
+#     40,000-step run will see, 16 is used rather than pushing closer to the
+#     observed failure point.
 #
 #   steps: sized for ~a few epochs over the full 20-language mix at this
 #     batch size; adjust once you've measured real wall-clock throughput
@@ -57,7 +68,7 @@
 
 dump_dir: /local/scratch/dfische/blt/dumps/entropy_medium_20lang
 name: "entropy_medium_20lang"
-steps: 40_000
+steps: 15_651  # 10 epochs at 4 GPUs (~1565 steps/epoch over the ~820MB corpus)
 max_steps: null
 probe_freq: null
 seed: 777
@@ -92,26 +103,26 @@ data:
   root_dir: /local/scratch/dfische/blt/data/lang_shards
   sources:
     eng_Latn: 1.0
-    deu_Latn: 1.0
-    spa_Latn: 1.0
-    ita_Latn: 1.0
-    fra_Latn: 1.0
-    ron_Latn: 1.0
-    hrv_Latn: 1.0
-    srp_Cyrl: 1.0
-    nya_Latn: 1.0
-    fin_Latn: 1.0
-    vie_Latn: 1.0
-    kat_Geor: 1.0
-    arb_Arab: 1.0
-    heb_Hebr: 1.0
-    tam_Taml: 1.0
-    tha_Thai: 1.0
-    amh_Ethi: 1.0
-    kor_Hang: 1.0
-    jpn_Jpan: 1.0
-    cmn_Hans: 1.0
-  batch_size: 24
+    deu_Latn: 1.188730146061138
+    spa_Latn: 1.2138079655199936
+    ita_Latn: 1.1827599968074067
+    fra_Latn: 1.233721765504031
+    ron_Latn: 1.1884108867427567
+    hrv_Latn: 1.0146859286455423
+    srp_Cyrl: 1.8072870939420544
+    nya_Latn: 1.1315907095538351
+    fin_Latn: 1.1107430760635326
+    vie_Latn: 1.3953148695027535
+    kat_Geor: 2.974363476733977
+    arb_Arab: 1.600893926091468
+    heb_Hebr: 1.392481443052119
+    tam_Taml: 3.183023385745072
+    tha_Thai: 2.765599808444409
+    amh_Ethi: 1.7431239524303617
+    kor_Hang: 1.2045494452869343
+    jpn_Jpan: 1.2774203847074783
+    cmn_Hans: 0.9358608029371858
+  batch_size: 16
   prefetch_size: 64
   seq_len: 8192
   max_encoder_seq_length: 8192
@@ -129,14 +140,18 @@ profiling:
 
 checkpoint:
   dump:
-    every: 500
-    keep: 3
+    every: 1565  # ~1 epoch at 4 GPUs, batch_size=16, seq_len=8192, ~820MB corpus
+    keep: -1
   eval:
-    every: 1000
+    every: 1565
     keep: -1
 
 logging:
   freq: 10
+  wandb:
+    project: "blt-entropy-model"
+    name: "entropy_medium_20lang"
+    entity: null  # set to your wandb team/username if not using your default
 
 eval_on_gpus: null
 eval: null
@@ -148,6 +163,20 @@ async_eval_gpus: null
 #
 #   torchrun --nproc_per_node=8 --standalone \
 #       -m bytelatent.train config=entropy_model_2080ti.yaml
+#
+# 4-GPU variant (e.g. if sharing the machine): shard count (8 chunks/lang)
+# still divides evenly (8 % 4 == 0), no data re-prep needed. Just:
+#
+#   torchrun --nproc_per_node=4 --standalone \
+#       -m bytelatent.train config=entropy_model_2080ti.yaml
+#
+# With 4 GPUs, bytes/step halves vs. 8 GPUs. Decide explicitly:
+#   - leave steps: 40_000 as-is -> same wall-clock, HALF the total data
+#     coverage of the original 8-GPU plan
+#   - steps: 80_000 -> same total data coverage as the 8-GPU plan (matches
+#     the Chinchilla-ratio sizing this config was built around), ~2x the
+#     wall-clock time. Given the original 8-GPU estimate had comfortable
+#     slack in a 48h budget, this is usually the safer default.
 #
 # Before the real run, do a short smoke test to calibrate batch_size and
 # get a real wall-clock steps/sec number instead of relying on the
