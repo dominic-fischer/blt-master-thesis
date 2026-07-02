@@ -521,16 +521,22 @@ def parallelize_model(
         raise ValueError(f"Invalid fsdp_type: {distributed_args.fsdp_type}")
 
     if distributed_args.selective_activation_checkpointing:
-        # only works for blt models
-        # assuming that entropy models will not use checkpointing
-        for module in [
-            model.global_transformer,
-            model.local_encoder,
-            model.local_decoder,
-        ]:
-            for i in range(len(module.layers)):
-                module.layers[i] = checkpoint_wrapper(
-                    module.layers[i],
+        if hasattr(model, "global_transformer"):
+            # ByteLatentTransformer: encoder/global/decoder submodules
+            for module in [
+                model.global_transformer,
+                model.local_encoder,
+                model.local_decoder,
+            ]:
+                for i in range(len(module.layers)):
+                    module.layers[i] = checkpoint_wrapper(
+                        module.layers[i],
+                    )
+        else:
+            # Entropy model (plain LMTransformer): flat layer list
+            for i in range(len(model.layers)):
+                model.layers[i] = checkpoint_wrapper(
+                    model.layers[i],
                 )
 
     if distributed_args.compile:

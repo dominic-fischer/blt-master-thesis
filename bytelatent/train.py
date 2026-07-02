@@ -205,8 +205,9 @@ def every_n_steps(train_state, freq: int, acc_step=None, acc_freq=None):
 
 
 def compute_loss(p, y, mask, scale):
+    # (logits upcast to fp32 just for the loss — numerically stable, keeps fp16 speed everywhere else):
     tok_loss = scale * F.cross_entropy(
-        p.flatten(0, 1), y.flatten(0, 1), reduction="none"
+        p.flatten(0, 1).float(), y.flatten(0, 1), reduction="none"
     )
     if mask is None:
         loss = tok_loss.mean()
