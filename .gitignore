@@ -175,3 +175,5 @@ junk.py
 inspect_results/
 throwaway_scripts/
 eval_results_chart.html
+data/
+dumps/

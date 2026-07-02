@@ -1,4 +1,4 @@
-Language,FLORES_Code,ratio_vs_english,Script,Script_Type,Directionality,Language_Family,Morphology,Word_Segmentation,Approx_Bytes_Per_Char,Reason_for_Selection,Tiny_bytes,Small_bytes,Medium_bytes,Paper-scale_bytes,Repo-scale_bytes
+Language,language_code,ratio_vs_english,Script,Script_Type,Directionality,Language_Family,Morphology,Word_Segmentation,Approx_Bytes_Per_Char,Reason_for_Selection,Tiny_bytes,Small_bytes,Medium_bytes,Paper-scale_bytes,Repo-scale_bytes
 English,eng_Latn,1.0,Latin,Alphabetic,LTR,Indo-European (Germanic),Fusional,Space-separated,1,Base language,4506431,11651614,26864254,31327102,65013693
 German,deu_Latn,1.188730146061138,Latin,Alphabetic,LTR,Indo-European (Germanic),Fusional,Space-separated,1,Direct comparison to the base language English,5356930,13850625,31934348,37239470,77283737
 Spanish,spa_Latn,1.2138079655199936,Latin,Alphabetic,LTR,Indo-European (Romance),Fusional,Space-separated,1,Romance language cluster to explore influence on model predictions,5469941,14142822,32608045,38025086,78914139
