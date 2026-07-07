@@ -41,6 +41,11 @@ waiting on it in NCCL. Use eval_after_training.sh once training has
 finished instead; this script prints that command for you, both up front
 and again after a successful --run.
 
+Reusable as a module: build_parser() and compute_plan() are exposed
+specifically so lr_sweep.py can build run plans (dump_dir, cmd, run_env,
+etc.) using the exact same logic/defaults as this script's CLI, without
+duplicating and risking drift between the two.
+
 Usage:
     python launch_training.py <size> --n-gpus 4 --epochs 10 [--batch-size 16]
                                [--run]
@@ -52,6 +57,7 @@ Example:
 
 import argparse
 import csv
+import json
 import os
 import subprocess
 import sys
@@ -63,6 +69,43 @@ SIZE_NAME_MAP = {
     "paper-scale": "Paper-scale",
     "repo-scale": "Repo-scale",
 }
+
+# Fallback when a size has no entry in the tuned-LR lookup file yet: the
+# yaml's own optim.lr, which is Meta's repo-scale (dim=768/12h/14L) debug
+# tuning -- NOT validated for other sizes. See --lr's help text.
+FALLBACK_LR = 4e-4
+
+
+def load_tuned_lr(path: str, size: str) -> float | None:
+    """Returns the saved LR for this size from the tuned-LR lookup file
+    (see lr_sweep.py's --save-best), or None if the file doesn't exist or
+    has no entry for this size yet."""
+    if not os.path.exists(path):
+        return None
+    with open(path) as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            return None
+    value = data.get(size)
+    return float(value) if value is not None else None
+
+
+def save_tuned_lr(path: str, size: str, lr: float) -> None:
+    """Read-modify-write: updates only this size's entry, preserving
+    whatever other sizes are already saved in the file."""
+    data = {}
+    if os.path.exists(path):
+        with open(path) as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                data = {}
+    data[size] = lr
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
+        f.write("\n")
 
 
 def load_architecture(configs_csv: str, size_row_name: str) -> dict:
@@ -102,11 +145,21 @@ def format_value(x: float) -> str:
     return f"{mantissa}e{exp_sign}{exp_num}"
 
 
-def main():
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("size", choices=list(SIZE_NAME_MAP.keys()))
     parser.add_argument("--n-gpus", type=int, required=True)
     parser.add_argument("--epochs", type=float, default=10)
+    parser.add_argument("--probe-steps", type=int, default=None,
+                         help="For quick LR probes (see lr_sweep.py): use "
+                              "exactly this many steps instead of computing "
+                              "steps from --epochs, and disable periodic "
+                              "checkpointing/eval entirely (set to fire "
+                              "past the end of the run) since a probe only "
+                              "needs metrics.jsonl's per-step train bpb/ "
+                              "grad_norm, logged every logging.freq steps "
+                              "regardless of checkpointing. Overrides "
+                              "--epochs when set.")
     parser.add_argument("--batch-size", type=int, default=16,
                          help="Default 16 is validated safe for Medium on "
                               "2080 Ti. Smaller models (Tiny/Small) likely "
@@ -145,21 +198,30 @@ def main():
     parser.add_argument("--base-warmup", type=int, default=500,
                          help="Upper cap for the scaled warmup (the yaml's own "
                               "default warmup value).")
-    parser.add_argument("--lr", type=float, default=4e-4,
-                         help="optim.lr override. Default 4e-4 matches the "
-                              "yaml's own value, which is Meta's original "
-                              "repo-scale (dim=768/12h/14L) tuning -- it does "
-                              "NOT automatically get lighter for smaller "
-                              "architectures, since this script's size "
+    parser.add_argument("--tuned-lrs-file", default="training_setup/tuned_lrs.json",
+                         help="JSON lookup of {size: lr} saved by "
+                              "lr_sweep.py --save-best. Used as --lr's "
+                              "default when --lr isn't explicitly passed, "
+                              "so once a size has been swept you don't "
+                              "have to remember/retype its result.")
+    parser.add_argument("--lr", type=float, default=None,
+                         help="optim.lr override. If omitted, uses the "
+                              "value saved for this size in "
+                              "--tuned-lrs-file if present, else falls "
+                              f"back to the yaml's own {FALLBACK_LR} -- "
+                              "which is Meta's original repo-scale "
+                              "(dim=768/12h/14L) tuning, NOT validated for "
+                              "other sizes, since this script's size "
                               "overrides only touch entropy_model.* dims, "
-                              "never optim.lr. Confirmed via metrics.jsonl on "
-                              "a Tiny (dim=256/4h/8L) run: grad_norm and bpb "
-                              "both climbed steadily for ~200 steps right "
-                              "after warmup ended at peak lr=4e-4, even "
-                              "though lr was already decaying -- classic "
-                              "too-high-lr divergence, not a warmup-length or "
-                              "overfitting issue. Re-tune per size; don't "
-                              "assume this default transfers as you scale up.")
+                              "never optim.lr on their own. Confirmed via "
+                              "metrics.jsonl on a Tiny (dim=256/4h/8L) run: "
+                              "grad_norm and bpb both climbed steadily for "
+                              "~200 steps right after warmup ended at peak "
+                              f"lr={FALLBACK_LR}, even though lr was already "
+                              "decaying -- classic too-high-lr divergence, "
+                              "not a warmup-length or overfitting issue. "
+                              "Use lr_sweep.py to find and save a validated "
+                              "value per size instead of guessing.")
     parser.add_argument("--clip", type=float, default=10.0,
                          help="optim.clip (grad norm clipping threshold). "
                               "Default 10.0 matches the yaml's own value, "
@@ -178,29 +240,63 @@ def main():
                               "Pass this flag to actually enable wandb logging.")
     parser.add_argument("--run", action="store_true",
                          help="Actually execute the command instead of just printing it")
-    args = parser.parse_args()
+    return parser
 
+
+def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> dict:
+    """Turns parsed args into everything needed to print or execute a run:
+    the torchrun command, env vars, dump/log dirs, and the post-training
+    eval command. Kept separate from main() so lr_sweep.py can build and
+    launch runs programmatically using identical logic/defaults."""
     size_row_name = SIZE_NAME_MAP[args.size]
     byte_column = f"{size_row_name}_bytes"
+
+    # Resolve --lr: explicit CLI value > saved tuned value for this size >
+    # yaml fallback. Tracked separately from a simple parser-default
+    # comparison since the "default" here depends on args.size, which
+    # argparse itself has no notion of.
+    tuned_lr = load_tuned_lr(args.tuned_lrs_file, args.size)
+    effective_default_lr = tuned_lr if tuned_lr is not None else FALLBACK_LR
+    if args.lr is None:
+        args.lr = effective_default_lr
+        lr_source = (f"tuned default for {args.size}, from {args.tuned_lrs_file}"
+                     if tuned_lr is not None else
+                     f"yaml fallback -- not yet tuned for {args.size}, "
+                     f"see lr_sweep.py")
+    else:
+        lr_source = "explicit override"
 
     arch = load_architecture(args.configs_csv, size_row_name)
     total_corpus_bytes = compute_total_corpus_bytes(args.langs_csv, byte_column)
 
     bytes_per_step = args.n_gpus * args.batch_size * args.seq_len
     steps_per_epoch = total_corpus_bytes / bytes_per_step
-    checkpoint_every = round(steps_per_epoch)
-    # total_steps is forced to an exact multiple of checkpoint_every (for
-    # whole-number epoch requests) as defense-in-depth against a real
-    # bytelatent bug: train.py's "saved" flag guarding the final checkpoint
-    # is never reset per-iteration, so once any periodic checkpoint fires,
-    # the "always save when training ends" safety net silently becomes a
-    # no-op -- meaning any steps after the LAST periodic checkpoint are
-    # never persisted. Confirmed: a Tiny run (steps=2625,
-    # checkpoint.dump.every=263) lost its final 258 steps (~1 epoch) this
-    # way. Making total_steps an exact multiple of checkpoint_every means
-    # the last periodic checkpoint IS the final step, so nothing is lost
-    # even if train.py hasn't been patched on a given machine.
-    total_steps = round(args.epochs) * checkpoint_every
+
+    if args.probe_steps is not None:
+        # Quick LR-probe mode: fixed step count, no periodic
+        # checkpoint/eval (set to fire past the end of the run so they
+        # never trigger) -- a probe only needs metrics.jsonl's per-step
+        # train bpb/grad_norm, which log every logging.freq steps
+        # regardless of checkpointing, so skipping checkpoint I/O and
+        # eval passes makes each probe much faster.
+        total_steps = args.probe_steps
+        checkpoint_every = total_steps + 1
+    else:
+        checkpoint_every = round(steps_per_epoch)
+        # total_steps is forced to an exact multiple of checkpoint_every
+        # (for whole-number epoch requests) as defense-in-depth against a
+        # real bytelatent bug: train.py's "saved" flag guarding the final
+        # checkpoint is never reset per-iteration, so once any periodic
+        # checkpoint fires, the "always save when training ends" safety
+        # net silently becomes a no-op -- meaning any steps after the
+        # LAST periodic checkpoint are never persisted. Confirmed: a Tiny
+        # run (steps=2625, checkpoint.dump.every=263) lost its final 258
+        # steps (~1 epoch) this way. Making total_steps an exact multiple
+        # of checkpoint_every means the last periodic checkpoint IS the
+        # final step, so nothing is lost even if train.py hasn't been
+        # patched on a given machine.
+        total_steps = round(args.epochs) * checkpoint_every
+
     warmup = max(1, min(args.base_warmup, round(args.warmup_fraction * total_steps)))
 
     shard_root = os.path.join(
@@ -212,10 +308,12 @@ def main():
     # don't silently collide in the same dump_dir/log_dir and overwrite
     # each other's checkpoints/metrics.jsonl. Compared against the actual
     # parser defaults (not hardcoded numbers here), so this stays correct
-    # even if a default above is changed later.
+    # even if a default above is changed later. "lr" is handled separately
+    # (below) since its effective default is size-dependent (tuned-LR
+    # lookup), not a single fixed parser default.
     tunable = {
         "epochs": "epochs",
-        "lr": "lr",
+        "probe_steps": "probesteps",
         "clip": "clip",
         "batch_size": "bs",
         "seq_len": "seqlen",
@@ -226,6 +324,12 @@ def main():
         default = parser.get_default(arg_name)
         if value != default:
             suffix_parts.append(f"{label}{format_value(value)}")
+    # lr: compare against this size's effective default (tuned value if
+    # present, else FALLBACK_LR), not a fixed parser default -- so a run
+    # using the tuned/saved LR doesn't get a redundant suffix, but one
+    # using a genuinely different --lr still does.
+    if args.lr != effective_default_lr:
+        suffix_parts.append(f"lr{format_value(args.lr)}")
     run_name_suffix = ("_" + "_".join(suffix_parts)) if suffix_parts else ""
 
     run_name = f"entropy_{args.size}_20lang_{args.n_gpus}gpu{run_name_suffix}"
@@ -235,12 +339,14 @@ def main():
     # variable so they can't silently drift apart from each other.
     log_dir = os.path.join(args.log_root, run_name)
 
+    shard_warning = None
     if not os.path.isdir(shard_root):
-        print(f"WARNING: shard directory not found: {shard_root}")
-        print(f"  Prepare it first, e.g.:")
-        print(f"  python prepare_language_shards.py {args.langs_csv} {byte_column} "
-              f"{shard_root} --n-chunks {args.n_gpus}")
-        print()
+        shard_warning = (
+            f"WARNING: shard directory not found: {shard_root}\n"
+            f"  Prepare it first, e.g.:\n"
+            f"  python prepare_language_shards.py {args.langs_csv} {byte_column} "
+            f"{shard_root} --n-chunks {args.n_gpus}"
+        )
 
     overrides = [
         f"steps={total_steps}",
@@ -277,9 +383,18 @@ def main():
         env_prefix.append("export WANDB_MODE=disabled")
     env_prefix.append(f"CUDA_VISIBLE_DEVICES={cuda_visible_devices}")
 
+    run_env = dict(os.environ)
+    run_env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+    run_env["PYTHONUNBUFFERED"] = "1"
+    if not args.enable_wandb:
+        run_env["WANDB_MODE"] = "disabled"
+    run_env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
+
     # Post-training eval only -- do NOT run this while training is still
     # active (see module docstring: concurrent eval is a suspected cause
-    # of silent rank crashes on shared/contended GPUs).
+    # of silent rank crashes on shared/contended GPUs). Not meaningful in
+    # probe mode (no checkpoints are saved), so callers should skip this
+    # when args.probe_steps is set.
     eval_after_cmd = [
         "bash", args.eval_after_script,
         dump_dir,
@@ -291,49 +406,91 @@ def main():
         str(checkpoint_every),
     ]
 
-    print(f"# {size_row_name}: {arch['total_params']:,} params, "
-          f"dim={arch['dim']} n_layers={arch['n_layers']} n_heads={arch['n_heads']}")
-    print(f"# corpus: {total_corpus_bytes:,} bytes, "
-          f"{steps_per_epoch:.1f} steps/epoch @ {args.n_gpus} GPUs, "
+    return {
+        "arch": arch,
+        "size_row_name": size_row_name,
+        "total_corpus_bytes": total_corpus_bytes,
+        "steps_per_epoch": steps_per_epoch,
+        "checkpoint_every": checkpoint_every,
+        "total_steps": total_steps,
+        "warmup": warmup,
+        "lr_source": lr_source,
+        "shard_root": shard_root,
+        "shard_warning": shard_warning,
+        "run_name": run_name,
+        "dump_dir": dump_dir,
+        "log_dir": log_dir,
+        "metrics_jsonl": os.path.join(dump_dir, "metrics.jsonl"),
+        "cmd": cmd,
+        "env_prefix": env_prefix,
+        "run_env": run_env,
+        "cuda_visible_devices": cuda_visible_devices,
+        "eval_after_cmd": eval_after_cmd,
+    }
+
+
+def print_plan(args: argparse.Namespace, plan: dict) -> None:
+    if plan["shard_warning"]:
+        print(plan["shard_warning"])
+        print()
+
+    print(f"# {plan['size_row_name']}: {plan['arch']['total_params']:,} params, "
+          f"dim={plan['arch']['dim']} n_layers={plan['arch']['n_layers']} "
+          f"n_heads={plan['arch']['n_heads']}")
+    print(f"# corpus: {plan['total_corpus_bytes']:,} bytes, "
+          f"{plan['steps_per_epoch']:.1f} steps/epoch @ {args.n_gpus} GPUs, "
           f"batch_size={args.batch_size}, seq_len={args.seq_len}")
-    print(f"# {round(args.epochs)} epochs -> steps={total_steps} "
-          f"(exact multiple of checkpoint_every={checkpoint_every}, "
-          f"guards against the missing-final-checkpoint bug)")
-    print(f"# warmup={warmup} (scaled to {args.warmup_fraction:.0%} of "
+    if args.probe_steps is not None:
+        print(f"# PROBE MODE: steps={plan['total_steps']} (fixed, --epochs "
+              f"ignored), checkpointing/eval disabled")
+    else:
+        print(f"# {round(args.epochs)} epochs -> steps={plan['total_steps']} "
+              f"(exact multiple of checkpoint_every={plan['checkpoint_every']}, "
+              f"guards against the missing-final-checkpoint bug)")
+    print(f"# warmup={plan['warmup']} (scaled to {args.warmup_fraction:.0%} of "
           f"total_steps, capped at {args.base_warmup})")
-    print(f"# optim.lr={args.lr}  optim.clip={args.clip}"
-          + ("  (yaml defaults -- not yet re-tuned for this size)"
-             if (args.lr == 4e-4 and args.clip == 10.0) else ""))
+    print(f"# optim.lr={args.lr}  optim.clip={args.clip}")
+    print(f"#   lr source: {plan['lr_source']}")
     print()
     print("# --- Training ---")
-    for line in env_prefix[:-1]:
+    for line in plan["env_prefix"][:-1]:
         print(line)
-    print(env_prefix[-1] + " \\")
-    print("    " + " \\\n    ".join(cmd))
+    print(plan["env_prefix"][-1] + " \\")
+    print("    " + " \\\n    ".join(plan["cmd"]))
     print()
     print("# --- Terminal 2: watch each rank's log separately (avoids the "
           "interleaved single-stream mess) ---")
     print("# torchrun creates this the moment the run starts, so it's safe "
           "to run right after launching Terminal 1")
-    print(f"tail -f {log_dir}/*/attempt_0/*/stdout.log")
+    print(f"tail -f {plan['log_dir']}/*/attempt_0/*/stdout.log")
     print("# (if that glob matches nothing, run: "
-          f"find {log_dir} -name stdout.log   -- to see the real path torchrun used)")
+          f"find {plan['log_dir']} -name stdout.log   -- to see the real "
+          f"path torchrun used)")
     print()
-    print("# --- Run this ONLY after training has finished (not concurrently) ---")
-    print(" ".join(eval_after_cmd))
+    if args.probe_steps is not None:
+        print("# (probe mode: no checkpoints saved, so no eval_after_training.sh "
+              "step -- inspect metrics.jsonl directly)")
+        print(f"#   {plan['metrics_jsonl']}")
+    else:
+        print("# --- Run this ONLY after training has finished (not concurrently) ---")
+        print(" ".join(plan["eval_after_cmd"]))
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+    plan = compute_plan(args, parser)
+    print_plan(args, plan)
 
     if args.run:
         print(f"\nStarting training now.\n")
-        run_env = dict(os.environ)
-        run_env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-        run_env["PYTHONUNBUFFERED"] = "1"
-        if not args.enable_wandb:
-            run_env["WANDB_MODE"] = "disabled"
-        run_env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
-        subprocess.run(cmd, check=True, env=run_env)
+        subprocess.run(plan["cmd"], check=True, env=plan["run_env"])
 
-        print("\nTraining finished successfully. To inspect it, run:\n")
-        print(" ".join(eval_after_cmd))
+        if args.probe_steps is None:
+            print("\nTraining finished successfully. To inspect it, run:\n")
+            print(" ".join(plan["eval_after_cmd"]))
+        else:
+            print(f"\nProbe finished. Metrics at: {plan['metrics_jsonl']}")
 
 
 if __name__ == "__main__":
