@@ -11,9 +11,12 @@ chunk shards, in the exact layout bytelatent's dataloader expects:
     ...
     <root_dir>/<language_code>/<language_code>.chunk.07.jsonl   (n_chunks total)
 
-Why 8 chunks: bytelatent's find_and_sanitize_chunks() requires
-world_size % n_chunks == 0. With 8 GPUs, 8 chunks (one per rank) is the
-simplest fit -- adjust --n-chunks if you train on a different GPU count.
+Why n_chunks matters: bytelatent's find_and_sanitize_chunks() requires
+world_size % n_chunks == 0, and silently DISCARDS excess chunks if
+n_chunks > world_size, or SHARES a chunk across multiple ranks if
+n_chunks < world_size -- so n_chunks should equal your actual GPU count
+for full, non-duplicated data coverage. This script defaults to 8; pass
+--n-chunks to match your launch.
 
 Special cases (same as check_fineweb_availability.py):
   - eng_Latn routes to HuggingFaceFW/fineweb instead of fineweb-2.
@@ -27,8 +30,18 @@ Usage:
     python prepare_language_shards.py \
         training_setup/langs/langs_chosen.csv \
         <column_name, e.g. Medium_bytes> \
-        <output_root_dir> \
+        [output_root_dir] \
         [--n-chunks 8] [--val-docs 200]
+
+If output_root_dir is omitted, it's auto-derived as
+data/lang_shards_<size>_<n_chunks>gpu/ (e.g. data/lang_shards_tiny_4gpu),
+matching the convention launch_training.py expects -- so the two scripts
+stay in sync without manually typing matching paths.
+
+Example:
+    python prepare_language_shards.py \
+        training_setup/langs/langs_chosen.csv Tiny_bytes --n-chunks 4
+    # -> writes to data/lang_shards_tiny_4gpu/
 """
 
 import argparse
@@ -119,11 +132,20 @@ def prepare_language(language_code: str, target_bytes: int, root_dir: str,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("langs_csv")
-    parser.add_argument("byte_column", help="e.g. Medium_bytes, Repo-scale_bytes")
-    parser.add_argument("output_root_dir")
+    parser.add_argument("byte_column", help="e.g. Tiny_bytes, Small_bytes, Medium_bytes")
+    parser.add_argument("output_root_dir", nargs="?", default=None,
+                         help="Optional. If omitted, auto-derived as "
+                              "data/lang_shards_<size>_<n_chunks>gpu/ from "
+                              "byte_column and --n-chunks, matching the "
+                              "convention launch_training.py expects.")
     parser.add_argument("--n-chunks", type=int, default=8)
     parser.add_argument("--val-docs", type=int, default=200)
     args = parser.parse_args()
+
+    if args.output_root_dir is None:
+        size = args.byte_column.removesuffix("_bytes").lower()
+        args.output_root_dir = os.path.join("data", f"lang_shards_{size}_{args.n_chunks}gpu")
+        print(f"No output_root_dir given -- auto-derived: {args.output_root_dir}")
 
     with open(args.langs_csv, newline="") as f:
         reader = csv.DictReader(f)

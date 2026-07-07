@@ -370,6 +370,8 @@ def train(args: TrainArgs):
         while train_state.step < args.steps and (
             args.max_steps is None or train_state.step < args.max_steps
         ):
+            # reset saved flag to False at the beginning of each iteration
+            saved = False
             # We constrain train_state.acc_step to be in range 0 to args.grad_acc_steps - 1
             train_state.acc_step += 1
             train_state.acc_step = train_state.acc_step % args.grad_acc_steps
