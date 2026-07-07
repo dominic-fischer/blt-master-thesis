@@ -18,6 +18,17 @@ n_chunks < world_size -- so n_chunks should equal your actual GPU count
 for full, non-duplicated data coverage. This script defaults to 8; pass
 --n-chunks to match your launch.
 
+Validation split: targets an exact BYTE count (--val-bytes, default
+500,000), not a fixed document count. A fixed document count would make
+the actual bytes collected depend on how long that language's documents
+happen to be -- exactly the problem eval_entropy_bpb.py's
+--target-bytes-per-lang was built to avoid on the eval side. Sizing this
+script's val split by bytes (with headroom above eval's own
+--target-bytes-per-lang, e.g. 500k written here vs. 400k evaluated there)
+means eval should never hit its "ran out of validation data" shortfall
+warning, without having to guess a per-language document count that
+happens to translate to enough bytes.
+
 Special cases (same as check_fineweb_availability.py):
   - eng_Latn routes to HuggingFaceFW/fineweb instead of fineweb-2.
   - cmn_Hans is queried in fineweb-2 under the config name cmn_Hani.
@@ -31,7 +42,7 @@ Usage:
         training_setup/langs/langs_chosen.csv \
         <column_name, e.g. Medium_bytes> \
         [output_root_dir] \
-        [--n-chunks 8] [--val-docs 200]
+        [--n-chunks 8] [--val-bytes 500000]
 
 If output_root_dir is omitted, it's auto-derived as
 data/lang_shards_<size>_<n_chunks>gpu/ (e.g. data/lang_shards_tiny_4gpu),
@@ -70,7 +81,7 @@ def resolve_dataset(language_code: str) -> tuple[str, str | None]:
 
 
 def prepare_language(language_code: str, target_bytes: int, root_dir: str,
-                      n_chunks: int, val_docs: int) -> None:
+                      n_chunks: int, val_bytes: int) -> None:
     dataset_name, dataset_config = resolve_dataset(language_code)
     out_dir = os.path.join(root_dir, language_code)
     os.makedirs(out_dir, exist_ok=True)
@@ -84,7 +95,7 @@ def prepare_language(language_code: str, target_bytes: int, root_dir: str,
     val_file = open(val_path, "w")
 
     print(f"--- {language_code} -> {dataset_name} ({dataset_config}) "
-          f"target={target_bytes:,} bytes ---")
+          f"target={target_bytes:,} bytes, val_target={val_bytes:,} bytes ---")
 
     try:
         ds = load_dataset(dataset_name, dataset_config, split="train", streaming=True)
@@ -96,37 +107,46 @@ def prepare_language(language_code: str, target_bytes: int, root_dir: str,
         return
 
     cumulative_bytes = 0
-    docs_written = 0
+    cumulative_val_bytes = 0
+    val_docs_written = 0
+    train_docs_written = 0
     try:
         for doc in ds:
             text = doc.get("text", "")
             n_bytes = len(text.encode("utf-8"))
 
-            if docs_written < val_docs:
-                # first val_docs docs go to the held-out validation file,
+            if cumulative_val_bytes < val_bytes:
+                # fill the held-out validation file first, by BYTES not
+                # document count, so eval later can rely on every language
+                # actually having val_bytes worth of data available --
                 # not counted against the training byte budget
                 val_file.write(json.dumps(doc, ensure_ascii=False) + "\n")
-                docs_written += 1
+                cumulative_val_bytes += n_bytes
+                val_docs_written += 1
                 continue
 
             if cumulative_bytes >= target_bytes:
                 break
 
-            chunk_idx = (docs_written - val_docs) % n_chunks
+            chunk_idx = train_docs_written % n_chunks
             chunk_files[chunk_idx].write(json.dumps(doc, ensure_ascii=False) + "\n")
             cumulative_bytes += n_bytes
-            docs_written += 1
+            train_docs_written += 1
     except Exception as e:
         print(f"  ERROR while streaming: {e} "
-              f"(after {docs_written} docs, {cumulative_bytes:,} bytes)")
+              f"(after {train_docs_written} train docs, {cumulative_bytes:,} bytes; "
+              f"{val_docs_written} val docs, {cumulative_val_bytes:,} val bytes)")
     finally:
         for f in chunk_files:
             f.close()
         val_file.close()
 
-    status = "OK" if cumulative_bytes >= target_bytes else "SHORTFALL"
-    print(f"  {status}: wrote {cumulative_bytes:,} / {target_bytes:,} bytes "
-          f"across {n_chunks} chunks, {val_docs} val docs")
+    train_status = "OK" if cumulative_bytes >= target_bytes else "SHORTFALL"
+    val_status = "OK" if cumulative_val_bytes >= val_bytes else "SHORTFALL"
+    print(f"  train {train_status}: wrote {cumulative_bytes:,} / {target_bytes:,} bytes "
+          f"across {n_chunks} chunks ({train_docs_written} docs)")
+    print(f"  val   {val_status}: wrote {cumulative_val_bytes:,} / {val_bytes:,} bytes "
+          f"({val_docs_written} docs)")
 
 
 def main():
@@ -139,7 +159,13 @@ def main():
                               "byte_column and --n-chunks, matching the "
                               "convention launch_training.py expects.")
     parser.add_argument("--n-chunks", type=int, default=8)
-    parser.add_argument("--val-docs", type=int, default=200)
+    parser.add_argument("--val-bytes", type=int, default=500_000,
+                         help="Target bytes for the held-out validation "
+                              "split, per language (not a document count). "
+                              "Default 500,000 gives headroom above "
+                              "eval_entropy_bpb.py's own "
+                              "--target-bytes-per-lang (default 400,000), "
+                              "so eval shouldn't hit its shortfall warning.")
     args = parser.parse_args()
 
     if args.output_root_dir is None:
@@ -156,7 +182,7 @@ def main():
         language_code = row["language_code"]
         target_bytes = int(row[args.byte_column])
         prepare_language(language_code, target_bytes, args.output_root_dir,
-                          args.n_chunks, args.val_docs)
+                          args.n_chunks, args.val_bytes)
 
     print(f"\nDone. Shards written under {args.output_root_dir}/<language_code>/")
 

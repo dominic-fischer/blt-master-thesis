@@ -13,6 +13,33 @@ optimization problem (both worsening together, e.g. an LR schedule mismatched
 to a short run's total step count). No extra forward passes needed since
 train.py already logs this at every step.
 
+Evaluation depth: each language is evaluated on EXACTLY the same number of
+bytes (--target-bytes-per-lang, default 400,000), not a fixed document
+count. If the document that would cross the threshold is longer than the
+remaining budget, it's truncated mid-document to hit the target exactly
+(byte-level models have no notion of a "valid" truncation boundary, so
+this is safe). This matters because the underlying training corpus is
+intentionally byte-imbalanced across languages (equal *content* per
+language, via add_language_allocations.py, means byte-heavy languages like
+Tamil/Georgian have more raw bytes for the same content) -- a fixed
+*document* count would let long-document languages dominate the aggregate
+OVERALL bpb purely by accident, unrelated to how good the model actually
+is at that language. With every language contributing exactly the same
+byte count, OVERALL becomes a genuine equal-weight macro-average across
+languages ("how good is the model at each language, treated as equally
+important"), rather than an artifact of whatever happened to be in the
+first N validation documents. Note this is a deliberate DIFFERENT question
+than training-time bpb, which is weighted by data.sources (proportional to
+shard byte-size, which itself already encodes equal content) -- so don't
+expect this OVERALL to track TRAIN bpb as closely as a data.sources-
+weighted aggregate would. It's a fairness / per-language-competence
+metric, not a training-consistency check.
+
+If a language's val.jsonl doesn't contain target_bytes worth of data at
+all, it's flagged explicitly in the output (see short_languages) rather
+than silently producing a smaller, non-comparable sample for that language
+alone.
+
 Tokenization matches training exactly (see bytelatent/tokenizers/blt_tokenizer.py):
     token_id = byte_value + OFFSET(4), BOS_ID=1 prepended, EOS_ID=2 appended.
 
@@ -20,7 +47,7 @@ Usage:
     python eval_entropy_bpb.py \
         <consolidated_checkpoint_dir>  \
         <lang_shards_root_dir> \
-        [--max-docs-per-lang 200] [--device cuda] [--metrics-jsonl PATH]
+        [--target-bytes-per-lang 400000] [--device cuda] [--metrics-jsonl PATH]
 
 Example:
     python eval_entropy_bpb.py \
@@ -42,12 +69,6 @@ from bytelatent.entropy_model import load_entropy_model
 OFFSET = 4
 BOS_ID = 1
 EOS_ID = 2
-
-
-def encode_bytes(text: str) -> list[int]:
-    raw = text.encode("utf-8", errors="ignore")
-    tokens = [b + OFFSET for b in raw]
-    return [BOS_ID] + tokens + [EOS_ID]
 
 
 def find_train_metrics_at_step(metrics_jsonl_path: str, target_step: int) -> dict | None:
@@ -81,26 +102,37 @@ def infer_step_from_checkpoint_dir(checkpoint_dir: str) -> int | None:
 
 
 @torch.no_grad()
-def eval_language(model, val_path: str, device: str, max_docs: int,
-                   max_seqlen: int) -> tuple[float, int]:
-    """Returns (total_nats, total_bytes) across up to max_docs documents.
-    Documents are truncated to max_seqlen tokens (including BOS/EOS) since
-    the model's RoPE table is only precomputed up to that length."""
+def eval_language(model, val_path: str, device: str, target_bytes: int,
+                   max_seqlen: int) -> tuple[float, int, bool]:
+    """Returns (total_nats, total_bytes, hit_target) across documents read
+    from val_path, stopping at EXACTLY target_bytes -- if the document that
+    would cross the threshold is longer than the remaining budget, only the
+    leading `remaining` bytes of it are fed to the model (byte-level models
+    have no notion of "valid" byte boundaries, so slicing mid-document is
+    fine). hit_target is False only if the file runs out of documents
+    before reaching target_bytes -- the caller should flag this, since it
+    breaks the equal-bytes-per-language comparison.
+    Documents are also truncated to max_seqlen tokens (including BOS/EOS)
+    since the model's RoPE table is only precomputed up to that length --
+    whichever of the two limits (remaining byte budget vs. max_seqlen) is
+    smaller wins for a given document."""
     total_nats = 0.0
     total_bytes = 0
     with open(val_path) as f:
-        for i, line in enumerate(f):
-            if i >= max_docs:
-                break
+        for line in f:
+            if total_bytes >= target_bytes:
+                return total_nats, total_bytes, True
             doc = json.loads(line)
             text = doc.get("text", "")
             if not text:
                 continue
-            tokens = encode_bytes(text)
-            if len(tokens) > max_seqlen:
-                tokens = tokens[:max_seqlen]
-            if len(tokens) < 2:
+            raw = text.encode("utf-8", errors="ignore")
+            remaining = target_bytes - total_bytes
+            n = min(len(raw), remaining, max_seqlen - 2)
+            if n < 1:
                 continue
+            raw = raw[:n]
+            tokens = [BOS_ID] + [b + OFFSET for b in raw] + [EOS_ID]
             x = torch.tensor(tokens[:-1], device=device).unsqueeze(0)
             y = torch.tensor(tokens[1:], device=device).unsqueeze(0)
 
@@ -109,14 +141,9 @@ def eval_language(model, val_path: str, device: str, max_docs: int,
                 logits.float().flatten(0, 1), y.flatten(0, 1), reduction="sum"
             )
             total_nats += loss.item()
-            # count only the bytes actually evaluated (post-truncation),
-            # so bpb reflects what the model was actually scored on
-            counted_bytes = min(
-                len(text.encode("utf-8", errors="ignore")),
-                max_seqlen - 2,  # tokens minus BOS/EOS
-            )
-            total_bytes += counted_bytes
-    return total_nats, total_bytes
+            total_bytes += n  # exact -- matches what was actually fed in
+    # ran out of documents before reaching target_bytes
+    return total_nats, total_bytes, False
 
 
 def main():
@@ -124,7 +151,14 @@ def main():
     parser.add_argument("checkpoint_dir",
                          help="consolidated checkpoint dir (contains consolidated.pth + params.json)")
     parser.add_argument("lang_shards_root")
-    parser.add_argument("--max-docs-per-lang", type=int, default=200)
+    parser.add_argument("--target-bytes-per-lang", type=int, default=400_000,
+                         help="Evaluate exactly this many bytes per language "
+                              "(not a fixed document count), so every "
+                              "language contributes equally to OVERALL -- "
+                              "a genuine macro-average across languages, "
+                              "rather than being skewed by whichever "
+                              "language's validation documents happen to be "
+                              "longest.")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu",
                          help="Some internal model buffers are hardcoded to cuda "
                               "(inherited from the repo's inference code), so cpu "
@@ -154,14 +188,17 @@ def main():
     grand_total_nats = 0.0
     grand_total_bytes = 0
     results = []
+    short_languages = []  # languages that ran out of val data before target_bytes
     for val_path in val_files:
         language_code = os.path.basename(os.path.dirname(val_path))
-        nats, n_bytes = eval_language(
-            model, val_path, args.device, args.max_docs_per_lang, model_args.max_seqlen
+        nats, n_bytes, hit_target = eval_language(
+            model, val_path, args.device, args.target_bytes_per_lang, model_args.max_seqlen
         )
         if n_bytes == 0:
             print(f"  {language_code}: no bytes evaluated, skipping")
             continue
+        if not hit_target:
+            short_languages.append((language_code, n_bytes))
         bpb = nats / math.log(2) / n_bytes
         results.append((language_code, bpb, n_bytes))
         grand_total_nats += nats
@@ -175,10 +212,26 @@ def main():
     overall_bpb = grand_total_nats / math.log(2) / grand_total_bytes
     print("-" * 34)
     print(f"{'OVERALL':<12} {overall_bpb:>8.4f} {grand_total_bytes:>12,}")
+    print(f"  (equal-weight macro-average: every language above contributed "
+          f"{args.target_bytes_per_lang:,} bytes"
+          f"{'' if not short_languages else ', except where noted below'})")
+
+    if short_languages:
+        print(f"\nWARNING: {len(short_languages)} language(s) ran out of "
+              f"validation data before reaching {args.target_bytes_per_lang:,} "
+              f"bytes -- OVERALL above is not a perfectly equal-weight "
+              f"average for these:")
+        for language_code, n_bytes in short_languages:
+            print(f"  {language_code}: only {n_bytes:,} bytes available "
+                  f"(val.jsonl exhausted)")
 
     # Training-time loss/bpb at this exact step, for direct comparison --
     # pulled from train.py's own logging, not recomputed (cheap, no extra
-    # forward passes over training data needed).
+    # forward passes over training data needed). NOTE: training bpb is
+    # weighted by data.sources (~ shard byte-size, i.e. NOT equal-weight
+    # across languages), so it will not necessarily track this script's
+    # OVERALL closely -- they're intentionally answering different
+    # questions (see module docstring).
     metrics_path = args.metrics_jsonl
     if metrics_path is None:
         checkpoints_dir = os.path.dirname(os.path.normpath(args.checkpoint_dir))

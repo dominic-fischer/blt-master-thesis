@@ -22,6 +22,25 @@ Reads:
     - langs_chosen.csv         : per-language byte allocation per size, to
                                   compute total corpus size for steps-per-epoch
 
+Logging: torchrun is launched with --log-dir, so each rank's stdout/stderr
+goes to its own file under logs/<run_name>/attempt_0/<rank>/stdout.log
+instead of interleaving all ranks into one messy terminal stream. This
+script prints a `tail -f .../attempt_0/*/stdout.log` command to watch all
+ranks side-by-side (each line prefixed with its filename), which also makes
+it easy to spot a rank that's gone silent -- exactly the pattern that
+preceded the NCCL-timeout crash this script's other changes are guarding
+against.
+
+Evaluation: this script no longer prints an eval_during_training.sh line.
+Running eval concurrently with training (a second process loading a
+checkpoint onto the same GPUs while training is actively using them) is a
+plausible cause of silent rank crashes -- extra GPU/host memory pressure on
+a shared machine can get a training rank OOM-killed by the kernel with no
+Python traceback, which then shows up as the *other* ranks timing out
+waiting on it in NCCL. Use eval_after_training.sh once training has
+finished instead; this script prints that command for you, both up front
+and again after a successful --run.
+
 Usage:
     python launch_training.py <size> --n-gpus 4 --epochs 10 [--batch-size 16]
                                [--run]
@@ -67,6 +86,22 @@ def compute_total_corpus_bytes(langs_csv: str, byte_column: str) -> int:
     return total
 
 
+def format_value(x: float) -> str:
+    """Compact, filename-safe representation of a hyperparameter value.
+    Whole numbers print without a decimal point (10 -> '10'); small
+    floats print in short scientific notation without a leading zero in
+    the exponent (0.0001 -> '1e-4', matching how people naturally write
+    LRs, rather than Python's default '1e-04' or '0.0001')."""
+    if x == round(x) and abs(x) >= 1:
+        return str(int(round(x)))
+    s = f"{x:.1e}" if x != 0 else "0"
+    mantissa, exp = s.split("e")
+    mantissa = mantissa.rstrip("0").rstrip(".")
+    exp_sign = exp[0]
+    exp_num = str(int(exp[1:]))
+    return f"{mantissa}e{exp_sign}{exp_num}"
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("size", choices=list(SIZE_NAME_MAP.keys()))
@@ -86,6 +121,14 @@ def main():
                          help="Shards expected at "
                               "<base>/lang_shards_<size>_<n_gpus>gpu/")
     parser.add_argument("--dump-root", default="dumps")
+    parser.add_argument("--log-root", default="logs",
+                         help="torchrun writes per-rank stdout/stderr under "
+                              "<log-root>/<run_name>/attempt_N/<rank>/ via "
+                              "--log-dir, instead of interleaving all ranks "
+                              "into one terminal stream.")
+    parser.add_argument("--eval-after-script", default="eval_after_training.sh",
+                         help="Path to the post-training eval script "
+                              "(run once, after training finishes).")
     parser.add_argument("--warmup-fraction", type=float, default=0.1,
                          help="warmup = min(base_warmup, round(warmup_fraction * "
                               "total_steps)). Default base_warmup=500 (the yaml's "
@@ -102,6 +145,37 @@ def main():
     parser.add_argument("--base-warmup", type=int, default=500,
                          help="Upper cap for the scaled warmup (the yaml's own "
                               "default warmup value).")
+    parser.add_argument("--lr", type=float, default=4e-4,
+                         help="optim.lr override. Default 4e-4 matches the "
+                              "yaml's own value, which is Meta's original "
+                              "repo-scale (dim=768/12h/14L) tuning -- it does "
+                              "NOT automatically get lighter for smaller "
+                              "architectures, since this script's size "
+                              "overrides only touch entropy_model.* dims, "
+                              "never optim.lr. Confirmed via metrics.jsonl on "
+                              "a Tiny (dim=256/4h/8L) run: grad_norm and bpb "
+                              "both climbed steadily for ~200 steps right "
+                              "after warmup ended at peak lr=4e-4, even "
+                              "though lr was already decaying -- classic "
+                              "too-high-lr divergence, not a warmup-length or "
+                              "overfitting issue. Re-tune per size; don't "
+                              "assume this default transfers as you scale up.")
+    parser.add_argument("--clip", type=float, default=10.0,
+                         help="optim.clip (grad norm clipping threshold). "
+                              "Default 10.0 matches the yaml's own value, "
+                              "which is loose relative to the grad_norm "
+                              "values actually observed on a Tiny run "
+                              "(~0.8-1.2 even while diverging) -- so it was "
+                              "providing essentially no protection there. "
+                              "Consider tightening (e.g. 1.0) as cheap "
+                              "insurance, especially alongside model_dtype: "
+                              "fp16 in this yaml, which has no GradScaler / "
+                              "no automatic loss-scaling safety net.")
+    parser.add_argument("--enable-wandb", action="store_true",
+                         help="By default WANDB_MODE=disabled is set so wandb "
+                              "is a complete no-op (no network calls, no login "
+                              "needed) regardless of the yaml's wandb config. "
+                              "Pass this flag to actually enable wandb logging.")
     parser.add_argument("--run", action="store_true",
                          help="Actually execute the command instead of just printing it")
     args = parser.parse_args()
@@ -132,8 +206,34 @@ def main():
     shard_root = os.path.join(
         args.shard_root_base, f"lang_shards_{args.size}_{args.n_gpus}gpu"
     )
-    dump_dir = os.path.join(args.dump_root, f"entropy_{args.size}_20lang_{args.n_gpus}gpu")
-    run_name = f"entropy_{args.size}_20lang_{args.n_gpus}gpu"
+
+    # Append a suffix for every hyperparameter overridden from its default,
+    # so two runs with different lr/epochs/etc. for the same size+n_gpus
+    # don't silently collide in the same dump_dir/log_dir and overwrite
+    # each other's checkpoints/metrics.jsonl. Compared against the actual
+    # parser defaults (not hardcoded numbers here), so this stays correct
+    # even if a default above is changed later.
+    tunable = {
+        "epochs": "epochs",
+        "lr": "lr",
+        "clip": "clip",
+        "batch_size": "bs",
+        "seq_len": "seqlen",
+    }
+    suffix_parts = []
+    for arg_name, label in tunable.items():
+        value = getattr(args, arg_name)
+        default = parser.get_default(arg_name)
+        if value != default:
+            suffix_parts.append(f"{label}{format_value(value)}")
+    run_name_suffix = ("_" + "_".join(suffix_parts)) if suffix_parts else ""
+
+    run_name = f"entropy_{args.size}_20lang_{args.n_gpus}gpu{run_name_suffix}"
+    dump_dir = os.path.join(args.dump_root, run_name)
+    # log_dir intentionally mirrors dump_dir exactly (same run_name, only the
+    # root differs: dumps/ vs logs/) -- both derive from the single run_name
+    # variable so they can't silently drift apart from each other.
+    log_dir = os.path.join(args.log_root, run_name)
 
     if not os.path.isdir(shard_root):
         print(f"WARNING: shard directory not found: {shard_root}")
@@ -156,11 +256,14 @@ def main():
         f"checkpoint.dump.every={checkpoint_every}",
         f"checkpoint.eval.every={checkpoint_every}",
         f"optim.warmup={warmup}",
+        f"optim.lr={args.lr}",
+        f"optim.clip={args.clip}",
         f"logging.wandb.name={run_name}",
     ]
 
     cmd = (
         ["torchrun", f"--nproc_per_node={args.n_gpus}", "--standalone",
+         f"--log-dir={log_dir}", "--redirects=3",
          "-m", "bytelatent.train", f"config={args.base_config}"]
         + overrides
     )
@@ -168,13 +271,23 @@ def main():
     cuda_visible_devices = ",".join(str(i) for i in range(args.n_gpus))
     env_prefix = [
         "export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True",
-        f"CUDA_VISIBLE_DEVICES={cuda_visible_devices}",
+        "export PYTHONUNBUFFERED=1",
     ]
+    if not args.enable_wandb:
+        env_prefix.append("export WANDB_MODE=disabled")
+    env_prefix.append(f"CUDA_VISIBLE_DEVICES={cuda_visible_devices}")
 
-    watch_eval_cmd = [
-        "bash", "eval_during_training.sh",
+    # Post-training eval only -- do NOT run this while training is still
+    # active (see module docstring: concurrent eval is a suspected cause
+    # of silent rank crashes on shared/contended GPUs).
+    eval_after_cmd = [
+        "bash", args.eval_after_script,
         dump_dir,
         shard_root,
+        # checkpoint_every (not the raw steps_per_epoch float) -- this is
+        # the actual checkpoint cadence during training, so it's what the
+        # epoch numbers in eval_after_training.sh should be computed
+        # against for consistency with where checkpoints really land.
         str(checkpoint_every),
     ]
 
@@ -188,22 +301,39 @@ def main():
           f"guards against the missing-final-checkpoint bug)")
     print(f"# warmup={warmup} (scaled to {args.warmup_fraction:.0%} of "
           f"total_steps, capped at {args.base_warmup})")
+    print(f"# optim.lr={args.lr}  optim.clip={args.clip}"
+          + ("  (yaml defaults -- not yet re-tuned for this size)"
+             if (args.lr == 4e-4 and args.clip == 10.0) else ""))
     print()
-    print("# --- Terminal 1: training ---")
-    print(env_prefix[0])
-    print(env_prefix[1] + " \\")
+    print("# --- Training ---")
+    for line in env_prefix[:-1]:
+        print(line)
+    print(env_prefix[-1] + " \\")
     print("    " + " \\\n    ".join(cmd))
     print()
-    print("# --- Terminal 2: copy this one line ---")
-    print(" ".join(watch_eval_cmd))
+    print("# --- Terminal 2: watch each rank's log separately (avoids the "
+          "interleaved single-stream mess) ---")
+    print("# torchrun creates this the moment the run starts, so it's safe "
+          "to run right after launching Terminal 1")
+    print(f"tail -f {log_dir}/*/attempt_0/*/stdout.log")
+    print("# (if that glob matches nothing, run: "
+          f"find {log_dir} -name stdout.log   -- to see the real path torchrun used)")
+    print()
+    print("# --- Run this ONLY after training has finished (not concurrently) ---")
+    print(" ".join(eval_after_cmd))
 
     if args.run:
-        print(f"\nStarting training now. Once it's progressing, copy the "
-              f"Terminal 2 line above into a separate terminal/tmux pane.\n")
+        print(f"\nStarting training now.\n")
         run_env = dict(os.environ)
         run_env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+        run_env["PYTHONUNBUFFERED"] = "1"
+        if not args.enable_wandb:
+            run_env["WANDB_MODE"] = "disabled"
         run_env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
         subprocess.run(cmd, check=True, env=run_env)
+
+        print("\nTraining finished successfully. To inspect it, run:\n")
+        print(" ".join(eval_after_cmd))
 
 
 if __name__ == "__main__":
