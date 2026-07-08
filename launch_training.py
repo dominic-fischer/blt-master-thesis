@@ -324,12 +324,15 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         default = parser.get_default(arg_name)
         if value != default:
             suffix_parts.append(f"{label}{format_value(value)}")
-    # lr: compare against this size's effective default (tuned value if
-    # present, else FALLBACK_LR), not a fixed parser default -- so a run
-    # using the tuned/saved LR doesn't get a redundant suffix, but one
-    # using a genuinely different --lr still does.
-    if args.lr != effective_default_lr:
-        suffix_parts.append(f"lr{format_value(args.lr)}")
+    # lr is ALWAYS included in the name, unlike the other tunables above --
+    # its effective default is size-dependent (tuned-LR lookup) and can
+    # change over time as tuned_lrs.json gets updated, so a run using
+    # "the default" today could be using a different actual number than a
+    # run using "the default" from before a --save-best update. Comparing
+    # against effective_default_lr would make otherwise-identical dump_dir
+    # names ambiguous about which numeric lr was actually used at the
+    # time -- always printing the number avoids that.
+    suffix_parts.append(f"lr{format_value(args.lr)}")
     run_name_suffix = ("_" + "_".join(suffix_parts)) if suffix_parts else ""
 
     run_name = f"entropy_{args.size}_20lang_{args.n_gpus}gpu{run_name_suffix}"
