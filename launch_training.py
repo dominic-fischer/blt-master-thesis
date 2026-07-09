@@ -216,7 +216,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--base-warmup", type=int, default=500,
                          help="Upper cap for the scaled warmup (the yaml's own "
                               "default warmup value).")
-    parser.add_argument("--tuned-lrs-file", default="training_setup/tuned_lrs.json",
+    parser.add_argument("--tuned-lrs-file", default="training_setup/learning_rate/tuned_lrs.json",
                          help="JSON lookup of {size: lr} saved by "
                               "lr_sweep.py --save-best. Used as --lr's "
                               "default when --lr isn't explicitly passed, "
@@ -274,6 +274,26 @@ def build_parser() -> argparse.ArgumentParser:
                               "still on no_shard -- it does add "
                               "all-gather/reduce-scatter communication "
                               "overhead no_shard doesn't have, though.")
+    parser.add_argument("--model-dtype", default=None, choices=["fp16", "fp32", "bf16"],
+                         help="Overrides distributed.model_dtype. If omitted, "
+                              "uses the yaml's own value (fp16) unchanged -- "
+                              "chosen for Turing (2080 Ti) tensor-core "
+                              "acceleration, but this codebase has NO "
+                              "GradScaler, so fp16 has no automatic "
+                              "loss-scaling safety net. Pass fp32 to rule "
+                              "this out as a cause if you see bpb/grad_norm "
+                              "degrade over a long run without recovering "
+                              "even as lr decays (confirmed pattern on a "
+                              "10-epoch Tiny run: grad_norm crept from "
+                              "~0.6 to ~1.3 over ~2000 steps and never came "
+                              "back down despite lr decaying 10x over the "
+                              "same span) -- fp32 is numerically safe but "
+                              "slower and uses more memory, so treat as a "
+                              "diagnostic, not a default. bf16 is offered "
+                              "for completeness but gets NO tensor-core "
+                              "acceleration on Turing (compute capability "
+                              "7.5, bf16 support starts at Ampere) -- don't "
+                              "expect it to be fast here.")
     parser.add_argument("--enable-wandb", action="store_true",
                          help="By default WANDB_MODE=disabled is set so wandb "
                               "is a complete no-op (no network calls, no login "
@@ -369,6 +389,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
             suffix_parts.append(f"{label}{format_value(value)}")
     if args.fsdp_type is not None:
         suffix_parts.append(f"fsdp{args.fsdp_type}")
+    if args.model_dtype is not None:
+        suffix_parts.append(f"dtype{args.model_dtype}")
     # lr is ALWAYS included in the name, unlike the other tunables above --
     # its effective default is size-dependent (tuned-LR lookup) and can
     # change over time as tuned_lrs.json gets updated, so a run using
@@ -416,6 +438,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     ]
     if args.fsdp_type is not None:
         overrides.append(f"distributed.fsdp_type={args.fsdp_type}")
+    if args.model_dtype is not None:
+        overrides.append(f"distributed.model_dtype={args.model_dtype}")
 
     cmd = (
         ["torchrun", f"--nproc_per_node={args.n_gpus}", "--standalone",
@@ -466,6 +490,7 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "warmup": warmup,
         "lr_source": lr_source,
         "fsdp_type": args.fsdp_type if args.fsdp_type is not None else "no_shard (yaml default)",
+        "model_dtype": args.model_dtype if args.model_dtype is not None else "fp16 (yaml default)",
         "shard_root": shard_root,
         "shard_warning": shard_warning,
         "run_name": run_name,
@@ -503,6 +528,7 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
     print(f"# optim.lr={args.lr}  optim.clip={args.clip}")
     print(f"#   lr source: {plan['lr_source']}")
     print(f"# distributed.fsdp_type={plan['fsdp_type']}")
+    print(f"# distributed.model_dtype={plan['model_dtype']}")
     print()
     print("# --- Training ---")
     for line in plan["env_prefix"][:-1]:

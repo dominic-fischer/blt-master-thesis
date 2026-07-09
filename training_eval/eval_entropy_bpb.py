@@ -151,7 +151,7 @@ def main():
     parser.add_argument("checkpoint_dir",
                          help="consolidated checkpoint dir (contains consolidated.pth + params.json)")
     parser.add_argument("lang_shards_root")
-    parser.add_argument("--target-bytes-per-lang", type=int, default=400_000,
+    parser.add_argument("--target-bytes-per-lang", type=int, default=150_000,
                          help="Evaluate exactly this many bytes per language "
                               "(not a fixed document count), so every "
                               "language contributes equally to OVERALL -- "

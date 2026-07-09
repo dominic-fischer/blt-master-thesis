@@ -1,0 +1,20 @@
+subset,split,name,documents,utf8_bytes,utf8_bytes_human
+amh_Ethi,train,Amharic,428373,2675147230,2.49GB
+arb_Arab,train,Standard Arabic,61977525,315241517028,293.59GB
+cmn_Hani,train,Mandarin Chinese,636058984,2665362545414,2.42TB
+deu_Latn,train,German,495964485,1654784757688,1.51TB
+fin_Latn,train,Finnish,36710816,153578789445,143.03GB
+fra_Latn,train,French,360058973,1220202265605,1.11TB
+heb_Hebr,train,Hebrew,14491748,73780962340,68.71GB
+hrv_Latn,train,Croatian,6195824,38555062999,35.91GB
+ita_Latn,train,Italian,238984437,793750885035,739.24GB
+jpn_Jpan,train,Japanese,400138563,1650248456871,1.50TB
+kat_Geor,train,Georgian,3706659,27094494127,25.23GB
+kor_Hang,train,Korean,60874355,229164863492,213.43GB
+nya_Latn,train,Nyanja,103045,417963769,398.60MB
+ron_Latn,train,Romanian,58303671,199920561455,186.19GB
+spa_Latn,train,Spanish,441287261,1447166708770,1.32TB
+srp_Cyrl,train,Serbian,4146124,28846157665,26.87GB
+tam_Taml,train,Tamil,5528854,39693515188,36.97GB
+tha_Thai,train,Thai,35897202,299226473998,278.68GB
+vie_Latn,train,Vietnamese,61064248,343416915256,319.83GB

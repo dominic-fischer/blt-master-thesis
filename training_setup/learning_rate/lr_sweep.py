@@ -199,22 +199,23 @@ def read_metrics(metrics_jsonl: str) -> list[dict]:
 
 
 def discover_candidates(sweep_root: str, size: str, n_gpus: int) -> list[tuple[float, str, str]]:
-    """Finds every existing run under sweep_root whose run_name matches
-    this size+n_gpus, regardless of which invocation of this script
-    created it (different --probe-steps, different --lrs, run days
-    apart -- all included). Since launch_training.py's compute_plan()
-    now ALWAYS appends "_lr<value>" as the final suffix segment
-    (unconditionally, so directory names are unambiguous about which
-    numeric lr was actually used), the lr can be parsed straight back
-    out of the directory name.
+    """Finds every existing run under sweep_root/entropy_<size>/ whose
+    run_name matches this size+n_gpus, regardless of which invocation of
+    this script created it (different --probe-steps, different --lrs,
+    run days apart -- all included). Since launch_training.py's
+    compute_plan() now ALWAYS appends "_lr<value>" as the final suffix
+    segment (unconditionally, so directory names are unambiguous about
+    which numeric lr was actually used), the lr can be parsed straight
+    back out of the directory name.
 
     Returns a list of (lr, run_name, metrics_jsonl_path) tuples.
     """
+    size_root = os.path.join(sweep_root, f"entropy_{size}")
     prefix = f"entropy_{size}_20lang_{n_gpus}gpu"
     candidates = []
-    if not os.path.isdir(sweep_root):
+    if not os.path.isdir(size_root):
         return candidates
-    for name in sorted(os.listdir(sweep_root)):
+    for name in sorted(os.listdir(size_root)):
         if not name.startswith(prefix):
             continue
         match = re.search(r"_lr(.+)$", name)
@@ -224,7 +225,7 @@ def discover_candidates(sweep_root: str, size: str, n_gpus: int) -> list[tuple[f
             lr = float(match.group(1))
         except ValueError:
             continue
-        metrics_path = os.path.join(sweep_root, name, "metrics.jsonl")
+        metrics_path = os.path.join(size_root, name, "metrics.jsonl")
         candidates.append((lr, name, metrics_path))
     return candidates
 
@@ -284,8 +285,8 @@ def run_probe(size: str, n_gpus: int, lr: float, probe_steps: int, clip: float,
         "--probe-steps", str(probe_steps),
         "--lr", str(lr),
         "--clip", str(clip),
-        "--dump-root", sweep_root,
-        "--log-root", LR_SWEEP_LOGS_DIR,
+        "--dump-root", os.path.join(sweep_root, f"entropy_{size}"),
+        "--log-root", os.path.join(LR_SWEEP_LOGS_DIR, f"entropy_{size}"),
     ] + extra_args
     args = parser.parse_args(argv)
     plan = launch_training.compute_plan(args, parser)

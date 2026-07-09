@@ -1,7 +1,0 @@
-config_name,dim,n_heads,head_dim,n_layers,ffn_dim_multiplier,vocab_size
-DOCUMENTATION,"hidden dimensionality","number of attention heads","dimension per attention head (dim / n_heads)","number of transformer blocks","scales the default SwiGLU FFN hidden size up or down","byte-level vocab size (256 byte values + special tokens)"
-Tiny,256,4,64,8,1.0,260
-Small,384,6,64,10,1.0,260
-Medium,512,8,64,12,1.0,260
-Paper-scale,512,8,64,14,1.0,260
-Repo-scale,768,12,64,14,1.0,260
