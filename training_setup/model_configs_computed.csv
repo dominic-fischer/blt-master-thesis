@@ -1,5 +1,4 @@
 config_name,dim,n_heads,head_dim,n_layers,ffn_dim_multiplier,vocab_size,ffn_hidden_dim,per_layer_params,total_params
-DOCUMENTATION,hidden dimensionality,number of attention heads,dimension per attention head (dim / n_heads),number of transformer blocks,scales the default SwiGLU FFN hidden size up or down,byte-level vocab size (256 byte values + special tokens),FFN hidden size after SwiGLU sizing + rounding to 256,params in one transformer block (attn + FFN),"total trainable parameters, approximate",Chinchilla-style ~20 bytes per parameter
 Tiny,256,4,64,8,1.0,260,768,851968,6882304
 Small,384,6,64,10,1.0,260,1024,1769472,17794560
 Medium,512,8,64,12,1.0,260,1536,3407872,41027584
