@@ -41,6 +41,23 @@ waiting on it in NCCL. Use eval_after_training.sh once training has
 finished instead; this script prints that command for you, both up front
 and again after a successful --run.
 
+FSDP sharding: --fsdp-type lets you override distributed.fsdp_type per run.
+The yaml defaults to no_shard (validated safe for Medium: every GPU holds a
+full unsharded copy of weights/gradients/optimizer state, which comfortably
+fits in 11GB for a ~41M-param model). This does NOT scale to larger sizes --
+confirmed: repo-scale (dim=768/12h/14L) OOMs immediately under no_shard
+("CUDA out of memory... this process has 10.14 GiB memory in use" on a
+10.57 GiB card, first backward pass). Pass --fsdp-type full_shard for
+repo-scale (or any size that doesn't fit) to actually shard parameters/
+gradients/optimizer state across GPUs -- this is what Meta's original
+template used by default, before this yaml's Medium-specific no_shard
+optimization. Sharding doesn't change the model's math (same architecture,
+same forward/backward/optimizer computation), only where the same numbers
+physically live across GPUs -- so switching it for one size doesn't
+compromise comparability with sizes still using no_shard, though it does
+add communication overhead (all-gather/reduce-scatter) that no_shard
+doesn't have.
+
 Reusable as a module: build_parser() and compute_plan() are exposed
 specifically so lr_sweep.py can build run plans (dump_dir, cmd, run_env,
 etc.) using the exact same logic/defaults as this script's CLI, without
@@ -53,6 +70,7 @@ Usage:
 Example:
     python launch_training.py tiny --n-gpus 4 --epochs 10
     python launch_training.py medium --n-gpus 4 --epochs 10 --run
+    python launch_training.py repo-scale --n-gpus 4 --fsdp-type full_shard --run
 """
 
 import argparse
@@ -233,6 +251,29 @@ def build_parser() -> argparse.ArgumentParser:
                               "insurance, especially alongside model_dtype: "
                               "fp16 in this yaml, which has no GradScaler / "
                               "no automatic loss-scaling safety net.")
+    parser.add_argument("--fsdp-type", default=None, choices=["no_shard", "full_shard"],
+                         help="Overrides distributed.fsdp_type. If omitted, "
+                              "uses the yaml's own value (no_shard) unchanged "
+                              "-- validated for Medium (~41M params fits "
+                              "comfortably in 11GB with a full unsharded "
+                              "copy per GPU) but confirmed to OOM immediately "
+                              "on repo-scale (dim=768/12h/14L): 'CUDA out of "
+                              "memory ... this process has 10.14 GiB memory "
+                              "in use' on a 10.57 GiB card, first backward "
+                              "pass. Pass full_shard to actually shard "
+                              "parameters/gradients/optimizer state across "
+                              "GPUs instead of duplicating them on each one "
+                              "-- this is what Meta's original template used "
+                              "by default, before this yaml's Medium-specific "
+                              "no_shard optimization. Doesn't change the "
+                              "model's math (same architecture/forward/"
+                              "backward/optimizer computation, just where "
+                              "the numbers physically live across GPUs), so "
+                              "using full_shard for one size doesn't "
+                              "compromise comparability with other sizes "
+                              "still on no_shard -- it does add "
+                              "all-gather/reduce-scatter communication "
+                              "overhead no_shard doesn't have, though.")
     parser.add_argument("--enable-wandb", action="store_true",
                          help="By default WANDB_MODE=disabled is set so wandb "
                               "is a complete no-op (no network calls, no login "
@@ -310,7 +351,9 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     # parser defaults (not hardcoded numbers here), so this stays correct
     # even if a default above is changed later. "lr" is handled separately
     # (below) since its effective default is size-dependent (tuned-LR
-    # lookup), not a single fixed parser default.
+    # lookup), not a single fixed parser default. "fsdp_type" is also
+    # handled separately since it's a string, not a number format_value()
+    # can handle.
     tunable = {
         "epochs": "epochs",
         "probe_steps": "probesteps",
@@ -324,6 +367,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         default = parser.get_default(arg_name)
         if value != default:
             suffix_parts.append(f"{label}{format_value(value)}")
+    if args.fsdp_type is not None:
+        suffix_parts.append(f"fsdp{args.fsdp_type}")
     # lr is ALWAYS included in the name, unlike the other tunables above --
     # its effective default is size-dependent (tuned-LR lookup) and can
     # change over time as tuned_lrs.json gets updated, so a run using
@@ -369,6 +414,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         f"optim.clip={args.clip}",
         f"logging.wandb.name={run_name}",
     ]
+    if args.fsdp_type is not None:
+        overrides.append(f"distributed.fsdp_type={args.fsdp_type}")
 
     cmd = (
         ["torchrun", f"--nproc_per_node={args.n_gpus}", "--standalone",
@@ -418,6 +465,7 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "total_steps": total_steps,
         "warmup": warmup,
         "lr_source": lr_source,
+        "fsdp_type": args.fsdp_type if args.fsdp_type is not None else "no_shard (yaml default)",
         "shard_root": shard_root,
         "shard_warning": shard_warning,
         "run_name": run_name,
@@ -454,6 +502,7 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
           f"total_steps, capped at {args.base_warmup})")
     print(f"# optim.lr={args.lr}  optim.clip={args.clip}")
     print(f"#   lr source: {plan['lr_source']}")
+    print(f"# distributed.fsdp_type={plan['fsdp_type']}")
     print()
     print("# --- Training ---")
     for line in plan["env_prefix"][:-1]:

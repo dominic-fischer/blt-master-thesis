@@ -30,7 +30,7 @@ from bytelatent.data.patcher import (
 )
 
 # ── config ────────────────────────────────────────────────────────────────────
-RESULTS_DIR  = "results/restructured"
+RESULTS_DIR  = "results/own_models"
 SUMMARY_CSV  = "calibrate_thresholds/thresholds_summary.csv"
 
 # maps case name → which score index to use

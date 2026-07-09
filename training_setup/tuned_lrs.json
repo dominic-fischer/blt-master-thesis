@@ -1,4 +1,6 @@
 {
-  "small": 4.5e-05,
-  "tiny": 0.0001
+  "medium": 1.4e-05,
+  "repo-scale": 1e-05,
+  "small": 3.3e-05,
+  "tiny": 0.00011
 }
