@@ -91,7 +91,7 @@ def parse_args():
         type=str,
         required=True,
         help="Repo id (or path) of the entropy model to use for patching, "
-             "e.g. facebook/blt-entropy-1b",
+             "e.g. --hf_weights/entropy_model",
     )
     return parser.parse_args()
 
