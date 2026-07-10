@@ -3,8 +3,16 @@ data_to_params_ratio.py
 
 Computes a single TOTAL training byte count across ALL 20 chosen languages,
 using content-equalized allocation capped by the smallest-content language,
-then reports the resulting bytes/param ratio for each model size in
-model_configs_computed.csv.
+reports the resulting bytes/param ratio for each model size in
+model_configs_computed.csv, AND writes each language's allocation back into
+langs_chosen.csv as a new "balanced_allocation_bytes" column (in place --
+only that column is touched; every other row/column is preserved exactly
+as-is, same pattern as the other langs_chosen.csv-updating scripts).
+
+That column is what prepare_language_shards.py reads as its per-language
+training byte target -- a single, model-size-independent number used for
+every size, since sampling weight + looping handles repetition instead of
+separate per-size shard truncation.
 
 Method:
     1. Find the smallest-content language by RATIO-ADJUSTED bytes
@@ -36,6 +44,7 @@ language equal raw bytes.
 Usage:
     python data_to_params_ratio.py
     python data_to_params_ratio.py --val-bytes 5000000
+    python data_to_params_ratio.py --no-write   # print only, don't touch langs_chosen.csv
     python data_to_params_ratio.py --langs-csv training_setup/langs/langs_chosen.csv \
                                     --configs-csv training_setup/model_configs_computed.csv
 """
@@ -129,6 +138,39 @@ def load_model_configs(configs_csv):
     return configs
 
 
+def write_allocations_to_langs_csv(langs_csv, allocations, column="balanced_allocation_bytes"):
+    """
+    Writes each language's allocated_bytes into langs_chosen.csv as
+    `column`, IN PLACE -- only that column is added/overwritten; every
+    other row and column is preserved exactly as read. Matched on
+    language_code, same pattern as the other langs_chosen.csv-updating
+    scripts (fineweb_byte_size.py, english_fineweb_exact_bytes.py, etc.).
+    """
+    alloc_by_code = {a["language_code"]: round(a["allocated_bytes"]) for a in allocations}
+
+    with open(langs_csv, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames
+        rows = list(reader)
+
+    if column not in fieldnames:
+        fieldnames.append(column)
+
+    updated = 0
+    for row in rows:
+        code = row.get("language_code")
+        if code in alloc_by_code:
+            row[column] = alloc_by_code[code]
+            updated += 1
+
+    with open(langs_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return updated
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--langs-csv", default="training_setup/langs/langs_chosen.csv")
@@ -137,8 +179,11 @@ def main():
                          help="Bytes reserved for validation, subtracted from "
                               "the smallest-content language's total before "
                               "computing the content budget. Default: 5,000,000.")
-    parser.add_argument("--show-allocations", action="store_true",
-                         help="Print the per-language raw byte allocation breakdown.")
+    parser.add_argument("--allocation-column", default="balanced_allocation_bytes",
+                         help="Column name to write each language's allocated "
+                              "training bytes into, in --langs-csv.")
+    parser.add_argument("--no-write", action="store_true",
+                         help="Only print results; don't touch --langs-csv.")
     args = parser.parse_args()
 
     langs = load_all_languages(args.langs_csv)
@@ -162,6 +207,15 @@ def main():
     print(f"{'TOTAL (' + str(len(langs)) + ' languages)':<38}{total_training_bytes:>22,.0f}")
     print(f"  = {total_training_bytes/1024**2:,.2f} MiB = {total_training_bytes/1024**3:,.4f} GiB "
           f"(ONE epoch, unique bytes)")
+    print()
+
+    if args.no_write:
+        print(f"(--no-write set: NOT writing '{args.allocation_column}' to {args.langs_csv})")
+    else:
+        updated = write_allocations_to_langs_csv(
+            args.langs_csv, allocations, column=args.allocation_column
+        )
+        print(f"Wrote '{args.allocation_column}' to {updated} row(s) in {args.langs_csv}")
     print()
 
     configs = load_model_configs(args.configs_csv)
