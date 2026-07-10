@@ -1,0 +1,90 @@
+dump_dir: ""      # PLACEHOLDER -- always overridden (dump_dir=)
+name: "_"         # PLACEHOLDER -- always overridden (name=)
+steps: "_"        # PLACEHOLDER -- always overridden (steps=)
+max_steps: null
+probe_freq: null  # never overridden; null unless using --probe-steps workflow (see lr_sweep.py)
+seed: 777
+
+optim:
+  lr: "_"             # PLACEHOLDER -- always overridden (optim.lr=)
+  warmup: "_"         # PLACEHOLDER -- always overridden (optim.warmup=)
+  lr_min_ratio: 0.1   # real value -- never overridden
+  clip: "_"           # PLACEHOLDER -- always overridden (optim.clip=)
+
+distributed:
+  fsdp_type: no_shard                       # real fallback
+  model_dtype: fp32                         # real fallback
+  matmul_allow_tf32: false                  # real value -- never overridden
+  selective_activation_checkpointing: true  # real value -- never overridden
+  tp_size: 1                                # real value -- never overridden
+
+train_entropy_model: true
+model: null
+entropy_model:
+  dim: "_"                              # PLACEHOLDER -- always overridden (entropy_model.dim=)
+  n_layers: "_"                         # PLACEHOLDER -- always overridden (entropy_model.n_layers=)
+  n_heads: "_"                          # PLACEHOLDER -- always overridden (entropy_model.n_heads=)
+  max_seqlen: 8192                      # real value -- never overridden
+  vocab_size: 260                       # real value -- never overridden
+  ffn_dim_multiplier: 1.0               # real value -- never overridden
+  sliding_window: 512                   # real value -- never overridden
+  attn_bias_type: "local_block_causal"  # real value -- never overridden
+  attn_impl: "xformers"                 # real value -- never overridden
+
+data:
+  root_dir: "_"                 # PLACEHOLDER -- always overridden (data.root_dir=)
+  sources:                      # PLACEHOLDER -- always overridden (data.sources.<lang>=)
+    eng_Latn: "_"                       
+    deu_Latn: "_"     
+    spa_Latn: "_"
+    ita_Latn: "_"
+    fra_Latn: "_"
+    ron_Latn: "_"
+    hrv_Latn: "_"
+    srp_Cyrl: "_"
+    nya_Latn: "_"
+    fin_Latn: "_"
+    vie_Latn: "_"
+    kat_Geor: "_"
+    arb_Arab: "_"
+    heb_Hebr: "_"
+    tam_Taml: "_"
+    tha_Thai: "_"
+    amh_Ethi: "_"
+    kor_Hang: "_"
+    jpn_Jpan: "_"
+    cmn_Hans: "_"
+  batch_size: "_"               # PLACEHOLDER -- always overridden (data.batch_size=)
+  prefetch_size: 64             # real value -- never overridden
+  seq_len: 8192                 # real value -- never overridden
+  max_encoder_seq_length: 8192  # real value -- never overridden
+  load_async: true              # real value -- never overridden
+  file_format: "json"           # real value -- never overridden
+  preprocess_dir: null          # real value -- never overridden
+  add_patches: false            # real value -- never overridden
+  patcher_args:
+    patching_mode: byte         # real value -- never overridden
+  tokenizer_args:
+    name: blt                   # real value -- never overridden
+
+profiling:
+  run: false    # real value -- never overridden
+
+checkpoint:
+  dump:
+    every: "_"  # PLACEHOLDER -- always overridden (checkpoint.dump.every=)
+    keep: -1    # real value -- never overridden
+  eval:
+    every: "_"  # PLACEHOLDER -- always overridden (checkpoint.eval.every=)
+    keep: -1    # real value -- never overridden
+
+logging:
+  freq: 10                        # real value -- never overridden
+  wandb:
+    project: "blt-entropy-model"  # real value -- never overridden
+    name: "_"                     # PLACEHOLDER -- always overridden (logging.wandb.name=)
+    entity: null                  # real value -- never overridden
+
+eval_on_gpus: null      # real value -- never overridden
+eval: null              # real value -- never overridden
+async_eval_gpus: null   # real value -- never overridden
