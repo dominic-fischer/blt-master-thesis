@@ -1,8 +1,8 @@
 """
-eval_flores.py
+run_eval.py
 Run BLT patching over a diverse subset of FLORES+ languages and save results to JSON.
 Usage:
-    python eval_flores.py --hf_weights/entropy_model
+    python run_eval.py --entropy_repo hf_weights/entropy_model
 Output: one JSON file per language at results/{lang_code}.json
 """
 import argparse
@@ -30,7 +30,7 @@ with open("floresplus_MASTER_CSV.csv", "r", encoding="utf-8") as f:
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def normalize_scores(scores: list[float]) -> list[float]:
-    arr = torch.tensor(scores)
+    arr = torch.tensor(scores, dtype=torch.float32)  # force fp16 here, not on the model
     mean = arr.mean()
     std = arr.std()
     return ((arr - mean) / (std + 1e-8)).tolist()

@@ -1,6 +1,4 @@
-config_name,dim,n_heads,head_dim,n_layers,ffn_dim_multiplier,vocab_size,ffn_hidden_dim,per_layer_params,total_params
-7M,256,4,64,8,1.0,260,768,851968,6882304
-18M,384,6,64,10,1.0,260,1024,1769472,17794560
-41M,512,8,64,12,1.0,260,1536,3407872,41027584
-48M,512,8,64,14,1.0,260,1536,3407872,47843328
-99M,768,12,64,14,1.0,260,2048,7077888,99290112
+config_name,dim,n_heads,head_dim,n_layers,ffn_dim_multiplier,vocab_size,ffn_hidden_dim,per_layer_params,total_params,aspect_ratio
+10M,384,6,64,6,1.0,260,1024,1769472,10816512,64.0
+50M,640,10,64,10,1.0,260,1792,5079040,51123200,64.0
+100M,768,12,64,14,1.0,260,2048,7077888,99489792,54.86

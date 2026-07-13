@@ -32,6 +32,15 @@ Keyed by --sources + --n-gpus, NOT by --size -- every model size shares
 the exact same shard set for a given --sources choice (see
 prepare_language_shards.py and lang_data_ratios_imbalanced.py).
 
+GPU selection (--gpu-ids vs auto-detection): by default this script
+queries nvidia-smi and picks --n-gpus idle GPUs automatically (see
+get_free_gpu_ids()) rather than blindly assuming indices 0..n_gpus-1 are
+free -- this is a shared machine and low-index GPUs are not reliably
+free. This is a best-effort, launch-time-only check: it cannot see GPUs
+that become busy after the check runs (TOCTOU race), so on a heavily
+contended machine, or if you want a specific, reproducible set of
+physical GPUs, pass --gpu-ids explicitly to skip auto-detection entirely.
+
 Usage:
     python launch_training.py <size> --n-gpus 4 --sources balanced [--run]
 
@@ -39,6 +48,7 @@ Example:
     python launch_training.py tiny --n-gpus 4 --sources balanced
     python launch_training.py medium --n-gpus 4 --sources imbalanced --run
     python launch_training.py repo-scale --n-gpus 4 --sources balanced --fsdp-type full_shard --run
+    python launch_training.py medium --gpu-ids 1,2,3,5 --sources balanced --run
 """
 
 import argparse
@@ -51,11 +61,9 @@ import sys
 import yaml
 
 SIZE_NAME_MAP = {
-    "tiny": "Tiny",
-    "small": "Small",
-    "medium": "Medium",
-    "paper-scale": "Paper-scale",
-    "repo-scale": "Repo-scale",
+    "10M": "10M",
+    "50M": "50M",
+    "100M": "100M"
 }
 
 # Which langs_chosen.csv column to read per --sources choice. Used for BOTH
@@ -85,6 +93,13 @@ BYTE_COLUMN_MAP = {
 # 10% of steps still vastly exceeds 500) unaffected.
 BASE_WARMUP = 500
 WARMUP_FRACTION = 0.1
+
+# GPU auto-detection thresholds: a GPU is considered "free" if BOTH its
+# memory usage and utilization are below these. Conservative on purpose --
+# a GPU sitting at, say, 40% memory used by someone else's job is not
+# "free" just because it's not at 100%.
+DEFAULT_FREE_MEM_THRESHOLD_MIB = 1024
+DEFAULT_FREE_UTIL_THRESHOLD_PCT = 10
 
 
 def load_yaml_config(path: str) -> dict:
@@ -198,6 +213,59 @@ def load_language_weights_and_bytes(langs_csv: str, byte_column: str) -> tuple[d
     return weights, sum(weights.values())
 
 
+def get_free_gpu_ids(
+    n_gpus: int,
+    mem_threshold_mib: int = DEFAULT_FREE_MEM_THRESHOLD_MIB,
+    util_threshold_pct: int = DEFAULT_FREE_UTIL_THRESHOLD_PCT,
+) -> list[int]:
+    """
+    Queries nvidia-smi for every visible GPU's used memory and utilization,
+    and returns the IDs of the first `n_gpus` GPUs (ascending index) that
+    are under both thresholds -- i.e. "idle by our definition", not
+    literally 0% used (a GPU can sit at a few MiB / a couple % from driver
+    overhead even with nothing running on it).
+
+    This is a snapshot at call time only. On a shared machine, another
+    job can start on one of these GPUs between this check and the actual
+    torchrun launch a few lines later -- there is no lock/reservation
+    mechanism here, just a best-effort check to avoid the OBVIOUS case of
+    picking an already-busy GPU (like GPU 0 sitting at 95% memory used by
+    someone else's job). If you need a hard guarantee, use your cluster's
+    real scheduler/reservation system and pass --gpu-ids explicitly
+    instead of relying on this.
+    """
+    try:
+        result = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=index,memory.used,memory.total,utilization.gpu",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True, text=True, check=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        raise SystemExit(
+            f"Auto GPU-detection failed (`nvidia-smi` not found or errored: {e}). "
+            f"Pass --gpu-ids explicitly instead."
+        )
+
+    free_ids = []
+    for line in result.stdout.strip().splitlines():
+        idx_s, mem_used_s, mem_total_s, util_s = (p.strip() for p in line.split(","))
+        idx, mem_used, util = int(idx_s), int(mem_used_s), int(util_s)
+        if mem_used < mem_threshold_mib and util < util_threshold_pct:
+            free_ids.append(idx)
+
+    if len(free_ids) < n_gpus:
+        raise SystemExit(
+            f"Only found {len(free_ids)} idle GPU(s) ({free_ids}) but --n-gpus={n_gpus} "
+            f"were requested. Either free up more GPUs, lower --n-gpus, loosen "
+            f"--free-mem-threshold-mib/--free-util-threshold-pct, or pass --gpu-ids "
+            f"explicitly to force specific GPUs regardless of current load."
+        )
+    return free_ids[:n_gpus]
+
+
 def format_value(x: float) -> str:
     """Compact, filename-safe representation of a hyperparameter value.
     Whole numbers print without a decimal point (10 -> '10'); small
@@ -217,6 +285,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("size", choices=list(SIZE_NAME_MAP.keys()))
     parser.add_argument("--n-gpus", type=int, required=True)
+    parser.add_argument("--gpu-ids", type=str, default=None,
+                         help="Comma-separated physical GPU indices to use, e.g. "
+                              "'1,2,3,5'. Must contain exactly --n-gpus values. If "
+                              "omitted (the default), --n-gpus idle GPUs are picked "
+                              "automatically via nvidia-smi (see get_free_gpu_ids()) "
+                              "-- pass this explicitly to skip auto-detection and pin "
+                              "specific physical GPUs regardless of current load.")
+    parser.add_argument("--free-mem-threshold-mib", type=int, default=DEFAULT_FREE_MEM_THRESHOLD_MIB,
+                         help="Only used for auto-detection (--gpu-ids omitted): a GPU "
+                              "counts as free if its used memory is below this, in MiB.")
+    parser.add_argument("--free-util-threshold-pct", type=int, default=DEFAULT_FREE_UTIL_THRESHOLD_PCT,
+                         help="Only used for auto-detection (--gpu-ids omitted): a GPU "
+                              "counts as free if its utilization is below this percent.")
     parser.add_argument("--sources", choices=["balanced", "imbalanced"], required=True,
                          help="Which langs_chosen.csv byte allocation (and, "
                               "by construction, sampling weight) to train "
@@ -341,6 +422,25 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     byte_column = BYTE_COLUMN_MAP[args.sources]
 
     base_yaml = load_yaml_config(args.base_config)
+
+    # --- GPU selection: explicit --gpu-ids, or auto-detect idle ones ---
+    if args.gpu_ids is not None:
+        gpu_ids = [int(x) for x in args.gpu_ids.split(",")]
+        if len(gpu_ids) != args.n_gpus:
+            raise SystemExit(
+                f"--gpu-ids has {len(gpu_ids)} value(s) ({gpu_ids}) but --n-gpus={args.n_gpus}. "
+                f"These must match."
+            )
+        gpu_source = "explicit --gpu-ids"
+    else:
+        gpu_ids = get_free_gpu_ids(
+            args.n_gpus, args.free_mem_threshold_mib, args.free_util_threshold_pct
+        )
+        gpu_source = (
+            f"auto-detected idle GPUs (< {args.free_mem_threshold_mib}MiB used, "
+            f"< {args.free_util_threshold_pct}% util at launch time -- "
+            f"best-effort snapshot, not a reservation)"
+        )
 
     # --- LR: no fallback, error if untuned and not explicit ---
     if args.lr is None:
@@ -498,7 +598,7 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         + overrides
     )
 
-    cuda_visible_devices = ",".join(str(i) for i in range(args.n_gpus))
+    cuda_visible_devices = ",".join(str(i) for i in gpu_ids)
     env_prefix = [
         "export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True",
         "export PYTHONUNBUFFERED=1",
@@ -533,6 +633,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "lr_source": lr_source,
         "batch_size_source": batch_size_source,
         "clip_source": clip_source,
+        "gpu_ids": gpu_ids,
+        "gpu_source": gpu_source,
         "fsdp_type": args.fsdp_type if args.fsdp_type is not None else "no_shard (yaml default)",
         "model_dtype": args.model_dtype if args.model_dtype is not None else "fp32 (yaml default)",
         "shard_root": shard_root,
@@ -558,6 +660,7 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
           f"dim={plan['arch']['dim']} n_layers={plan['arch']['n_layers']} "
           f"n_heads={plan['arch']['n_heads']}")
     print(f"# sources: {args.sources} ({plan['byte_column']})")
+    print(f"# GPUs: {plan['cuda_visible_devices']}  ({plan['gpu_source']})")
     print(f"# corpus: {plan['total_corpus_bytes']:,} bytes, "
           f"{plan['steps_per_epoch']:.1f} steps/epoch @ {args.n_gpus} GPUs, "
           f"batch_size={args.batch_size} ({plan['batch_size_source']})")

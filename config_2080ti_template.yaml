@@ -9,7 +9,7 @@ optim:
   lr: "_"             # PLACEHOLDER -- always overridden (optim.lr=)
   warmup: "_"         # PLACEHOLDER -- always overridden (optim.warmup=)
   lr_min_ratio: 0.1   # real value -- never overridden
-  clip: "_"           # PLACEHOLDER -- always overridden (optim.clip=)
+  clip: 10            # real value -- never overridden
 
 distributed:
   fsdp_type: no_shard                       # real fallback

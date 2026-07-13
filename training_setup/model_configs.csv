@@ -1,0 +1,4 @@
+config_name,dim,n_heads,head_dim,n_layers,ffn_dim_multiplier,vocab_size
+10M,384,6,64,6,1.0,260
+50M,640,10,64,10,1.0,260
+100M,768,12,64,14,1.0,260
