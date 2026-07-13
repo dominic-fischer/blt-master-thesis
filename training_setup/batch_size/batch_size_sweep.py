@@ -102,25 +102,6 @@ def try_batch_size(sweep_args: argparse.Namespace, batch_size: int) -> str:
     return "oom"
 
 
-def round_down_to_divisor(value: int, divisor: int, size: str) -> int:
-    """Rounds the converged max batch size down to the nearest multiple of
-    divisor (--n-gpus), so the saved batch size actually splits evenly across
-    GPUs instead of leaving a ragged last shard (or erroring outright,
-    depending on how strict the training code's sharding is)."""
-    if divisor <= 0:
-        return value
-    rounded = (value // divisor) * divisor
-    if rounded == 0:
-        raise SystemExit(
-            f"[{size}] converged max batch_size={value} is smaller than "
-            f"--n-gpus={divisor}, so there's no multiple of {divisor} that "
-            f"fits -- can't give each GPU at least 1 sample. Use fewer GPUs "
-            f"for this size, or accept gradient accumulation instead of a "
-            f"larger per-step batch."
-        )
-    return rounded
-
-
 def find_max_batch_size(sweep_args: argparse.Namespace) -> int:
     check_shard_warning(sweep_args)
 
@@ -187,6 +168,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
                          help="Hard ceiling for the exponential search, in case a size "
                               "never OOMs (unlikely at these model scales on a 2080Ti, "
                               "but avoids an infinite doubling loop).")
+    parser.add_argument("--safety-margin", type=float, default=0.9,
+                         help="Fraction of the converged max batch size to actually "
+                              "save/use, as a cushion against memory-profile differences "
+                              "between a short probe and a full training run.")
     parser.add_argument("--base-config", default="config_2080ti_template.yaml")
     parser.add_argument("--log-root", default="logs/batch_sizes_sweep_logs",
                          help="Forwarded as launch_training's --log-root, so batch-size "
@@ -228,14 +213,13 @@ def main():
         )
 
         converged = find_max_batch_size(sweep_args)
-        divisible = round_down_to_divisor(converged, top_args.n_gpus, size)
+        safe = max(1, int(converged * top_args.safety_margin))
         print(f"[{size}] max working batch_size={converged}, "
-              f"saving largest multiple of --n-gpus={top_args.n_gpus} "
-              f"that fits={divisible}")
+              f"saving safety-margined value={safe} (margin={top_args.safety_margin:.0%})")
         if top_args.dry_run:
-            print(f"[{size}] (dry run -- nothing saved; '{converged}'/'{divisible}' above are not real results)")
+            print(f"[{size}] (dry run -- nothing saved; '{converged}' above is not a real result)")
         else:
-            save_tuned_batch_size(top_args.tuned_batch_sizes_file, size, divisible)
+            save_tuned_batch_size(top_args.tuned_batch_sizes_file, size, safe)
 
 
 if __name__ == "__main__":

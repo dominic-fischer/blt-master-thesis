@@ -1,56 +1,3 @@
-"""
-launch_training.py
-
-Given a model size (tiny/small/medium/paper-scale/repo-scale), computes and
-prints the full torchrun launch command with the correct CLI overrides on
-top of entropy_model_2080ti.yaml -- architecture dims, data.root_dir, data
-sources/weights, dump_dir, steps (as a generous ceiling, since real
-stopping is meant to be plateau-based -- not yet implemented, see the
-docstring note below), checkpoint cadence, wandb run name. Avoids
-hand-editing the yaml or manually recomputing this math per run.
-
-Design principle (see entropy_model_2080ti.yaml's own header): that yaml is
-a TEMPLATE. Every field this script overrides is a placeholder there
-("_" or "" -- deliberately chosen so a strict pydantic ValidationError, or
-bytelatent's own `assert args.dump_dir`, fires immediately if this script
-ever fails to override something it's supposed to). Fields this script
-does NOT override (data.sources structure aside -- see below --
-distributed.fsdp_type, distributed.model_dtype, optim.clip) are REAL,
-deliberately-chosen fallback values in the yaml -- only overridden here if
-the corresponding CLI flag is explicitly passed.
-
-NOT YET IMPLEMENTED: plateau-based early stopping. --max-epochs below is a
-generous CEILING, not a real training plan -- a safety backstop in case
-plateau-detection (external to this script) never fires. Do not treat the
-printed step count as "the training plan"; treat it as "the most this run
-will ever do."
-
-Shard directory convention (IMPORTANT -- prepare shards to match this
-before running): data/lang_shards_<balanced|imbalanced>_<n_gpus>gpu/
-    e.g. data/lang_shards_balanced_4gpu, data/lang_shards_imbalanced_4gpu
-Keyed by --sources + --n-gpus, NOT by --size -- every model size shares
-the exact same shard set for a given --sources choice (see
-prepare_language_shards.py and lang_data_ratios_imbalanced.py).
-
-GPU selection (--gpu-ids vs auto-detection): by default this script
-queries nvidia-smi and picks --n-gpus idle GPUs automatically (see
-get_free_gpu_ids()) rather than blindly assuming indices 0..n_gpus-1 are
-free -- this is a shared machine and low-index GPUs are not reliably
-free. This is a best-effort, launch-time-only check: it cannot see GPUs
-that become busy after the check runs (TOCTOU race), so on a heavily
-contended machine, or if you want a specific, reproducible set of
-physical GPUs, pass --gpu-ids explicitly to skip auto-detection entirely.
-
-Usage:
-    python launch_training.py <size> --n-gpus 4 --sources balanced [--run]
-
-Example:
-    python launch_training.py tiny --n-gpus 4 --sources balanced
-    python launch_training.py medium --n-gpus 4 --sources imbalanced --run
-    python launch_training.py repo-scale --n-gpus 4 --sources balanced --fsdp-type full_shard --run
-    python launch_training.py medium --gpu-ids 1,2,3,5 --sources balanced --run
-"""
-
 import argparse
 import csv
 import json
@@ -81,18 +28,30 @@ BYTE_COLUMN_MAP = {
     "imbalanced": "imbalanced_allocation_bytes",
 }
 
-# Warmup scaling constants: warmup = min(BASE_WARMUP, round(WARMUP_FRACTION *
-# total_steps)). No yaml home for these -- they're not real bytelatent
-# config fields, just parameters of this launcher's own scaling algorithm,
-# so they're plain constants rather than CLI flags with defaults.
-# Confirmed necessary: a Tiny run with a flat warmup=500 over only 789
-# total steps spent ~63% of training still ramping LR upward, both train
-# AND held-out bpb climbing in lockstep the whole time -- not overfitting,
-# an LR schedule mismatched to a short run. Scaling avoids that for
-# short/small-size runs while leaving long runs (Medium/Repo-scale, where
-# 10% of steps still vastly exceeds 500) unaffected.
+# Warmup scaling constants: warmup = max(MIN_WARMUP, min(BASE_WARMUP,
+# round(WARMUP_FRACTION * total_steps))). No yaml home for these -- they're
+# not real bytelatent config fields, just parameters of this launcher's own
+# scaling algorithm, so they're plain constants rather than CLI flags with
+# defaults.
+# Confirmed necessary (upper cap): a Tiny run with a flat warmup=500 over
+# only 789 total steps spent ~63% of training still ramping LR upward, both
+# train AND held-out bpb climbing in lockstep the whole time -- not
+# overfitting, an LR schedule mismatched to a short run. Scaling avoids
+# that for short/small-size runs while leaving long runs (Medium/
+# Repo-scale, where 10% of steps still vastly exceeds 500) unaffected.
+# MIN_WARMUP (lower floor): the scaled formula alone has no protection
+# against warmup being too SHORT in absolute terms -- e.g. a 300-step LR
+# probe scales to just 30 steps of warmup, which isn't enough for Adam's
+# gradient-variance estimates to settle before LR hits full value. A
+# too-short warmup can look like a bad candidate LR (early instability)
+# when it's really a warmup artifact -- risking a false DIVERGING read
+# during an LR sweep. 50 is a floor, not a rigorously derived optimum: it
+# eats a bigger fraction of very short probes (e.g. ~17% of a 300-step
+# probe) in exchange for giving Adam some real settling time before ramping
+# to peak LR.
 BASE_WARMUP = 500
 WARMUP_FRACTION = 0.1
+MIN_WARMUP = 50
 
 # GPU auto-detection thresholds: a GPU is considered "free" if BOTH its
 # memory usage and utilization are below these. Conservative on purpose --
@@ -349,7 +308,7 @@ def build_parser() -> argparse.ArgumentParser:
                               "--tuned-lrs-file / lr_sweep.py).")
     parser.add_argument("--configs-csv", default="training_setup/model_configs_computed.csv")
     parser.add_argument("--langs-csv", default="training_setup/langs/langs_chosen.csv")
-    parser.add_argument("--base-config", default="entropy_model_2080ti.yaml")
+    parser.add_argument("--base-config", default="config_2080ti_template.yaml")
     parser.add_argument("--shard-root-base", default="data",
                          help="Shards expected at "
                               "<base>/lang_shards_<balanced|imbalanced>_<n_gpus>gpu/ "
@@ -364,10 +323,16 @@ def build_parser() -> argparse.ArgumentParser:
                          help="Path to the post-training eval script "
                               "(run once, after training finishes).")
     parser.add_argument("--warmup-fraction", type=float, default=WARMUP_FRACTION,
-                         help=f"warmup = min(--base-warmup, round(this * "
-                              f"total_steps)). Default {WARMUP_FRACTION}.")
+                         help=f"warmup = max(--min-warmup, min(--base-warmup, "
+                              f"round(this * total_steps))). Default {WARMUP_FRACTION}.")
     parser.add_argument("--base-warmup", type=int, default=BASE_WARMUP,
                          help=f"Upper cap for the scaled warmup. Default {BASE_WARMUP}.")
+    parser.add_argument("--min-warmup", type=int, default=MIN_WARMUP,
+                         help=f"Lower floor for the scaled warmup, so very "
+                              f"short probes (e.g. --probe-steps 300) don't "
+                              f"get an absurdly short warmup that can look "
+                              f"like LR instability rather than a warmup "
+                              f"artifact. Default {MIN_WARMUP}.")
     parser.add_argument("--tuned-lrs-file", default="training_setup/learning_rate/tuned_lrs.json",
                          help="JSON lookup of {size: lr} saved by "
                               "lr_sweep.py --save-best.")
@@ -381,7 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--clip", type=float, default=None,
                          help="optim.clip override. If omitted, uses "
                               "the yaml's own real fallback value "
-                              "(currently 1.0, bytelatent's own built-in "
+                              "(currently 10.0, bytelatent's own built-in "
                               "OptimArgs default) unchanged.")
     parser.add_argument("--fsdp-type", default=None, choices=["no_shard", "full_shard"],
                          help="Overrides distributed.fsdp_type. If omitted, "
@@ -507,7 +472,11 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         # final step, so nothing is lost.
         total_steps = args.max_epochs * checkpoint_every
 
-    warmup = max(1, min(args.base_warmup, round(args.warmup_fraction * total_steps)))
+    # See MIN_WARMUP's module-level comment: floor added alongside the
+    # existing upper cap so warmup can't collapse to an unreasonably short
+    # absolute number of steps on short probes/runs, in addition to not
+    # dominating a short run.
+    warmup = max(args.min_warmup, min(args.base_warmup, round(args.warmup_fraction * total_steps)))
 
     shard_root = os.path.join(
         args.shard_root_base, f"lang_shards_{args.sources}_{args.n_gpus}gpu"
@@ -626,6 +595,7 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "size_row_name": size_row_name,
         "byte_column": byte_column,
         "total_corpus_bytes": total_corpus_bytes,
+        "bytes_per_step": bytes_per_step,
         "steps_per_epoch": steps_per_epoch,
         "checkpoint_every": checkpoint_every,
         "total_steps": total_steps,
@@ -672,7 +642,7 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
               f"see module docstring) -> steps={plan['total_steps']} "
               f"(exact multiple of checkpoint_every={plan['checkpoint_every']})")
     print(f"# warmup={plan['warmup']} (scaled to {args.warmup_fraction:.0%} of "
-          f"total_steps, capped at {args.base_warmup})")
+          f"total_steps, floored at {args.min_warmup}, capped at {args.base_warmup})")
     print(f"# optim.lr={args.lr}  ({plan['lr_source']})")
     print(f"# optim.clip={args.clip}  ({plan['clip_source']})")
     print(f"# distributed.fsdp_type={plan['fsdp_type']}")
