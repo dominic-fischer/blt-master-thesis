@@ -397,6 +397,16 @@ def build_parser() -> argparse.ArgumentParser:
                               "wandb is a complete no-op regardless of the "
                               "yaml's wandb config. Pass this flag to "
                               "actually enable wandb logging.")
+    parser.add_argument("--trace-source-bytes", action="store_true",
+                         help="Additionally log how many bytes are actually drawn "
+                              "from each data.sources.<language> during training, "
+                              "without changing training behavior otherwise -- see "
+                              "trace_source_bytes.py. Swaps the torchrun entrypoint "
+                              "from bytelatent.train to trace_source_bytes (a thin, "
+                              "behavior-preserving wrapper), and logs land under "
+                              "<dump_dir>/source_bytes/, one file per rank. Run "
+                              "summarize_source_bytes.py <dump_dir> afterward to "
+                              "aggregate them and cross-check against metrics.jsonl.")
     parser.add_argument("--run", action="store_true",
                          help="Actually execute the command instead of just printing it")
     return parser
@@ -622,10 +632,11 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     if args.model_dtype is not None:
         overrides.append(f"distributed.model_dtype={args.model_dtype}")
 
+    train_module = "trace_source_bytes" if args.trace_source_bytes else "bytelatent.train"
     cmd = (
         ["torchrun", f"--nproc_per_node={args.n_gpus}", "--standalone",
          f"--log-dir={log_dir}", "--redirects=3",
-         "-m", "bytelatent.train", f"config={args.base_config}"]
+         "-m", train_module, f"config={args.base_config}"]
         + overrides
     )
 
@@ -636,6 +647,9 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     ]
     if not args.enable_wandb:
         env_prefix.append("export WANDB_MODE=disabled")
+    source_bytes_dir = os.path.join(dump_dir, "source_bytes")
+    if args.trace_source_bytes:
+        env_prefix.append(f"export SOURCE_BYTES_LOG_DIR={source_bytes_dir}")
     env_prefix.append(f"CUDA_VISIBLE_DEVICES={cuda_visible_devices}")
 
     run_env = dict(os.environ)
@@ -643,6 +657,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     run_env["PYTHONUNBUFFERED"] = "1"
     if not args.enable_wandb:
         run_env["WANDB_MODE"] = "disabled"
+    if args.trace_source_bytes:
+        run_env["SOURCE_BYTES_LOG_DIR"] = source_bytes_dir
     run_env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
 
     eval_after_cmd = [
@@ -678,6 +694,8 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "dump_dir": dump_dir,
         "log_dir": log_dir,
         "metrics_jsonl": os.path.join(dump_dir, "metrics.jsonl"),
+        "trace_source_bytes": args.trace_source_bytes,
+        "source_bytes_dir": source_bytes_dir if args.trace_source_bytes else None,
         "cmd": cmd,
         "env_prefix": env_prefix,
         "run_env": run_env,
@@ -718,6 +736,10 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
     print(f"# optim.clip={args.clip}  ({plan['clip_source']})")
     print(f"# distributed.fsdp_type={plan['fsdp_type']}")
     print(f"# distributed.model_dtype={plan['model_dtype']}")
+    if plan["trace_source_bytes"]:
+        print(f"# --trace-source-bytes ON: per-language byte counts -> "
+              f"{plan['source_bytes_dir']}/source_bytes.rank*.jsonl "
+              f"(aggregate afterward with summarize_source_bytes.py {plan['dump_dir']})")
     print()
     print("# --- Training ---")
     for line in plan["env_prefix"][:-1]:

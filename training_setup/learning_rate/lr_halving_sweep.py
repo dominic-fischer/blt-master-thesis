@@ -22,10 +22,21 @@ cheap technique instead of a fixed grid:
      sign two grid points landed on essentially the same performance --
      which one "wins" the tie is just an artifact of Python's min()
      picking the first-seen candidate, not evidence either LR is
-     actually better. Probe the geometric midpoint of the tied pair to
-     see if a sharper optimum lies between them. This runs irrespective
-     of --refine-rounds, since resolving a tie is a data-quality
-     question, not a matter of how many bisection rounds were budgeted.
+     actually better. Probe the geometric midpoint of the tied pair
+     (once, by default -- see --max-tie-break-rounds) to see what's
+     actually between them:
+       - midpoint matches or beats the tied endpoints -> a real flat (or
+         improving) region; the midpoint is preferred as the reported
+         answer over the arbitrary tied endpoint.
+       - midpoint comes back WORSE than both endpoints -> the "tie" isn't
+         a genuine minimum at all, just two points that happen to land on
+         the same value with a worse point between them (non-convex/
+         noisy). This is flagged with an explicit warning rather than
+         silently reporting one of the tied endpoints as if it were a
+         trustworthy optimum.
+     This runs irrespective of --refine-rounds, since resolving a tie is
+     a data-quality question, not a matter of how many bisection rounds
+     were budgeted.
 
   4. CHAINING ACROSS SIZES: sizes are tuned smallest to largest, in the
      order given by --sizes. The FIRST (smallest) size starts its
@@ -57,6 +68,7 @@ Requires launch_training.py in the same directory, providing:
 """
 
 import argparse
+import glob
 import json
 import math
 import os
@@ -73,7 +85,7 @@ GRAD_NORM_WATCH_RATIO = 1.3   # final-third / first-third grad_norm mean, just a
 DEFAULT_START_LR = 4e-4       # BLT's own reported LR; only used for the SMALLEST size
 DEFAULT_MIN_LR_FLOOR = 1e-6   # safety stop for the halving loop
 MAX_UPWARD_EXTENSIONS = 6     # safety cap on how many times we'll double past the top edge
-MAX_TIE_BREAK_ROUNDS = 3      # safety cap on how many tie-break midpoints we'll chase
+MAX_TIE_BREAK_ROUNDS = 1      # safety cap on how many tie-break midpoints we'll chase
 TIE_BREAK_DECIMALS = 4        # min_bpb agreement (decimal digits) to call something a "tie"
 LR_SWEEP_LOGS_DIR = "logs/lr_halving_sweep"
 DEFAULT_SWEEP_ROOT = "dumps/lr_halving_sweep"
@@ -455,42 +467,150 @@ def resolve_ties(size: str, n_gpus: int, results: list[dict], probe_steps: int, 
                   decimals: int = TIE_BREAK_DECIMALS,
                   max_rounds: int = MAX_TIE_BREAK_ROUNDS) -> list[dict]:
     """After refinement, if the best candidate is tied (to `decimals`
-    digits) with an LR-adjacent neighbor, probe their geometric midpoint --
-    a tie between two grid points is a sign the true optimum may lie
-    between them, not a settled result. Runs regardless of --refine-rounds,
-    since this is about data quality (an unresolved tie), not about how
-    many bisection rounds were budgeted. Repeats up to `max_rounds` times,
-    since resolving one tie can reveal a new one against the freshly probed
-    midpoint; stops as soon as no tie remains, or if the midpoint of a tied
-    pair has already been tested (nothing left to narrow)."""
+    digits) with an LR-adjacent neighbor, probe their geometric midpoint
+    and use it to actually resolve the tie rather than just adding a data
+    point and leaving the arbitrary min()-picks-first-seen behavior in
+    place:
+      - midpoint's min_bpb matches or beats the tied value -> a real
+        flat (or improving) region. The midpoint is inserted at the
+        FRONT of `results` so it -- not whichever tied endpoint happened
+        to be appended first -- is what min()-based selection downstream
+        (compute_refinement_candidates, print_size_report) picks on a
+        tie, since the centered point is a more defensible answer than
+        an arbitrary search-order artifact.
+      - midpoint's min_bpb is WORSE than BOTH tied endpoints -> this is
+        NOT a proper minimum (a real optimum can't have a worse point
+        sitting between two better/equal ones) -- the "tie" is more
+        likely measurement noise than a genuine flat basin. Printed as
+        an explicit warning rather than silently reporting one of the
+        tied LRs as if it were trustworthy.
+    Runs regardless of --refine-rounds, since this is about data quality
+    (an unresolved tie), not about how many bisection rounds were
+    budgeted. Repeats up to `max_rounds` times (default 1: resolve once
+    and stop -- ties can span a wide LR range in practice, so chasing
+    narrower and narrower midpoints risks spending probes narrowing in on
+    noise rather than a real sharper optimum). Only warns about hitting
+    the round cap if a tie is STILL unresolved once rounds run out --
+    cleanly resolving the original tie within the budget is not itself a
+    problem worth flagging."""
+    rounds_used = 0
     for _ in range(max_rounds):
         tie = find_adjacent_tie(results, decimals)
         if tie is None:
             break
+        rounds_used += 1
         best, neighbor = tie
         low, high = sorted([best["lr"], neighbor["lr"]])
         midpoint = round_lr(math.sqrt(low * high))
+        tied_bpb = best["min_bpb"]  # both endpoints share this value to `decimals`
 
         existing = {r["lr"] for r in results}
         if midpoint in existing:
             print(f"  [tie-break] lr={best['lr']:.3g} and lr={neighbor['lr']:.3g} are tied "
-                  f"(both min_bpb={best['min_bpb']:.4f} to {decimals} decimals), but their "
+                  f"(both min_bpb={tied_bpb:.4f} to {decimals} decimals), but their "
                   f"geometric midpoint {midpoint:.3g} was already tested -- stopping "
                   f"tie-break for this size.")
             break
 
         print(f"\n--- tie-break for size={size}: lr={best['lr']:.3g} and lr={neighbor['lr']:.3g} "
-              f"both landed at min_bpb={best['min_bpb']:.4f} -- probing geometric midpoint "
+              f"both landed at min_bpb={tied_bpb:.4f} -- probing geometric midpoint "
               f"{midpoint:.3g} ---")
-        results.append(run_probe(size, n_gpus, midpoint, probe_steps, clip, sources, sweep_root,
-                                  extra_args, force_rerun))
-    else:
-        print(f"  WARNING: hit --max-tie-break-rounds ({max_rounds}) while still finding ties "
-              f"for size={size}; consider inspecting manually.")
+        mid_result = run_probe(size, n_gpus, midpoint, probe_steps, clip, sources, sweep_root,
+                                extra_args, force_rerun)
+
+        mid_matches_or_beats = (
+            mid_result["status"] == "CONVERGING"
+            and round(mid_result["min_bpb"], decimals) <= round(tied_bpb, decimals)
+        )
+        if mid_matches_or_beats:
+            results.insert(0, mid_result)
+            if round(mid_result["min_bpb"], decimals) < round(tied_bpb, decimals):
+                print(f"  Midpoint lr={midpoint:.3g} improved on the tie "
+                      f"(min_bpb={mid_result['min_bpb']:.4f} < {tied_bpb:.4f}) -- using it.")
+            else:
+                print(f"  Midpoint lr={midpoint:.3g} matched the tie "
+                      f"(min_bpb={mid_result['min_bpb']:.4f}) -- preferring the centered "
+                      f"value over the arbitrary tied endpoint.")
+        else:
+            results.append(mid_result)
+            mid_bpb_str = (f"{mid_result['min_bpb']:.4f}" if mid_result["status"] == "CONVERGING"
+                            else mid_result["status"])
+            print(f"  WARNING: midpoint lr={midpoint:.3g} came back WORSE ({mid_bpb_str}) "
+                  f"than both tied endpoints (lr={best['lr']:.3g} and lr={neighbor['lr']:.3g}, "
+                  f"both min_bpb={tied_bpb:.4f}) -- this is NOT a proper minimum. The tied "
+                  f"region is likely noise rather than a genuine flat optimum; treat these "
+                  f"LRs with caution and consider a longer probe to get a cleaner read.")
+
+    if rounds_used >= max_rounds and find_adjacent_tie(results, decimals) is not None:
+        print(f"  WARNING: hit --max-tie-break-rounds ({max_rounds}) while a tie still "
+              f"remains for size={size}; consider inspecting manually or raising the cap.")
     return results
 
 
-def print_size_report(size: str, results: list[dict]) -> dict | None:
+def discover_prior_probe_results(size: str, n_gpus: int, sources: str, probe_steps: int,
+                                  clip: float, sweep_root: str, extra_args: list[str]) -> list[dict]:
+    """Scans disk for EVERY previously probed LR at this exact
+    (size, n_gpus, sources, probe_steps, clip, extra_args) configuration --
+    not just the ones THIS session's search algorithm happened to propose.
+
+    This matters because a one-off manually-launched probe (e.g. testing a
+    specific LR directly via launch_training.py, outside the halving/
+    refine/tie-break search) writes its metrics.jsonl to the exact same
+    dump_dir this script would use for that LR, but the in-memory
+    `results` list built up during a single run of tune_size() has no way
+    to know that data exists unless the search happens to propose that
+    same LR itself. Without this, the final summary silently omits real,
+    already-paid-for probes just because they weren't reached by this
+    session's particular search path.
+
+    Works by building the run_name PREFIX (everything up to, but not
+    including, the trailing "_lr<value>" component) the same way
+    compute_plan does, using a placeholder LR -- lr is always appended
+    LAST in compute_plan's suffix construction, so truncating at "_lr" is
+    safe. Globs for every directory sharing that prefix, and parses each
+    one's actual LR back out of its own "_lr<value>" suffix."""
+    parser = launch_training.build_parser()
+    placeholder_lr = 1.0
+    argv = [
+        size, "--n-gpus", str(n_gpus),
+        "--sources", sources,
+        "--probe-steps", str(probe_steps),
+        "--lr", str(placeholder_lr),
+        "--clip", str(clip),
+        "--dump-root", os.path.join(sweep_root, f"entropy_{size}"),
+        "--log-root", os.path.join(LR_SWEEP_LOGS_DIR, f"entropy_{size}"),
+    ] + extra_args
+    args = parser.parse_args(argv)
+    plan = launch_training.compute_plan(args, parser)
+
+    placeholder_suffix = f"_lr{launch_training.format_value(placeholder_lr)}"
+    if not plan["run_name"].endswith(placeholder_suffix):
+        # Defensive: if compute_plan's suffix ordering ever changes so lr
+        # isn't last, don't guess at a prefix -- just skip discovery
+        # rather than risk matching the wrong runs.
+        return []
+    prefix = plan["run_name"][: -len(placeholder_suffix)]
+
+    discovered = []
+    pattern = os.path.join(os.path.dirname(plan["dump_dir"]), f"{prefix}_lr*")
+    for dump_dir in sorted(glob.glob(pattern)):
+        run_name = os.path.basename(dump_dir)
+        lr_str = run_name[len(prefix) + len("_lr"):]
+        try:
+            lr = float(lr_str)
+        except ValueError:
+            continue
+        rows = read_metrics(os.path.join(dump_dir, "metrics.jsonl"))
+        if not rows:
+            continue
+        result = analyze(rows)
+        result["lr"] = lr
+        result["run_name"] = run_name
+        discovered.append(result)
+    return discovered
+
+
+def print_size_report(size: str, results: list[dict], tie_decimals: int = TIE_BREAK_DECIMALS) -> dict | None:
     print(f"\n{'=' * 78}\nsummary for size={size}\n{'=' * 78}")
     print(f"{'lr':>10}  {'status':<11} {'min_bpb':>9} {'@step':>7}  {'final_bpb':>10}")
     for r in sorted(results, key=lambda r: r["lr"], reverse=True):
@@ -504,7 +624,27 @@ def print_size_report(size: str, results: list[dict]) -> dict | None:
         print("No candidate converged for this size -- nothing to hand off to the next size.")
         return None
     best = min(converging, key=lambda r: r["min_bpb"])
+
+    # Anything tied with best (to tie_decimals) -- not just LR-adjacent
+    # neighbors, ALL converging candidates -- forms the "tie group". Its
+    # highest LR is what the next size's starting bound should chain from:
+    # since we're not confident which exact tied value is the true
+    # optimum, and bigger models trend toward needing LR <= the smaller
+    # model's, using the highest tied value avoids underestimating that
+    # ceiling. If nothing else is tied with best, the group is just
+    # {best} and this equals best['lr'] -- so this always applies, tie or
+    # not, with no separate branch needed.
+    best_rounded = round(best["min_bpb"], tie_decimals)
+    tie_group = [r for r in converging if round(r["min_bpb"], tie_decimals) == best_rounded]
+    chain_reference_lr = max(r["lr"] for r in tie_group)
+    best["chain_reference_lr"] = chain_reference_lr
+
     print(f"-> best: lr={best['lr']:.3g}  (min_bpb={best['min_bpb']:.4f})")
+    if len(tie_group) > 1:
+        tied_lrs = sorted((r["lr"] for r in tie_group), reverse=True)
+        print(f"   tied (to {tie_decimals} decimals) with: {[f'{lr:.3g}' for lr in tied_lrs]}")
+        print(f"   -> next size's starting bound will chain from the highest tied value, "
+              f"lr={chain_reference_lr:.3g}, not the reported best itself.")
     return best
 
 
@@ -520,7 +660,26 @@ def tune_size(size: str, n_gpus: int, start_ub: float, probe_steps: int, clip: f
                       sweep_root, extra_args, force_rerun, max_upward_extensions)
     results = resolve_ties(size, n_gpus, results, probe_steps, clip, sources, sweep_root,
                             extra_args, force_rerun, tie_break_decimals, max_tie_break_rounds)
-    return print_size_report(size, results)
+
+    # Fold in any previously-probed LRs for this exact configuration that
+    # this session's search never happened to propose (e.g. a one-off
+    # manual probe run outside the algorithm) -- see
+    # discover_prior_probe_results's docstring for why this is necessary.
+    known_lrs = {r["lr"] for r in results}
+    prior_results = discover_prior_probe_results(size, n_gpus, sources, probe_steps, clip,
+                                                  sweep_root, extra_args)
+    added_lrs = []
+    for prior in prior_results:
+        if prior["lr"] not in known_lrs:
+            results.append(prior)
+            known_lrs.add(prior["lr"])
+            added_lrs.append(prior["lr"])
+    if added_lrs:
+        print(f"\n  (folded in {len(added_lrs)} previously-probed LR(s) for size={size} "
+              f"found on disk but not reached by this session's search: "
+              f"{sorted(added_lrs, reverse=True)})")
+
+    return print_size_report(size, results, tie_break_decimals)
 
 
 def main():
@@ -580,7 +739,11 @@ def main():
                         "probed automatically, irrespective of --refine-rounds.")
     p.add_argument("--max-tie-break-rounds", type=int, default=MAX_TIE_BREAK_ROUNDS,
                    help="Safety cap on how many tie-break midpoints will be chased in a row "
-                        f"for a single size (default {MAX_TIE_BREAK_ROUNDS}).")
+                        f"for a single size (default {MAX_TIE_BREAK_ROUNDS}: resolve a tie "
+                        "once and stop, rather than keep narrowing indefinitely -- given how "
+                        "wide the tied region can be in practice (see 10M's 1.4e-3/1.5e-3/"
+                        "1.7e-3 tie), chasing multiple rounds risks spending probes "
+                        "narrowing in on noise rather than a real sharper optimum).")
     p.add_argument("--sweep-root", default=DEFAULT_SWEEP_ROOT)
     p.add_argument("--save-best", action="store_true",
                    help="Write each size's tuned best LR to --tuned-lrs-file as it's found.")
@@ -654,7 +817,7 @@ def main():
             launch_training.save_tuned_lr(args.tuned_lrs_file, size, best["lr"])
             print(f"Saved lr={best['lr']:.3g} for size={size} to {args.tuned_lrs_file}")
 
-        chain_upper_bound = next_grid_multiple(best["lr"], args.start_lr)
+        chain_upper_bound = next_grid_multiple(best["chain_reference_lr"], args.start_lr)
 
     print(f"\n{'=' * 78}\nfinal chained results\n{'=' * 78}")
     for size in sizes:
