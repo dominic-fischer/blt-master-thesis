@@ -171,6 +171,15 @@ def main():
                               "as <dump_dir>/metrics.jsonl assuming the "
                               "standard checkpoint_dir layout "
                               "(<dump_dir>/checkpoints/<step>/consolidated).")
+    parser.add_argument("--json-out", default=None,
+                         help="If given, also writes a machine-readable JSON "
+                              "summary here (overall_bpb, grand_total_bytes, "
+                              "per-language bpb/bytes, short_languages, step, "
+                              "and matched TRAIN bpb/loss if found) -- for "
+                              "programmatic consumption, e.g. by "
+                              "monitor_and_stop_training_early.py's early-stopping "
+                              "monitor. The printed human-readable report is "
+                              "unaffected either way.")
     args = parser.parse_args()
 
     state_dict_path = os.path.join(args.checkpoint_dir, "consolidated.pth")
@@ -241,6 +250,9 @@ def main():
     step = infer_step_from_checkpoint_dir(args.checkpoint_dir)
     train_metrics = find_train_metrics_at_step(metrics_path, step) if step is not None else None
 
+    train_bpb = None
+    train_loss = None
+    matched_step = None
     if train_metrics is not None:
         train_loss = train_metrics.get("loss/interval_across_gpu")
         train_bpb = train_metrics.get("bpb/interval_across_gpus")
@@ -255,6 +267,28 @@ def main():
     else:
         print(f"\n(no training metrics found at step {step} in {metrics_path} "
               f"-- pass --metrics-jsonl explicitly if it's elsewhere)")
+
+    if args.json_out:
+        summary = {
+            "step": step,
+            "overall_bpb": overall_bpb,
+            "grand_total_bytes": grand_total_bytes,
+            "target_bytes_per_lang": args.target_bytes_per_lang,
+            "per_language": [
+                {"language_code": lc, "val_bpb": bpb, "val_bytes": n_bytes}
+                for lc, bpb, n_bytes in results
+            ],
+            "short_languages": [
+                {"language_code": lc, "val_bytes": n_bytes}
+                for lc, n_bytes in short_languages
+            ],
+            "train_bpb": train_bpb,
+            "train_loss": train_loss,
+            "train_matched_step": matched_step,
+        }
+        os.makedirs(os.path.dirname(args.json_out) or ".", exist_ok=True)
+        with open(args.json_out, "w") as f:
+            json.dump(summary, f, indent=2)
 
 
 if __name__ == "__main__":

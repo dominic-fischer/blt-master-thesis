@@ -1,6 +1,7 @@
 import argparse
 import csv
 import json
+import math
 import os
 import subprocess
 import sys
@@ -279,7 +280,30 @@ def build_parser() -> argparse.ArgumentParser:
                               "bytes/param ratio per data_to_params_ratio.py), "
                               "so watch their curves and raise this "
                               "manually if needed until real early "
-                              "stopping exists.")
+                              "stopping exists. IGNORED if --total-steps is "
+                              "passed explicitly.")
+    parser.add_argument("--total-steps", type=int, default=None,
+                         help="Explicit total training step count, overriding the "
+                              "--max-epochs-based ceiling entirely -- use this "
+                              "instead of --max-epochs when you don't expect to "
+                              "train a full epoch (e.g. a large corpus where even "
+                              "one epoch is far more compute than you plan to "
+                              "spend). Rounded UP to the nearest exact multiple of "
+                              "the checkpoint cadence (see --checkpoint-every-steps) "
+                              "if it isn't one already -- same defense-in-depth "
+                              "reasoning as the --max-epochs path: the final "
+                              "training step must exactly coincide with a periodic "
+                              "checkpoint, or bytelatent's missing-final-checkpoint "
+                              "bug silently drops it (see the checkpoint_every "
+                              "comment below).")
+    parser.add_argument("--checkpoint-every-steps", type=int, default=None,
+                         help="Explicit checkpoint/held-out-eval cadence in steps, "
+                              "decoupled from epoch length. If omitted, falls back "
+                              "to the old once-per-epoch behavior "
+                              "(round(steps_per_epoch)) -- which is almost "
+                              "certainly not what you want if you're not planning "
+                              "to train a full epoch, since 'once per epoch' would "
+                              "then mean 'once, at the very end, if ever'.")
     parser.add_argument("--probe-steps", type=int, default=None,
                          help="For quick LR probes (see lr_sweep.py): use "
                               "exactly this many steps instead of computing "
@@ -289,7 +313,7 @@ def build_parser() -> argparse.ArgumentParser:
                               "only needs metrics.jsonl's per-step train "
                               "bpb/grad_norm, logged every logging.freq "
                               "steps regardless of checkpointing. Overrides "
-                              "--max-epochs when set.")
+                              "--max-epochs and --total-steps when set.")
     parser.add_argument("--batch-size", type=int, default=None,
                          help="If omitted, looked up from "
                               "--tuned-batch-sizes-file for this exact "
@@ -454,23 +478,48 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     bytes_per_step = args.n_gpus * args.batch_size * seq_len
     steps_per_epoch = total_corpus_bytes / bytes_per_step
 
+    total_steps_rounded_from = None  # only set if --total-steps got bumped up
+
     if args.probe_steps is not None:
         # Quick LR-probe mode: fixed step count, no periodic
         # checkpoint/eval (set to fire past the end of the run).
         total_steps = args.probe_steps
         checkpoint_every = total_steps + 1
+        checkpoint_every_source = "probe mode (checkpointing/eval disabled)"
+        total_steps_source = "explicit --probe-steps"
     else:
-        checkpoint_every = round(steps_per_epoch)
-        # total_steps forced to an exact multiple of checkpoint_every --
-        # defense-in-depth against bytelatent's missing-final-checkpoint
-        # bug (train.py's "saved" flag guarding the final checkpoint is
-        # never reset per-iteration, so once any periodic checkpoint
-        # fires, the "always save when training ends" safety net silently
-        # becomes a no-op). Confirmed: a Tiny run lost its final ~1 epoch
-        # this way. Making total_steps an exact multiple of
-        # checkpoint_every means the last periodic checkpoint IS the
-        # final step, so nothing is lost.
-        total_steps = args.max_epochs * checkpoint_every
+        # Checkpoint cadence: explicit --checkpoint-every-steps decouples
+        # this from epoch length entirely. Falls back to the original
+        # once-per-epoch behavior if omitted -- but that fallback is a poor
+        # fit for a run that isn't expected to reach even one epoch (it'd
+        # mean "checkpoint once, at the very end, if ever").
+        if args.checkpoint_every_steps is not None:
+            checkpoint_every = args.checkpoint_every_steps
+            checkpoint_every_source = "explicit --checkpoint-every-steps"
+        else:
+            checkpoint_every = round(steps_per_epoch)
+            checkpoint_every_source = (
+                "once-per-epoch (round(steps_per_epoch); pass "
+                "--checkpoint-every-steps to decouple from epoch length)"
+            )
+
+        if args.total_steps is not None:
+            # Force to an exact multiple of checkpoint_every -- same
+            # defense-in-depth reasoning as the epoch-based path: a
+            # periodic checkpoint must land exactly on the final step, or
+            # bytelatent's missing-final-checkpoint bug (train.py's
+            # "saved" flag guarding the final checkpoint is never reset
+            # per-iteration, so once any periodic checkpoint fires, the
+            # "always save when training ends" safety net silently
+            # becomes a no-op) silently drops the last one.
+            n_intervals = math.ceil(args.total_steps / checkpoint_every)
+            total_steps = n_intervals * checkpoint_every
+            if total_steps != args.total_steps:
+                total_steps_rounded_from = args.total_steps
+            total_steps_source = "explicit --total-steps"
+        else:
+            total_steps = args.max_epochs * checkpoint_every
+            total_steps_source = f"--max-epochs={args.max_epochs} x checkpoint_every"
 
     # See MIN_WARMUP's module-level comment: floor added alongside the
     # existing upper cap so warmup can't collapse to an unreasonably short
@@ -488,13 +537,26 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     # ALWAYS included (like lr) since it's a required, no-default,
     # first-class experimental choice -- never "the default", so always
     # worth having explicit in the name.
+    suffix_parts = [f"sources{args.sources}"]
+
+    # total_steps/checkpoint cadence: only meaningfully "non-default" when
+    # explicitly overridden (like clip/batch_size, their effective value
+    # after resolution isn't comparable to the raw parser default), so
+    # handled explicitly rather than through the generic tunable loop below.
+    if args.total_steps is not None:
+        suffix_parts.append(f"steps{format_value(total_steps)}")
+    else:
+        default_max_epochs = parser.get_default("max_epochs")
+        if args.max_epochs != default_max_epochs:
+            suffix_parts.append(f"epochs{format_value(args.max_epochs)}")
+    if args.checkpoint_every_steps is not None:
+        suffix_parts.append(f"ckpt{format_value(checkpoint_every)}")
+
     tunable = {
-        "max_epochs": "epochs",
         "probe_steps": "probesteps",
         "clip": "clip",
         "batch_size": "bs",
     }
-    suffix_parts = [f"sources{args.sources}"]
     for arg_name, label in tunable.items():
         value = getattr(args, arg_name)
         default = parser.get_default(arg_name)
@@ -598,7 +660,10 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         "bytes_per_step": bytes_per_step,
         "steps_per_epoch": steps_per_epoch,
         "checkpoint_every": checkpoint_every,
+        "checkpoint_every_source": checkpoint_every_source,
         "total_steps": total_steps,
+        "total_steps_source": total_steps_source,
+        "total_steps_rounded_from": total_steps_rounded_from,
         "warmup": warmup,
         "lr_source": lr_source,
         "batch_size_source": batch_size_source,
@@ -635,12 +700,18 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
           f"{plan['steps_per_epoch']:.1f} steps/epoch @ {args.n_gpus} GPUs, "
           f"batch_size={args.batch_size} ({plan['batch_size_source']})")
     if args.probe_steps is not None:
-        print(f"# PROBE MODE: steps={plan['total_steps']} (fixed, --max-epochs "
-              f"ignored), checkpointing/eval disabled")
+        print(f"# PROBE MODE: steps={plan['total_steps']} (fixed, --max-epochs/"
+              f"--total-steps ignored), checkpointing/eval disabled")
     else:
-        print(f"# --max-epochs={args.max_epochs} (CEILING, not a training plan -- "
-              f"see module docstring) -> steps={plan['total_steps']} "
-              f"(exact multiple of checkpoint_every={plan['checkpoint_every']})")
+        print(f"# checkpoint_every={plan['checkpoint_every']} steps "
+              f"({plan['checkpoint_every_source']})")
+        rounding_note = ""
+        if plan["total_steps_rounded_from"] is not None:
+            rounding_note = (f" (rounded up from requested "
+                              f"{plan['total_steps_rounded_from']:,} to land exactly "
+                              f"on a checkpoint boundary)")
+        print(f"# total_steps={plan['total_steps']:,} ({plan['total_steps_source']})"
+              f"{rounding_note}")
     print(f"# warmup={plan['warmup']} (scaled to {args.warmup_fraction:.0%} of "
           f"total_steps, floored at {args.min_warmup}, capped at {args.base_warmup})")
     print(f"# optim.lr={args.lr}  ({plan['lr_source']})")

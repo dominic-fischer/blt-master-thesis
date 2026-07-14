@@ -12,17 +12,31 @@ cheap technique instead of a fixed grid:
 
   2. BRACKET REFINEMENT: once descent stops, take the best point found
      and its two neighbors (one step up, one step down, in LR-space) and
-     probe 2 new log-spaced points inside each of those two gaps. Repeat
-     for --refine-rounds. This narrows in on the optimum without ever
-     running a wasteful full grid.
+     probe 1 new log-spaced (bisecting) point inside each of those two
+     gaps. Repeat for --refine-rounds, re-centering on the updated best
+     each round. This narrows in on the optimum without ever running a
+     wasteful full grid.
 
-  3. CHAINING ACROSS SIZES: sizes are tuned smallest to largest, in the
+  3. TIE-BREAKING: after refinement, if the best candidate is tied (to
+     --tie-break-decimals digits) with an LR-adjacent neighbor, that's a
+     sign two grid points landed on essentially the same performance --
+     which one "wins" the tie is just an artifact of Python's min()
+     picking the first-seen candidate, not evidence either LR is
+     actually better. Probe the geometric midpoint of the tied pair to
+     see if a sharper optimum lies between them. This runs irrespective
+     of --refine-rounds, since resolving a tie is a data-quality
+     question, not a matter of how many bisection rounds were budgeted.
+
+  4. CHAINING ACROSS SIZES: sizes are tuned smallest to largest, in the
      order given by --sizes. The FIRST (smallest) size starts its
      descent from --start-lr (default 4e-4, BLT's reported value).
-     EVERY SUBSEQUENT size starts its descent from the previous size's
-     tuned best LR -- since bigger models need LR <= smaller model's LR
-     in practice, the previous winner is a safe, tight upper bound
-     rather than re-testing values we already know are too high.
+     EVERY SUBSEQUENT size starts its descent from the next multiple of
+     --start-lr above the previous size's tuned best LR (e.g. on the
+     default 4e-4 grid: a previous best of 3e-4 chains to 4e-4, and a
+     previous best of 5.5e-4 chains to 8e-4) -- since bigger models need
+     LR <= smaller model's LR in practice, this gives the descent a
+     real, round-number upper bound to start from rather than
+     re-testing values we already know are too high.
 
 This assumes bigger sizes need a smaller-or-equal LR than smaller ones.
 That's the common pattern but isn't guaranteed -- check the per-size
@@ -34,7 +48,7 @@ assumption doesn't hold here.
 Usage:
     python lr_halving_sweep.py --sizes 10M,50M,100M --n-gpus 4
     python lr_halving_sweep.py --sizes 10M,50M,100M --n-gpus 4 \\
-        --start-lr 4e-4 --probe-steps 300 --refine-rounds 1 --save-best
+        --start-lr 4e-4 --probe-steps 300 --refine-rounds 2 --save-best
 
 Requires launch_training.py in the same directory, providing:
     build_parser(), compute_plan(args, parser), save_tuned_lr(path, size, lr),
@@ -58,6 +72,9 @@ DIVERGE_RATIO = 1.15          # final_bpb / min_bpb above this -> DIVERGING
 GRAD_NORM_WATCH_RATIO = 1.3   # final-third / first-third grad_norm mean, just a flag
 DEFAULT_START_LR = 4e-4       # BLT's own reported LR; only used for the SMALLEST size
 DEFAULT_MIN_LR_FLOOR = 1e-6   # safety stop for the halving loop
+MAX_UPWARD_EXTENSIONS = 6     # safety cap on how many times we'll double past the top edge
+MAX_TIE_BREAK_ROUNDS = 3      # safety cap on how many tie-break midpoints we'll chase
+TIE_BREAK_DECIMALS = 4        # min_bpb agreement (decimal digits) to call something a "tie"
 LR_SWEEP_LOGS_DIR = "logs/lr_halving_sweep"
 DEFAULT_SWEEP_ROOT = "dumps/lr_halving_sweep"
 
@@ -81,6 +98,20 @@ def round_lr(x: float) -> float:
     """Round to 1 decimal digit of scientific-notation mantissa, e.g.
     2.884e-4 -> 2.9e-4, so candidate LRs stay readable."""
     return float(f"{x:.1e}")
+
+
+def next_grid_multiple(value: float, quantum: float) -> float:
+    """Smallest multiple of `quantum` that is STRICTLY GREATER than `value`,
+    e.g. next_grid_multiple(3e-4, 4e-4) -> 4e-4, and
+    next_grid_multiple(5.5e-4, 4e-4) -> 8e-4 (since 5.5e-4 sits between
+    the 4e-4 and 8e-4 grid points, the next one up is 8e-4). Even if
+    `value` already lands exactly on a grid point, this always steps up
+    one more multiple -- we want a real upper bound for the next size's
+    descent to start from, not the previous winner itself. The small
+    epsilon guards against value/quantum landing at e.g. 1.9999999999998
+    instead of 2.0 due to float representation."""
+    k = math.floor(value / quantum + 1e-9) + 1
+    return round_lr(k * quantum)
 
 
 def read_metrics(metrics_jsonl: str) -> list[dict]:
@@ -276,12 +307,18 @@ def log_space_midpoints(low: float, high: float, n: int) -> list[float]:
     return [round_lr(math.exp(log_low + step * (i + 1))) for i in range(n)]
 
 
-def compute_refinement_candidates(results: list[dict], n_midpoints: int = 2) -> tuple[list[float], dict]:
+def compute_refinement_candidates(results: list[dict], n_midpoints: int = 1) -> tuple[list[float], dict]:
     """Finds the best CONVERGING candidate among ALL results so far, plus
     its immediate LR-neighbors (up and down), and proposes n_midpoints
     new log-spaced candidates inside each of those two gaps. If the best
     sits at either edge of the tested range, that side can't be
-    bracketed -- flagged via info['edge_warning'] instead."""
+    bracketed -- flagged via info['edge_warning'] instead.
+
+    Default n_midpoints=1 just bisects each gap (each gap is only one
+    halving-descent step, i.e. a factor of 2, so a single midpoint at
+    sqrt(2)x already narrows the window a lot); run multiple
+    --refine-rounds to keep bisecting around the updated best instead of
+    spending two probes per gap in a single round."""
     info = {"best_lr": None, "lower_neighbor": None, "upper_neighbor": None, "edge_warning": None}
     converging = [r for r in results if r["status"] == "CONVERGING"]
     if not converging:
@@ -325,8 +362,52 @@ def compute_refinement_candidates(results: list[dict], n_midpoints: int = 2) -> 
     return deduped, info
 
 
+def extend_upper_edge(size: str, n_gpus: int, results: list[dict], probe_steps: int, clip: float,
+                       sources: str, sweep_root: str, extra_args: list[str], force_rerun: bool,
+                       max_extensions: int = MAX_UPWARD_EXTENSIONS) -> list[dict]:
+    """If the current best candidate sits at the TOP of the tested range
+    (no upper neighbor -- i.e. compute_refinement_candidates would raise
+    the 'HIGHEST candidate tested' edge_warning), we don't yet know
+    whether the halving descent simply started too low. So before
+    bracketing, keep doubling the best LR and probing it: as long as the
+    doubled point keeps winning, double again. The first time a doubled
+    point comes in worse (or fails/diverges), it becomes the best's real
+    upper neighbor and we stop -- normal bracket refinement can now run
+    with a proper gap on both sides.
+
+    e.g. best=4e-4 with nothing tested above it -> probe 8e-4. If 8e-4
+    wins, probe 1.6e-3. If that loses, we now bracket between 4e-4/8e-4
+    and 8e-4/1.6e-3 (4e-4 being 8e-4's lower neighbor) as usual.
+
+    Capped at `max_extensions` doublings as a safety valve in case LR
+    keeps improving indefinitely (shouldn't happen in practice, but we
+    don't want an unbounded loop of real training runs)."""
+    for _ in range(max_extensions):
+        _, info = compute_refinement_candidates(results)
+        if info["best_lr"] is None or info["upper_neighbor"] is not None:
+            # Nothing converged yet, or the best already has something
+            # tested above it -- normal bracketing can proceed.
+            break
+        candidate_lr = round_lr(info["best_lr"] * 2)
+        print(f"\n--- best lr={info['best_lr']:.3g} is the top of the tested range for "
+              f"size={size} -- probing lr={candidate_lr:.3g} before bracketing ---")
+        results.append(run_probe(size, n_gpus, candidate_lr, probe_steps, clip, sources,
+                                  sweep_root, extra_args, force_rerun))
+    else:
+        print(f"  WARNING: hit --max-upward-extensions ({max_extensions}) while still "
+              f"climbing for size={size}; the LR search may not have found a true peak. "
+              f"Consider raising the cap or double-checking this size manually.")
+    return results
+
+
 def refine(size: str, n_gpus: int, results: list[dict], rounds: int, probe_steps: int,
-           clip: float, sources: str, sweep_root: str, extra_args: list[str], force_rerun: bool) -> list[dict]:
+           clip: float, sources: str, sweep_root: str, extra_args: list[str], force_rerun: bool,
+           max_upward_extensions: int = MAX_UPWARD_EXTENSIONS) -> list[dict]:
+    # Before bracketing gaps, make sure the best point isn't sitting at the
+    # top of the tested range with nothing above it to bracket against.
+    results = extend_upper_edge(size, n_gpus, results, probe_steps, clip, sources,
+                                 sweep_root, extra_args, force_rerun, max_upward_extensions)
+
     for round_num in range(1, rounds + 1):
         new_lrs, info = compute_refinement_candidates(results)
         if info["edge_warning"]:
@@ -339,6 +420,73 @@ def refine(size: str, n_gpus: int, results: list[dict], rounds: int, probe_steps
         for lr in new_lrs:
             results.append(run_probe(size, n_gpus, lr, probe_steps, clip, sources, sweep_root,
                                       extra_args, force_rerun))
+    return results
+
+
+def find_adjacent_tie(results: list[dict], decimals: int) -> tuple[dict, dict] | None:
+    """Looks at the best CONVERGING candidate and its immediate LR-neighbors
+    (same notion of 'neighbor' as compute_refinement_candidates uses). If
+    either neighbor's min_bpb agrees with the best's to `decimals` digits,
+    returns (best, tied_neighbor) -- since which one is "best" in that case
+    is just an artifact of Python's min() picking whichever was appended
+    first, not evidence that LR is actually better. Returns None if there's
+    no tie to resolve."""
+    converging = [r for r in results if r["status"] == "CONVERGING"]
+    if not converging:
+        return None
+
+    by_lr = sorted(results, key=lambda r: r["lr"])
+    lrs_sorted = [r["lr"] for r in by_lr]
+    best = min(converging, key=lambda r: r["min_bpb"])
+    idx = lrs_sorted.index(best["lr"])
+    best_rounded = round(best["min_bpb"], decimals)
+
+    for neighbor_idx in (idx - 1, idx + 1):
+        if 0 <= neighbor_idx < len(by_lr):
+            neighbor = by_lr[neighbor_idx]
+            if (neighbor["status"] == "CONVERGING"
+                    and round(neighbor["min_bpb"], decimals) == best_rounded):
+                return best, neighbor
+    return None
+
+
+def resolve_ties(size: str, n_gpus: int, results: list[dict], probe_steps: int, clip: float,
+                  sources: str, sweep_root: str, extra_args: list[str], force_rerun: bool,
+                  decimals: int = TIE_BREAK_DECIMALS,
+                  max_rounds: int = MAX_TIE_BREAK_ROUNDS) -> list[dict]:
+    """After refinement, if the best candidate is tied (to `decimals`
+    digits) with an LR-adjacent neighbor, probe their geometric midpoint --
+    a tie between two grid points is a sign the true optimum may lie
+    between them, not a settled result. Runs regardless of --refine-rounds,
+    since this is about data quality (an unresolved tie), not about how
+    many bisection rounds were budgeted. Repeats up to `max_rounds` times,
+    since resolving one tie can reveal a new one against the freshly probed
+    midpoint; stops as soon as no tie remains, or if the midpoint of a tied
+    pair has already been tested (nothing left to narrow)."""
+    for _ in range(max_rounds):
+        tie = find_adjacent_tie(results, decimals)
+        if tie is None:
+            break
+        best, neighbor = tie
+        low, high = sorted([best["lr"], neighbor["lr"]])
+        midpoint = round_lr(math.sqrt(low * high))
+
+        existing = {r["lr"] for r in results}
+        if midpoint in existing:
+            print(f"  [tie-break] lr={best['lr']:.3g} and lr={neighbor['lr']:.3g} are tied "
+                  f"(both min_bpb={best['min_bpb']:.4f} to {decimals} decimals), but their "
+                  f"geometric midpoint {midpoint:.3g} was already tested -- stopping "
+                  f"tie-break for this size.")
+            break
+
+        print(f"\n--- tie-break for size={size}: lr={best['lr']:.3g} and lr={neighbor['lr']:.3g} "
+              f"both landed at min_bpb={best['min_bpb']:.4f} -- probing geometric midpoint "
+              f"{midpoint:.3g} ---")
+        results.append(run_probe(size, n_gpus, midpoint, probe_steps, clip, sources, sweep_root,
+                                  extra_args, force_rerun))
+    else:
+        print(f"  WARNING: hit --max-tie-break-rounds ({max_rounds}) while still finding ties "
+              f"for size={size}; consider inspecting manually.")
     return results
 
 
@@ -362,11 +510,16 @@ def print_size_report(size: str, results: list[dict]) -> dict | None:
 
 def tune_size(size: str, n_gpus: int, start_ub: float, probe_steps: int, clip: float,
               sources: str, sweep_root: str, extra_args: list[str], min_lr_floor: float,
-              refine_rounds: int, force_rerun: bool, patience: int) -> dict | None:
+              refine_rounds: int, force_rerun: bool, patience: int,
+              max_upward_extensions: int = MAX_UPWARD_EXTENSIONS,
+              tie_break_decimals: int = TIE_BREAK_DECIMALS,
+              max_tie_break_rounds: int = MAX_TIE_BREAK_ROUNDS) -> dict | None:
     results, _ = halving_descent(size, n_gpus, start_ub, probe_steps, clip, sources,
                                   sweep_root, extra_args, min_lr_floor, force_rerun, patience)
     results = refine(size, n_gpus, results, refine_rounds, probe_steps, clip, sources,
-                      sweep_root, extra_args, force_rerun)
+                      sweep_root, extra_args, force_rerun, max_upward_extensions)
+    results = resolve_ties(size, n_gpus, results, probe_steps, clip, sources, sweep_root,
+                            extra_args, force_rerun, tie_break_decimals, max_tie_break_rounds)
     return print_size_report(size, results)
 
 
@@ -383,19 +536,18 @@ def main():
     p.add_argument("--start-lr", type=float, default=DEFAULT_START_LR,
                    help=f"Upper-bound LR for the SMALLEST size, used only if --prev-size "
                         f"isn't given or isn't found in --tuned-lrs-file (default "
-                        f"{DEFAULT_START_LR:.0e}, BLT's reported value).")
+                        f"{DEFAULT_START_LR:.0e}, BLT's reported value). Also doubles as the "
+                        f"grid unit for chaining: every subsequent size starts its descent "
+                        f"from the next multiple of --start-lr above the previous size's "
+                        f"tuned best (e.g. with the default grid, a best of 3e-4 chains to "
+                        f"4e-4, and a best of 5.5e-4 chains to 8e-4).")
     p.add_argument("--prev-size", type=str, default=None,
                    help="Name of the size one step smaller than the first entry in --sizes "
                         "(e.g. if --sizes=100M and 50M was already tuned in a previous "
                         "invocation, pass --prev-size 50M). If found in --tuned-lrs-file, "
-                        "its tuned lr x --safety-margin is used as the starting upper bound "
-                        "instead of --start-lr. Lets you tune sizes across separate runs.")
-    p.add_argument("--safety-margin", type=float, default=2.0,
-                   help="Each size (after the first) starts its descent at "
-                        "previous_best_lr * safety_margin, rather than exactly at "
-                        "previous_best_lr -- so the descent gets a chance to check "
-                        "whether 'bigger model needs smaller lr' actually held for this "
-                        "jump, instead of assuming it. Default 2.0 (one halving step up).")
+                        "the next multiple of --start-lr above its tuned lr is used as the "
+                        "starting upper bound instead of --start-lr itself. Lets you tune "
+                        "sizes across separate runs.")
     p.add_argument("--probe-steps", type=int, default=300,
                    help="Fallback probe length for any size not covered by "
                         "--probe-steps-per-size.")
@@ -407,12 +559,28 @@ def main():
                         "at 50 steps. A size not listed here falls back to --probe-steps.")
     p.add_argument("--clip", type=float, default=10.0)
     p.add_argument("--min-lr-floor", type=float, default=DEFAULT_MIN_LR_FLOOR)
-    p.add_argument("--refine-rounds", type=int, default=1,
-                   help="Bracket-refinement rounds after the halving descent stops.")
+    p.add_argument("--refine-rounds", type=int, default=2,
+                   help="Bracket-refinement rounds after the halving descent stops. Each "
+                        "round bisects the gap on either side of the current best (1 new "
+                        "point per gap); with 2 rounds (default) that's two successive "
+                        "sqrt(2)x-ish narrowings re-centered on the updated best each time.")
     p.add_argument("--patience", type=int, default=1,
                    help="Consecutive worse-than-best steps tolerated during the halving "
                         "descent before actually stopping (default 1: tolerate a single "
                         "blip, then stop if the step after that is also worse).")
+    p.add_argument("--max-upward-extensions", type=int, default=MAX_UPWARD_EXTENSIONS,
+                   help="Safety cap on how many times refine() will double the best LR "
+                        "when it sits at the top of the tested range (default "
+                        f"{MAX_UPWARD_EXTENSIONS}).")
+    p.add_argument("--tie-break-decimals", type=int, default=TIE_BREAK_DECIMALS,
+                   help="Number of decimal digits of min_bpb agreement required to treat "
+                        f"two LR-adjacent candidates as tied (default {TIE_BREAK_DECIMALS}, "
+                        "matching the precision shown in the summary table). When the best "
+                        "candidate is tied with a neighbor, their geometric midpoint is "
+                        "probed automatically, irrespective of --refine-rounds.")
+    p.add_argument("--max-tie-break-rounds", type=int, default=MAX_TIE_BREAK_ROUNDS,
+                   help="Safety cap on how many tie-break midpoints will be chased in a row "
+                        f"for a single size (default {MAX_TIE_BREAK_ROUNDS}).")
     p.add_argument("--sweep-root", default=DEFAULT_SWEEP_ROOT)
     p.add_argument("--save-best", action="store_true",
                    help="Write each size's tuned best LR to --tuned-lrs-file as it's found.")
@@ -440,10 +608,10 @@ def main():
 
     if args.prev_size:
         if args.prev_size in tuned_lookup:
-            chain_upper_bound = round_lr(tuned_lookup[args.prev_size] * args.safety_margin)
+            chain_upper_bound = next_grid_multiple(tuned_lookup[args.prev_size], args.start_lr)
             print(f"Seeding start bound from {args.tuned_lrs_file}: {args.prev_size}'s tuned "
-                  f"lr={tuned_lookup[args.prev_size]:.3g} x safety_margin={args.safety_margin:g} "
-                  f"-> {chain_upper_bound:.3g}")
+                  f"lr={tuned_lookup[args.prev_size]:.3g} -> next multiple of "
+                  f"start_lr={args.start_lr:.3g} -> {chain_upper_bound:.3g}")
         else:
             print(f"WARNING: --prev-size={args.prev_size} not found in {args.tuned_lrs_file} "
                   f"-- falling back to --start-lr={args.start_lr:.3g}")
@@ -458,22 +626,23 @@ def main():
             print(f"\n### size={size}: starting from lr={chain_upper_bound:.3g}, "
                   f"probe_steps={probe_steps_this_size} ###")
         else:
-            print(f"\n### size={size}: starting from previous size's tuned best "
-                  f"x safety_margin={args.safety_margin:g} = {chain_upper_bound:.3g}, "
-                  f"probe_steps={probe_steps_this_size} ###")
+            print(f"\n### size={size}: starting from next multiple of "
+                  f"start_lr={args.start_lr:.3g} above previous size's tuned best "
+                  f"= {chain_upper_bound:.3g}, probe_steps={probe_steps_this_size} ###")
 
         best = tune_size(size, args.n_gpus, chain_upper_bound, probe_steps_this_size, args.clip,
                           args.sources, args.sweep_root, extra, args.min_lr_floor, args.refine_rounds,
-                          args.force_rerun, args.patience)
+                          args.force_rerun, args.patience, args.max_upward_extensions,
+                          args.tie_break_decimals, args.max_tie_break_rounds)
         final_results[size] = best
 
         if best is None:
             if size in tuned_lookup:
-                chain_upper_bound = round_lr(tuned_lookup[size] * args.safety_margin)
+                chain_upper_bound = next_grid_multiple(tuned_lookup[size], args.start_lr)
                 print(f"\nWARNING: no candidate converged for size={size} this run, but a "
                       f"previously tuned lr={tuned_lookup[size]:.3g} exists in "
-                      f"{args.tuned_lrs_file} -- using that (x safety_margin) for the next "
-                      f"size instead of a blind fallback.")
+                      f"{args.tuned_lrs_file} -- using the next multiple of start_lr above "
+                      f"that for the next size instead of a blind fallback.")
             else:
                 chain_upper_bound = round_lr(chain_upper_bound / 2)
                 print(f"\nWARNING: no candidate converged for size={size}, and no previously "
@@ -485,7 +654,7 @@ def main():
             launch_training.save_tuned_lr(args.tuned_lrs_file, size, best["lr"])
             print(f"Saved lr={best['lr']:.3g} for size={size} to {args.tuned_lrs_file}")
 
-        chain_upper_bound = round_lr(best["lr"] * args.safety_margin)
+        chain_upper_bound = next_grid_multiple(best["lr"], args.start_lr)
 
     print(f"\n{'=' * 78}\nfinal chained results\n{'=' * 78}")
     for size in sizes:
