@@ -80,7 +80,7 @@ import sys
 import time
 from os import path
 
-sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))  # for launch_training import
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # for launch_training import
 from launch_training import (
     get_free_gpu_ids,
     DEFAULT_FREE_MEM_THRESHOLD_MIB,
