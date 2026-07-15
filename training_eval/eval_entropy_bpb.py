@@ -123,16 +123,25 @@ def eval_language(model, val_path: str, device: str, target_bytes: int,
     was actually available. Splitting into windows uses that content
     instead of wasting it.
 
-    hit_target is False only if the file runs out of documents (and their
-    windows) before reaching target_bytes -- the caller should flag this,
-    since it breaks the equal-bytes-per-language comparison."""
+    hit_target is checked IMMEDIATELY after each window is counted,
+    inside the inner loop -- not only at the top of the outer per-
+    document loop. That matters because prepare_language_shards.py's
+    val.jsonl always ends exactly at the document that crosses
+    --val-bytes (the next document after that goes to training chunks
+    instead), so the window that completes target_bytes is very often
+    inside the FILE'S LAST document. Checking only between documents
+    would mean there's no next iteration left to notice the target was
+    reached, incorrectly reporting hit_target=False even though
+    total_bytes exactly equals target_bytes.
+
+    hit_target is False only if the file genuinely runs out of documents
+    (and their windows) before reaching target_bytes -- the caller should
+    flag this, since it breaks the equal-bytes-per-language comparison."""
     total_nats = 0.0
     total_bytes = 0
     max_window = max_seqlen - 2  # room for BOS + EOS
     with open(val_path) as f:
         for line in f:
-            if total_bytes >= target_bytes:
-                return total_nats, total_bytes, True
             doc = json.loads(line)
             text = doc.get("text", "")
             if not text:
@@ -140,8 +149,10 @@ def eval_language(model, val_path: str, device: str, target_bytes: int,
             raw = text.encode("utf-8", errors="ignore")
 
             offset = 0
-            while offset < len(raw) and total_bytes < target_bytes:
+            while offset < len(raw):
                 remaining_budget = target_bytes - total_bytes
+                if remaining_budget <= 0:
+                    return total_nats, total_bytes, True
                 n = min(len(raw) - offset, remaining_budget, max_window)
                 if n < 1:
                     break
@@ -157,6 +168,9 @@ def eval_language(model, val_path: str, device: str, target_bytes: int,
                 total_nats += loss.item()
                 total_bytes += n  # exact -- matches what was actually fed in
                 offset += n
+
+                if total_bytes >= target_bytes:
+                    return total_nats, total_bytes, True
     # ran out of documents (and their windows) before reaching target_bytes
     return total_nats, total_bytes, False
 

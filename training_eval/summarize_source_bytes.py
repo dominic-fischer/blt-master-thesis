@@ -253,6 +253,7 @@ def main():
     args = parser.parse_args()
 
     log_dir = os.path.join("dumps", args.dump_dir, "source_bytes")
+    full_dump_dir = os.path.join("dumps", args.dump_dir)
 
     if args.legacy:
         rank_files = sorted(glob.glob(os.path.join(log_dir, "source_bytes.rank*.jsonl")))
@@ -281,7 +282,7 @@ def main():
 
         print()
         summarize_and_print(
-            dict(total_bytes), dict(total_draws), args.dump_dir,
+            dict(total_bytes), dict(total_draws), full_dump_dir,
             f"--legacy reconstruction: {n_workers_total} worker(s) recovered from "
             f"{len(rank_files)} file(s) -- BEST-EFFORT, see module docstring",
             args.langs_csv, args.deviation_tolerance_pct,
@@ -308,7 +309,7 @@ def main():
             total_draws[source] += n
 
     summarize_and_print(
-        dict(total_bytes), dict(total_draws), args.dump_dir,
+        dict(total_bytes), dict(total_draws), full_dump_dir,
         f"{len(pid_files)} process file(s) found: "
         f"{[os.path.basename(p) for p in pid_files]}",
         args.langs_csv, args.deviation_tolerance_pct,

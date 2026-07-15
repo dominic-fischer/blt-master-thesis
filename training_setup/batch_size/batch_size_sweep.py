@@ -211,6 +211,9 @@ def main():
             size=size,
             **{f: getattr(top_args, f) for f in forwarded_fields},
         )
+        # Append the model size as a subfolder to both paths
+        sweep_args.log_root = path.join(sweep_args.log_root, f"entropy_{size}")
+        sweep_args.dump_root = path.join(sweep_args.dump_root, f"entropy_{size}")
 
         converged = find_max_batch_size(sweep_args)
         safe = max(1, int(converged * top_args.safety_margin))
