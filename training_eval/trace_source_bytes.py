@@ -23,27 +23,31 @@ count IS byte count (including the BOS/EOS tokens per sequence -- matches
 train.py's own train-time byte counting via batch.mask.sum(), so the two
 totals are directly comparable; see the cross-check note below).
 
-MULTI-RANK: torchrun runs one process per GPU (rank), and
+MULTI-RANK / MULTI-PROCESS: torchrun runs one process per GPU (rank), and
 args.data.build_from_rank(dp_rank, dp_degree) gives each rank its own
-independent SamplingIterator over a DIFFERENT shard of the data -- so
-this writes one log file PER RANK (tagged by torch.distributed.get_rank()
-once distributed is initialized), not one combined file. Run
-summarize_source_bytes.py <dump_dir> afterward to sum across all of them.
+independent SamplingIterator over a DIFFERENT shard of the data. A real
+run confirmed that SamplingIterator.create_iter() actually executes
+inside MultiprocessIterator's own internal data-loading worker
+process(es), not directly in the main per-GPU-rank torchrun process --
+evidenced by multiple concurrent, independently-growing byte counts
+showing up interleaved in a single log file when this used
+torch.distributed.get_rank() for naming (that call was silently failing
+in every worker and falling back to rank 0, so all workers collided on
+one file). Log files are now named by os.getpid() instead, which has no
+such dependency and is always correct regardless of where the process
+sits relative to torch.distributed. Run summarize_source_bytes.py
+<dump_dir> afterward to sum across all of them.
 
-ASSUMPTION WORTH VERIFYING: if bytelatent's data loading additionally
-uses its own internal multiprocessing (separate from torchrun's per-GPU
-ranks) via Python's multiprocessing with a 'spawn' start method, this
-patch -- applied only in the main process before those workers exist --
-would NOT propagate into them (spawned workers re-import everything
-fresh, unlike forked ones, which inherit the parent's already-patched
-memory). This has NOT been confirmed against MultiprocessIterator's
-actual implementation.
-The cross-check in summarize_source_bytes.py tells you directly whether
-this happened: summed per-source bytes should land close to
-metrics.jsonl's own total n_bytes for the same run. If it's far off
-(especially much smaller), some data is likely being drawn through a
-worker path this patch never reached, and the per-language breakdown
-below should be treated as incomplete until that's resolved.
+CONFIRMED (previously an open assumption): SamplingIterator.create_iter()
+runs inside a data-loading worker process distinct from the main
+per-GPU-rank process, not in that main process itself. Naming log files
+by os.getpid() (see _get_log_path) sidesteps this cleanly, since PIDs
+don't depend on torch.distributed being valid in whichever process
+happens to run the patched code. As a residual sanity check,
+summarize_source_bytes.py's cross-check against metrics.jsonl's own
+n_bytes logging still tells you directly whether the traced total is
+capturing everything -- keep an eye on it after any change to this file
+or to bytelatent's data-loading internals.
 
 Usage: launch_training.py --trace-source-bytes swaps this module in as
 the torchrun entrypoint automatically (and sets SOURCE_BYTES_LOG_DIR);
@@ -56,21 +60,24 @@ import time
 from collections import defaultdict
 
 import numpy as np
-
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from bytelatent.data.iterators.sampling_iterator import SamplingIterator
 
 
-def _get_rank() -> int:
-    try:
-        import torch.distributed as dist
-        if dist.is_available() and dist.is_initialized():
-            return dist.get_rank()
-    except Exception:
-        pass
-    return 0
-
-
 def _get_log_path() -> str:
+    """Uses the OS process ID, not torch.distributed.get_rank(), to name
+    each log file. This was originally rank-based, but real runs showed
+    multiple concurrent series interleaved into a single 'rank0' file --
+    strong evidence that SamplingIterator.create_iter() actually executes
+    inside MultiprocessIterator's own data-loading worker process(es),
+    not the main per-GPU-rank torchrun process itself. torch.distributed's
+    process-group state (especially NCCL-backed) generally isn't valid in
+    a forked/spawned worker, so dist.get_rank() was silently throwing and
+    falling back to 0 in every worker -- causing them all to collide on
+    the same file. os.getpid() has no such dependency: it's always
+    correct and unique per real OS process regardless of where that
+    process sits relative to torch.distributed or how it was created."""
     log_dir = os.environ.get("SOURCE_BYTES_LOG_DIR")
     if not log_dir:
         raise SystemExit(
@@ -79,7 +86,7 @@ def _get_log_path() -> str:
             "automatically."
         )
     os.makedirs(log_dir, exist_ok=True)
-    return os.path.join(log_dir, f"source_bytes.rank{_get_rank()}.jsonl")
+    return os.path.join(log_dir, f"source_bytes.pid{os.getpid()}.jsonl")
 
 
 def _patched_create_iter(self):

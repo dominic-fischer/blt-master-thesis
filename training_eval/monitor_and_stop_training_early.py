@@ -80,7 +80,7 @@ import sys
 import time
 from os import path
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # for launch_training import
+sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))  # for launch_training import
 from launch_training import (
     get_free_gpu_ids,
     DEFAULT_FREE_MEM_THRESHOLD_MIB,
@@ -359,6 +359,10 @@ def main():
     p.add_argument("--state-file", default=None,
                    help="Where to persist best-bpb/patience/processed-checkpoints state "
                         "for crash-resumability. Default: <dump_dir>/early_stopping_state.json")
+    p.add_argument("--log-root", default="logs",
+                   help="This monitor's own log lands under <log-root>/<run_name>/, "
+                        "matching launch_training.py's --log-root convention, where "
+                        "<run_name> is derived from dump_dir's basename (default 'logs').")
     args = p.parse_args()
 
     state_file = args.state_file or os.path.join(args.dump_dir, "early_stopping_state.json")
@@ -370,8 +374,10 @@ def main():
     state["_burn_in_evals"] = args.burn_in_evals
     state["_simulate"] = args.simulate
 
-    os.makedirs(args.dump_dir, exist_ok=True)
-    log_path = os.path.join(args.dump_dir, f"monitor_and_stop_training_early_{time.strftime('%Y%m%d_%H%M%S')}.log")
+    run_name = os.path.basename(os.path.normpath(args.dump_dir))
+    log_dir = os.path.join(args.log_root, run_name)
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, f"monitor_and_stop_training_early_{time.strftime('%Y%m%d_%H%M%S')}.log")
     sys.stdout = Tee(sys.__stdout__, open(log_path, "w"))
     print(f"Logging this monitor run to: {log_path}")
     print(f"State file: {state_file}")

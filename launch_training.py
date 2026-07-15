@@ -343,7 +343,7 @@ def build_parser() -> argparse.ArgumentParser:
                               "<log-root>/<run_name>/attempt_N/<rank>/ via "
                               "--log-dir, instead of interleaving all ranks "
                               "into one terminal stream.")
-    parser.add_argument("--eval-after-script", default="eval_after_training.sh",
+    parser.add_argument("--eval-after-script", default="eval_after_training.py",
                          help="Path to the post-training eval script "
                               "(run once, after training finishes).")
     parser.add_argument("--warmup-fraction", type=float, default=WARMUP_FRACTION,
@@ -662,10 +662,10 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
     run_env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
 
     eval_after_cmd = [
-        "bash", args.eval_after_script,
+        "python", args.eval_after_script,
         dump_dir,
         shard_root,
-        str(checkpoint_every),
+        "--steps-per-epoch", str(steps_per_epoch),
     ]
 
     return {

@@ -15,10 +15,13 @@ train.py already logs this at every step.
 
 Evaluation depth: each language is evaluated on EXACTLY the same number of
 bytes (--target-bytes-per-lang, default 400,000), not a fixed document
-count. If the document that would cross the threshold is longer than the
-remaining budget, it's truncated mid-document to hit the target exactly
-(byte-level models have no notion of a "valid" truncation boundary, so
-this is safe). This matters because the underlying training corpus is
+count. Documents longer than the model's max_seqlen are split into
+multiple back-to-back windows (each its own BOS/EOS-wrapped sequence)
+rather than truncated to just the first window -- byte-level models have
+no notion of a "valid" split boundary, so this is safe, and it means a
+handful of long documents doesn't leave most of val.jsonl's actual byte
+content unused (see eval_language's docstring for why that matters in
+practice). This matters because the underlying training corpus is
 intentionally byte-imbalanced across languages (equal *content* per
 language, via add_language_allocations.py, means byte-heavy languages like
 Tamil/Georgian have more raw bytes for the same content) -- a fixed
@@ -60,10 +63,10 @@ import glob
 import json
 import math
 import os
-
+import sys
 import torch
 import torch.nn.functional as F
-
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from bytelatent.entropy_model import load_entropy_model
 
 OFFSET = 4
@@ -105,19 +108,27 @@ def infer_step_from_checkpoint_dir(checkpoint_dir: str) -> int | None:
 def eval_language(model, val_path: str, device: str, target_bytes: int,
                    max_seqlen: int) -> tuple[float, int, bool]:
     """Returns (total_nats, total_bytes, hit_target) across documents read
-    from val_path, stopping at EXACTLY target_bytes -- if the document that
-    would cross the threshold is longer than the remaining budget, only the
-    leading `remaining` bytes of it are fed to the model (byte-level models
-    have no notion of "valid" byte boundaries, so slicing mid-document is
-    fine). hit_target is False only if the file runs out of documents
-    before reaching target_bytes -- the caller should flag this, since it
-    breaks the equal-bytes-per-language comparison.
-    Documents are also truncated to max_seqlen tokens (including BOS/EOS)
-    since the model's RoPE table is only precomputed up to that length --
-    whichever of the two limits (remaining byte budget vs. max_seqlen) is
-    smaller wins for a given document."""
+    from val_path, stopping at EXACTLY target_bytes.
+
+    Documents longer than max_seqlen-2 bytes (room for BOS/EOS) are SPLIT
+    into multiple back-to-back windows, each evaluated as its own
+    BOS/EOS-wrapped sequence, rather than truncating to just the first
+    window and discarding the rest of the document. This matters because
+    val.jsonl guarantees a minimum of RAW TEXT bytes (see
+    prepare_language_shards.py's --val-bytes), with no per-document cap --
+    truncating every document to a single max_seqlen window silently
+    discards most of a long document's bytes, which can make the file
+    "run out of documents" long before the (heavily undercounted) running
+    total reaches target_bytes, even though plenty of raw byte content
+    was actually available. Splitting into windows uses that content
+    instead of wasting it.
+
+    hit_target is False only if the file runs out of documents (and their
+    windows) before reaching target_bytes -- the caller should flag this,
+    since it breaks the equal-bytes-per-language comparison."""
     total_nats = 0.0
     total_bytes = 0
+    max_window = max_seqlen - 2  # room for BOS + EOS
     with open(val_path) as f:
         for line in f:
             if total_bytes >= target_bytes:
@@ -127,22 +138,26 @@ def eval_language(model, val_path: str, device: str, target_bytes: int,
             if not text:
                 continue
             raw = text.encode("utf-8", errors="ignore")
-            remaining = target_bytes - total_bytes
-            n = min(len(raw), remaining, max_seqlen - 2)
-            if n < 1:
-                continue
-            raw = raw[:n]
-            tokens = [BOS_ID] + [b + OFFSET for b in raw] + [EOS_ID]
-            x = torch.tensor(tokens[:-1], device=device).unsqueeze(0)
-            y = torch.tensor(tokens[1:], device=device).unsqueeze(0)
 
-            logits = model(x)
-            loss = F.cross_entropy(
-                logits.float().flatten(0, 1), y.flatten(0, 1), reduction="sum"
-            )
-            total_nats += loss.item()
-            total_bytes += n  # exact -- matches what was actually fed in
-    # ran out of documents before reaching target_bytes
+            offset = 0
+            while offset < len(raw) and total_bytes < target_bytes:
+                remaining_budget = target_bytes - total_bytes
+                n = min(len(raw) - offset, remaining_budget, max_window)
+                if n < 1:
+                    break
+                window = raw[offset:offset + n]
+                tokens = [BOS_ID] + [b + OFFSET for b in window] + [EOS_ID]
+                x = torch.tensor(tokens[:-1], device=device).unsqueeze(0)
+                y = torch.tensor(tokens[1:], device=device).unsqueeze(0)
+
+                logits = model(x)
+                loss = F.cross_entropy(
+                    logits.float().flatten(0, 1), y.flatten(0, 1), reduction="sum"
+                )
+                total_nats += loss.item()
+                total_bytes += n  # exact -- matches what was actually fed in
+                offset += n
+    # ran out of documents (and their windows) before reaching target_bytes
     return total_nats, total_bytes, False
 
 
@@ -151,7 +166,7 @@ def main():
     parser.add_argument("checkpoint_dir",
                          help="consolidated checkpoint dir (contains consolidated.pth + params.json)")
     parser.add_argument("lang_shards_root")
-    parser.add_argument("--target-bytes-per-lang", type=int, default=150_000,
+    parser.add_argument("--target-bytes-per-lang", type=int, default=5_000_000,
                          help="Evaluate exactly this many bytes per language "
                               "(not a fixed document count), so every "
                               "language contributes equally to OVERALL -- "
