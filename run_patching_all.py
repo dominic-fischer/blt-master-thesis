@@ -30,7 +30,7 @@ from bytelatent.data.patcher import (
 )
 
 # ── config ────────────────────────────────────────────────────────────────────
-RESULTS_DIR  = "results/own_models"
+RESULTS_DIR  = "results/own_models/entropy_10M_20lang_4gpu_sourcesbalanced_steps3000_ckpt200_lr4.5e-3/step_0000003000"
 SUMMARY_CSV  = "calibrate_thresholds/thresholds_summary.csv"
 
 # maps case name → which score index to use

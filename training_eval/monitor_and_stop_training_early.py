@@ -17,16 +17,22 @@ external monitor, same philosophy as batch_size_sweep.py / lr_halving_sweep.py:
 training keeps checkpointing on its normal schedule, and this script
 decides from the outside whether to keep letting it run.
 
-EARLY STOPPING RULE: patience + min_delta on HELD-OUT bpb (via
+EARLY STOPPING RULE: patience + min_delta_pct on HELD-OUT bpb (via
 eval_entropy_bpb.py's OVERALL, an equal-weight macro-average across
 languages), not training bpb -- training bpb can keep slowly improving
 from memorization long after held-out performance has plateaued, so it's
 not a safe stopping signal on its own.
   - burn-in-evals: the first N eval events are never counted toward
     patience (early bpb is noisy while the LR is still ramping/near peak).
-  - min-delta: an improvement must beat the running best by more than
-    this to reset the patience counter -- otherwise noise alone could
-    reset patience indefinitely on a genuinely flat curve.
+  - min-delta-pct: an improvement must beat the running best by more than
+    this RELATIVE fraction to reset the patience counter -- e.g. 0.003
+    means the new bpb must be at least 0.3% below the current best.
+    Relative rather than absolute because bpb's overall scale differs a
+    lot by model size (observed: 10M's held-out bpb sits around 1.5-2.5,
+    other sizes will differ) -- a fixed absolute threshold tuned for one
+    size doesn't transfer cleanly to another. Without SOME threshold,
+    noise alone could reset patience indefinitely on a genuinely flat
+    curve.
   - patience: number of EVAL EVENTS (not steps) tolerated with no
     real improvement before stopping. Units are eval events because
     that's the only cadence this script can observe -- how many wall-
@@ -64,11 +70,11 @@ ASSUMPTIONS WORTH CHECKING:
 
 Usage:
     python monitor_and_stop_training_early.py <dump_dir> <lang_shards_root> \\
-        --patience 3 --min-delta 0.002 --burn-in-evals 3
+        --patience 3 --min-delta-pct 0.003 --burn-in-evals 3
 
     # Calibration run: log what WOULD trigger, never actually stop training:
     python monitor_and_stop_training_early.py <dump_dir> <lang_shards_root> \\
-        --patience 3 --min-delta 0.002 --burn-in-evals 3 --simulate
+        --patience 3 --min-delta-pct 0.003 --burn-in-evals 3 --simulate
 """
 
 import argparse
@@ -80,7 +86,7 @@ import sys
 import time
 from os import path
 
-sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))  # for launch_training import
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # for launch_training import
 from launch_training import (
     get_free_gpu_ids,
     DEFAULT_FREE_MEM_THRESHOLD_MIB,
@@ -90,7 +96,7 @@ from launch_training import (
 EVAL_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eval_entropy_bpb.py")
 DEFAULT_POLL_INTERVAL_SEC = 60
 DEFAULT_PATIENCE = 3
-DEFAULT_MIN_DELTA = 0.002
+DEFAULT_MIN_DELTA_PCT = 0.003  # 0.3% relative -- see module docstring
 DEFAULT_BURN_IN_EVALS = 3
 MAX_CONSOLIDATE_FAILURES_PER_CHECKPOINT = 1
 MAX_EVAL_FAILURES_PER_CHECKPOINT = 3
@@ -272,8 +278,9 @@ def process_checkpoint(ckpt_name: str, step: int, dump_dir: str, lang_shards_roo
               f"not counted toward patience)")
     else:
         best_bpb = state["best_bpb"]
-        min_delta = state.get("_min_delta", DEFAULT_MIN_DELTA)
-        if best_bpb is None or overall_bpb < best_bpb - min_delta:
+        min_delta_pct = state.get("_min_delta_pct", DEFAULT_MIN_DELTA_PCT)
+        threshold = best_bpb * (1 - min_delta_pct) if best_bpb is not None else None
+        if best_bpb is None or overall_bpb < threshold:
             state["best_bpb"] = overall_bpb
             state["best_step"] = step
             state["bad_evals"] = 0
@@ -284,20 +291,20 @@ def process_checkpoint(ckpt_name: str, step: int, dump_dir: str, lang_shards_roo
             state["bad_evals"] += 1
             patience = state.get("_patience", DEFAULT_PATIENCE)
             print(f"  held_out_bpb={overall_bpb:.4f}  (no improvement vs best="
-                  f"{best_bpb:.4f} @step {state['best_step']}; "
+                  f"{best_bpb:.4f} @step {state['best_step']} [needed < {threshold:.4f}]; "
                   f"bad_evals={state['bad_evals']}/{patience})")
             if state["bad_evals"] > patience:
                 simulate = state.get("_simulate", False)
                 lead = "WOULD HAVE STOPPED" if simulate else "EARLY STOPPING TRIGGERED"
                 print(f"\n  {lead} at step {step} "
-                      f"(patience={patience}, min_delta={state.get('_min_delta', DEFAULT_MIN_DELTA)}, "
+                      f"(patience={patience}, min_delta_pct={min_delta_pct:.1%}, "
                       f"burn_in_evals={state.get('_burn_in_evals', DEFAULT_BURN_IN_EVALS)}): "
                       f"{state['bad_evals']} consecutive eval(s) without improving "
                       f"on best_bpb={best_bpb:.4f} @step {state['best_step']}.")
                 state.setdefault("trigger_events", []).append({
                     "step": step, "bad_evals": state["bad_evals"],
                     "best_bpb": best_bpb, "best_step": state["best_step"],
-                    "patience": patience, "min_delta": state.get("_min_delta", DEFAULT_MIN_DELTA),
+                    "patience": patience, "min_delta_pct": min_delta_pct,
                     "burn_in_evals": state.get("_burn_in_evals", DEFAULT_BURN_IN_EVALS),
                 })
                 if not simulate:
@@ -321,17 +328,24 @@ def main():
                         "in epochs (e.g. training on a corpus you don't expect to "
                         "finish one epoch of) -- the step number is always shown "
                         "regardless.")
-    p.add_argument("--target-bytes-per-lang", type=int, default=150_000)
+    p.add_argument("--target-bytes-per-lang", type=int, default=5_000_000,
+                   help="Default matches prepare_language_shards.py's --val-bytes "
+                        "(5,000,000) so each language's val.jsonl gets used in full, "
+                        "now that eval_entropy_bpb.py's window-splitting fix makes "
+                        "hitting this exactly reliable.")
     p.add_argument("--poll-interval", type=int, default=DEFAULT_POLL_INTERVAL_SEC,
                    help=f"Seconds between checks for new checkpoints (default "
                         f"{DEFAULT_POLL_INTERVAL_SEC}).")
     p.add_argument("--patience", type=int, default=DEFAULT_PATIENCE,
                    help=f"Consecutive eval EVENTS (not steps) tolerated with no real "
                         f"improvement before stopping training (default {DEFAULT_PATIENCE}).")
-    p.add_argument("--min-delta", type=float, default=DEFAULT_MIN_DELTA,
-                   help=f"Minimum bpb improvement over the running best to reset the "
-                        f"patience counter (default {DEFAULT_MIN_DELTA}); without this, "
-                        f"noise alone could reset patience indefinitely on a flat curve.")
+    p.add_argument("--min-delta-pct", type=float, default=DEFAULT_MIN_DELTA_PCT,
+                   help=f"Minimum RELATIVE bpb improvement over the running best (as a "
+                        f"fraction, e.g. 0.003 = 0.3%%) to reset the patience counter "
+                        f"(default {DEFAULT_MIN_DELTA_PCT}). Relative rather than "
+                        f"absolute since bpb's scale differs by model size -- see module "
+                        f"docstring. Without this, noise alone could reset patience "
+                        f"indefinitely on a flat curve.")
     p.add_argument("--burn-in-evals", type=int, default=DEFAULT_BURN_IN_EVALS,
                    help=f"First N eval events are never counted toward patience -- bpb "
                         f"is typically noisy while LR is still near/at peak (default "
@@ -370,7 +384,7 @@ def main():
     # Stash current CLI thresholds into state so process_checkpoint can see them
     # without threading three more params through every call.
     state["_patience"] = args.patience
-    state["_min_delta"] = args.min_delta
+    state["_min_delta_pct"] = args.min_delta_pct
     state["_burn_in_evals"] = args.burn_in_evals
     state["_simulate"] = args.simulate
 
