@@ -154,16 +154,10 @@ def patch_start_mask_global_and_monotonicity(entropies, t, t_add=0):
     # Calculate conditions for all elements except the first one in each sequence
     condition = (differences > t_add) & (entropies[:, 1:] > t) & (~mask[:, :-1])
 
-    # DEBUG
-    print("entropies:", entropies[0].tolist())
-    print("differences:", differences[0].tolist())
-    print("condition:", condition[0].tolist())
-    print("mask before:", mask[0].tolist())
     mask[:, 1:] = condition
-    print("mask after:", mask[0].tolist())
+
     # check for consecutive boundaries
     consec = (mask[:, 1:] & mask[:, :-1]).any()
-    print("consecutive boundaries exist:", consec.item())
     
     return mask
 

@@ -91,6 +91,34 @@ def main():
              f"'language_code' column restricts which languages appear in the "
              f".txt premium lists (default {DEFAULT_LANGS_CSV}).",
     )
+    parser.add_argument(
+        "--only-trained-langs",
+        action="store_true",
+        help="Passed to run_eval.py's --only-trained-langs (using the same "
+             "--langs-csv) -- only evaluate/patch the 20 trained languages "
+             "instead of the full FLORES+ set, much faster when that's all "
+             "you need.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Passed to run_eval.py's --force -- re-run the eval even for "
+             "languages whose output already exists, instead of the default "
+             "skip-if-present behavior.",
+    )
+    parser.add_argument(
+        "--gpu",
+        type=int,
+        default=None,
+        help="Passed to run_eval.py's --gpu -- explicit physical GPU index, "
+             "skipping auto-detection.",
+    )
+    parser.add_argument(
+        "--cpu",
+        action="store_true",
+        help="Passed to run_eval.py's --cpu -- force CPU, skipping GPU "
+             "auto-detection entirely (much slower).",
+    )
     args = parser.parse_args()
 
     results_dir = args.results_dir if args.results_dir is not None else results_dir_for(args.entropy_repo)
@@ -100,11 +128,17 @@ def main():
 
     print(f"[1/5] Running run_eval.py for --entropy_repo={args.entropy_repo}")
     print(f"      (results will land under {results_dir}/)")
-    subprocess.run(
-        [sys.executable, "model_eval/run_eval.py", "--entropy_repo", args.entropy_repo,
-         "--results-dir", results_dir],
-        check=True,
-    )
+    eval_cmd = [sys.executable, "model_eval/run_eval.py", "--entropy_repo", args.entropy_repo,
+                "--results-dir", results_dir]
+    if args.only_trained_langs:
+        eval_cmd += ["--only-trained-langs", "--langs-csv", args.langs_csv]
+    if args.force:
+        eval_cmd += ["--force"]
+    if args.gpu is not None:
+        eval_cmd += ["--gpu", str(args.gpu)]
+    if args.cpu:
+        eval_cmd += ["--cpu"]
+    subprocess.run(eval_cmd, check=True)
 
     print(f"\n[2/5] Running run_patching.py on {results_dir}")
     patch_cmd = [sys.executable, "model_eval/run_patching.py", "--results-dir", results_dir]

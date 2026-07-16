@@ -8,6 +8,9 @@ them as new columns to the CSV.
 
 Also computes pps_premium columns: lang_pps / eng_pps for each case/threshold.
 
+If a language results JSON is missing, the columns for that language will 
+be filled with N/A.
+
 Column naming:
   {case}_{threshold_key}_pps         e.g. raw_entropy_t_1.1904_pps
   {case}_{threshold_key}_bpp         e.g. raw_entropy_t_1.1904_bpp
@@ -17,10 +20,6 @@ The INPUT csv is left exactly as-is; the new columns are written to a
 SEPARATE output csv (--csv-out-path), which defaults to
 <csv-in-path stem>_with_results.csv if not given explicitly, so the
 input file is never silently overwritten.
-
-Usage:
-    python results_to_CSV.py --results-dir results/own_models/<run>/step_<step>
-    python results_to_CSV.py --results-dir <dir> --csv-in-path floresplus_MASTER.csv --csv-out-path floresplus_MASTER_with_results.csv
 """
 
 import argparse
@@ -34,17 +33,16 @@ ENGLISH = "eng_Latn"
 
 
 def default_csv_out_path(csv_in_path: str) -> str:
-    """<name>.csv -> <name>_with_results.csv, so the input CSV is never
-    silently overwritten unless --csv-out-path is explicitly set to the
-    same path."""
+    """<name>.csv -> <name>_with_results.csv"""
     p = Path(csv_in_path)
     return str(p.with_name(f"{p.stem}_with_results{p.suffix}"))
 
 
-def load_results(results_dir: str, code_orig: str) -> list[dict]:
+def load_results(results_dir: str, code_orig: str) -> list[dict] | None:
     path = Path(results_dir) / f"{code_orig}.json"
     if not path.exists():
-        raise FileNotFoundError(f"Missing results file: {path}")
+        # Instead of raising an error, we return None to signal a missing file
+        return None
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
@@ -94,27 +92,53 @@ def main():
     df = pd.read_csv(args.csv_in_path)
     print(f"Loaded {len(df)} languages from {args.csv_in_path}")
 
-    all_rows = []
+    # Keep track of all keys seen across valid files so we can fill missing ones with NaN
+    all_known_keys = set()
+    rows_data = []
+
     for _, row in df.iterrows():
         code_orig = row["Code_Orig"]
         sentences = load_results(args.results_dir, code_orig)
-        agg       = aggregate(sentences)
-        all_rows.append({**row.to_dict(), **agg})
-        print(f"  {code_orig}: {len(agg)} result columns")
+        
+        if sentences is None:
+            # File is missing. We save the baseline row and fill the rest later
+            rows_data.append((row.to_dict(), None))
+            print(f"  {code_orig}: Missing JSON -> filling with N/A")
+        else:
+            agg = aggregate(sentences)
+            all_known_keys.update(agg.keys())
+            rows_data.append((row.to_dict(), agg))
+            print(f"  {code_orig}: {len(agg)} result columns")
+
+    # Reconstruct rows ensuring missing ones get NaNs for the aggregated keys
+    all_rows = []
+    for base_row, agg in rows_data:
+        if agg is None:
+            # Create a dict of NaNs for all possible result columns we found
+            nan_dict = {k: None for k in all_known_keys}
+            all_rows.append({**base_row, **nan_dict})
+        else:
+            all_rows.append({**base_row, **agg})
 
     out = pd.DataFrame(all_rows)
 
-    # compute pps premiums relative to English
+    # Compute pps premiums relative to English
     eng_row = out[out["Code_Orig"] == ENGLISH]
     if len(eng_row) == 0:
         raise ValueError(f"English row ({ENGLISH}) not found in CSV")
+    
     pps_cols = [c for c in out.columns if c.endswith("_pps")]
     for col in pps_cols:
         eng_pps = eng_row[col].values[0]
-        out[col.replace("_pps", "_pps_premium")] = (out[col] / eng_pps).round(4)
+        # Only compute the premium if English actually has data for this column
+        if pd.notna(eng_pps) and eng_pps != 0:
+            out[col.replace("_pps", "_pps_premium")] = (out[col] / eng_pps).round(4)
+        else:
+            out[col.replace("_pps", "_pps_premium")] = None
+            
     print(f"  Added {len(pps_cols)} pps_premium columns")
 
-    # keep original columns first, then result columns sorted
+    # Keep original columns first, then result columns sorted
     orig_cols   = list(df.columns)
     result_cols = sorted(c for c in out.columns if c not in orig_cols)
     out = out[orig_cols + result_cols]

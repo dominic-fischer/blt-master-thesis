@@ -27,6 +27,9 @@ import os
 import torch
 from pathlib import Path
 from tqdm import tqdm
+from os import path
+import sys
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # repo root, for blt_patcher + launch_training
 from bytelatent.data.patcher import (
     find_entropy_patch_start_ids,
     patch_lengths_from_start_ids,

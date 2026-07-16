@@ -26,7 +26,7 @@ import os
 import sys
 from os import path
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # repo root, for blt_patcher
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # repo root, for blt_patcher + launch_training
 
 import torch
 from datasets import load_dataset
@@ -34,12 +34,14 @@ from tqdm import tqdm
 import subprocess
 from blt_patcher import load_patcher, patch_text
 from results_paths import results_dir_for
+from launch_training import get_free_gpu_ids, DEFAULT_FREE_MEM_THRESHOLD_MIB, DEFAULT_FREE_UTIL_THRESHOLD_PCT
 
 # ── config ────────────────────────────────────────────────────────────────────
 LIMIT = None  # set to an int for quick testing
 REPO = "facebook/blt-1b"
 SPLIT = "dev"
 FLORES_DATASET = "openlanguagedata/flores_plus"
+DEFAULT_LANGS_CSV = "training_setup/langs/langs_chosen.csv"
 
 # read the languages from floresplus_MASTER.csv, like this: Code_Orig : Name
 with open("floresplus_MASTER.csv", "r", encoding="utf-8") as f:
@@ -48,6 +50,14 @@ with open("floresplus_MASTER.csv", "r", encoding="utf-8") as f:
 
 
 # ── helpers ───────────────────────────────────────────────────────────────────
+def load_trained_lang_codes(langs_csv: str) -> set[str]:
+    """Returns the set of language_code values from langs_csv (the 20
+    languages actually used in training -- equivalent to Code_Orig in
+    floresplus_MASTER.csv)."""
+    with open(langs_csv, newline="", encoding="utf-8") as f:
+        return {row["language_code"] for row in csv.DictReader(f)}
+
+
 def normalize_scores(scores: list[float]) -> list[float]:
     arr = torch.tensor(scores, dtype=torch.float32)  # force fp16 here, not on the model
     mean = arr.mean()
@@ -120,6 +130,58 @@ def parse_args():
              "(results/own_models/<run>/step_<step>/). If omitted, derived "
              "from --entropy_repo via results_paths.derive_run_subdir.",
     )
+    parser.add_argument(
+        "--only-trained-langs",
+        action="store_true",
+        help="Only evaluate the languages actually used in training (from "
+             "--langs-csv's 'language_code' column) instead of the full FLORES+ "
+             "set in floresplus_MASTER.csv -- much faster when you only "
+             "care about the 20 trained languages, e.g. for feeding into "
+             "results_to_txt_premiums.py, which already restricts to these "
+             "same languages at the reporting stage.",
+    )
+    parser.add_argument(
+        "--langs-csv",
+        type=str,
+        default=DEFAULT_LANGS_CSV,
+        help=f"CSV whose 'language_code' column defines the trained-language "
+             f"set, used only when --only-trained-langs is set (default "
+             f"{DEFAULT_LANGS_CSV}).",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-run the (expensive) FLORES+ eval even for languages whose output "
+             "JSON already exists in the results dir. By default, existing files "
+             "are left as-is and skipped, since the eval itself is the slow part "
+             "of this pipeline -- re-running run_patching.py afterward already "
+             "picks up existing results incrementally without needing this.",
+    )
+    parser.add_argument(
+        "--gpu",
+        type=int,
+        default=None,
+        help="Explicit physical GPU index to use, skipping auto-detection.",
+    )
+    parser.add_argument(
+        "--cpu",
+        action="store_true",
+        help="Force CPU, skipping GPU auto-detection entirely (much slower).",
+    )
+    parser.add_argument(
+        "--free-mem-threshold-mib",
+        type=int,
+        default=DEFAULT_FREE_MEM_THRESHOLD_MIB,
+        help="Only used for GPU auto-detection: a GPU counts as free if its used "
+             f"memory is below this, in MiB (default {DEFAULT_FREE_MEM_THRESHOLD_MIB}).",
+    )
+    parser.add_argument(
+        "--free-util-threshold-pct",
+        type=int,
+        default=DEFAULT_FREE_UTIL_THRESHOLD_PCT,
+        help="Only used for GPU auto-detection: a GPU counts as free if its "
+             f"utilization is below this percent (default {DEFAULT_FREE_UTIL_THRESHOLD_PCT}).",
+    )
     return parser.parse_args()
 
 
@@ -130,12 +192,57 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     print(f"Saving results under: {output_dir}/")
 
+    languages = LANGUAGES
+    if args.only_trained_langs:
+        trained_codes = load_trained_lang_codes(args.langs_csv)
+        languages = {code: name for code, name in LANGUAGES.items() if code in trained_codes}
+        missing = trained_codes - set(languages)
+        print(f"--only-trained-langs set: restricting to {len(languages)}/{len(LANGUAGES)} "
+              f"languages (from {args.langs_csv}).")
+        if missing:
+            print(f"  NOTE: {len(missing)} code(s) from {args.langs_csv} not found in "
+                  f"floresplus_MASTER.csv, skipped: {sorted(missing)}")
+
+    # Split into "already have output, skip" vs "actually need to run" BEFORE
+    # loading the patcher/model at all -- if everything's already done, this
+    # avoids even that cost, not just the per-language FLORES+ eval itself.
+    to_process = {}
+    already_done = []
+    for lang_code, lang_name in languages.items():
+        out_path = os.path.join(output_dir, f"{lang_code}.json")
+        if os.path.exists(out_path) and not args.force:
+            already_done.append(lang_code)
+        else:
+            to_process[lang_code] = lang_name
+
+    if already_done:
+        print(f"Skipping {len(already_done)} already-evaluated language(s) "
+              f"(pass --force to re-run anyway): {sorted(already_done)}")
+
+    if not to_process:
+        print("All requested languages already evaluated -- nothing to do.")
+        return
+
+    if args.cpu:
+        print("Forcing CPU (--cpu set) -- this will be much slower.")
+    elif args.gpu is not None:
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
+        print(f"Using explicit GPU {args.gpu}.")
+    else:
+        try:
+            gpu_ids = get_free_gpu_ids(1, args.free_mem_threshold_mib, args.free_util_threshold_pct)
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_ids[0])
+            print(f"Auto-detected idle GPU {gpu_ids[0]}, using it.")
+        except SystemExit as e:
+            print(f"No idle GPU found ({e}) -- falling back to CPU, this will be much "
+                  f"slower. Pass --gpu to force a specific one, or free up a GPU.")
+
     print("Loading patcher...")
     tokenizer, patcher = load_patcher(repo=REPO, entropy_repo=args.entropy_repo)
     print(f"Loading English ({SPLIT})...")
     eng_dataset = load_language("eng_Latn")
 
-    for lang_code, lang_name in LANGUAGES.items():
+    for lang_code, lang_name in to_process.items():
         results = run_language(lang_code, lang_name, eng_dataset, tokenizer, patcher)
         if results is None:
             continue
