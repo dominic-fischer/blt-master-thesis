@@ -392,7 +392,7 @@ def main():
     log_dir = os.path.join(args.log_root, run_name)
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, f"monitor_and_stop_training_early_{time.strftime('%Y%m%d_%H%M%S')}.log")
-    sys.stdout = Tee(sys.__stdout__, open(log_path, "w"))
+    sys.stdout = Tee(sys.__stdout__, open(log_path, "w", buffering=1))
     print(f"Logging this monitor run to: {log_path}")
     print(f"State file: {state_file}")
     if state["processed_steps"]:

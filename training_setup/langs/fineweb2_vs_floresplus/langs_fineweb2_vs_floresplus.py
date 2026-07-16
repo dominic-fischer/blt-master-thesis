@@ -14,7 +14,7 @@ import pandas as pd
 from huggingface_hub import HfApi
 
 FINEWEB2_REPO = "HuggingFaceFW/fineweb-2"
-FLORES_CSV = "floresplus_MASTER_CSV.csv"   # adjust path if needed
+FLORES_CSV = "floresplus_MASTER.csv"   # adjust path if needed
 FLORES_CODE_COL = "Code_Orig"
 
 

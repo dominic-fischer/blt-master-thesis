@@ -22,8 +22,8 @@ from pathlib import Path
 
 import pandas as pd
 
-RESULTS_DIR = Path("results/restructured")
-OUTPUT_CSV = Path("results/byte_counts_and_ratios.csv")
+RESULTS_DIR = Path("results/base_model")
+OUTPUT_CSV = Path("training_setup/langs/floresplus/byte_counts_and_ratios.csv")
 
 REFERENCE_CODE = "eng_Latn"  # adjust if your English file uses a different code
 EXPECTED_N_ENTRIES = 997

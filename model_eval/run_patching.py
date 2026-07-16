@@ -4,20 +4,23 @@ run_patching.py
 Computes patch lengths for all cases and thresholds and stores results
 in the restructured JSON files under eval_modes.
 
-Cases and thresholds are read from calibrate_thresholds/thresholds_summary.csv.
-For standard cases, the threshold column values (t_low, t_mid, t_high, t_anchor)
-are used directly as the patching threshold.
-For the combined case, fixed_t is the entropy threshold and
-t_low/t_mid/t_high/t_anchor are threshold_add values.
+Cases and thresholds are read from --summary-csv (default
+calibrate_thresholds/thresholds_summary.csv). For standard cases, the
+threshold column values (t_low, t_mid, t_high, t_anchor) are used
+directly as the patching threshold. For the combined case, fixed_t is
+the entropy threshold and t_low/t_mid/t_high/t_anchor are threshold_add
+values.
 
 Any eval_modes keys in the JSON that are NOT present in the CSV are removed.
 
-Output: updates results/restructured/{lang_code}.json in place (indented)
+Output: updates <results-dir>/{lang_code}.json in place (indented)
 
-Usage:
-    python run_patching.py
+Usage (from repo root):
+    python model_eval/run_patching.py --results-dir results/own_models/entropy_10M_..._lr4.5e-3/step_0000006000
+    python model_eval/run_patching.py --results-dir <dir> --summary-csv calibrate_thresholds/thresholds_summary.csv
 """
 
+import argparse
 import csv
 import json
 import os
@@ -29,9 +32,7 @@ from bytelatent.data.patcher import (
     patch_lengths_from_start_ids,
 )
 
-# ── config ────────────────────────────────────────────────────────────────────
-RESULTS_DIR  = "results/own_models/entropy_10M_20lang_4gpu_sourcesbalanced_steps3000_ckpt200_lr4.5e-3/step_0000003000"
-SUMMARY_CSV  = "calibrate_thresholds/thresholds_summary.csv"
+DEFAULT_SUMMARY_CSV = "calibrate_thresholds/thresholds_summary.csv"
 
 # maps case name → which score index to use
 SCORE_IDX = {
@@ -111,11 +112,35 @@ def threshold_key(threshold: float) -> str:
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Compute patch lengths for all cases/thresholds over an "
+                    "existing run_eval.py results directory.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=str,
+        required=True,
+        help="Directory of per-language JSON files produced by run_eval.py "
+             "(e.g. results/own_models/<run>/step_<step>/). Updated in place.",
+    )
+    parser.add_argument(
+        "--summary-csv",
+        type=str,
+        default=DEFAULT_SUMMARY_CSV,
+        help=f"CSV defining cases and thresholds (default {DEFAULT_SUMMARY_CSV}).",
+    )
+    return parser.parse_args()
+
+
 def main():
-    cases = load_cases(SUMMARY_CSV)
+    args = parse_args()
+
+    cases = load_cases(args.summary_csv)
     valid_case_names = set(cases.keys())
 
-    print(f"Loaded {len(cases)} cases from {SUMMARY_CSV}:")
+    print(f"Loaded {len(cases)} cases from {args.summary_csv}:")
     for name, case in cases.items():
         if case["fixed_threshold"] is not None:
             print(f"  {name}: fixed_t={case['fixed_threshold']:.4f}, "
@@ -124,8 +149,8 @@ def main():
             print(f"  {name}: thresholds={[f'{t:.4f}' for t in case['thresholds']]}")
     print()
 
-    paths = sorted(Path(RESULTS_DIR).glob("*.json"))
-    print(f"Found {len(paths)} language files\n")
+    paths = sorted(Path(args.results_dir).glob("*.json"))
+    print(f"Found {len(paths)} language files in {args.results_dir}\n")
 
     for path in paths:
         lang_code = path.stem

@@ -21,7 +21,7 @@ from config import SCRIPT_LABELS, SCRIPT_COLORS
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
+MASTER_CSV = Path("floresplus_MASTER.csv")
 
 # Which premium column to plot. Same 16 options as the CC script — set the full
 # "<model>_t_<threshold>_pps_premium" name. Keep this in sync with that script if

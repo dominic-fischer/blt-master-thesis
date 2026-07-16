@@ -36,7 +36,7 @@ from bytelatent.data.patcher import (
 )
 
 # ── config ────────────────────────────────────────────────────────────────────
-RESULTS_DIR = "results/restructured"
+RESULTS_DIR = "results/base_model"
 OUTPUT_DIR  = "calibrate_thresholds"
 ENGLISH     = "eng_Latn"
 TARGET_PPS  = 32.77

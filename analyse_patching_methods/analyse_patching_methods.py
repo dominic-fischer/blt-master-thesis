@@ -3,8 +3,8 @@ import json
 import pandas as pd
 from collections import defaultdict
 
-MASTER_CSV  = "floresplus_MASTER_CSV.csv"
-RESULTS_DIR = "results/restructured"
+MASTER_CSV  = "floresplus_MASTER.csv"
+RESULTS_DIR = "results/base_model"
 RAW_T       = "t_1.3340"
 MONO_T      = "t_0.3662"
 NORM_T      = "t_0.5293"

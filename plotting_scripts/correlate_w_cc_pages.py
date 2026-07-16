@@ -26,7 +26,7 @@ from config import SCRIPT_LABELS, SCRIPT_COLORS
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
+MASTER_CSV = Path("floresplus_MASTER.csv")
 OUT_DIR    = Path("charts/")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 

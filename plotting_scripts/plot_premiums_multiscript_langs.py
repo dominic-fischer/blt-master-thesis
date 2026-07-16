@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 plot_multiscript.py
-Reads floresplus_MASTER_CSV.csv and plots grouped bars for languages that
+Reads floresplus_MASTER.csv and plots grouped bars for languages that
 appear in multiple distinct scripts (matched on the ISO 639 part before the
 first underscore of Code_Orig; regional variants like lld_Latn_gard1241 are
 collapsed into lld + Latn).
@@ -19,7 +19,7 @@ from collections import defaultdict
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
+MASTER_CSV = Path("floresplus_MASTER.csv")
 
 # Which premium column to read. Same 16 options as the other scripts — set the
 # full "<model>_t_<threshold>_pps_premium" name.

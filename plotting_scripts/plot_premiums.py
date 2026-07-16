@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 plot_premiums.py
-Reads floresplus_MASTER_CSV.csv and produces per-script bar charts
+Reads floresplus_MASTER.csv and produces per-script bar charts
 of BLT patch premiums relative to English, plus an overview chart.
 Output filenames carry the premium-column tag so different configs
 don't overwrite each other.
@@ -22,7 +22,7 @@ from config import SCRIPT_LABELS
 
 # ── Config ──────────────────────────────────────────────────────────────────
 
-MASTER_CSV = Path("floresplus_MASTER_CSV.csv")
+MASTER_CSV = Path("floresplus_MASTER.csv")
 
 # Which premium column to plot. Same 16 options as the other scripts — set the
 # full "<model>_t_<threshold>_pps_premium" name.

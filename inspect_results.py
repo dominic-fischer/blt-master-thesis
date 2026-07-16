@@ -29,7 +29,7 @@ from blt_visualize import BLTPatchVisualizer
 # ── config ────────────────────────────────────────────────────────────────────
 REPO           = "facebook/blt-1b"
 ENTROPY_REPO   = "hf-weights/entropy_model"
-RESTRUCTURED   = "results/restructured"
+RESTRUCTURED   = "results/base_model"
 
 W_BITS   = 33
 W_SCRIPT = 50
