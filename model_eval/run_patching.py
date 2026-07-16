@@ -5,11 +5,26 @@ Computes patch lengths for all cases and thresholds and stores results
 in the restructured JSON files under eval_modes.
 
 Cases and thresholds are read from --summary-csv (default
-calibrate_thresholds/thresholds_summary.csv). For standard cases, the
+calibrated_thresholds/thresholds_summary.csv, or a per-checkpoint
+recalibrated CSV from calibrate_thresholds.py). For standard cases, the
 threshold column values (t_low, t_mid, t_high, t_anchor) are used
 directly as the patching threshold. For the combined case, fixed_t is
 the entropy threshold and t_low/t_mid/t_high/t_anchor are threshold_add
 values.
+
+KEYED BY EXACT NUMERIC THRESHOLD (as originally): eval_modes entries are
+stored as eval_modes[case_name]["t_<value>"], e.g. "t_1.3340" -- the
+literal calibrated threshold, not a bound label. Bound identity
+(low/mid/high/anchor) is intentionally NOT baked in here; it's
+reconstructed downstream by results_to_txt_premiums.py, which
+cross-references the same --summary-csv this script used to figure out
+which numeric value corresponds to which bound, per case. This keeps
+--summary-csv as the single source of truth for that mapping instead of
+duplicating it into the patching output. (Iterating the 4 named bounds
+from the CSV, rather than blindly deduplicating via a set as an earlier
+version of this script did, still avoids silently losing an entry if two
+bounds happen to coincide numerically for a given case -- the second one
+just correctly reuses the already-computed result instead of redoing it.)
 
 Any eval_modes keys in the JSON that are NOT present in the CSV are removed.
 
@@ -17,7 +32,7 @@ Output: updates <results-dir>/{lang_code}.json in place (indented)
 
 Usage (from repo root):
     python model_eval/run_patching.py --results-dir results/own_models/entropy_10M_..._lr4.5e-3/step_0000006000
-    python model_eval/run_patching.py --results-dir <dir> --summary-csv calibrate_thresholds/thresholds_summary.csv
+    python model_eval/run_patching.py --results-dir <dir> --summary-csv calibrated_thresholds/thresholds_summary.csv
 """
 
 import argparse
@@ -27,15 +42,15 @@ import os
 import torch
 from pathlib import Path
 from tqdm import tqdm
-from os import path
 import sys
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # repo root, for blt_patcher + launch_training
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # noqa: E402
 from bytelatent.data.patcher import (
     find_entropy_patch_start_ids,
     patch_lengths_from_start_ids,
 )
 
-DEFAULT_SUMMARY_CSV = "calibrate_thresholds/thresholds_summary.csv"
+DEFAULT_SUMMARY_CSV = "calibrated_thresholds/base_model_thresholds_summary.csv"
 
 # maps case name → which score index to use
 SCORE_IDX = {
@@ -56,31 +71,35 @@ MONOTONICITY = {
 
 # ── load cases from CSV ───────────────────────────────────────────────────────
 
+BOUND_NAMES = ["low", "mid", "high", "anchor"]
+
+
 def load_cases(csv_path: str) -> dict:
     """
     Returns a dict keyed by case name. Each value is a dict with:
-      - score_idx:       int
-      - monotonicity:    bool
-      - fixed_threshold: float or None  (only for combined)
-      - thresholds:      list[float]    (t_add values for combined, else t values)
+      - score_idx:         int
+      - monotonicity:      bool
+      - fixed_threshold:   float or None  (only for combined)
+      - named_thresholds:  dict[str, float], keys "low"/"mid"/"high"/"anchor"
+                           (t_add values for combined, else t values)
     """
     cases = {}
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             name = row["case"]
-            thresholds = sorted({
-                float(row["t_low"]),
-                float(row["t_mid"]),
-                float(row["t_high"]),
-                float(row["t_anchor"]),
-            })
+            named_thresholds = {
+                "low":    float(row["t_low"]),
+                "mid":    float(row["t_mid"]),
+                "high":   float(row["t_high"]),
+                "anchor": float(row["t_anchor"]),
+            }
             fixed_t = float(row["fixed_t"]) if row["fixed_t"] else None
             cases[name] = {
-                "score_idx":       SCORE_IDX[name],
-                "monotonicity":    MONOTONICITY[name],
-                "fixed_threshold": fixed_t,
-                "thresholds":      thresholds,
+                "score_idx":        SCORE_IDX[name],
+                "monotonicity":     MONOTONICITY[name],
+                "fixed_threshold":  fixed_t,
+                "named_thresholds": named_thresholds,
             }
     return cases
 
@@ -145,11 +164,11 @@ def main():
 
     print(f"Loaded {len(cases)} cases from {args.summary_csv}:")
     for name, case in cases.items():
+        bounds_str = ", ".join(f"{b}={case['named_thresholds'][b]:.4f}" for b in BOUND_NAMES)
         if case["fixed_threshold"] is not None:
-            print(f"  {name}: fixed_t={case['fixed_threshold']:.4f}, "
-                  f"t_add values={[f'{t:.4f}' for t in case['thresholds']]}")
+            print(f"  {name}: fixed_t={case['fixed_threshold']:.4f}, t_add: {bounds_str}")
         else:
-            print(f"  {name}: thresholds={[f'{t:.4f}' for t in case['thresholds']]}")
+            print(f"  {name}: {bounds_str}")
     print()
 
     paths = sorted(Path(args.results_dir).glob("*.json"))
@@ -176,10 +195,11 @@ def main():
                 scores = [be[case["score_idx"]] for be in sentence["bytes_entropies"]]
                 is_combined = case["fixed_threshold"] is not None
 
-                for t in case["thresholds"]:
+                for bound_name in BOUND_NAMES:
+                    t = case["named_thresholds"][bound_name]
                     key = threshold_key(t)
                     if key in sentence["eval_modes"][case_name]:
-                        continue  # already computed, skip
+                        continue  # already computed (this exact value), skip
 
                     if is_combined:
                         threshold     = case["fixed_threshold"]

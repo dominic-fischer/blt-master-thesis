@@ -343,7 +343,7 @@ def build_parser() -> argparse.ArgumentParser:
                               "<log-root>/<run_name>/attempt_N/<rank>/ via "
                               "--log-dir, instead of interleaving all ranks "
                               "into one terminal stream.")
-    parser.add_argument("--eval-after-script", default="eval_after_training.py",
+    parser.add_argument("--eval-after-script", default="training_eval/eval_after_training.py",
                          help="Path to the post-training eval script "
                               "(run once, after training finishes).")
     parser.add_argument("--warmup-fraction", type=float, default=WARMUP_FRACTION,
@@ -407,6 +407,15 @@ def build_parser() -> argparse.ArgumentParser:
                               "<dump_dir>/source_bytes/, one file per rank. Run "
                               "summarize_source_bytes.py <dump_dir> afterward to "
                               "aggregate them and cross-check against metrics.jsonl.")
+    parser.add_argument("--custom-encoding-path", default=None,
+                         help="Path to a custom_encoding.json produced by "
+                              "training_setup/build_custom_encoding.py. If given, "
+                              "BltTokenizer uses this random-but-reproducible "
+                              "per-character byte mapping instead of raw UTF-8 -- "
+                              "see blt_tokenizer.py's custom_encoding_path support. "
+                              "Passed through as data.tokenizer_args.init_kwargs "
+                              "(overwrites the whole init_kwargs dict, since nothing "
+                              "else in this pipeline currently sets it).")
     parser.add_argument("--run", action="store_true",
                          help="Actually execute the command instead of just printing it")
     return parser
@@ -586,6 +595,12 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         suffix_parts.append(f"fsdp{args.fsdp_type}")
     if args.model_dtype is not None:
         suffix_parts.append(f"dtype{args.model_dtype}")
+    if args.custom_encoding_path is not None:
+        # Just a marker, not the path itself (could be long/contain slashes
+        # unsuitable for a directory name) -- enough to keep custom-encoding
+        # runs from silently colliding with UTF-8 runs of the same
+        # size/sources/lr in the same dump_dir.
+        suffix_parts.append("customenc")
     # lr always included, same reasoning as --sources: its effective value
     # is size-dependent (tuned-LR lookup) and can change over time as
     # tuned_lrs.json gets updated, so always printing the number avoids
@@ -631,6 +646,19 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         overrides.append(f"distributed.fsdp_type={args.fsdp_type}")
     if args.model_dtype is not None:
         overrides.append(f"distributed.model_dtype={args.model_dtype}")
+    if args.custom_encoding_path is not None:
+        # Overwrites the WHOLE init_kwargs dict via an inline literal (rather
+        # than a dotted key into a single field) since TokenizerArgs.init_kwargs
+        # defaults to None -- setting a nested key inside a None dict via
+        # dotted override syntax isn't guaranteed to work depending on the
+        # config parser's struct-mode behavior, while replacing the whole
+        # dict with a literal is a reliably-supported pattern. Safe here
+        # since nothing else in this pipeline sets init_kwargs (add_bos/
+        # add_eos are separate top-level DataloaderArgs fields, not part of
+        # tokenizer_args.init_kwargs).
+        overrides.append(
+            f"data.tokenizer_args.init_kwargs={{custom_encoding_path:{args.custom_encoding_path}}}"
+        )
 
     train_module = "trace_source_bytes" if args.trace_source_bytes else "bytelatent.train"
     cmd = (
@@ -736,6 +764,9 @@ def print_plan(args: argparse.Namespace, plan: dict) -> None:
     print(f"# optim.clip={args.clip}  ({plan['clip_source']})")
     print(f"# distributed.fsdp_type={plan['fsdp_type']}")
     print(f"# distributed.model_dtype={plan['model_dtype']}")
+    if args.custom_encoding_path is not None:
+        print(f"# tokenizer: CUSTOM ENCODING from {args.custom_encoding_path} "
+              f"(instead of raw UTF-8) -- see blt_tokenizer.py")
     if plan["trace_source_bytes"]:
         print(f"# --trace-source-bytes ON: per-language byte counts -> "
               f"{plan['source_bytes_dir']}/source_bytes.rank*.jsonl "

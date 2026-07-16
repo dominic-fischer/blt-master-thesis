@@ -1,4 +1,6 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
+import json
+import logging
 import re
 
 from bytelatent.tokenizers.abstract_tokenizer import Tokenizer
@@ -12,6 +14,8 @@ from bytelatent.tokenizers.constants import (
     PAD_ID,
 )
 from bytelatent.tokenizers.sentence_piece_tokenizer import SentencePieceTokenizer
+
+logger = logging.getLogger()
 
 
 def convert_to_bytes(s):
@@ -80,6 +84,7 @@ class BltTokenizer(Tokenizer):
         bpe_tokenizer_path="/home/artidoro/tokenizers/llama_v2.tokenizer.model",
         add_bos: bool = True,
         add_eos: bool = True,
+        custom_encoding_path: str | None = None,
     ):
         self.add_bos = add_bos
         self.add_eos = add_eos
@@ -101,8 +106,69 @@ class BltTokenizer(Tokenizer):
         self.vocab_size_unit_1 = vocab_size_unit_1
         self.n_words = vocab_size_unit_1 + self.offsetting_special_char
 
+        # Custom (random-but-reproducible) per-character byte encoding, as an
+        # alternative to raw UTF-8 -- see training_setup/build_custom_encoding.py.
+        # Loaded once per tokenizer instance (cheap: one JSON file, tens of
+        # thousands of entries at most). Vocab size/n_words are UNCHANGED --
+        # each individual byte within a character's 2- or 3-byte code is
+        # still just a value in 0-255, the same range UTF-8 bytes already
+        # occupy, so nothing downstream needs to know this happened.
+        self.custom_encoding_path = custom_encoding_path
+        if custom_encoding_path is not None:
+            with open(custom_encoding_path, encoding="utf-8") as f:
+                self.custom_encoding = json.load(f)
+            self.custom_bytes_per_char = self.custom_encoding["bytes_per_char"]
+            logger.info(
+                "BltTokenizer: using custom encoding from %s (%d chars, "
+                "%d bytes/char, seed=%s)",
+                custom_encoding_path,
+                self.custom_encoding["num_chars"],
+                self.custom_bytes_per_char,
+                self.custom_encoding.get("seed"),
+            )
+        else:
+            self.custom_encoding = None
+            self.custom_bytes_per_char = None
+
     def get_vocab_size(self) -> int:
         return self.n_words
+
+    def _custom_encode_to_bytes(self, text: str) -> bytes:
+        """Encodes text using the custom per-character byte mapping instead
+        of UTF-8. Raises on any character with no entry in the mapping --
+        deliberately loud rather than silently dropping/substituting,
+        since build_custom_encoding.py is meant to scan training + val +
+        FLORES+ exhaustively, so a missing character here means the
+        encoding needs to be rebuilt to include it, not that this text
+        should be silently corrupted."""
+        char_to_bytes_hex = self.custom_encoding["char_to_bytes_hex"]
+        raw = bytearray()
+        for ch in text:
+            hex_key = char_to_bytes_hex.get(ch)
+            if hex_key is None:
+                raise ValueError(
+                    f"Character {ch!r} (U+{ord(ch):04X}) has no entry in the "
+                    f"custom encoding at {self.custom_encoding_path} -- rebuild "
+                    f"it with training_setup/build_custom_encoding.py to include "
+                    f"this character before encoding text that contains it."
+                )
+            raw.extend(bytes.fromhex(hex_key))
+        return bytes(raw)
+
+    def _custom_decode_from_bytes(self, raw_bytes: bytes) -> str:
+        """Inverse of _custom_encode_to_bytes: groups raw bytes back into
+        bytes_per_char-sized chunks and looks each one up. Any trailing
+        partial chunk (fewer than bytes_per_char bytes left, e.g. from
+        truncating mid-character) is silently dropped, same spirit as the
+        UTF-8 path's errors="ignore"."""
+        n = self.custom_bytes_per_char
+        bytes_hex_to_char = self.custom_encoding["bytes_hex_to_char"]
+        usable_len = len(raw_bytes) - (len(raw_bytes) % n)
+        chars = []
+        for i in range(0, usable_len, n):
+            chunk_hex = raw_bytes[i : i + n].hex()
+            chars.append(bytes_hex_to_char.get(chunk_hex, "\ufffd"))
+        return "".join(chars)
 
     def encode(
         self, text: str, add_bos: bool | None = None, add_eos: bool | None = None
@@ -121,6 +187,8 @@ class BltTokenizer(Tokenizer):
                 add_bos=False,
                 add_eos=False,
             )
+        elif self.custom_encoding is not None:
+            tokens = self._custom_encode_to_bytes(text)
         else:
             tokens = bytes(text, encoding="utf-8", errors="ignore")
 
@@ -140,13 +208,16 @@ class BltTokenizer(Tokenizer):
                 if t == self.eos_id:
                     tokens = tokens[: k + 1]
                     break
-        return bytes(
+        raw_bytes = bytes(
             [
                 tok - self.offsetting_special_char
                 for tok in tokens
                 if tok - self.offsetting_special_char >= 0
             ]
-        ).decode("utf-8", errors="ignore")
+        )
+        if self.custom_encoding is not None:
+            return self._custom_decode_from_bytes(raw_bytes)
+        return raw_bytes.decode("utf-8", errors="ignore")
 
     def get_token_offsets(self, text: str, tokens: list[int] | None = None):
         # TODO: Figure out what this does
