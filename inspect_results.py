@@ -10,29 +10,65 @@ pre-computed restructured results and:
   B) Saves a .txt file with per-byte entropy, binary breakdown, top-k
      next-byte predictions (re-run through the entropy model).
 
+MODEL SELECTION: --entropy_repo is the primary argument -- it's used to
+reload the actual model and recompute fresh scores/predictions for
+comparison against the stored ones. --restructured_dir (where the STORED
+JSON lives) now defaults to:
+    results/own_models/<model_name>/<step>/
+which is auto-derived by parsing the --entropy_repo path structure.
+
 Usage:
-    python inspect_sentence.py eng_Latn 42
-    python inspect_sentence.py hin_Deva 0 --top_k 3
-    python inspect_sentence.py khm_Khmr 17 --out_dir my_output
+    python inspect_sentence.py amh_Ethi 0 --entropy_repo results/entropy_10M_20lang_4gpu_sourcesbalanced_steps6000_ckpt200_lr4.5e-3/checkpoints/0000006000/consolidated
 """
 
 import argparse
 import json
 import os
 import sys
+import re
+from os import path
 import torch
 from pathlib import Path
+
+sys.path.append(path.join(path.dirname(path.abspath(__file__)), "model_eval"))
+from results_paths import results_dir_for, derive_filename_stem
 
 from blt_patcher import load_patcher, patch_text
 from blt_visualize import BLTPatchVisualizer
 
 # ── config ────────────────────────────────────────────────────────────────────
-REPO           = "facebook/blt-1b"
-ENTROPY_REPO   = "hf-weights/entropy_model"
-RESTRUCTURED   = "results/base_model"
+DEFAULT_REPO = "facebook/blt-1b"
+DEFAULT_ENTROPY_REPO = "hf-weights/entropy_model"
 
 W_BITS   = 33
 W_SCRIPT = 50
+
+# ── Auto-derive Restructured Directory Helper ─────────────────────────────────
+def derive_own_results_dir(entropy_repo_path: str) -> str:
+    norm_path = os.path.normpath(entropy_repo_path)
+    parts = norm_path.split(os.sep)
+    
+    # We look for the common training output pattern: <model_dir>/checkpoints/<step>/consolidated
+    if "checkpoints" in parts:
+        idx = parts.index("checkpoints")
+        if idx > 0 and idx + 1 < len(parts):
+            # Extract the model directory name
+            model_name = parts[idx - 1]
+            
+            # Extract and format the step directory (e.g., step_0000006000)
+            raw_step = parts[idx + 1]
+            step = raw_step if raw_step.startswith("step_") else f"step_{raw_step}"
+            
+            return os.path.join("results", "own_models", model_name, step)
+
+    # Fallback pattern matching with regex
+    match = re.search(r"([^/]+)/checkpoints/(\d+)", norm_path.replace("\\", "/"))
+    if match:
+        model_name, step = match.groups()
+        return os.path.join("results", "own_models", model_name, f"step_{step}")
+
+    print(f"Warning: Could not extract checkpoints/step pattern from '{entropy_repo_path}'.")
+    return results_dir_for(entropy_repo_path)
 
 # ── Unicode / byte helpers (unchanged from original) ─────────────────────────
 SCRIPT_RANGES = [
@@ -56,7 +92,7 @@ SCRIPT_RANGES = [
     (3072,  3199,  "Telugu"),
     (3200,  3327,  "Kannada"),
     (3328,  3455,  "Malayalam"),
-    (3456,  3583,  "Sinhala"),
+    (3328,  3583,  "Sinhala"),
     (3584,  3711,  "Thai"),
     (3712,  3839,  "Lao"),
     (3840,  4095,  "Tibetan"),
@@ -211,25 +247,47 @@ def main():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("lang_code",  help="e.g. eng_Latn, hin_Deva, khm_Khmr")
     parser.add_argument("index",      type=int, help="Sentence index (0-based)")
+    parser.add_argument("--entropy_repo", default=DEFAULT_ENTROPY_REPO,
+                        help=f"Repo id (or path) of the entropy model to reload for "
+                             f"fresh scores/predictions -- e.g. a dumps/.../checkpoints/"
+                             f"<step>/consolidated path, or an HF repo id (default "
+                             f"{DEFAULT_ENTROPY_REPO}). Also used to auto-derive "
+                             f"--restructured_dir and the output subfolder, unless "
+                             f"overridden explicitly.")
+    parser.add_argument("--repo", default=DEFAULT_REPO,
+                        help=f"Repo id of the full BLT model (default {DEFAULT_REPO}).")
     parser.add_argument("--top_k",    type=int, default=1,
                         help="Top-k next-byte predictions to show (default: 1)")
     parser.add_argument("--out_dir",  default=None,
-                        help="Output directory (default: inspect_results/inspect_{lang_code}_{index}/)")
-    parser.add_argument("--restructured_dir", default=RESTRUCTURED,
-                        help=f"Path to restructured results (default: {RESTRUCTURED})")
+                        help="Output directory. If omitted, derived as "
+                             "inspect_results/<stem>/inspect_{lang_code}_{index}/, "
+                             "where <stem> comes from --entropy_repo -- so different "
+                             "models/checkpoints don't overwrite each other's output.")
+    parser.add_argument("--restructured_dir", default=None,
+                        help="Path to restructured results. If omitted, derived from "
+                             "--entropy_repo -- now auto-resolving to "
+                             "results/own_models/<model_name>/<step>/ "
+                             "if checkpoints exist in the path.")
     args = parser.parse_args()
 
     lang_code = args.lang_code
     idx       = args.index
     top_k     = max(1, min(args.top_k, 10))
-    out_dir   = args.out_dir or f"inspect_results/inspect_{lang_code}_{idx}"
+
+    # >>> ADAPTED SECTION: Custom derivation mapping to results/own_models/
+    restructured_dir = args.restructured_dir or derive_own_results_dir(args.entropy_repo)
+    
+    stem = derive_filename_stem(args.entropy_repo)
+    out_dir = args.out_dir or os.path.join("inspect_results", stem, f"inspect_{lang_code}_{idx}")
     os.makedirs(out_dir, exist_ok=True)
 
     # ── load restructured sentence ────────────────────────────────────────────
-    json_path = Path(args.restructured_dir) / f"{lang_code}.json"
+    json_path = Path(restructured_dir) / f"{lang_code}.json"
     if not json_path.exists():
         sys.exit(f"Error: {json_path} not found. "
-                 f"Run restructure_eval.py / run_patching.py first.")
+                 f"Run restructure_eval.py / run_patching.py first, or check that "
+                 f"--entropy_repo (or an explicit --restructured_dir) points at the "
+                 f"right model.")
 
     with open(json_path, encoding="utf-8") as f:
         sentences = json.load(f)
@@ -242,13 +300,15 @@ def main():
     text_en  = sentence.get("text_en", "")
     print(f"\nLanguage : {lang_code}")
     print(f"Index    : {idx}")
+    print(f"Restructured dir: {restructured_dir}")
+    print(f"Entropy repo    : {args.entropy_repo}")
     print(f"Text     : {text}")
     if text_en and text_en != text:
         print(f"English  : {text_en}")
 
     # ── load patcher + re-run entropy model for predictions ──────────────────
     print("\nLoading patcher...")
-    tokenizer, patcher = load_patcher(repo=REPO, entropy_repo=ENTROPY_REPO)
+    tokenizer, patcher = load_patcher(repo=args.repo, entropy_repo=args.entropy_repo)
     offset = tokenizer.offsetting_special_char
 
     result        = patch_text(text, tokenizer, patcher)
@@ -308,6 +368,7 @@ def main():
     lines.append("=" * 80)
     lines.append(f"  Language : {lang_code}")
     lines.append(f"  Index    : {idx}")
+    lines.append(f"  Entropy repo: {args.entropy_repo}")
     lines.append(f"  Text     : {text}")
     if text_en and text_en != text:
         lines.append(f"  English  : {text_en}")

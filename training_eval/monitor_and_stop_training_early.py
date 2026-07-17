@@ -60,6 +60,14 @@ checkpoint, so if this monitor itself crashes or is restarted, it picks
 up where it left off instead of re-evaluating or losing the patience
 count.
 
+LOGGING: everything written to stdout is duplicated to --log-root's log
+file line-by-line as it happens (Tee flushes on every write), and both
+subprocess calls this script makes (checkpoint consolidation and
+eval_entropy_bpb.py) stream their output through as it's produced rather
+than buffering until the subprocess exits -- so `tail -f` on the log
+shows live progress through a multi-minute consolidate/eval, not just a
+dump at the end.
+
 ASSUMPTIONS WORTH CHECKING:
   - Checkpoint dirs are named as zero-padded step numbers directly under
     <dump_dir>/checkpoints/ (same layout eval_after_training.sh assumes).
@@ -104,7 +112,10 @@ MAX_EVAL_FAILURES_PER_CHECKPOINT = 3
 
 class Tee:
     """Duplicates writes to real stdout and a log file (same helper as
-    lr_halving_sweep.py's Tee)."""
+    lr_halving_sweep.py's Tee), flushing both after every write so the log
+    file reflects progress in real time (e.g. under `tail -f`) instead of
+    only appearing once this script's own stdout buffer fills or the
+    process exits."""
 
     def __init__(self, *streams):
         self.streams = streams
@@ -112,10 +123,32 @@ class Tee:
     def write(self, data):
         for s in self.streams:
             s.write(data)
+            s.flush()
 
     def flush(self):
         for s in self.streams:
             s.flush()
+
+
+def stream_subprocess(cmd: list[str], env: dict | None = None) -> tuple[int, str]:
+    """Runs cmd, printing its combined stdout+stderr line-by-line AS IT'S
+    PRODUCED (instead of subprocess.run(capture_output=True), which
+    buffers everything until the subprocess exits). Since our own stdout
+    is a flush-on-write Tee, this means the log file gets live output
+    through long-running steps like checkpoint consolidation or eval,
+    not just a dump at the end. Returns (returncode, full_combined_output)
+    so callers that want a failure tail can still get one."""
+    proc = subprocess.Popen(
+        cmd, env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        text=True, bufsize=1,
+    )
+    lines = []
+    for line in proc.stdout:
+        print(line, end="")
+        lines.append(line)
+    proc.wait()
+    return proc.returncode, "".join(lines)
 
 
 def list_checkpoint_steps(checkpoints_dir: str) -> list[tuple[str, int]]:
@@ -172,13 +205,11 @@ def consolidate_checkpoint(ckpt_dir: str) -> bool:
         print("  Already consolidated, skipping.")
         return True
     print("  Consolidating...")
-    proc = subprocess.run(
-        ["python", "-m", "bytelatent.checkpoint", "consolidate", ckpt_dir],
-        capture_output=True, text=True,
+    returncode, _ = stream_subprocess(
+        ["python", "-m", "bytelatent.checkpoint", "consolidate", ckpt_dir]
     )
-    if proc.returncode != 0:
-        tail = "\n".join((proc.stdout + proc.stderr).strip().splitlines()[-15:])
-        print(f"  Consolidation FAILED (exit {proc.returncode}):\n{tail}")
+    if returncode != 0:
+        print(f"  Consolidation FAILED (exit {returncode}) -- see output above.")
         return False
     return True
 
@@ -199,8 +230,8 @@ def stop_training(tmux_target: str) -> None:
 def run_eval(consolidated_dir: str, lang_shards_root: str, target_bytes_per_lang: int,
              metrics_jsonl: str, json_out_path: str, gpu_id: int) -> dict | None:
     """Runs eval_entropy_bpb.py pinned to gpu_id via CUDA_VISIBLE_DEVICES,
-    prints its full output for visibility (so this monitor's own log is a
-    complete record, same spirit as eval_after_training.sh's tee), and
+    streaming its output live (so this monitor's own log is a complete,
+    real-time record, same spirit as eval_after_training.sh's tee), and
     returns the parsed --json-out summary, or None on failure."""
     env = dict(os.environ)
     env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
@@ -213,10 +244,9 @@ def run_eval(consolidated_dir: str, lang_shards_root: str, target_bytes_per_lang
         "--json-out", json_out_path,
     ]
     print(f"  Evaluating held-out bpb on GPU {gpu_id}...")
-    proc = subprocess.run(cmd, env=env, capture_output=True, text=True)
-    print(proc.stdout)
-    if proc.returncode != 0:
-        print(f"  eval_entropy_bpb.py FAILED (exit {proc.returncode}):\n{proc.stderr}")
+    returncode, _ = stream_subprocess(cmd, env=env)
+    if returncode != 0:
+        print(f"  eval_entropy_bpb.py FAILED (exit {returncode}) -- see output above.")
         return None
     try:
         with open(json_out_path) as f:
@@ -392,6 +422,8 @@ def main():
     log_dir = os.path.join(args.log_root, run_name)
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, f"monitor_and_stop_training_early_{time.strftime('%Y%m%d_%H%M%S')}.log")
+    # buffering=1 (line-buffered) plus Tee's per-write flush() means every
+    # line lands on disk immediately -- safe to `tail -f` this file live.
     sys.stdout = Tee(sys.__stdout__, open(log_path, "w", buffering=1))
     print(f"Logging this monitor run to: {log_path}")
     print(f"State file: {state_file}")
