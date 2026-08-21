@@ -657,7 +657,7 @@ def compute_plan(args: argparse.Namespace, parser: argparse.ArgumentParser) -> d
         # add_eos are separate top-level DataloaderArgs fields, not part of
         # tokenizer_args.init_kwargs).
         overrides.append(
-            f"data.tokenizer_args.init_kwargs={{custom_encoding_path:{args.custom_encoding_path}}}"
+            f'data.tokenizer_args.init_kwargs={{custom_encoding_path: "{args.custom_encoding_path}"}}'
         )
 
     train_module = "trace_source_bytes" if args.trace_source_bytes else "bytelatent.train"
