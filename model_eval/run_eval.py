@@ -4,6 +4,7 @@ Run BLT patching over a diverse subset of FLORES+ languages and save results to 
 Usage (from repo root):
     python model_eval/run_eval.py --entropy_repo dumps/entropy_10M_20lang_4gpu_sourcesbalanced_steps3000_ckpt200_lr4.5e-3/checkpoints/0000003000/consolidated
     python model_eval/run_eval.py --entropy_repo hf_weights/entropy_model --results-dir results/own_models/my_custom_name
+    python model_eval/run_eval.py --entropy_repo <repo> --custom-encoding-path training_setup/custom_encoding.json
 Output: one JSON file per language at
     results/own_models/<run_name>/step_<step>/{lang_code}.json
 where <run_name> is the path component immediately after "dumps/" in
@@ -18,6 +19,14 @@ Must be invoked with the repo root as the current working directory
 (same requirement as before this script lived under model_eval/) --
 floresplus_MASTER.csv, --results-dir's default, etc. are all resolved
 relative to cwd, not to this file's own location.
+
+CUSTOM ENCODING: if the entropy model at --entropy_repo was trained with
+launch_training.py's --custom-encoding-path, pass the SAME path here via
+--custom-encoding-path -- FLORES+ text will then be encoded to bytes the
+same way (see blt_patcher.py's patch_text/_text_to_raw_bytes) before
+being fed to the entropy model. A mismatch silently produces meaningless
+entropy scores and patch boundaries. Omit for a model trained on plain
+UTF-8.
 """
 import argparse
 import csv
@@ -69,7 +78,8 @@ def load_language(lang_code: str):
     return load_dataset(FLORES_DATASET, lang_code, split=SPLIT)
 
 
-def run_language(lang_code: str, lang_name: str, eng_dataset, tokenizer, patcher):
+def run_language(lang_code: str, lang_name: str, eng_dataset, tokenizer, patcher,
+                  custom_encoding: dict | None):
     print(f"\nProcessing {lang_name} ({lang_code})...")
     if lang_code == "eng_Latn":
         dataset = eng_dataset
@@ -92,7 +102,7 @@ def run_language(lang_code: str, lang_name: str, eng_dataset, tokenizer, patcher
             break
         text = row["text"]
         eng_text = eng_row["text"]
-        result = patch_text(text, tokenizer, patcher)
+        result = patch_text(text, tokenizer, patcher, custom_encoding=custom_encoding)
         text_bytes = result["text_bytes"]
         scores = result["scores"]
         norm = normalize_scores(scores)
@@ -147,6 +157,18 @@ def parse_args():
         help=f"CSV whose 'language_code' column defines the trained-language "
              f"set, used only when --only-trained-langs is set (default "
              f"{DEFAULT_LANGS_CSV}).",
+    )
+    parser.add_argument(
+        "--custom-encoding-path",
+        type=str,
+        default=None,
+        help="Path to the SAME custom_encoding.json passed to "
+             "launch_training.py's --custom-encoding-path when the entropy "
+             "model at --entropy_repo was trained. FLORES+ text will be "
+             "encoded to bytes using this mapping instead of plain UTF-8 "
+             "(see blt_patcher.py's patch_text). MUST match training exactly, "
+             "or entropy scores / patch boundaries will be meaningless. Omit "
+             "for a model trained on plain UTF-8.",
     )
     parser.add_argument(
         "--force",
@@ -238,12 +260,17 @@ def main():
                   f"slower. Pass --gpu to force a specific one, or free up a GPU.")
 
     print("Loading patcher...")
-    tokenizer, patcher = load_patcher(repo=REPO, entropy_repo=args.entropy_repo)
+    tokenizer, patcher, custom_encoding = load_patcher(
+        repo=REPO, entropy_repo=args.entropy_repo,
+        custom_encoding_path=args.custom_encoding_path,
+    )
+    if custom_encoding is not None:
+        print(f"Using CUSTOM ENCODING from {args.custom_encoding_path}")
     print(f"Loading English ({SPLIT})...")
     eng_dataset = load_language("eng_Latn")
 
     for lang_code, lang_name in to_process.items():
-        results = run_language(lang_code, lang_name, eng_dataset, tokenizer, patcher)
+        results = run_language(lang_code, lang_name, eng_dataset, tokenizer, patcher, custom_encoding)
         if results is None:
             continue
         out_path = os.path.join(output_dir, f"{lang_code}.json")

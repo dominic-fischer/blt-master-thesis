@@ -17,6 +17,17 @@ low/mid/high/anchor, per case -- reusing run_patching.py's own
 load_cases()/threshold_key() directly rather than duplicating that
 parsing logic.
 
+RUN NAME ALIASING: raw run-name stems (e.g.
+"entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3")
+are long and not meant for human-facing filenames/folders. RUN_NAME_ALIASES
+maps known raw stems to short, readable names (e.g. "Balanced-Custom") --
+applied via apply_run_name_alias() to whichever raw name is in play (either
+the CSV-filename-derived stem, or an explicit --filename-prefix) BEFORE it's
+used for any output path or filename, so aliasing is transparent to the rest
+of this script's logic. Add new entries to RUN_NAME_ALIASES as new runs are
+evaluated; anything not in the map passes through unchanged (falls back to
+the raw stem), so this is purely additive/non-breaking.
+
 Output:
     results/txt_premiums/t_anchor/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
     results/txt_premiums/t_lower_bound/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
@@ -26,7 +37,8 @@ Output:
 where <subfolder> and <prefix> are determined by --filename-prefix if specified,
 otherwise automatically parsed as the portion of the CSV filename preceding the 
 second underscore. If "step_X" is present in the CSV filename, it is nested inside 
-an extra step subfolder.
+an extra step subfolder. Either way, the raw stem is passed through
+apply_run_name_alias() first -- see RUN NAME ALIASING above.
 
 Each file contains language code, sorted premium, and the absolute patches-per-sentence 
 (pps) and bytes-per-patch (bpp) values.
@@ -57,7 +69,8 @@ PREMIUM_SUFFIX = "_pps_premium"
 ENGLISH = "eng_Latn"
 
 # Must match run_patching.py's CASES/COMBINED keys.
-KNOWN_CASES = ["raw_entropy", "raw_monotonicity", "norm_entropy", "combined"]
+# KNOWN_CASES = ["raw_entropy", "raw_monotonicity", "norm_entropy", "combined"]
+KNOWN_CASES = ["raw_entropy", "raw_monotonicity"]
 
 # Maps run_patching.py's internal bound name -> the folder name requested.
 BOUND_FOLDER_NAMES = {
@@ -66,6 +79,35 @@ BOUND_FOLDER_NAMES = {
     "high":   "t_upper_bound",
     "anchor": "t_anchor",
 }
+
+# Raw run-name stem -> short, human-readable name. See module docstring's
+# "RUN NAME ALIASING" section. Matched via exact-substring replacement
+# (apply_run_name_alias), so a raw name embedded with an extra suffix
+# (e.g. a trailing "_step_0000010000") still gets its known-run portion
+# swapped out cleanly, leaving the step suffix intact.
+RUN_NAME_ALIASES = {
+    "entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3": "Balanced-Custom",
+    "entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3": "Balanced",
+    "entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3": "Imbalanced",
+    "base_model":"_Base-Model"
+}
+
+
+def apply_run_name_alias(name: str) -> str:
+    """Replaces the FIRST matching raw run-name stem found anywhere in
+    name with its short alias from RUN_NAME_ALIASES, and strips any
+    trailing "_step_<digits>" suffix (e.g. "_step_0000010000") entirely,
+    rather than preserving it. Longer keys are checked first so a raw
+    name that is itself a prefix of another mapped name (not currently
+    the case here, but cheap insurance) can't shadow the more specific
+    match. Returns name unchanged (step suffix stripped either way) if no
+    known raw stem is found -- unmapped runs simply fall back to their
+    raw name rather than erroring."""
+    for raw in sorted(RUN_NAME_ALIASES, key=len, reverse=True):
+        if raw in name:
+            name = name.replace(raw, RUN_NAME_ALIASES[raw])
+            break
+    return re.sub(r"_step_\d+", "", name)
 
 
 def load_chosen_languages(langs_csv: str) -> set[str]:
@@ -139,7 +181,9 @@ def parse_args():
         default=None,
         help="Optional prefix (e.g. a model/checkpoint stem) for the "
              "output filename and subfolder. If omitted, parsed automatically "
-             "from the input CSV's filename before the second underscore."
+             "from the input CSV's filename before the second underscore. "
+             "Either way, passed through apply_run_name_alias() -- see "
+             "RUN_NAME_ALIASES near the top of this file."
     )
     return parser.parse_args()
 
@@ -161,16 +205,21 @@ def main():
     step_match = re.search(r"step_\d+", csv_stem)
     step_subfolder = step_match.group(0) if step_match else None
 
-    # Determine automatic prefix / subfolder name if not explicitly specified
+    # Determine automatic prefix / subfolder name if not explicitly specified.
+    # Either way, run the result through apply_run_name_alias() so a known
+    # raw run stem (e.g. "entropy_10M_..._customenc_lr4.5e-3") is swapped
+    # for its short alias (e.g. "Balanced-Custom") before it's used in any
+    # output path or filename -- see RUN_NAME_ALIASES.
     if args.filename_prefix:
-        prefix = args.filename_prefix
-        subfolder_name = args.filename_prefix
+        prefix = apply_run_name_alias(args.filename_prefix)
+        subfolder_name = prefix
     else:
         parts = csv_stem.split("_")
         if len(parts) >= 2:
             prefix = f"{parts[0]}_{parts[1]}"
         else:
             prefix = csv_stem
+        prefix = apply_run_name_alias(prefix)
         subfolder_name = prefix
 
     filtered = df[df["Code_Orig"].astype(str).isin(chosen_langs)]

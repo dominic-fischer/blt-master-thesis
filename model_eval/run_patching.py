@@ -26,7 +26,21 @@ version of this script did, still avoids silently losing an entry if two
 bounds happen to coincide numerically for a given case -- the second one
 just correctly reuses the already-computed result instead of redoing it.)
 
-Any eval_modes keys in the JSON that are NOT present in the CSV are removed.
+STALE CLEANUP -- TWO LEVELS: any eval_modes CASE (raw_entropy,
+raw_monotonicity, etc.) not present in the CSV is removed entirely, same
+as before. Additionally, WITHIN each still-valid case, any THRESHOLD KEY
+(e.g. "t_0.5928") not among that case's current 4 named-bound values in
+the CSV is also removed. This second level matters whenever a checkpoint
+gets recalibrated (e.g. a change in --target-pps/--pps-low/--pps-high, or
+switching calibration methodology entirely, as happened when this
+script's bpp-based bounds became pps-based) -- the OLD threshold values
+computed under the previous calibration would otherwise silently persist
+in eval_modes forever, since they still sit under a valid case name and
+only the case-name-level cleanup ran previously. Leftover stale
+threshold keys don't corrupt anything by themselves, but they do produce
+extra *_pps_premium columns downstream (via results_to_CSV.py) that
+results_to_txt_premiums.py then can't map to a bound and skips with a
+warning -- cleaning them up here removes that noise at the source.
 
 Output: updates <results-dir>/{lang_code}.json in place (indented)
 
@@ -162,6 +176,16 @@ def main():
     cases = load_cases(args.summary_csv)
     valid_case_names = set(cases.keys())
 
+    # Per case, the set of threshold keys ("t_<value>") that are current
+    # under this --summary-csv -- used for the threshold-level stale
+    # cleanup (see module docstring's STALE CLEANUP section). Computed
+    # once here, outside the per-sentence loop, since it's the same for
+    # every sentence/language.
+    valid_keys_per_case = {
+        case_name: {threshold_key(case["named_thresholds"][b]) for b in BOUND_NAMES}
+        for case_name, case in cases.items()
+    }
+
     print(f"Loaded {len(cases)} cases from {args.summary_csv}:")
     for name, case in cases.items():
         bounds_str = ", ".join(f"{b}={case['named_thresholds'][b]:.4f}" for b in BOUND_NAMES)
@@ -179,18 +203,31 @@ def main():
         with open(path, encoding="utf-8") as f:
             sentences = json.load(f)
 
+        stale_threshold_count = 0
         for sentence in tqdm(sentences, desc=lang_code, leave=False):
             if "eval_modes" not in sentence:
                 sentence["eval_modes"] = {}
 
-            # remove stale cases not present in the CSV
-            stale = [k for k in sentence["eval_modes"] if k not in valid_case_names]
-            for k in stale:
+            # Level 1: remove stale CASES not present in the CSV at all.
+            stale_cases = [k for k in sentence["eval_modes"] if k not in valid_case_names]
+            for k in stale_cases:
                 del sentence["eval_modes"][k]
 
             for case_name, case in cases.items():
                 if case_name not in sentence["eval_modes"]:
                     sentence["eval_modes"][case_name] = {}
+
+                # Level 2: WITHIN this still-valid case, remove stale
+                # THRESHOLD KEYS left over from a previous calibration
+                # (e.g. old bpp-based thresholds after switching to
+                # pps-based calibration) -- see module docstring.
+                stale_keys = [
+                    k for k in sentence["eval_modes"][case_name]
+                    if k not in valid_keys_per_case[case_name]
+                ]
+                for k in stale_keys:
+                    del sentence["eval_modes"][case_name][k]
+                    stale_threshold_count += 1
 
                 scores = [be[case["score_idx"]] for be in sentence["bytes_entropies"]]
                 is_combined = case["fixed_threshold"] is not None
@@ -227,7 +264,8 @@ def main():
         with open(path, "w", encoding="utf-8") as f:
             json.dump(sentences, f, ensure_ascii=False, indent=2)
 
-        print(f"  {lang_code}: done")
+        stale_note = f" (removed {stale_threshold_count} stale threshold entr{'y' if stale_threshold_count == 1 else 'ies'})" if stale_threshold_count else ""
+        print(f"  {lang_code}: done{stale_note}")
 
     print("\nDone.")
 

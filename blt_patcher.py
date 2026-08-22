@@ -26,6 +26,7 @@ Entropy:
     #          AND previous byte was NOT a boundary      (no consecutive boundaries)
 """
 
+import json
 import torch
 from bytelatent.hf import BltTokenizerAndPatcher
 from bytelatent.data.patcher import PatchingModeEnum
@@ -49,8 +50,21 @@ def load_patcher(
     threshold_add: float = None,
     monotonicity: bool = False,
     patch_size: int = 4,
+    custom_encoding_path: str | None = None,
 ):
-    """Load and configure BLT tokenizer and patcher."""
+    """Load and configure BLT tokenizer and patcher.
+
+    custom_encoding_path: if given, patch_text() will encode input text
+    using this custom per-character byte mapping (see
+    training_setup/build_custom_encoding.py / bytelatent_tokenizer.py's
+    custom_encoding_path support) instead of plain UTF-8 -- MUST match
+    whatever the entropy model at entropy_repo was actually trained with,
+    or entropy scores (and therefore patch boundaries) will be
+    meaningless. The returned tokenizer is unused for encoding either way
+    (only its offsetting_special_char/bos_id are read) -- the custom
+    encoding, if any, is loaded here and returned as a third value for
+    patch_text() to use directly.
+    """
     tok_and_patcher = BltTokenizerAndPatcher.from_pretrained(repo)
 
     tok_and_patcher.patcher_args.entropy_model_checkpoint_dir = entropy_repo
@@ -65,28 +79,71 @@ def load_patcher(
     tokenizer = tok_and_patcher.tokenizer_args.build()
     patcher = tok_and_patcher.patcher_args.build()
 
-    return tokenizer, patcher
+    custom_encoding = None
+    if custom_encoding_path is not None:
+        with open(custom_encoding_path, encoding="utf-8") as f:
+            custom_encoding = json.load(f)
+
+    return tokenizer, patcher, custom_encoding
 
 
-def _byte_to_char_map(text: str) -> dict:
-    """Build a mapping from byte offset → character index for a UTF-8 string."""
+def _text_to_raw_bytes(text: str, custom_encoding: dict | None) -> bytes:
+    """Encodes text to raw bytes using the custom per-character mapping if
+    custom_encoding is given, otherwise plain UTF-8. Must match whatever
+    encoding the entropy model being used was actually trained with (see
+    bytelatent/tokenizers/blt_tokenizer.py's _custom_encode_to_bytes,
+    which this mirrors) -- a mismatch silently produces meaningless
+    entropy scores and patch boundaries."""
+    if custom_encoding is None:
+        return text.encode("utf-8")
+    char_to_bytes_hex = custom_encoding["char_to_bytes_hex"]
+    raw = bytearray()
+    for ch in text:
+        hex_key = char_to_bytes_hex.get(ch)
+        if hex_key is None:
+            raise ValueError(
+                f"Character {ch!r} (U+{ord(ch):04X}) has no entry in the custom "
+                f"encoding -- rebuild it with build_custom_encoding.py to include "
+                f"this character."
+            )
+        raw.extend(bytes.fromhex(hex_key))
+    return bytes(raw)
+
+
+def _byte_to_char_map(text: str, custom_encoding: dict | None) -> dict:
+    """Build a mapping from byte offset → character index, for either
+    plain UTF-8 (variable bytes/char) or a custom encoding (fixed
+    bytes_per_char)."""
     byte_to_char = {}
     char_idx = 0
     byte_idx = 0
-    for char in text:
-        char_byte_len = len(char.encode("utf-8"))
-        for b in range(char_byte_len):
-            byte_to_char[byte_idx + b] = char_idx
-        byte_idx += char_byte_len
-        char_idx += 1
+    if custom_encoding is None:
+        for char in text:
+            char_byte_len = len(char.encode("utf-8"))
+            for b in range(char_byte_len):
+                byte_to_char[byte_idx + b] = char_idx
+            byte_idx += char_byte_len
+            char_idx += 1
+    else:
+        bytes_per_char = custom_encoding["bytes_per_char"]
+        for char in text:
+            for b in range(bytes_per_char):
+                byte_to_char[byte_idx + b] = char_idx
+            byte_idx += bytes_per_char
+            char_idx += 1
     # Sentinel: end of string
     byte_to_char[byte_idx] = char_idx
     return byte_to_char
 
 
-def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
+def patch_text(text: str, tokenizer, patcher, device: str = "cuda",
+                custom_encoding: dict | None = None) -> dict:
     """
     Patch a single text string.
+
+    custom_encoding: the parsed custom_encoding.json (from load_patcher's
+    third return value), or None for plain UTF-8. Must match whatever the
+    entropy model was trained with.
 
     Returns a dict with:
         - patches:             list of (chunk_str, chunk_bytes, byte_length) tuples
@@ -94,14 +151,15 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
         - scores:              list of per-byte entropy scores (or None)
         - n_patches:           int
         - n_bytes:             int
-        - text_bytes:          list of ints (raw UTF-8 bytes of the input text)
+        - text_bytes:          list of ints (raw bytes of the input text,
+                                under whichever encoding was used)
         - avg_bytes_per_patch: float
         - threshold:           float
     """
     offset = tokenizer.offsetting_special_char
     bos_id = tokenizer.bos_id
 
-    byte_seq = text.encode("utf-8")
+    byte_seq = _text_to_raw_bytes(text, custom_encoding)
     ids = [b + offset for b in byte_seq]
     tokens = torch.tensor([ids], dtype=torch.long, device=device)
 
@@ -120,9 +178,11 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
         if preds is not None:
             preds = preds[:, 1:]
 
-    # Decode full sequence once (guaranteed valid) and build byte→char map
-    full_text = byte_seq.decode("utf-8")
-    b2c = _byte_to_char_map(full_text)
+    # Build byte→char map directly from text + encoding (no decode-and-verify
+    # round trip needed under a custom encoding, unlike UTF-8's original
+    # decode-back-from-bytes approach -- we already know exactly how many
+    # bytes each character consumed).
+    b2c = _byte_to_char_map(text, custom_encoding)
     bytes_list = list(byte_seq)
 
     # Build patch list as (chunk_str, chunk_bytes, byte_length) tuples
@@ -132,7 +192,7 @@ def patch_text(text: str, tokenizer, patcher, device: str = "cuda") -> dict:
     for length in patch_lengths[0].tolist():
         raw = bytes(bytes_list[byte_cursor: byte_cursor + length])
         start_char = b2c.get(byte_cursor, 0)
-        end_char = b2c.get(byte_cursor + length, len(full_text))
+        end_char = b2c.get(byte_cursor + length, len(text))
         patches.append((list(raw), length))
         byte_cursor += length
 

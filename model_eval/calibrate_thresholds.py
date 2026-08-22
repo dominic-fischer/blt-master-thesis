@@ -8,13 +8,13 @@ Runs English sentences across a range of thresholds for all cases:
   - combined mode (entropy threshold + monotonicity delta)
 
 For each case, finds:
-  - The threshold at exactly 3.5 bpp (lower bound)
-  - The threshold at exactly 5.5 bpp (upper bound)
+  - The threshold at exactly --pps-low patches/sentence (lower bound)
+  - The threshold at exactly --pps-high patches/sentence (upper bound)
   - The midpoint between them
-  - The exact anchor threshold that gives 32.77 pps (binary search)
+  - The exact anchor threshold that gives --target-pps patches/sentence (binary search)
 
 For combined mode specifically:
-  - t is fixed by finding the entropy threshold that gives bpp=3.5 at t_add=0
+  - t is fixed by finding the entropy threshold that gives pps=--pps-low at t_add=0
   - t_add is then swept to find the upper bound, midpoint, and anchor
 
 WHY RE-RUN THIS PER MODEL/CHECKPOINT: a fixed threshold value doesn't
@@ -22,13 +22,32 @@ correspond to the same operating point across two different models --
 entropy score distributions can differ in scale/sharpness, so the same
 literal threshold could mean "English at 4 bytes/patch" for one model
 and "English at 6 bytes/patch" for another. Recalibrating per model so
-English hits the SAME target pps/bpp each time is what makes premiums
+English hits the SAME target pps each time is what makes premiums
 (lang_pps / eng_pps) actually comparable across models -- otherwise
 you're comparing two different anchor points and calling it one metric.
 
-TARGET_PPS/BPP_LOW/BPP_HIGH default to the same values the base model
-(facebook/blt-1b) was originally calibrated against -- change these only
-if you deliberately want a different (non-comparable-to-base) target.
+WHY PPS, NOT BPP, FOR ALL FOUR THRESHOLDS: all four calibration targets
+(low/mid/high/anchor) are now PPS-based, not BPP-based. This used to be
+BPP-based for low/high specifically (targeting 3.5/5.5 bytes-per-patch),
+with only the anchor targeted by PPS. That broke under a custom byte
+encoding with a different bytes-per-character ratio than UTF-8 (e.g. a
+fixed 2 bytes/char custom encoding vs UTF-8's ~1 byte/char for English):
+empirically, calibrating the anchor to the SAME target PPS across both
+encodings reproduced almost exactly the same PPS (32.80 vs 32.77 target)
+but a hugely different BPP (7.66 vs the intended ~3.5-5.5 range) --
+confirming BPP scales with the encoding's bytes-per-character while PPS
+stays comparable across encodings for the same underlying sentence
+content. Using PPS uniformly for all four thresholds keeps calibration
+(and therefore premiums downstream) meaningfully comparable across
+different byte encodings, not just across different model sizes/checkpoints.
+
+TARGET_PPS/PPS_LOW/PPS_HIGH default to values matching the base model's
+original UTF-8 calibration (32.77 anchor; 36/23 as the pps equivalents of
+the former 3.5/5.5 bpp bounds) -- change these only if you deliberately
+want a different (non-comparable-to-base) target, e.g. doubling
+--target-pps (and --pps-low/--pps-high) for a checkpoint trained with a
+fixed 2-bytes-per-character custom encoding, to compensate for English
+now taking roughly twice as many raw bytes for the same sentence content.
 
 Output: printed to stdout + saved to --out-path (default
 calibrated_thresholds/thresholds_summary.csv)
@@ -36,6 +55,8 @@ calibrated_thresholds/thresholds_summary.csv)
 Usage:
     python model_eval/calibrate_thresholds.py --results-dir results/base_model
     python model_eval/calibrate_thresholds.py --results-dir results/own_models/<run>/step_<step> --out-path calibrated_thresholds/<stem>_thresholds_summary.csv
+    # Custom 2-bytes-per-character encoding -- double the pps targets:
+    python model_eval/calibrate_thresholds.py --results-dir <dir> --target-pps 65.54 --pps-low 72 --pps-high 46
 """
 
 import argparse
@@ -54,8 +75,8 @@ from bytelatent.data.patcher import (
 # ── config ────────────────────────────────────────────────────────────────────
 ENGLISH = "eng_Latn"
 DEFAULT_TARGET_PPS = 32.77
-DEFAULT_BPP_LOW = 3.5
-DEFAULT_BPP_HIGH = 5.5
+DEFAULT_PPS_LOW = 36.0
+DEFAULT_PPS_HIGH = 23.0
 DEFAULT_OUT_PATH = "calibrated_thresholds/thresholds_summary.csv"
 
 CASES = {
@@ -179,33 +200,17 @@ def binary_search_pps(sentences, target_pps, score_idx, monotonicity, low, high,
     return mid, mean_pps, mean_bpp
 
 
-def binary_search_bpp(sentences, target_bpp, score_idx, monotonicity, low, high, tolerance=0.01):
-    """Binary search for threshold giving target_bpp. Higher threshold → higher bpp."""
-    mid = (low + high) / 2
-    for _ in range(50):
-        mid = (low + high) / 2
-        mean_pps, mean_bpp = eval_english(sentences, mid, score_idx, monotonicity)
-        if abs(mean_bpp - target_bpp) < tolerance:
-            return mid, mean_pps, mean_bpp
-        if mean_bpp < target_bpp:
-            low = mid
-        else:
-            high = mid
-        if high - low < 1e-6:
-            break
-    mean_pps, mean_bpp = eval_english(sentences, mid, score_idx, monotonicity)
-    return mid, mean_pps, mean_bpp
-
-
-def binary_search_t_for_combined(sentences, target_bpp, score_idx, t_add, low, high, tolerance=0.01):
-    """Binary search over t (entropy threshold) in combined mode at fixed t_add."""
+def binary_search_t_for_combined_pps(sentences, target_pps, score_idx, t_add, low, high, tolerance=0.05):
+    """Binary search over t (entropy threshold) in combined mode at fixed
+    t_add, targeting a PPS value (used to fix t for the lower bound)."""
     mid = (low + high) / 2
     for _ in range(50):
         mid = (low + high) / 2
         mean_pps, mean_bpp = eval_english_combined(sentences, mid, t_add, score_idx)
-        if abs(mean_bpp - target_bpp) < tolerance:
+        if abs(mean_pps - target_pps) < tolerance:
             return mid, mean_pps, mean_bpp
-        if mean_bpp < target_bpp:
+        # Higher entropy threshold t → fewer patch boundaries → lower pps
+        if mean_pps > target_pps:
             low = mid
         else:
             high = mid
@@ -215,7 +220,7 @@ def binary_search_t_for_combined(sentences, target_bpp, score_idx, t_add, low, h
     return mid, mean_pps, mean_bpp
 
 
-def binary_search_t_add(sentences, target, score_idx, t, low, high, mode="bpp", tolerance=0.05):
+def binary_search_t_add(sentences, target, score_idx, t, low, high, mode="pps", tolerance=0.05):
     """Binary search over t_add at fixed t. mode='bpp' or 'pps'."""
     mid = (low + high) / 2
     for _ in range(50):
@@ -255,14 +260,18 @@ def parse_args():
     parser.add_argument("--target-pps", type=float, default=DEFAULT_TARGET_PPS,
                          help=f"Anchor target: patches-per-sentence for English "
                               f"(default {DEFAULT_TARGET_PPS}, matching the base model's "
-                              f"original calibration -- change only if you deliberately "
-                              f"want a non-comparable-to-base target).")
-    parser.add_argument("--bpp-low", type=float, default=DEFAULT_BPP_LOW,
-                         help=f"Lower-bound target: bytes-per-patch for English "
-                              f"(default {DEFAULT_BPP_LOW}).")
-    parser.add_argument("--bpp-high", type=float, default=DEFAULT_BPP_HIGH,
-                         help=f"Upper-bound target: bytes-per-patch for English "
-                              f"(default {DEFAULT_BPP_HIGH}).")
+                              f"original UTF-8 calibration -- e.g. double this for a "
+                              f"checkpoint trained with a fixed 2-bytes-per-character "
+                              f"custom encoding, since PPS scales with a sentence's raw "
+                              f"byte count for a fixed encoding, see module docstring).")
+    parser.add_argument("--pps-low", type=float, default=DEFAULT_PPS_LOW,
+                         help=f"Lower-bound target: patches-per-sentence for English "
+                              f"(default {DEFAULT_PPS_LOW}; higher pps = finer patching, "
+                              f"see module docstring for why this is pps- rather than "
+                              f"bpp-targeted).")
+    parser.add_argument("--pps-high", type=float, default=DEFAULT_PPS_HIGH,
+                         help=f"Upper-bound target: patches-per-sentence for English "
+                              f"(default {DEFAULT_PPS_HIGH}; lower pps = coarser patching).")
     return parser.parse_args()
 
 
@@ -277,8 +286,8 @@ def main():
         sentences = json.load(f)
 
     print(f"Loaded {len(sentences)} English sentences from {eng_path}")
-    print(f"Target pps : {args.target_pps}")
-    print(f"Target bpp : {args.bpp_low} - {args.bpp_high}\n")
+    print(f"Target pps (anchor)     : {args.target_pps}")
+    print(f"Target pps (low/high)   : {args.pps_low} / {args.pps_high}\n")
 
     summary_rows = []
 
@@ -290,13 +299,13 @@ def main():
         slow  = case["search_low"]
         shigh = case["search_high"]
 
-        t_low, pps_low, bpp_low = binary_search_bpp(
-            sentences, args.bpp_low, idx, mono, slow, shigh)
-        print(f"  Lower bound  (bpp≈{args.bpp_low}): threshold={t_low:.4f}  pps={pps_low:.2f}  bpp={bpp_low:.4f}")
+        t_low, pps_low, bpp_low = binary_search_pps(
+            sentences, args.pps_low, idx, mono, slow, shigh)
+        print(f"  Lower bound  (pps≈{args.pps_low}): threshold={t_low:.4f}  pps={pps_low:.2f}  bpp={bpp_low:.4f}")
 
-        t_high, pps_high, bpp_high = binary_search_bpp(
-            sentences, args.bpp_high, idx, mono, slow, shigh)
-        print(f"  Upper bound  (bpp≈{args.bpp_high}): threshold={t_high:.4f}  pps={pps_high:.2f}  bpp={bpp_high:.4f}")
+        t_high, pps_high, bpp_high = binary_search_pps(
+            sentences, args.pps_high, idx, mono, slow, shigh)
+        print(f"  Upper bound  (pps≈{args.pps_high}): threshold={t_high:.4f}  pps={pps_high:.2f}  bpp={bpp_high:.4f}")
 
         t_mid = (t_low + t_high) / 2
         pps_mid, bpp_mid = eval_english(sentences, t_mid, idx, mono)
@@ -326,15 +335,15 @@ def main():
     t_sh      = COMBINED["t_search_high"]
     t_add_max = COMBINED["t_add_max"]
 
-    # step 1: fix t so that bpp=3.5 at t_add=0 (lower bound)
-    t_fixed, pps_lb, bpp_lb = binary_search_t_for_combined(
-        sentences, args.bpp_low, idx, t_add=0.0, low=t_sl, high=t_sh)
-    print(f"  Fixed t (bpp≈{args.bpp_low} at t_add=0): t={t_fixed:.4f}  pps={pps_lb:.2f}  bpp={bpp_lb:.4f}")
+    # step 1: fix t so that pps=--pps-low at t_add=0 (lower bound)
+    t_fixed, pps_lb, bpp_lb = binary_search_t_for_combined_pps(
+        sentences, args.pps_low, idx, t_add=0.0, low=t_sl, high=t_sh)
+    print(f"  Fixed t (pps≈{args.pps_low} at t_add=0): t={t_fixed:.4f}  pps={pps_lb:.2f}  bpp={bpp_lb:.4f}")
 
-    # step 2: upper bound — find t_add giving bpp=5.5
+    # step 2: upper bound — find t_add giving pps=--pps-high
     t_add_high, pps_ub, bpp_ub = binary_search_t_add(
-        sentences, args.bpp_high, idx, t_fixed, low=0.0, high=t_add_max, mode="bpp")
-    print(f"  Upper bound  (bpp≈{args.bpp_high}): t_add={t_add_high:.4f}  pps={pps_ub:.2f}  bpp={bpp_ub:.4f}")
+        sentences, args.pps_high, idx, t_fixed, low=0.0, high=t_add_max, mode="pps")
+    print(f"  Upper bound  (pps≈{args.pps_high}): t_add={t_add_high:.4f}  pps={pps_ub:.2f}  bpp={bpp_ub:.4f}")
 
     # step 3: midpoint
     t_add_mid = t_add_high / 2
