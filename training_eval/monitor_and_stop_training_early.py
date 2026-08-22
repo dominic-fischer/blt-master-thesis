@@ -80,6 +80,13 @@ Usage:
     python monitor_and_stop_training_early.py <dump_dir> <lang_shards_root> \\
         --patience 3 --min-delta-pct 0.003 --burn-in-evals 3
 
+    # If the run being monitored was trained with a custom byte encoding
+    # (launch_training.py's --custom-encoding-path), pass the SAME path
+    # here too -- otherwise held-out bpb will be meaningless:
+    python monitor_and_stop_training_early.py <dump_dir> <lang_shards_root> \\
+        --patience 3 --min-delta-pct 0.003 --burn-in-evals 3 \\
+        --custom-encoding-path training_setup/custom_encoding.json
+
     # Calibration run: log what WOULD trigger, never actually stop training:
     python monitor_and_stop_training_early.py <dump_dir> <lang_shards_root> \\
         --patience 3 --min-delta-pct 0.003 --burn-in-evals 3 --simulate
@@ -228,7 +235,8 @@ def stop_training(tmux_target: str) -> None:
 
 
 def run_eval(consolidated_dir: str, lang_shards_root: str, target_bytes_per_lang: int,
-             metrics_jsonl: str, json_out_path: str, gpu_id: int) -> dict | None:
+             metrics_jsonl: str, json_out_path: str, gpu_id: int,
+             custom_encoding_path: str | None) -> dict | None:
     """Runs eval_entropy_bpb.py pinned to gpu_id via CUDA_VISIBLE_DEVICES,
     streaming its output live (so this monitor's own log is a complete,
     real-time record, same spirit as eval_after_training.sh's tee), and
@@ -243,6 +251,8 @@ def run_eval(consolidated_dir: str, lang_shards_root: str, target_bytes_per_lang
         "--metrics-jsonl", metrics_jsonl,
         "--json-out", json_out_path,
     ]
+    if custom_encoding_path is not None:
+        cmd += ["--custom-encoding-path", custom_encoding_path]
     print(f"  Evaluating held-out bpb on GPU {gpu_id}...")
     returncode, _ = stream_subprocess(cmd, env=env)
     if returncode != 0:
@@ -258,7 +268,8 @@ def run_eval(consolidated_dir: str, lang_shards_root: str, target_bytes_per_lang
 
 def process_checkpoint(ckpt_name: str, step: int, dump_dir: str, lang_shards_root: str,
                         steps_per_epoch: float, target_bytes_per_lang: int,
-                        mem_threshold: int, util_threshold: int, state: dict) -> str:
+                        mem_threshold: int, util_threshold: int, state: dict,
+                        custom_encoding_path: str | None) -> str:
     """Returns one of: 'done' (evaluated, state updated), 'retry_gpu' (no
     idle GPU right now, try again next poll), 'gave_up' (too many
     consolidate/eval failures for this checkpoint, marked processed anyway
@@ -290,7 +301,8 @@ def process_checkpoint(ckpt_name: str, step: int, dump_dir: str, lang_shards_roo
     metrics_jsonl = os.path.join(dump_dir, "metrics.jsonl")
     json_out_path = os.path.join(ckpt_dir, "eval_result.json")
     result = run_eval(os.path.join(ckpt_dir, "consolidated"), lang_shards_root,
-                       target_bytes_per_lang, metrics_jsonl, json_out_path, gpu_id)
+                       target_bytes_per_lang, metrics_jsonl, json_out_path, gpu_id,
+                       custom_encoding_path)
 
     if result is None:
         fail_counts[fail_key] = fail_counts.get(fail_key, 0) + 1
@@ -380,6 +392,13 @@ def main():
                    help=f"First N eval events are never counted toward patience -- bpb "
                         f"is typically noisy while LR is still near/at peak (default "
                         f"{DEFAULT_BURN_IN_EVALS}).")
+    p.add_argument("--custom-encoding-path", default=None,
+                   help="Path to the SAME custom_encoding.json passed to "
+                        "launch_training.py's --custom-encoding-path for the run being "
+                        "monitored. MUST match training exactly -- see "
+                        "eval_entropy_bpb.py's module docstring for why a mismatch "
+                        "silently produces meaningless (often worse-than-random) "
+                        "held-out bpb. Omit if this run was trained on plain UTF-8.")
     p.add_argument("--free-mem-threshold-mib", type=int, default=DEFAULT_FREE_MEM_THRESHOLD_MIB)
     p.add_argument("--free-util-threshold-pct", type=int, default=DEFAULT_FREE_UTIL_THRESHOLD_PCT)
     p.add_argument("--tmux-target", default="training",
@@ -427,6 +446,8 @@ def main():
     sys.stdout = Tee(sys.__stdout__, open(log_path, "w", buffering=1))
     print(f"Logging this monitor run to: {log_path}")
     print(f"State file: {state_file}")
+    if args.custom_encoding_path is not None:
+        print(f"Custom encoding: {args.custom_encoding_path} (passed through to every eval)")
     if state["processed_steps"]:
         print(f"Resuming: {len(state['processed_steps'])} checkpoint(s) already evaluated, "
               f"best_bpb={state['best_bpb']} @step {state['best_step']}, "
@@ -455,6 +476,7 @@ def main():
                     ckpt_name, step, args.dump_dir, args.lang_shards_root,
                     args.steps_per_epoch, args.target_bytes_per_lang,
                     args.free_mem_threshold_mib, args.free_util_threshold_pct, state,
+                    args.custom_encoding_path,
                 )
                 if outcome in ("done", "gave_up"):
                     processed.add(step)

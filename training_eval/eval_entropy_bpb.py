@@ -46,11 +46,19 @@ alone.
 Tokenization matches training exactly (see bytelatent/tokenizers/blt_tokenizer.py):
     token_id = byte_value + OFFSET(4), BOS_ID=1 prepended, EOS_ID=2 appended.
 
+Byte encoding: plain UTF-8 by default, matching training's default. If the
+checkpoint being evaluated was trained with launch_training.py's
+--custom-encoding-path, pass the SAME path here via --custom-encoding-path
+-- a mismatch silently produces meaningless (often *worse than random*)
+held-out bpb, since the model receives byte patterns unrelated to whatever
+it actually learned (see text_to_raw_bytes / load_custom_encoding).
+
 Usage:
     python eval_entropy_bpb.py \
         <consolidated_checkpoint_dir>  \
         <lang_shards_root_dir> \
-        [--target-bytes-per-lang 400000] [--device cuda] [--metrics-jsonl PATH]
+        [--target-bytes-per-lang 400000] [--device cuda] [--metrics-jsonl PATH] \
+        [--custom-encoding-path PATH]
 
 Example:
     python eval_entropy_bpb.py \
@@ -72,6 +80,40 @@ from bytelatent.entropy_model import load_entropy_model
 OFFSET = 4
 BOS_ID = 1
 EOS_ID = 2
+
+
+def load_custom_encoding(custom_encoding_path: str | None) -> dict | None:
+    """Returns the parsed custom_encoding.json (see BltTokenizer), or None
+    if custom_encoding_path is None -- in which case callers fall back to
+    plain UTF-8, exactly matching training's default behavior."""
+    if custom_encoding_path is None:
+        return None
+    with open(custom_encoding_path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def text_to_raw_bytes(text: str, custom_encoding: dict | None) -> bytes:
+    """Encodes text to raw bytes using the SAME scheme as training: the
+    custom per-character mapping if custom_encoding is given, otherwise
+    plain UTF-8. This must match training exactly -- see
+    bytelatent/tokenizers/blt_tokenizer.py's _custom_encode_to_bytes,
+    which this mirrors. A mismatch here silently produces meaningless
+    (often worse-than-random) held-out bpb, since the model receives byte
+    patterns unrelated to whatever it actually learned."""
+    if custom_encoding is None:
+        return text.encode("utf-8", errors="ignore")
+    char_to_bytes_hex = custom_encoding["char_to_bytes_hex"]
+    raw = bytearray()
+    for ch in text:
+        hex_key = char_to_bytes_hex.get(ch)
+        if hex_key is None:
+            raise ValueError(
+                f"Character {ch!r} (U+{ord(ch):04X}) has no entry in the custom "
+                f"encoding -- rebuild it with build_custom_encoding.py to include "
+                f"this character."
+            )
+        raw.extend(bytes.fromhex(hex_key))
+    return bytes(raw)
 
 
 def find_train_metrics_at_step(metrics_jsonl_path: str, target_step: int) -> dict | None:
@@ -106,7 +148,7 @@ def infer_step_from_checkpoint_dir(checkpoint_dir: str) -> int | None:
 
 @torch.no_grad()
 def eval_language(model, val_path: str, device: str, target_bytes: int,
-                   max_seqlen: int) -> tuple[float, int, bool]:
+                   max_seqlen: int, custom_encoding: dict | None) -> tuple[float, int, bool]:
     """Returns (total_nats, total_bytes, hit_target) across documents read
     from val_path, stopping at EXACTLY target_bytes.
 
@@ -146,7 +188,7 @@ def eval_language(model, val_path: str, device: str, target_bytes: int,
             text = doc.get("text", "")
             if not text:
                 continue
-            raw = text.encode("utf-8", errors="ignore")
+            raw = text_to_raw_bytes(text, custom_encoding)
 
             offset = 0
             while offset < len(raw):
@@ -200,6 +242,13 @@ def main():
                               "as <dump_dir>/metrics.jsonl assuming the "
                               "standard checkpoint_dir layout "
                               "(<dump_dir>/checkpoints/<step>/consolidated).")
+    parser.add_argument("--custom-encoding-path", default=None,
+                         help="Path to the SAME custom_encoding.json passed to "
+                              "launch_training.py's --custom-encoding-path when this "
+                              "checkpoint was trained. MUST match training exactly, or "
+                              "held-out bpb will be meaningless (often *worse* than the "
+                              "8.0 bpb of a uniform-random byte guess). Omit for a "
+                              "checkpoint trained on plain UTF-8.")
     parser.add_argument("--json-out", default=None,
                          help="If given, also writes a machine-readable JSON "
                               "summary here (overall_bpb, grand_total_bytes, "
@@ -218,6 +267,10 @@ def main():
     print(f"Loaded model: dim={model_args.dim} n_layers={model_args.n_layers} "
           f"n_heads={model_args.n_heads}")
 
+    custom_encoding = load_custom_encoding(args.custom_encoding_path)
+    if custom_encoding is not None:
+        print(f"Evaluating with CUSTOM ENCODING from {args.custom_encoding_path}")
+
     val_files = sorted(glob.glob(os.path.join(args.lang_shards_root, "*", "*.val.jsonl")))
     if not val_files:
         print(f"No *.val.jsonl files found under {args.lang_shards_root}")
@@ -230,7 +283,8 @@ def main():
     for val_path in val_files:
         language_code = os.path.basename(os.path.dirname(val_path))
         nats, n_bytes, hit_target = eval_language(
-            model, val_path, args.device, args.target_bytes_per_lang, model_args.max_seqlen
+            model, val_path, args.device, args.target_bytes_per_lang,
+            model_args.max_seqlen, custom_encoding,
         )
         if n_bytes == 0:
             print(f"  {language_code}: no bytes evaluated, skipping")
@@ -303,6 +357,7 @@ def main():
             "overall_bpb": overall_bpb,
             "grand_total_bytes": grand_total_bytes,
             "target_bytes_per_lang": args.target_bytes_per_lang,
+            "custom_encoding_path": args.custom_encoding_path,
             "per_language": [
                 {"language_code": lc, "val_bpb": bpb, "val_bytes": n_bytes}
                 for lc, bpb, n_bytes in results
