@@ -172,7 +172,6 @@ hf-weights/
 
 # Other
 junk.py
-inspect_results/
 throwaway_scripts/
 eval_results_chart.html
 data/

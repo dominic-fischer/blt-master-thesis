@@ -344,6 +344,7 @@ def main():
         entropy_repo=args.entropy_repo,
         custom_encoding_path=args.custom_encoding_path,
     )
+    print(f"Entropy model device: {next(patcher.entropy_model.parameters()).device}")
     get_char_lengths = build_char_lengths_fn(custom_encoding)
     offset = tokenizer.offsetting_special_char
 
