@@ -44,6 +44,9 @@ class PatchResult:
 
 class BLTPatchVisualizer:
 
+    def __init__(self):
+        self._results: List[PatchResult] = []
+
     def add(self, text, patches, scores=None, label="", threshold=None, char_lengths=None):
         self._results.append(PatchResult(text, label, patches, scores, threshold, char_lengths))
 
