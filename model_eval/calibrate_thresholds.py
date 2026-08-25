@@ -53,7 +53,7 @@ Output: printed to stdout + saved to --out-path (default
 calibrated_thresholds/thresholds_summary.csv)
 
 Usage:
-    python model_eval/calibrate_thresholds.py --results-dir results/base_model
+    python model_eval/calibrate_thresholds.py --results-dir results/base_model --out-path calibrated_thresholds/base_model_thresholds_summary.csv
     python model_eval/calibrate_thresholds.py --results-dir results/own_models/<run>/step_<step> --out-path calibrated_thresholds/<stem>_thresholds_summary.csv
     # Custom 2-bytes-per-character encoding -- double the pps targets:
     python model_eval/calibrate_thresholds.py --results-dir <dir> --target-pps 65.54 --pps-low 72 --pps-high 46
@@ -281,6 +281,9 @@ def main():
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
 
+    # Check if the output CSV is specifically base_model_thresholds_summary.csv
+    is_base_model = Path(args.out_path).name == "base_model_thresholds_summary.csv"
+
     eng_path = Path(args.results_dir) / f"{ENGLISH}.json"
     with open(eng_path, encoding="utf-8") as f:
         sentences = json.load(f)
@@ -291,8 +294,13 @@ def main():
 
     summary_rows = []
 
+    # Include norm_entropy only if saving to base_model_thresholds_summary.csv
+    active_cases = CASES if is_base_model else {
+        k: v for k, v in CASES.items() if k in ("raw_entropy", "raw_monotonicity")
+    }
+
     # ── standard cases ────────────────────────────────────────────────────────
-    for case_name, case in CASES.items():
+    for case_name, case in active_cases.items():
         print(f"── {case_name} ──")
         idx   = case["score_idx"]
         mono  = case["monotonicity"]
@@ -328,45 +336,46 @@ def main():
             "final_thresholds": thresholds,
         })
 
-    # ── combined mode ─────────────────────────────────────────────────────────
-    print("── combined (raw entropy + monotonicity delta) ──")
-    idx       = COMBINED["score_idx"]
-    t_sl      = COMBINED["t_search_low"]
-    t_sh      = COMBINED["t_search_high"]
-    t_add_max = COMBINED["t_add_max"]
+    # ── combined mode (only executed for base_model_thresholds_summary.csv) ──
+    if is_base_model:
+        print("── combined (raw entropy + monotonicity delta) ──")
+        idx       = COMBINED["score_idx"]
+        t_sl      = COMBINED["t_search_low"]
+        t_sh      = COMBINED["t_search_high"]
+        t_add_max = COMBINED["t_add_max"]
 
-    # step 1: fix t so that pps=--pps-low at t_add=0 (lower bound)
-    t_fixed, pps_lb, bpp_lb = binary_search_t_for_combined_pps(
-        sentences, args.pps_low, idx, t_add=0.0, low=t_sl, high=t_sh)
-    print(f"  Fixed t (pps≈{args.pps_low} at t_add=0): t={t_fixed:.4f}  pps={pps_lb:.2f}  bpp={bpp_lb:.4f}")
+        # step 1: fix t so that pps=--pps-low at t_add=0 (lower bound)
+        t_fixed, pps_lb, bpp_lb = binary_search_t_for_combined_pps(
+            sentences, args.pps_low, idx, t_add=0.0, low=t_sl, high=t_sh)
+        print(f"  Fixed t (pps≈{args.pps_low} at t_add=0): t={t_fixed:.4f}  pps={pps_lb:.2f}  bpp={bpp_lb:.4f}")
 
-    # step 2: upper bound — find t_add giving pps=--pps-high
-    t_add_high, pps_ub, bpp_ub = binary_search_t_add(
-        sentences, args.pps_high, idx, t_fixed, low=0.0, high=t_add_max, mode="pps")
-    print(f"  Upper bound  (pps≈{args.pps_high}): t_add={t_add_high:.4f}  pps={pps_ub:.2f}  bpp={bpp_ub:.4f}")
+        # step 2: upper bound — find t_add giving pps=--pps-high
+        t_add_high, pps_ub, bpp_ub = binary_search_t_add(
+            sentences, args.pps_high, idx, t_fixed, low=0.0, high=t_add_max, mode="pps")
+        print(f"  Upper bound  (pps≈{args.pps_high}): t_add={t_add_high:.4f}  pps={pps_ub:.2f}  bpp={bpp_ub:.4f}")
 
-    # step 3: midpoint
-    t_add_mid = t_add_high / 2
-    pps_mid, bpp_mid = eval_english_combined(sentences, t_fixed, t_add_mid, idx)
-    print(f"  Midpoint                  : t_add={t_add_mid:.4f}  pps={pps_mid:.2f}  bpp={bpp_mid:.4f}")
+        # step 3: midpoint
+        t_add_mid = t_add_high / 2
+        pps_mid, bpp_mid = eval_english_combined(sentences, t_fixed, t_add_mid, idx)
+        print(f"  Midpoint                  : t_add={t_add_mid:.4f}  pps={pps_mid:.2f}  bpp={bpp_mid:.4f}")
 
-    # step 4: anchor — find t_add giving target pps
-    t_add_anchor, pps_anchor, bpp_anchor = binary_search_t_add(
-        sentences, args.target_pps, idx, t_fixed, low=0.0, high=t_add_max, mode="pps")
-    print(f"  Anchor       (pps≈{args.target_pps}): t_add={t_add_anchor:.4f}  pps={pps_anchor:.2f}  bpp={bpp_anchor:.4f}")
+        # step 4: anchor — find t_add giving target pps
+        t_add_anchor, pps_anchor, bpp_anchor = binary_search_t_add(
+            sentences, args.target_pps, idx, t_fixed, low=0.0, high=t_add_max, mode="pps")
+        print(f"  Anchor       (pps≈{args.target_pps}): t_add={t_add_anchor:.4f}  pps={pps_anchor:.2f}  bpp={bpp_anchor:.4f}")
 
-    t_adds = sorted([0.0, t_add_mid, t_add_high, t_add_anchor])
-    print(f"\n  Fixed t={t_fixed:.4f}, final 4 t_add values: {[f'{t:.4f}' for t in t_adds]}\n")
+        t_adds = sorted([0.0, t_add_mid, t_add_high, t_add_anchor])
+        print(f"\n  Fixed t={t_fixed:.4f}, final 4 t_add values: {[f'{t:.4f}' for t in t_adds]}\n")
 
-    summary_rows.append({
-        "case":             "combined",
-        "fixed_t":          t_fixed,
-        "t_low":            0.0,         "pps_low":    pps_lb,      "bpp_low":    bpp_lb,
-        "t_mid":            t_add_mid,   "pps_mid":    pps_mid,     "bpp_mid":    bpp_mid,
-        "t_high":           t_add_high,  "pps_high":   pps_ub,      "bpp_high":   bpp_ub,
-        "t_anchor":         t_add_anchor,"pps_anchor":  pps_anchor,  "bpp_anchor": bpp_anchor,
-        "final_thresholds": t_adds,
-    })
+        summary_rows.append({
+            "case":             "combined",
+            "fixed_t":          t_fixed,
+            "t_low":            0.0,         "pps_low":    pps_lb,      "bpp_low":    bpp_lb,
+            "t_mid":            t_add_mid,   "pps_mid":    pps_mid,     "bpp_mid":    bpp_mid,
+            "t_high":           t_add_high,  "pps_high":   pps_ub,      "bpp_high":   bpp_ub,
+            "t_anchor":         t_add_anchor,"pps_anchor":  pps_anchor,  "bpp_anchor": bpp_anchor,
+            "final_thresholds": t_adds,
+        })
 
     # ── save summary ──────────────────────────────────────────────────────────
     with open(args.out_path, "w", newline="", encoding="utf-8") as f:

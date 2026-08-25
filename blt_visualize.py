@@ -39,15 +39,13 @@ class PatchResult:
     patches: list
     scores: Optional[List[float]] = None
     threshold: Optional[float] = None
+    char_lengths: Optional[List[int]] = None   # NEW: byte-length of each char in `text`, in order
 
 
 class BLTPatchVisualizer:
 
-    def __init__(self):
-        self._results: List[PatchResult] = []
-
-    def add(self, text, patches, scores=None, label="", threshold=None):
-        self._results.append(PatchResult(text, label, patches, scores, threshold))
+    def add(self, text, patches, scores=None, label="", threshold=None, char_lengths=None):
+        self._results.append(PatchResult(text, label, patches, scores, threshold, char_lengths))
 
     def render(self) -> str:
         sections = "\n".join(self._render_section(r, i) for i, r in enumerate(self._results))
@@ -70,8 +68,8 @@ class BLTPatchVisualizer:
     def _render_section(self, r: PatchResult, idx: int) -> str:
         patches = [self._norm(p) for p in r.patches]
 
-        patch_html   = self._build_patch_html(patches)
-        combined_svg = self._build_combined_svg(patches, r.scores, r.threshold)
+        patch_html   = self._build_patch_html(patches, r.text, r.char_lengths)
+        combined_svg = self._build_combined_svg(patches, r.scores, r.threshold, r.text, r.char_lengths)
 
         n_patches = len(patches)
         n_bytes   = sum(ln for _, ln in patches)
@@ -95,26 +93,30 @@ class BLTPatchVisualizer:
 
     # ── coloured patch tokens ─────────────────────────────────────────────────
     @staticmethod
-    def _build_patch_html(patches) -> str:
+    def _build_patch_html(patches, text, char_lengths=None) -> str:
         flat_bytes = []
         for pi, (blist, _) in enumerate(patches):
             for b in blist:
                 flat_bytes.append((b, pi))
 
-        full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+        if char_lengths is None:
+            # legacy fallback: assume UTF-8, decode bytes to recover text/lengths
+            full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+            char_lengths = [len(ch.encode("utf-8")) for ch in full_text]
+        else:
+            full_text = text
 
         parts = []
         byte_cursor = 0
-        for ch in full_text:
-            ch_bytes = len(ch.encode("utf-8"))
+        for ch, ch_bytes in zip(full_text, char_lengths):
             display = html_lib.escape(ch) if ch != " " else "_"
-
             squares = ""
             for i in range(ch_bytes):
+                if byte_cursor + i >= len(flat_bytes):
+                    break  # safety net, shouldn't trigger once lengths are correct
                 pi = flat_bytes[byte_cursor + i][1]
                 bg = PATCH_COLORS[pi % len(PATCH_COLORS)]
                 squares += f'<span class="byte-sq" style="background:{bg}"></span>'
-
             parts.append(
                 f'<span class="char-group">'
                 f'<span class="byte-row">{squares}</span>'
@@ -124,11 +126,10 @@ class BLTPatchVisualizer:
             byte_cursor += ch_bytes
 
         return "".join(parts)
-    
 
     # ── combined SVG: entropy line chart + aligned byte/char table ────────────
 
-    def _build_combined_svg(self, patches, scores, threshold) -> str:
+    def _build_combined_svg(self, patches, scores, threshold, text, char_lengths=None) -> str:
         # ── layout constants ──────────────────────────────────────────────────
         CELL_W      = 28       # px per byte column
         MARGIN_L    = 52       # left margin (y-axis labels)
@@ -150,6 +151,14 @@ class BLTPatchVisualizer:
         N = len(flat_bytes)
         if N == 0:
             return ""
+
+        # Character byte-lengths: use the caller-provided mapping if given,
+        # otherwise fall back to the old UTF-8 guess (decode + re-encode).
+        if char_lengths is None:
+            full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+            char_lengths = [len(ch.encode("utf-8")) for ch in full_text]
+        else:
+            full_text = text
 
         W = MARGIN_L + N * CELL_W + MARGIN_R
         TABLE_TOP = PAD_TOP + CHART_H + AXIS_H
@@ -313,11 +322,11 @@ class BLTPatchVisualizer:
                 f'font-size="9" font-weight="600" fill="{fg}">{bv}</text>'
             )
 
-        # Character row — built from full text, ignoring patch boundaries
-        full_text = bytes(b for blist, _ in patches for b in blist).decode("utf-8", errors="replace")
+        # Character row — built from text + char_lengths, ignoring patch boundaries
         byte_cursor = 0
-        for ch in full_text:
-            ch_bytes = len(ch.encode("utf-8"))
+        for ch, ch_bytes in zip(full_text, char_lengths):
+            if byte_cursor >= N:
+                break  # safety net in case of any residual mismatch
             char_cx = MARGIN_L + byte_cursor * CELL_W + ch_bytes * CELL_W / 2
             display = html_lib.escape(ch) if ch != " " else "_"
             elements.append(
@@ -348,7 +357,6 @@ class BLTPatchVisualizer:
             + "</svg>"
         )
         return svg
-
 
 # ─── HTML shell ───────────────────────────────────────────────────────────────
 

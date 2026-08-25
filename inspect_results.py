@@ -183,6 +183,31 @@ def make_script_str(cp_low, cp_high=None):
     return f"{names}({low}-{high})"
 
 
+def build_char_lengths_fn(custom_encoding):
+    """
+    Returns a function text -> List[int] giving the byte-length of each
+    character in `text`, according to custom_encoding (or UTF-8 if None
+    / character not found in the mapping).
+    """
+    if custom_encoding is None:
+        return lambda text: [len(ch.encode("utf-8")) for ch in text]
+
+    hex_to_char = custom_encoding["bytes_hex_to_char"]
+    char_to_bytelen = {ch: len(hex_code) // 2 for hex_code, ch in hex_to_char.items()}
+
+    def char_lengths(text):
+        lengths = []
+        for ch in text:
+            if ch in char_to_bytelen:
+                lengths.append(char_to_bytelen[ch])
+            else:
+                # fallback for any char outside the custom mapping
+                lengths.append(len(ch.encode("utf-8")))
+        return lengths
+
+    return char_lengths
+
+
 def format_bits(byte_val, off, total, lead, context_bytes, pos):
     pc = byte_val & 0x3F
     if byte_val < 0x80:
@@ -263,6 +288,13 @@ def main():
                              "inspect_results/<stem>/inspect_{lang_code}_{index}/, "
                              "where <stem> comes from --entropy_repo -- so different "
                              "models/checkpoints don't overwrite each other's output.")
+    parser.add_argument("--custom_encoding_path", default=None,
+                        help="Path to a custom per-character byte encoding JSON "
+                             "(see training_setup/build_custom_encoding.py). MUST "
+                             "match whatever the entropy model at --entropy_repo was "
+                             "actually trained with, or entropy scores/patch "
+                             "boundaries will be meaningless. If omitted, plain "
+                             "UTF-8 is used.")
     parser.add_argument("--restructured_dir", default=None,
                         help="Path to restructured results. If omitted, derived from "
                              "--entropy_repo -- now auto-resolving to "
@@ -307,19 +339,33 @@ def main():
         print(f"English  : {text_en}")
 
     # ── load patcher + re-run entropy model for predictions ──────────────────
-    print("\nLoading patcher...")
-    tokenizer, patcher = load_patcher(repo=args.repo, entropy_repo=args.entropy_repo)
+    tokenizer, patcher, custom_encoding = load_patcher(
+        repo=args.repo,
+        entropy_repo=args.entropy_repo,
+        custom_encoding_path=args.custom_encoding_path,
+    )
+    get_char_lengths = build_char_lengths_fn(custom_encoding)
     offset = tokenizer.offsetting_special_char
 
-    result        = patch_text(text, tokenizer, patcher)
+    # after
+    result = patch_text(text, tokenizer, patcher, custom_encoding=custom_encoding)
     context_bytes = result["text_bytes"]
     scores        = result["scores"]    # fresh from model (should match stored)
     preds         = result["preds"]     # logits for top-k display
     char_map      = build_char_map(context_bytes)
 
+
     # ── A) visualisations ─────────────────────────────────────────────────────
     # Iterate every mode × threshold stored in the restructured JSON
     eval_modes = sentence.get("eval_modes", {})
+
+
+    print(f"len(context_bytes) = {len(context_bytes)}")
+    print(f"len(stored bytes_entropies) = {len(sentence.get('bytes_entropies', []))}")
+    for mode_name, thresholds_dict in eval_modes.items():
+        for t_key, mode_data in thresholds_dict.items():
+            total = sum(mode_data["patch_lengths"])
+            print(f"  {mode_name} {t_key}: sum(patch_lengths)={total}")
 
     if not eval_modes:
         print("Warning: no eval_modes found in restructured JSON for this sentence.")
@@ -353,9 +399,10 @@ def main():
             viz.add(
                 text=text,
                 patches=patches,
-                scores=viz_scores,          # <── was just `scores` before
+                scores=viz_scores,
                 label=f"{lang_code} [{idx}] — {mode_name} {t_key}",
                 threshold=threshold,
+                char_lengths=get_char_lengths(text),
             )
             fname = f"{lang_code}_{idx}_{mode_name}_{t_key}.html"
             viz.save(os.path.join(out_dir, fname))
