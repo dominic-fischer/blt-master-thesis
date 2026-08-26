@@ -4,7 +4,7 @@ inspect_sentence.py
 Given a lang_code (e.g. "eng_Latn") and a sentence index, reads the
 pre-computed restructured results and:
 
-  A) Saves HTML visualisations for every mode × threshold combination
+  A) Saves HTML visualisations for every mode x threshold combination
      that exists in the restructured JSON, using BLTPatchVisualizer.
      This now covers BOTH granularities: byte-mode ("eval_modes",
      patch boundaries thresholded over per-byte scores, patch_lengths
@@ -13,13 +13,15 @@ pre-computed restructured results and:
      reconstructed against context_bytes using patch_lengths_bytes,
      since that's what run_patching.py's char-mode output already
      stores precisely so downstream tools like this one don't have to
-     re-derive byte spans from character spans themselves). Output
-     filenames/labels are prefixed "char_" for the char-mode ones so
-     they never collide with the byte-mode files for the same
-     mode/threshold. Per-byte coloring (viz_scores) is the SAME
-     bytes_entropies array either way -- only the patch BOUNDARIES
-     differ between granularities, not the underlying per-byte scores
-     being visualised.
+     re-derive byte spans from character spans themselves). Char-mode
+     HTML files are written to a "char_level" subfolder under out_dir
+     (mirroring the results/*/char_level/ convention used elsewhere in
+     this pipeline), so they never collide with the byte-mode files for
+     the same mode/threshold, and the folder itself makes the
+     granularity distinction clear without needing a filename prefix.
+     Per-byte coloring (viz_scores) is the SAME bytes_entropies array
+     either way -- only the patch BOUNDARIES differ between
+     granularities, not the underlying per-byte scores being visualised.
 
   B) Saves a .txt file with per-byte entropy, binary breakdown, top-k
      next-byte predictions (re-run through the entropy model), plus a
@@ -52,14 +54,14 @@ from results_paths import results_dir_for, derive_filename_stem
 from blt_patcher import load_patcher, patch_text
 from blt_visualize import BLTPatchVisualizer
 
-# ── config ────────────────────────────────────────────────────────────────────
+# -- config --------------------------------------------------------------------
 DEFAULT_REPO = "facebook/blt-1b"
 DEFAULT_ENTROPY_REPO = "hf-weights/entropy_model"
 
 W_BITS   = 33
 W_SCRIPT = 50
 
-# ── Auto-derive Restructured Directory Helper ─────────────────────────────────
+# -- Auto-derive Restructured Directory Helper ----------------------------------
 def derive_own_results_dir(entropy_repo_path: str) -> str:
     norm_path = os.path.normpath(entropy_repo_path)
     parts = norm_path.split(os.sep)
@@ -86,7 +88,7 @@ def derive_own_results_dir(entropy_repo_path: str) -> str:
     print(f"Warning: Could not extract checkpoints/step pattern from '{entropy_repo_path}'.")
     return results_dir_for(entropy_repo_path)
 
-# ── Unicode / byte helpers (unchanged from original) ─────────────────────────
+# -- Unicode / byte helpers (unchanged from original) --------------------------
 SCRIPT_RANGES = [
     (0,     127,   "ASCII"),
     (128,   591,   "Latin-Ext"),
@@ -298,7 +300,7 @@ def reconstruct_patches(context_bytes, patch_lengths_in_bytes):
     return patches
 
 
-# ── main ──────────────────────────────────────────────────────────────────────
+# -- main ------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
@@ -346,7 +348,7 @@ def main():
     out_dir = args.out_dir or os.path.join("inspect_results", stem, f"inspect_{lang_code}_{idx}")
     os.makedirs(out_dir, exist_ok=True)
 
-    # ── load restructured sentence ────────────────────────────────────────────
+    # -- load restructured sentence ---------------------------------------------
     json_path = Path(restructured_dir) / f"{lang_code}.json"
     if not json_path.exists():
         sys.exit(f"Error: {json_path} not found. "
@@ -358,7 +360,7 @@ def main():
         sentences = json.load(f)
 
     if idx < 0 or idx >= len(sentences):
-        sys.exit(f"Error: index {idx} out of range (0–{len(sentences) - 1}).")
+        sys.exit(f"Error: index {idx} out of range (0-{len(sentences) - 1}).")
 
     sentence = sentences[idx]
     text     = sentence["text"]
@@ -371,7 +373,7 @@ def main():
     if text_en and text_en != text:
         print(f"English  : {text_en}")
 
-    # ── load patcher + re-run entropy model for predictions ──────────────────
+    # -- load patcher + re-run entropy model for predictions --------------------
     tokenizer, patcher, custom_encoding = load_patcher(
         repo=args.repo,
         entropy_repo=args.entropy_repo,
@@ -389,8 +391,8 @@ def main():
     char_map      = build_char_map(context_bytes)
 
 
-    # ── A) visualisations ─────────────────────────────────────────────────────
-    # Iterate every mode × threshold stored in the restructured JSON, for
+    # -- A) visualisations --------------------------------------------------------
+    # Iterate every mode x threshold stored in the restructured JSON, for
     # BOTH granularities: byte-mode (eval_modes) and char-mode
     # (char_eval_modes, if present -- e.g. only after run_patching.py has
     # been run with --score-source chars for this language/checkpoint).
@@ -417,7 +419,7 @@ def main():
     if not eval_modes and not char_eval_modes:
         print("Warning: no eval_modes or char_eval_modes found in restructured JSON for this sentence.")
     else:
-        print(f"\nGenerating visualisations → {out_dir}/")
+        print(f"\nGenerating visualisations -> {out_dir}/")
 
     # -- byte-mode visualisations (unchanged behavior) --
     for mode_name, thresholds_dict in eval_modes.items():
@@ -437,7 +439,7 @@ def main():
                 text=text,
                 patches=patches,
                 scores=viz_scores,
-                label=f"{lang_code} [{idx}] — {mode_name} {t_key}",
+                label=f"{lang_code} [{idx}] - {mode_name} {t_key}",
                 threshold=threshold,
                 char_lengths=get_char_lengths(text),
             )
@@ -457,6 +459,9 @@ def main():
     # char_eval_modes only ever contains raw_entropy/raw_monotonicity
     # (no norm_entropy/combined equivalent -- see calibrate_thresholds.py
     # and run_patching.py), so viz_scores is always the raw column here.
+    # Written to a "char_level" subfolder under out_dir, mirroring the
+    # results/*/char_level/ convention used elsewhere in this pipeline --
+    # so no filename prefix is needed to disambiguate from byte-mode.
     for mode_name, thresholds_dict in char_eval_modes.items():
         for t_key, mode_data in thresholds_dict.items():
             threshold = float(t_key[2:])  # strip leading "t_"
@@ -469,17 +474,19 @@ def main():
                 text=text,
                 patches=patches,
                 scores=viz_scores,
-                label=f"{lang_code} [{idx}] — char:{mode_name} {t_key}",
+                label=f"{lang_code} [{idx}] - char:{mode_name} {t_key}",
                 threshold=threshold,
                 char_lengths=get_char_lengths(text),
             )
-            fname = f"char_{lang_code}_{idx}_{mode_name}_{t_key}.html"
-            viz.save(os.path.join(out_dir, fname))
+            char_out_dir = os.path.join(out_dir, "char_level")
+            os.makedirs(char_out_dir, exist_ok=True)
+            fname = f"{lang_code}_{idx}_{mode_name}_{t_key}.html"
+            viz.save(os.path.join(char_out_dir, fname))
             n_p = mode_data["n_patches"]
             bpp = mode_data["avg_bytes_per_patch"]
-            print(f"  {fname}  ({n_p} patches [char-level boundaries], {bpp:.2f} bytes/patch)")
+            print(f"  char_level/{fname}  ({n_p} patches [char-level boundaries], {bpp:.2f} bytes/patch)")
 
-    # ── B) txt file with per-byte analysis ───────────────────────────────────
+    # -- B) txt file with per-byte analysis ----------------------------------------
     lines = []
     lines.append("=" * 80)
     lines.append(f"  Language : {lang_code}")
@@ -519,7 +526,7 @@ def main():
             pbin  = format_byte_binary(b) if 0 <= b <= 255 else "?"
             cp_bits, cp_script = format_bits(b, off, total, lead, context_bytes, i)
             lines.append(
-                f"       →  {pchar:<6}  {pbin:<10}  prob=   {p.item():.3f}  "
+                f"       ->  {pchar:<6}  {pbin:<10}  prob=   {p.item():.3f}  "
                 f"{cp_bits:<{W_BITS}}  {cp_script:<{W_SCRIPT}}"
             )
 
@@ -531,7 +538,7 @@ def main():
     # also add a compact patch summary per mode/threshold at the end,
     # for both byte-mode and char-mode
     if eval_modes or char_eval_modes:
-        lines.append("─" * 80)
+        lines.append("-" * 80)
         lines.append("  Patch summary from restructured results:")
         lines.append("")
         for mode_name, thresholds_dict in eval_modes.items():
@@ -557,7 +564,7 @@ def main():
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
-    print(f"\nText analysis → {txt_path}")
+    print(f"\nText analysis -> {txt_path}")
     print("Done.")
 
 
