@@ -1,0 +1,23 @@
+Language  Premium  PPS      BPP
+deu_Latn  1.1693   33.3350  8.8195
+vie_Latn  1.1387   32.4634  8.1561
+spa_Latn  1.1090   31.6169  9.4656
+tha_Thai  1.1057   31.5216  7.6538
+ron_Latn  1.0677   30.4393  9.2950
+fra_Latn  1.0640   30.3340  9.8396
+nya_Latn  1.0505   29.9488  9.4753
+kat_Geor  1.0499   29.9318  9.2449
+ita_Latn  1.0330   29.4504  10.0191
+eng_Latn  1.0000   28.5095  8.8090
+srp_Cyrl  0.9846   28.0712  8.8973
+hrv_Latn  0.9790   27.9117  8.9025
+tam_Taml  0.9789   27.9077  10.5037
+fin_Latn  0.9372   26.7202  10.0552
+arb_Arab  0.8903   25.3821  8.7390
+amh_Ethi  0.7532   21.4744  7.9519
+heb_Hebr  0.6835   19.4855  10.0377
+kor_Hang  0.6291   17.9358  7.0474
+jpn_Jpan  0.5984   17.0592  6.4273
+cmn_Hans  0.4540   12.9428  6.5374
+
+# eng_Latn reference (raw_monotonicity, t_0.9297, t_midpoint): pps=28.5095	bpp=8.8090

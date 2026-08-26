@@ -17,6 +17,19 @@ low/mid/high/anchor, per case -- reusing run_patching.py's own
 load_cases()/threshold_key() directly rather than duplicating that
 parsing logic.
 
+SCORE SOURCE (--score-source bytes|chars): mirrors calibrate_thresholds.py/
+run_patching.py/results_to_CSV.py. With --score-source=chars, columns in
+--csv-in-path carry a "char_" prefix (added by results_to_CSV.py's
+COLUMN_PREFIX) ahead of the case name, e.g.
+"char_raw_entropy_t_1.3340_pps_premium" -- this prefix is stripped before
+parsing into (case, t_key) (see parse_premium_column) and load_cases() is
+called with the matching score_source so its case set and threshold
+lookups match what run_patching.py actually produced (norm_entropy/
+combined are never present in chars-mode, matching KNOWN_CASES below).
+Output additionally nests under a "char_level" folder (see Output below)
+so byte-mode and chars-mode runs never share a directory even if pointed
+at the same --out-dir.
+
 RUN NAME ALIASING: raw run-name stems (e.g.
 "entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3")
 are long and not meant for human-facing filenames/folders. RUN_NAME_ALIASES
@@ -33,6 +46,8 @@ Output:
     results/txt_premiums/t_lower_bound/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
     results/txt_premiums/t_midpoint/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
     results/txt_premiums/t_upper_bound/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
+  (--score-source=chars nests all of the above one level deeper, under
+  results/txt_premiums/char_level/<bound>/... -- see build_out_dir.)
 
 where <subfolder> and <prefix> are determined by --filename-prefix if specified,
 otherwise automatically parsed as the portion of the CSV filename preceding the 
@@ -51,6 +66,8 @@ that exact case+threshold -- since English's own premium is trivially
 Usage:
     python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/<stem>_results.csv --summary-csv calibrated_thresholds/<stem>_thresholds_summary.csv
     python results/results_to_txt_premiums.py --csv-in-path <csv> --summary-csv <csv> --langs-csv training_setup/langs/langs_chosen.csv --filename-prefix <stem>
+    # Char-level score source:
+    python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/<stem>_results.csv --summary-csv calibrated_thresholds/char_level/<stem>_thresholds_summary.csv --score-source chars --filename-prefix <stem>
 """
 import argparse
 import os
@@ -58,18 +75,29 @@ import re
 import sys
 from os import path
 
+print("[DEBUG] module import: starting (about to import model_eval.run_patching, "
+      "which pulls in torch + bytelatent.data.patcher)...", flush=True)
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # noqa: E402
 from model_eval.run_patching import load_cases, threshold_key, BOUND_NAMES, DEFAULT_SUMMARY_CSV
+print("[DEBUG] module import: model_eval.run_patching imported OK", flush=True)
 
 import pandas as pd
+print("[DEBUG] module import: pandas imported OK -- all imports done", flush=True)
 
 DEFAULT_LANGS_CSV = "training_setup/langs/langs_chosen.csv"
 DEFAULT_OUT_DIR = "results/txt_premiums"
 PREMIUM_SUFFIX = "_pps_premium"
 ENGLISH = "eng_Latn"
+SCORE_SOURCES = ("bytes", "chars")
+# Matches results_to_CSV.py's COLUMN_PREFIX -- the prefix stripped off
+# the front of every column name before parsing, in chars-mode.
+COLUMN_PREFIX = {"bytes": "", "chars": "char_"}
+CHAR_LEVEL_FOLDER = "char_level"
 
-# Must match run_patching.py's CASES/COMBINED keys.
-# KNOWN_CASES = ["raw_entropy", "raw_monotonicity", "norm_entropy", "combined"]
+# Must match run_patching.py's CASES/COMBINED keys. Both bytes-mode and
+# chars-mode use the same KNOWN_CASES here since norm_entropy/combined
+# never appear in a chars-mode CSV in the first place (run_patching.py's
+# load_cases already excludes them there) -- nothing extra to filter.
 KNOWN_CASES = ["raw_entropy", "raw_monotonicity"]
 
 # Maps run_patching.py's internal bound name -> the folder name requested.
@@ -115,12 +143,15 @@ def load_chosen_languages(langs_csv: str) -> set[str]:
     return set(df["language_code"].astype(str))
 
 
-def build_key_to_bound(summary_csv: str) -> dict[tuple[str, str], str]:
+def build_key_to_bound(summary_csv: str, score_source: str) -> dict[tuple[str, str], str]:
     """Returns {(case_name, "t_<value>"): bound_name}, reusing
     run_patching.py's own load_cases()/threshold_key() so this always
     matches exactly how run_patching.py itself keyed its output --
-    no separate float-formatting logic to drift out of sync."""
-    cases = load_cases(summary_csv)
+    no separate float-formatting logic to drift out of sync. score_source
+    must match the --score-source that produced summary_csv, so
+    load_cases() applies the same norm_entropy/combined exclusion for
+    chars-mode that run_patching.py itself applied."""
+    cases = load_cases(summary_csv, score_source)
     key_to_bound = {}
     for case_name, case in cases.items():
         for bound_name in BOUND_NAMES:
@@ -129,22 +160,43 @@ def build_key_to_bound(summary_csv: str) -> dict[tuple[str, str], str]:
     return key_to_bound
 
 
-def parse_premium_column(col: str) -> tuple[str, str] | None:
-    """Splits "{case}_{t_key}_pps_premium" into (case, t_key), where
-    t_key is the literal "t_<value>" string (e.g. "t_1.3340") -- bound
-    identity is looked up separately via build_key_to_bound, not parsed
-    out of the column name itself. Returns None if col doesn't end in
-    PREMIUM_SUFFIX or doesn't match a known case -- defensive against
-    unrelated columns / naming drift."""
+def parse_premium_column(col: str, score_source: str) -> tuple[str, str] | None:
+    """Splits "{prefix}{case}_{t_key}_pps_premium" into (case, t_key),
+    where t_key is the literal "t_<value>" string (e.g. "t_1.3340") --
+    bound identity is looked up separately via build_key_to_bound, not
+    parsed out of the column name itself. prefix is COLUMN_PREFIX[score_source]
+    ("" for bytes, "char_" for chars) and is stripped first. Returns None
+    if col doesn't end in PREMIUM_SUFFIX, doesn't start with the expected
+    prefix, or doesn't match a known case -- defensive against unrelated
+    columns / naming drift."""
     if not col.endswith(PREMIUM_SUFFIX):
         return None
-    mode_str = col[: -len(PREMIUM_SUFFIX)]  # "{case}_t_{value}"
+    prefix = COLUMN_PREFIX[score_source]
+    if not col.startswith(prefix):
+        return None
+    mode_str = col[len(prefix): -len(PREMIUM_SUFFIX)]  # "{case}_t_{value}"
     for case in KNOWN_CASES:
-        prefix = f"{case}_"
-        if mode_str.startswith(prefix):
-            t_key = mode_str[len(prefix):]  # "t_1.3340"
+        case_prefix = f"{case}_"
+        if mode_str.startswith(case_prefix):
+            t_key = mode_str[len(case_prefix):]  # "t_1.3340"
             return case, t_key
     return None
+
+
+def build_out_dir(base_out_dir: str, bound_folder: str, subfolder_name: str,
+                   step_subfolder: str | None, score_source: str) -> str:
+    """out_dir / [char_level /] bound / prefix [/ step_subfolder] --
+    chars-mode nests everything one level deeper under CHAR_LEVEL_FOLDER
+    so it never shares a directory with a bytes-mode run of the same
+    model/checkpoint."""
+    parts = [base_out_dir]
+    if score_source == "chars":
+        parts.append(CHAR_LEVEL_FOLDER)
+    parts.append(bound_folder)
+    parts.append(subfolder_name)
+    if step_subfolder:
+        parts.append(step_subfolder)
+    return os.path.join(*parts)
 
 
 def parse_args():
@@ -161,8 +213,9 @@ def parse_args():
         "--summary-csv", 
         default=DEFAULT_SUMMARY_CSV,
         help=f"The SAME calibration CSV used by run_patching.py for "
-             f"this checkpoint, used here to look up which numeric "
-             f"threshold is which bound (default {DEFAULT_SUMMARY_CSV})."
+             f"this checkpoint (and with the same --score-source), used "
+             f"here to look up which numeric threshold is which bound "
+             f"(default {DEFAULT_SUMMARY_CSV})."
     )
     parser.add_argument(
         "--langs-csv", 
@@ -174,7 +227,18 @@ def parse_args():
         "--out-dir", 
         default=DEFAULT_OUT_DIR,
         help=f"Base output directory (default {DEFAULT_OUT_DIR}); "
-             f"one subfolder per bound type is created under it."
+             f"one subfolder per bound type is created under it "
+             f"(nested under char_level/ first, for --score-source=chars)."
+    )
+    parser.add_argument(
+        "--score-source",
+        choices=SCORE_SOURCES,
+        default="bytes",
+        help="Must match the --score-source used for --csv-in-path "
+             "(results_to_CSV.py) and --summary-csv (calibrate_thresholds.py). "
+             "'bytes' (default) expects unprefixed columns; 'chars' expects "
+             "'char_'-prefixed columns and nests output under char_level/. "
+             "See module docstring."
     )
     parser.add_argument(
         "--filename-prefix", 
@@ -189,11 +253,24 @@ def parse_args():
 
 
 def main():
+    print("[DEBUG] main() started, parsing args...", flush=True)
     args = parse_args()
+    source = args.score_source
+    print(f"[DEBUG] args parsed: csv_in_path={args.csv_in_path!r} "
+          f"summary_csv={args.summary_csv!r} langs_csv={args.langs_csv!r} "
+          f"score_source={source!r}", flush=True)
 
+    print(f"[DEBUG] reading --csv-in-path {args.csv_in_path!r}...", flush=True)
     df = pd.read_csv(args.csv_in_path)
+    print(f"[DEBUG] read {len(df)} rows from --csv-in-path", flush=True)
+
+    print(f"[DEBUG] reading --langs-csv {args.langs_csv!r}...", flush=True)
     chosen_langs = load_chosen_languages(args.langs_csv)
-    key_to_bound = build_key_to_bound(args.summary_csv)
+    print(f"[DEBUG] loaded {len(chosen_langs)} chosen languages", flush=True)
+
+    print(f"[DEBUG] calling build_key_to_bound({args.summary_csv!r}, {source!r})...", flush=True)
+    key_to_bound = build_key_to_bound(args.summary_csv, source)
+    print(f"[DEBUG] build_key_to_bound returned {len(key_to_bound)} entries", flush=True)
 
     if "Code_Orig" not in df.columns:
         raise ValueError(f"'Code_Orig' column not found in {args.csv_in_path}")
@@ -233,6 +310,7 @@ def main():
         print(f"No *{PREMIUM_SUFFIX} columns found in {args.csv_in_path} -- nothing to write.")
         return
 
+    print(f"Score source: {source}")
     print(f"Found {len(premium_cols)} premium column(s); "
           f"{len(filtered)}/{len(chosen_langs)} chosen languages present.")
 
@@ -241,11 +319,13 @@ def main():
         print(f"  NOTE: {ENGLISH} not found in the filtered set -- the English "
               f"reference line will be omitted from every file.")
 
-    for col in premium_cols:
-        parsed = parse_premium_column(col)
+    for i, col in enumerate(premium_cols):
+        print(f"[DEBUG] ({i+1}/{len(premium_cols)}) processing column {col!r}...", flush=True)
+        parsed = parse_premium_column(col, source)
         if parsed is None:
-            print(f"  WARNING: could not parse column {col!r} into (case, t_key) -- "
-                  f"skipping (unrecognized case name or naming drift vs run_patching.py).")
+            print(f"  WARNING: could not parse column {col!r} into (case, t_key) for "
+                  f"score-source={source!r} -- skipping (unrecognized case name, wrong "
+                  f"prefix, or naming drift vs run_patching.py/results_to_CSV.py).")
             continue
         case, t_key = parsed
 
@@ -253,24 +333,21 @@ def main():
         if bound_name is None:
             print(f"  WARNING: {case}/{t_key} not found in {args.summary_csv}'s calibrated "
                   f"bounds for this case -- skipping (was --summary-csv the same one "
-                  f"run_patching.py used for this checkpoint?).")
+                  f"run_patching.py used for this checkpoint AND score-source?).")
             continue
         bound_folder = BOUND_FOLDER_NAMES.get(bound_name, f"t_{bound_name}")
 
-        # Construct path hierarchy: out_dir / bound / prefix [/ step_subfolder]
-        if step_subfolder:
-            out_dir = os.path.join(args.out_dir, bound_folder, subfolder_name, step_subfolder)
-        else:
-            out_dir = os.path.join(args.out_dir, bound_folder, subfolder_name)
-            
+        out_dir = build_out_dir(args.out_dir, bound_folder, subfolder_name, step_subfolder, source)
         os.makedirs(out_dir, exist_ok=True)
 
         base_name = f"{case}_{t_key}_premiums_sorted.txt"
         filename = f"{prefix}_{base_name}"
         out_path = os.path.join(out_dir, filename)
 
-        # Retrieve absolute pps and bpp columns alongside premium
-        mode_str = f"{case}_{t_key}"
+        # Retrieve absolute pps and bpp columns alongside premium (same
+        # prefix as the premium column itself).
+        col_prefix = COLUMN_PREFIX[source]
+        mode_str = f"{col_prefix}{case}_{t_key}"
         pps_col = f"{mode_str}_pps"
         bpp_col = f"{mode_str}_bpp"
 
@@ -322,6 +399,7 @@ def main():
                           f"reference line for {out_path}")
 
         print(f"  {case} / {t_key} ({bound_folder}/{subfolder_name}{f'/{step_subfolder}' if step_subfolder else ''}): wrote {len(rows)} language(s) -> {out_path}")
+        print(f"[DEBUG] ({i+1}/{len(premium_cols)}) finished column {col!r}", flush=True)
 
     print("\nDone.")
 

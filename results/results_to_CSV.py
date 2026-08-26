@@ -11,10 +11,28 @@ Also computes pps_premium columns: lang_pps / eng_pps for each case/threshold.
 If a language results JSON is missing, the columns for that language will 
 be filled with N/A.
 
+SCORE SOURCE (--score-source bytes|chars): mirrors calibrate_thresholds.py
+and run_patching.py.
+  - bytes (default): reads sentence["eval_modes"], and bpp uses
+    vals["patch_lengths"]'s sum (already in bytes -- a byte-mode "unit"
+    IS a byte).
+  - chars: reads sentence["char_eval_modes"] (must already be populated
+    by run_patching.py --score-source=chars), and bpp uses
+    vals["patch_lengths_bytes"]'s sum -- NOT patch_lengths_chars, whose
+    sum would give bpp in units of characters-per-patch, a different and
+    not-directly-comparable quantity. See run_patching.py's OUTPUT SHAPE
+    section for why both are stored.
+  Column names get a "char_" prefix in chars-mode (e.g.
+  char_raw_entropy_t_1.1904_pps) so byte-mode and chars-mode results
+  never collide if ever written to the same CSV -- though by convention
+  (see results_to_txt_premiums.py / run_eval_and_patch.py) chars-mode
+  output goes to a separate char_level/ output path entirely.
+
 Column naming:
-  {case}_{threshold_key}_pps         e.g. raw_entropy_t_1.1904_pps
-  {case}_{threshold_key}_bpp         e.g. raw_entropy_t_1.1904_bpp
-  {case}_{threshold_key}_pps_premium e.g. raw_entropy_t_1.1904_pps_premium
+  {prefix}{case}_{threshold_key}_pps         e.g. raw_entropy_t_1.1904_pps
+  {prefix}{case}_{threshold_key}_bpp         e.g. raw_entropy_t_1.1904_bpp
+  {prefix}{case}_{threshold_key}_pps_premium e.g. raw_entropy_t_1.1904_pps_premium
+  (prefix is "" for bytes, "char_" for chars)
 
 The INPUT csv is left exactly as-is; the new columns are written to a
 SEPARATE output csv (--csv-out-path), which defaults to
@@ -30,6 +48,9 @@ from pathlib import Path
 import pandas as pd
 
 ENGLISH = "eng_Latn"
+SCORE_SOURCES = ("bytes", "chars")
+EVAL_MODES_KEY = {"bytes": "eval_modes", "chars": "char_eval_modes"}
+COLUMN_PREFIX = {"bytes": "", "chars": "char_"}
 
 
 def default_csv_out_path(csv_in_path: str) -> str:
@@ -47,19 +68,26 @@ def load_results(results_dir: str, code_orig: str) -> list[dict] | None:
         return json.load(f)
 
 
-def aggregate(sentences: list[dict]) -> dict[str, float]:
-    """Compute mean pps and global bpp (total_bytes / total_patches) for every case/threshold."""
+def aggregate(sentences: list[dict], source: str) -> dict[str, float]:
+    """Compute mean pps and global bpp (total_bytes / total_patches) for
+    every case/threshold, reading from the source-appropriate eval_modes
+    key. Columns are prefixed per COLUMN_PREFIX (empty for bytes)."""
+    modes_key = EVAL_MODES_KEY[source]
+    prefix = COLUMN_PREFIX[source]
     totals = {}  # key -> [total_patches, total_bytes, n_sentences]
 
     for s in sentences:
-        n_bytes = len(s["bytes_entropies"])
-        for case_name, thresholds in s.get("eval_modes", {}).items():
+        for case_name, thresholds in s.get(modes_key, {}).items():
             for t_key, vals in thresholds.items():
-                col = f"{case_name}_{t_key}"
+                col = f"{prefix}{case_name}_{t_key}"
                 if col not in totals:
                     totals[col] = [0, 0, 0]
+                if source == "bytes":
+                    patch_bytes_sum = sum(vals["patch_lengths"])
+                else:
+                    patch_bytes_sum = sum(vals["patch_lengths_bytes"])
                 totals[col][0] += vals["n_patches"]
-                totals[col][1] += n_bytes
+                totals[col][1] += patch_bytes_sum
                 totals[col][2] += 1
 
     result = {}
@@ -75,22 +103,31 @@ def parse_args():
     )
     parser.add_argument("--results-dir", default="results/restructured",
                          help="Directory of per-language JSON files with eval_modes "
-                              "populated (default: results/restructured).")
+                              "(or char_eval_modes, for --score-source=chars) populated "
+                              "(default: results/restructured).")
     parser.add_argument("--csv-in-path", default="floresplus_MASTER.csv",
                          help="Input CSV, read but never modified "
                               "(default: floresplus_MASTER.csv).")
     parser.add_argument("--csv-out-path", default=None,
                          help="Output CSV with the new columns added. If omitted, "
                               "derived from --csv-in-path as <name>_with_results.csv.")
+    parser.add_argument("--score-source", choices=SCORE_SOURCES, default="bytes",
+                         help="Which eval_modes key to aggregate from: 'bytes' (default, "
+                              "reads sentence['eval_modes']) or 'chars' (reads "
+                              "sentence['char_eval_modes'], requires run_patching.py "
+                              "--score-source=chars to have already populated it). "
+                              "Columns get a 'char_' prefix in chars-mode.")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
     csv_out_path = args.csv_out_path or default_csv_out_path(args.csv_in_path)
+    source = args.score_source
 
     df = pd.read_csv(args.csv_in_path)
     print(f"Loaded {len(df)} languages from {args.csv_in_path}")
+    print(f"Score source: {source}  (reading sentence['{EVAL_MODES_KEY[source]}'])")
 
     # Keep track of all keys seen across valid files so we can fill missing ones with NaN
     all_known_keys = set()
@@ -105,7 +142,7 @@ def main():
             rows_data.append((row.to_dict(), None))
             print(f"  {code_orig}: Missing JSON -> filling with N/A")
         else:
-            agg = aggregate(sentences)
+            agg = aggregate(sentences, source)
             all_known_keys.update(agg.keys())
             rows_data.append((row.to_dict(), agg))
             print(f"  {code_orig}: {len(agg)} result columns")
