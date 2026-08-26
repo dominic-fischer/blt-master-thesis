@@ -1,5 +1,5 @@
 """
-inspect_sentence.py
+inspect_results.py
 
 Given a lang_code (e.g. "eng_Latn") and a sentence index, reads the
 pre-computed restructured results and:
@@ -451,14 +451,20 @@ def main():
 
     # -- char-mode visualisations (new) --
     # Patch BOUNDARIES were determined by thresholding per-character
-    # summed scores, but reconstruction against context_bytes uses
-    # patch_lengths_bytes (byte-length per patch), and per-byte coloring
-    # (viz_scores) still comes from the SAME bytes_entropies array as
-    # byte-mode -- only where the patch lines fall differs between
-    # granularities, not the underlying per-byte score being displayed.
-    # char_eval_modes only ever contains raw_entropy/raw_monotonicity
-    # (no norm_entropy/combined equivalent -- see calibrate_thresholds.py
-    # and run_patching.py), so viz_scores is always the raw column here.
+    # SUMMED scores, so the chart should plot THAT quantity (one point
+    # per character, at that character's center x-position) rather than
+    # per-byte scores -- otherwise the chart just reproduces the same
+    # byte-by-byte zigzag as byte-mode with different boundary lines
+    # overlaid, which doesn't show what was actually thresholded. We pass
+    # char_scores=[summed raw entropy per character] from chars_entropies
+    # (index 1 -- see add_char_entropies.py); blt_visualize.py's
+    # _build_combined_svg switches to character-granularity plotting
+    # whenever char_scores is given, while the byte grid/table below is
+    # unaffected. char_eval_modes only ever contains raw_entropy/
+    # raw_monotonicity (no norm_entropy/combined equivalent -- see
+    # calibrate_thresholds.py and run_patching.py), and chars_entropies
+    # only ever stores the raw (not normalized) summed score, so there's
+    # only ever one char_scores column to use here, unconditionally.
     # Written to a "char_level" subfolder under out_dir, mirroring the
     # results/*/char_level/ convention used elsewhere in this pipeline --
     # so no filename prefix is needed to disambiguate from byte-mode.
@@ -467,13 +473,13 @@ def main():
             threshold = float(t_key[2:])  # strip leading "t_"
             patches = reconstruct_patches(context_bytes, mode_data["patch_lengths_bytes"])
 
-            viz_scores = [be[1] for be in sentence["bytes_entropies"]]  # entropy_raw
+            char_scores = [ce[1] for ce in sentence["chars_entropies"]]  # summed raw entropy, per character
 
             viz = BLTPatchVisualizer()
             viz.add(
                 text=text,
                 patches=patches,
-                scores=viz_scores,
+                char_scores=char_scores,
                 label=f"{lang_code} [{idx}] - char:{mode_name} {t_key}",
                 threshold=threshold,
                 char_lengths=get_char_lengths(text),

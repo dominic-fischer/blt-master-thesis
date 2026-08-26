@@ -1,5 +1,5 @@
 """
-blt_visualize.py — Drop-in visualization for BLT entropy patcher output.
+blt_visualize.py -- Drop-in visualization for BLT entropy patcher output.
 
 Usage:
     from blt_visualize import BLTPatchVisualizer
@@ -11,6 +11,26 @@ Usage:
 
 Note: patches should be (chunk_str, chunk_bytes_list, byte_length) tuples
       as produced by blt_patcher.patch_text().
+
+CHAR-LEVEL SCORES (char_scores, new): by default the entropy chart is
+BYTE-granular -- one point per byte, x-position = that byte's column,
+using `scores` (one value per byte, aligned with the flattened patch
+bytes). Pass `char_scores` (one value per CHARACTER, e.g. per-character
+SUMMED raw entropy from add_char_entropies.py's chars_entropies) to plot
+the chart at CHARACTER granularity instead: one point per character,
+x-position = that character's center (the SAME x used for the "char" row
+below, so the line's peaks land visually centered over their character,
+not over an arbitrary byte within it). This matters because plotting
+byte-level `scores` (even with char-mode patch boundary lines overlaid)
+just reproduces the same byte-by-byte zigzag as byte-mode -- it doesn't
+show the quantity that was actually thresholded to produce those
+boundaries. When char_scores is given, it takes over the chart entirely
+(scores is ignored for plotting purposes, though still accepted for
+backward compatibility with existing byte-mode callers). The underlying
+byte grid/table (idx/byte/char rows) is UNCHANGED either way -- only the
+entropy line's granularity differs. Patch boundary vertical lines are
+still drawn at their actual byte offsets (unchanged), since patches are
+always byte-spans regardless of which granularity determined them.
 """
 
 import html as html_lib
@@ -19,7 +39,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 
-# ─── colour palette ───────────────────────────────────────────────────────────
+# --- colour palette ------------------------------------------------------------
 PATCH_COLORS = [
     "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c",
     "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00",
@@ -39,7 +59,10 @@ class PatchResult:
     patches: list
     scores: Optional[List[float]] = None
     threshold: Optional[float] = None
-    char_lengths: Optional[List[int]] = None   # NEW: byte-length of each char in `text`, in order
+    char_lengths: Optional[List[int]] = None   # byte-length of each char in `text`, in order
+    char_scores: Optional[List[float]] = None  # NEW: one score per CHARACTER (e.g. summed raw entropy).
+                                                # When set, the chart plots at character granularity
+                                                # instead of byte granularity -- see module docstring.
 
 
 class BLTPatchVisualizer:
@@ -47,8 +70,8 @@ class BLTPatchVisualizer:
     def __init__(self):
         self._results: List[PatchResult] = []
 
-    def add(self, text, patches, scores=None, label="", threshold=None, char_lengths=None):
-        self._results.append(PatchResult(text, label, patches, scores, threshold, char_lengths))
+    def add(self, text, patches, scores=None, label="", threshold=None, char_lengths=None, char_scores=None):
+        self._results.append(PatchResult(text, label, patches, scores, threshold, char_lengths, char_scores))
 
     def render(self) -> str:
         sections = "\n".join(self._render_section(r, i) for i, r in enumerate(self._results))
@@ -57,22 +80,24 @@ class BLTPatchVisualizer:
     def save(self, path="blt_output.html"):
         with open(path, "w", encoding="utf-8") as f:
             f.write(self.render())
-        print(f"[blt_visualize] Saved → {path}")
+        print(f"[blt_visualize] Saved -> {path}")
 
-    # ── normalise patch tuple ─────────────────────────────────────────────────
+    # --- normalise patch tuple ------------------------------------------------
 
     @staticmethod
     def _norm(p):
         blist, length = p
         return list(blist), length
 
-    # ── section ───────────────────────────────────────────────────────────────
+    # --- section ---------------------------------------------------------------
 
     def _render_section(self, r: PatchResult, idx: int) -> str:
         patches = [self._norm(p) for p in r.patches]
 
         patch_html   = self._build_patch_html(patches, r.text, r.char_lengths)
-        combined_svg = self._build_combined_svg(patches, r.scores, r.threshold, r.text, r.char_lengths)
+        combined_svg = self._build_combined_svg(
+            patches, r.scores, r.threshold, r.text, r.char_lengths, r.char_scores
+        )
 
         n_patches = len(patches)
         n_bytes   = sum(ln for _, ln in patches)
@@ -94,7 +119,7 @@ class BLTPatchVisualizer:
           <div class="svg-wrap">{combined_svg}</div>
         </section>"""
 
-    # ── coloured patch tokens ─────────────────────────────────────────────────
+    # --- coloured patch tokens ---------------------------------------------------
     @staticmethod
     def _build_patch_html(patches, text, char_lengths=None) -> str:
         flat_bytes = []
@@ -130,10 +155,10 @@ class BLTPatchVisualizer:
 
         return "".join(parts)
 
-    # ── combined SVG: entropy line chart + aligned byte/char table ────────────
+    # --- combined SVG: entropy line chart + aligned byte/char table --------------
 
-    def _build_combined_svg(self, patches, scores, threshold, text, char_lengths=None) -> str:
-        # ── layout constants ──────────────────────────────────────────────────
+    def _build_combined_svg(self, patches, scores, threshold, text, char_lengths=None, char_scores=None) -> str:
+        # --- layout constants ------------------------------------------------
         CELL_W      = 28       # px per byte column
         MARGIN_L    = 52       # left margin (y-axis labels)
         MARGIN_R    = 16
@@ -171,7 +196,20 @@ class BLTPatchVisualizer:
         def cx(i):
             return MARGIN_L + i * CELL_W + CELL_W / 2
 
-        # ── entropy chart ─────────────────────────────────────────────────────
+        # Character center x-positions, computed the SAME way the char row
+        # below places its rects/labels -- reused here so char-granularity
+        # score points land exactly centered over their character.
+        def char_centers():
+            centers = []
+            byte_cursor = 0
+            for ch, ch_bytes in zip(full_text, char_lengths):
+                if byte_cursor >= N:
+                    break
+                centers.append(MARGIN_L + byte_cursor * CELL_W + ch_bytes * CELL_W / 2)
+                byte_cursor += ch_bytes
+            return centers
+
+        # --- entropy chart -----------------------------------------------------
         elements = []
 
         # Background
@@ -188,10 +226,24 @@ class BLTPatchVisualizer:
             f'fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>'
         )
 
-        if scores:
-            visible_scores = scores[:N]
-            s_min = min(visible_scores)
-            s_max = max(visible_scores)
+        use_char_scores = char_scores is not None and len(char_scores) > 0
+
+        if use_char_scores:
+            centers = char_centers()
+            # Align lengths defensively (should already match 1:1 with full_text)
+            n_plot = min(len(centers), len(char_scores))
+            plot_xs = centers[:n_plot]
+            plot_vs = list(char_scores[:n_plot])
+        elif scores:
+            plot_xs = [cx(i) for i in range(min(len(scores), N))]
+            plot_vs = list(scores[:N])
+        else:
+            plot_xs = []
+            plot_vs = []
+
+        if plot_vs:
+            s_min = min(plot_vs)
+            s_max = max(plot_vs)
             s_range = max(s_max - s_min, 0.01)
 
             def sy(v):
@@ -224,7 +276,10 @@ class BLTPatchVisualizer:
                     f'font-size="9" fill="#c0392b">t={threshold:.2f}</text>'
                 )
 
-            # Patch boundary vertical lines
+            # Patch boundary vertical lines -- always at actual BYTE offsets,
+            # regardless of score granularity, since patches are byte-spans
+            # either way (char-mode patches were reconstructed via
+            # patch_lengths_bytes upstream, so this is unchanged).
             cursor = 0
             for pi, (_, length) in enumerate(patches[:-1]):
                 cursor += length
@@ -235,9 +290,9 @@ class BLTPatchVisualizer:
                 )
 
             # Filled area under curve
-            pts = " ".join(f"{cx(i):.1f},{sy(v):.1f}" for i, v in enumerate(visible_scores))
-            first_x = cx(0)
-            last_x  = cx(len(visible_scores) - 1)
+            pts = " ".join(f"{x:.1f},{sy(v):.1f}" for x, v in zip(plot_xs, plot_vs))
+            first_x = plot_xs[0]
+            last_x  = plot_xs[-1]
             base_y  = chart_y + CHART_H
             elements.append(
                 f'<polygon points="{first_x:.1f},{base_y} {pts} {last_x:.1f},{base_y}" '
@@ -245,27 +300,29 @@ class BLTPatchVisualizer:
             )
 
             # Line
-            polyline_pts = " ".join(f"{cx(i):.1f},{sy(v):.1f}" for i, v in enumerate(visible_scores))
+            polyline_pts = " ".join(f"{x:.1f},{sy(v):.1f}" for x, v in zip(plot_xs, plot_vs))
             elements.append(
                 f'<polyline points="{polyline_pts}" fill="none" '
                 f'stroke="#2a6db5" stroke-width="1.5" stroke-linejoin="round"/>'
             )
 
             # Dots
-            for i, v in enumerate(visible_scores):
+            for x, v in zip(plot_xs, plot_vs):
                 elements.append(
-                    f'<circle cx="{cx(i):.1f}" cy="{sy(v):.1f}" r="2" '
+                    f'<circle cx="{x:.1f}" cy="{sy(v):.1f}" r="2" '
                     f'fill="#2a6db5" opacity="0.7"/>'
                 )
 
         # Y-axis label
+        y_axis_label = "Summed entropy per CHARACTER" if use_char_scores else "Entropy of NEXT byte"
         elements.append(
             f'<text x="10" y="{chart_y + CHART_H//2}" '
             f'text-anchor="middle" font-size="10" fill="#444" '
-            f'transform="rotate(-90, 10, {chart_y + CHART_H//2})">Entropy of NEXT byte</text>'
+            f'transform="rotate(-90, 10, {chart_y + CHART_H//2})">{y_axis_label}</text>'
         )
 
-        # X-axis tick labels (every N bytes to avoid crowding)
+        # X-axis tick labels (every N bytes to avoid crowding) -- unchanged,
+        # still describes the underlying byte grid regardless of chart mode.
         tick_every = max(1, N // 40)
         axis_y = chart_y + CHART_H + 13
         for i in range(0, N, tick_every):
@@ -274,7 +331,7 @@ class BLTPatchVisualizer:
                 f'font-size="8" fill="#555">{i}</text>'
             )
 
-        # ── byte table ────────────────────────────────────────────────────────
+        # --- byte table -----------------------------------------------------
         row_idx_y = TABLE_TOP
         row_val_y = row_idx_y + ROW_IDX_H
         row_chr_y = row_val_y + ROW_VAL_H
@@ -325,7 +382,7 @@ class BLTPatchVisualizer:
                 f'font-size="9" font-weight="600" fill="{fg}">{bv}</text>'
             )
 
-        # Character row — built from text + char_lengths, ignoring patch boundaries
+        # Character row -- built from text + char_lengths, ignoring patch boundaries
         byte_cursor = 0
         for ch, ch_bytes in zip(full_text, char_lengths):
             if byte_cursor >= N:
@@ -361,7 +418,7 @@ class BLTPatchVisualizer:
         )
         return svg
 
-# ─── HTML shell ───────────────────────────────────────────────────────────────
+# --- HTML shell -----------------------------------------------------------------
 
 _HTML_TEMPLATE = """\
 <!DOCTYPE html>
@@ -369,7 +426,7 @@ _HTML_TEMPLATE = """\
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BLT Entropy Patcher — Visualisation</title>
+<title>BLT Entropy Patcher -- Visualisation</title>
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
@@ -529,7 +586,7 @@ _HTML_TEMPLATE = """\
 <body>
 <header class="page-header">
   <h1>BLT Entropy Patcher &mdash; Visualisation</h1>
-  <p class="subtitle">Per-byte entropy &middot; patch boundaries &middot; byte↔character alignment</p>
+  <p class="subtitle">Per-byte entropy &middot; patch boundaries &middot; byte&harr;character alignment</p>
 </header>
 
 {sections}
@@ -539,7 +596,7 @@ _HTML_TEMPLATE = """\
 """
 
 
-# ─── convenience ─────────────────────────────────────────────────────────────
+# --- convenience ---------------------------------------------------------------
 
 def visualize_patch_results(results, output_path="blt_output.html"):
     viz = BLTPatchVisualizer()
@@ -550,5 +607,7 @@ def visualize_patch_results(results, output_path="blt_output.html"):
             scores=r.get("scores"),
             label=r.get("label", ""),
             threshold=r.get("threshold"),
+            char_lengths=r.get("char_lengths"),
+            char_scores=r.get("char_scores"),
         )
     viz.save(output_path)
