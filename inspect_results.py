@@ -6,9 +6,25 @@ pre-computed restructured results and:
 
   A) Saves HTML visualisations for every mode × threshold combination
      that exists in the restructured JSON, using BLTPatchVisualizer.
+     This now covers BOTH granularities: byte-mode ("eval_modes",
+     patch boundaries thresholded over per-byte scores, patch_lengths
+     already in bytes) AND char-mode ("char_eval_modes", patch
+     boundaries thresholded over per-CHARACTER summed scores --
+     reconstructed against context_bytes using patch_lengths_bytes,
+     since that's what run_patching.py's char-mode output already
+     stores precisely so downstream tools like this one don't have to
+     re-derive byte spans from character spans themselves). Output
+     filenames/labels are prefixed "char_" for the char-mode ones so
+     they never collide with the byte-mode files for the same
+     mode/threshold. Per-byte coloring (viz_scores) is the SAME
+     bytes_entropies array either way -- only the patch BOUNDARIES
+     differ between granularities, not the underlying per-byte scores
+     being visualised.
 
   B) Saves a .txt file with per-byte entropy, binary breakdown, top-k
-     next-byte predictions (re-run through the entropy model).
+     next-byte predictions (re-run through the entropy model), plus a
+     compact patch summary block covering both eval_modes and
+     char_eval_modes.
 
 MODEL SELECTION: --entropy_repo is the primary argument -- it's used to
 reload the actual model and recompute fresh scores/predictions for
@@ -265,6 +281,23 @@ def format_bits(byte_val, off, total, lead, context_bytes, pos):
     return "?", "?"
 
 
+def reconstruct_patches(context_bytes, patch_lengths_in_bytes):
+    """Given a list of patch lengths ALREADY IN BYTES (either
+    eval_modes' native "patch_lengths", or char_eval_modes'
+    "patch_lengths_bytes" -- both are byte-length-per-patch lists, just
+    derived over different granularities), slices context_bytes into
+    (patch_bytes, length) tuples for the visualiser. Shared by both the
+    byte-mode and char-mode visualisation loops below."""
+    patches = []
+    cursor = 0
+    for length in patch_lengths_in_bytes:
+        if length == 0:
+            break
+        patches.append((context_bytes[cursor:cursor + length], length))
+        cursor += length
+    return patches
+
+
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -357,8 +390,12 @@ def main():
 
 
     # ── A) visualisations ─────────────────────────────────────────────────────
-    # Iterate every mode × threshold stored in the restructured JSON
-    eval_modes = sentence.get("eval_modes", {})
+    # Iterate every mode × threshold stored in the restructured JSON, for
+    # BOTH granularities: byte-mode (eval_modes) and char-mode
+    # (char_eval_modes, if present -- e.g. only after run_patching.py has
+    # been run with --score-source chars for this language/checkpoint).
+    eval_modes      = sentence.get("eval_modes", {})
+    char_eval_modes = sentence.get("char_eval_modes", {})
 
 
     print(f"len(context_bytes) = {len(context_bytes)}")
@@ -366,29 +403,28 @@ def main():
     for mode_name, thresholds_dict in eval_modes.items():
         for t_key, mode_data in thresholds_dict.items():
             total = sum(mode_data["patch_lengths"])
-            print(f"  {mode_name} {t_key}: sum(patch_lengths)={total}")
+            print(f"  [bytes] {mode_name} {t_key}: sum(patch_lengths)={total}")
+    if char_eval_modes:
+        n_chars = len(sentence.get("chars_entropies", []))
+        print(f"len(stored chars_entropies) = {n_chars}")
+        for mode_name, thresholds_dict in char_eval_modes.items():
+            for t_key, mode_data in thresholds_dict.items():
+                total_chars = sum(mode_data["patch_lengths_chars"])
+                total_bytes = sum(mode_data["patch_lengths_bytes"])
+                print(f"  [chars] {mode_name} {t_key}: sum(patch_lengths_chars)={total_chars}  "
+                      f"sum(patch_lengths_bytes)={total_bytes}")
 
-    if not eval_modes:
-        print("Warning: no eval_modes found in restructured JSON for this sentence.")
+    if not eval_modes and not char_eval_modes:
+        print("Warning: no eval_modes or char_eval_modes found in restructured JSON for this sentence.")
     else:
         print(f"\nGenerating visualisations → {out_dir}/")
 
+    # -- byte-mode visualisations (unchanged behavior) --
     for mode_name, thresholds_dict in eval_modes.items():
         for t_key, mode_data in thresholds_dict.items():
             # t_key is like "t_1.3340"
             threshold = float(t_key[2:])  # strip leading "t_"
-            patch_lengths = mode_data["patch_lengths"]
-
-            # reconstruct patches list for the visualiser
-            patches = []
-            cursor  = 0
-            for length in patch_lengths:
-                if length == 0:
-                    break
-                patches.append((context_bytes[cursor:cursor + length], length))
-                cursor += length
-
-            # inside the mode × threshold loop, replace the scores= line:
+            patches = reconstruct_patches(context_bytes, mode_data["patch_lengths"])
 
             # get the right scores for this mode
             if "norm" in mode_name:
@@ -410,6 +446,38 @@ def main():
             n_p = mode_data["n_patches"]
             bpp = mode_data["avg_bytes_per_patch"]
             print(f"  {fname}  ({n_p} patches, {bpp:.2f} bytes/patch)")
+
+    # -- char-mode visualisations (new) --
+    # Patch BOUNDARIES were determined by thresholding per-character
+    # summed scores, but reconstruction against context_bytes uses
+    # patch_lengths_bytes (byte-length per patch), and per-byte coloring
+    # (viz_scores) still comes from the SAME bytes_entropies array as
+    # byte-mode -- only where the patch lines fall differs between
+    # granularities, not the underlying per-byte score being displayed.
+    # char_eval_modes only ever contains raw_entropy/raw_monotonicity
+    # (no norm_entropy/combined equivalent -- see calibrate_thresholds.py
+    # and run_patching.py), so viz_scores is always the raw column here.
+    for mode_name, thresholds_dict in char_eval_modes.items():
+        for t_key, mode_data in thresholds_dict.items():
+            threshold = float(t_key[2:])  # strip leading "t_"
+            patches = reconstruct_patches(context_bytes, mode_data["patch_lengths_bytes"])
+
+            viz_scores = [be[1] for be in sentence["bytes_entropies"]]  # entropy_raw
+
+            viz = BLTPatchVisualizer()
+            viz.add(
+                text=text,
+                patches=patches,
+                scores=viz_scores,
+                label=f"{lang_code} [{idx}] — char:{mode_name} {t_key}",
+                threshold=threshold,
+                char_lengths=get_char_lengths(text),
+            )
+            fname = f"char_{lang_code}_{idx}_{mode_name}_{t_key}.html"
+            viz.save(os.path.join(out_dir, fname))
+            n_p = mode_data["n_patches"]
+            bpp = mode_data["avg_bytes_per_patch"]
+            print(f"  {fname}  ({n_p} patches [char-level boundaries], {bpp:.2f} bytes/patch)")
 
     # ── B) txt file with per-byte analysis ───────────────────────────────────
     lines = []
@@ -460,18 +528,28 @@ def main():
 
     lines.append("")
 
-    # also add a compact patch summary per mode/threshold at the end
-    if eval_modes:
+    # also add a compact patch summary per mode/threshold at the end,
+    # for both byte-mode and char-mode
+    if eval_modes or char_eval_modes:
         lines.append("─" * 80)
         lines.append("  Patch summary from restructured results:")
         lines.append("")
         for mode_name, thresholds_dict in eval_modes.items():
             for t_key, mode_data in thresholds_dict.items():
                 lines.append(
-                    f"  {mode_name:<20} {t_key:<12}  "
+                    f"  [bytes] {mode_name:<20} {t_key:<12}  "
                     f"n_patches={mode_data['n_patches']}  "
                     f"avg_bpp={mode_data['avg_bytes_per_patch']:.4f}  "
                     f"lengths={mode_data['patch_lengths']}"
+                )
+        for mode_name, thresholds_dict in char_eval_modes.items():
+            for t_key, mode_data in thresholds_dict.items():
+                lines.append(
+                    f"  [chars] {mode_name:<20} {t_key:<12}  "
+                    f"n_patches={mode_data['n_patches']}  "
+                    f"avg_bpp={mode_data['avg_bytes_per_patch']:.4f}  "
+                    f"lengths_chars={mode_data['patch_lengths_chars']}  "
+                    f"lengths_bytes={mode_data['patch_lengths_bytes']}"
                 )
         lines.append("")
 
