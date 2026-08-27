@@ -75,14 +75,10 @@ import re
 import sys
 from os import path
 
-print("[DEBUG] module import: starting (about to import model_eval.run_patching, "
-      "which pulls in torch + bytelatent.data.patcher)...", flush=True)
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # noqa: E402
 from model_eval.run_patching import load_cases, threshold_key, BOUND_NAMES, DEFAULT_SUMMARY_CSV
-print("[DEBUG] module import: model_eval.run_patching imported OK", flush=True)
 
 import pandas as pd
-print("[DEBUG] module import: pandas imported OK -- all imports done", flush=True)
 
 DEFAULT_LANGS_CSV = "training_setup/langs/langs_chosen.csv"
 DEFAULT_OUT_DIR = "results/txt_premiums"
@@ -256,21 +252,9 @@ def main():
     print("[DEBUG] main() started, parsing args...", flush=True)
     args = parse_args()
     source = args.score_source
-    print(f"[DEBUG] args parsed: csv_in_path={args.csv_in_path!r} "
-          f"summary_csv={args.summary_csv!r} langs_csv={args.langs_csv!r} "
-          f"score_source={source!r}", flush=True)
-
-    print(f"[DEBUG] reading --csv-in-path {args.csv_in_path!r}...", flush=True)
     df = pd.read_csv(args.csv_in_path)
-    print(f"[DEBUG] read {len(df)} rows from --csv-in-path", flush=True)
-
-    print(f"[DEBUG] reading --langs-csv {args.langs_csv!r}...", flush=True)
     chosen_langs = load_chosen_languages(args.langs_csv)
-    print(f"[DEBUG] loaded {len(chosen_langs)} chosen languages", flush=True)
-
-    print(f"[DEBUG] calling build_key_to_bound({args.summary_csv!r}, {source!r})...", flush=True)
     key_to_bound = build_key_to_bound(args.summary_csv, source)
-    print(f"[DEBUG] build_key_to_bound returned {len(key_to_bound)} entries", flush=True)
 
     if "Code_Orig" not in df.columns:
         raise ValueError(f"'Code_Orig' column not found in {args.csv_in_path}")
@@ -320,7 +304,6 @@ def main():
               f"reference line will be omitted from every file.")
 
     for i, col in enumerate(premium_cols):
-        print(f"[DEBUG] ({i+1}/{len(premium_cols)}) processing column {col!r}...", flush=True)
         parsed = parse_premium_column(col, source)
         if parsed is None:
             print(f"  WARNING: could not parse column {col!r} into (case, t_key) for "
@@ -399,7 +382,6 @@ def main():
                           f"reference line for {out_path}")
 
         print(f"  {case} / {t_key} ({bound_folder}/{subfolder_name}{f'/{step_subfolder}' if step_subfolder else ''}): wrote {len(rows)} language(s) -> {out_path}")
-        print(f"[DEBUG] ({i+1}/{len(premium_cols)}) finished column {col!r}", flush=True)
 
     print("\nDone.")
 
