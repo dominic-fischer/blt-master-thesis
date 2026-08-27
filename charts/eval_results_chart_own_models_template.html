@@ -249,7 +249,7 @@ function getColName() {
 }
 function getPremium(lang) { const v=lang[getColName()]; return (v!=null&&!isNaN(v))?v:0; }
 function groupFor(p) {
-  if(p<1.0) return GROUPS[0];
+  if(p<BOUNDS[0]) return GROUPS[0];
   for(let i=0;i<GROUPS.length;i++) if(p>=BOUNDS[i]&&p<BOUNDS[i+1]) return GROUPS[i];
   return GROUPS[GROUPS.length-1];
 }

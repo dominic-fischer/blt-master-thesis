@@ -69,12 +69,12 @@ MODEL_FILES = {
 
 # Only these two modes remain in the trimmed template (combined/normalised
 # were removed), so these are the only premium columns we scan for min/max.
-PREMIUM_COL_PATTERN = re.compile(r"^(char_)?(raw_entropy|raw_monotonicity)_t_[\d.]+_pps_premium$")
+PREMIUM_COL_PATTERN = re.compile(r"^(raw_entropy|raw_monotonicity)_t_[\d.]+_pps_premium$")
 
 # Same two modes, but capturing the mode name and threshold string so we can
 # rebuild MODES_META (thresholds differ per model/run, so this can't be
 # copied from the reference template -- it must come from the data itself).
-THRESH_COL_PATTERN = re.compile(r"^(char_)?(raw_entropy|raw_monotonicity)_t_([\d.]+)_pps_premium$")
+THRESH_COL_PATTERN = re.compile(r"^(raw_entropy|raw_monotonicity)_t_([\d.]+)_pps_premium$")
 MODE_LABELS = {"raw_entropy": "Entropy", "raw_monotonicity": "Monotonicity"}
 
 # Field in the results records holding the per-language code (matches the
@@ -137,7 +137,30 @@ def load_lang_data(js_path: Path, chosen_codes: set[str]) -> list[dict]:
             f"not found via field {CODE_FIELD!r}: {sorted(missing)}",
             file=sys.stderr,
         )
-    return filtered
+
+    # Drop any "char_" prefix (added by results_to_CSV.py --score-source=chars)
+    # right here, so every downstream step (regex matching, MODES_META,
+    # GROUPS/BOUNDS, and the template's own column-name lookups) only ever
+    # has to deal with the plain byte-mode naming, regardless of whether
+    # this particular results file came from a bytes- or chars-mode run.
+    stripped = []
+    for rec in filtered:
+        new_rec = dict(rec)
+        for key in list(new_rec):
+            if key.startswith("char_"):
+                target = key[len("char_"):]
+                if target in new_rec:
+                    print(
+                        f"  warning: {js_path.name}: both {key!r} and {target!r} "
+                        "present; keeping unprefixed, dropping char_ version",
+                        file=sys.stderr,
+                    )
+                    del new_rec[key]
+                else:
+                    new_rec[target] = new_rec.pop(key)
+        stripped.append(new_rec)
+
+    return stripped
 
 
 def compute_modes_meta(lang_data: list[dict]) -> dict:
@@ -150,7 +173,7 @@ def compute_modes_meta(lang_data: list[dict]) -> dict:
         for key in rec:
             m = THRESH_COL_PATTERN.match(key)
             if m:
-                _char_prefix, mode, t_str = m.groups()
+                mode, t_str = m.groups()
                 # Round to 4 dp (matching the .toFixed(4) used to build the
                 # column name in JS) so any float-parsing noise doesn't
                 # create spurious near-duplicate threshold values.
@@ -178,23 +201,28 @@ def compute_modes_meta(lang_data: list[dict]) -> dict:
     return modes_meta
 
 
-def nice_step(raw_step: float) -> float:
-    """Round raw_step up to the nearest 'nice' number (1/2/2.5/5/10 x 10^k)."""
-    if raw_step <= 0:
-        return 1.0
-    exp = math.floor(math.log10(raw_step))
-    base = 10 ** exp
-    for mult in (1, 2, 2.5, 5, 10):
-        step = mult * base
-        if step >= raw_step - 1e-12:
-            return step
-    return 10 * base
+CANDIDATE_STEPS = (0.1, 0.25, 0.5, 1.0)
 
 
 def compute_groups_bounds(lang_data: list[dict]) -> tuple[list[str], list[float]]:
     """Scan every raw_entropy_*/raw_monotonicity_*_pps_premium column across
-    all thresholds and all records, find the overall min/max, and build a
-    clean set of bin edges (BOUNDS) with matching labels (GROUPS)."""
+    all thresholds and all records (both modes combined, since the
+    template shares one GROUPS/BOUNDS array across whichever mode is
+    selected), find the overall min/max, and build bin edges as follows:
+
+      For each candidate step in CANDIDATE_STEPS (0.1, 0.25, 0.5, 1.0):
+        - snap vmin DOWN to the nearest multiple of that step (bin start)
+        - snap vmax UP to the nearest multiple of that step (bin end)
+        - count how many equal-width bins of that size span start->end
+      Keep whichever candidate's bin count is closest to 10.
+
+    Because every candidate step evenly divides 1.0, and English's own
+    premium is always exactly 1.0 for every column, 1.0 always lands
+    exactly on a bin edge with no special-casing needed. Because start
+    and end are snapped outward to *contain* vmin/vmax, every bin --
+    including the first and last -- necessarily contains at least one
+    real value, so there's no leftover empty leading/trailing bins to
+    trim."""
     values = []
     for rec in lang_data:
         for key, val in rec.items():
@@ -208,13 +236,21 @@ def compute_groups_bounds(lang_data: list[dict]) -> tuple[list[str], list[float]
         raise ValueError("No premium values found to compute GROUPS/BOUNDS from")
 
     vmin, vmax = min(values), max(values)
-    span = vmax - vmin
-    step = nice_step(span / 10 if span > 0 else 1.0)  # aim for ~10 bins
 
-    # Anchor the range at/below 1.0 (English's own premium == 1.0 by
-    # definition) so the "no premium" reference point always falls on a
-    # bin edge, then extend down/up to cover the data.
-    start = min(1.0, math.floor(vmin / step) * step)
+    best_step, best_n, best_diff = None, None, None
+    for step in CANDIDATE_STEPS:
+        cand_start = math.floor(vmin / step) * step
+        cand_end = math.ceil(vmax / step) * step
+        n_bins = round((cand_end - cand_start) / step)
+        diff = abs(n_bins - 10)
+        print(f"  candidate step={step}: {n_bins} bins (|diff from 10|={diff})")
+        if best_diff is None or diff < best_diff:
+            best_step, best_n, best_diff = step, n_bins, diff
+
+    step = best_step
+    print(f"  chosen step={step} -> {best_n} bins")
+
+    start = round(math.floor(vmin / step) * step, 10)
 
     bounds = [start]
     while bounds[-1] < vmax:
