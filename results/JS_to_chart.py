@@ -57,6 +57,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent            # <repo>/results
 REPO_ROOT = SCRIPT_DIR.parent                             # <repo>
 DEFAULT_RESULTS_JS_DIR = SCRIPT_DIR / "results_JS"
 CHARTS_DIR = REPO_ROOT / "charts"
+CALIBRATED_THRESHOLDS_BASE_DIR = REPO_ROOT / "calibrated_thresholds"
 TEMPLATE_PATH = CHARTS_DIR / "eval_results_chart_own_models_template.html"
 LANGS_CSV = REPO_ROOT / "training_setup" / "langs" / "langs_chosen.csv"
 
@@ -163,11 +164,55 @@ def load_lang_data(js_path: Path, chosen_codes: set[str]) -> list[dict]:
     return stripped
 
 
-def compute_modes_meta(lang_data: list[dict]) -> dict:
+def load_anchor_thresholds(results_filename: str, calibrated_dir: Path) -> dict[str, float] | None:
+    """Read t_anchor per case ('raw_entropy'/'raw_monotonicity') from this
+    model's <base_name>_thresholds_summary.csv under calibrated_dir
+    (produced by calibrate_thresholds.py). calibrated_dir must be the
+    subfolder matching the results_JS source used -- calibrated_thresholds/
+    mirrors results_JS/'s layout, e.g. a char_level/ results run has its
+    calibration file under calibrated_thresholds/char_level/, not the
+    byte-level default. This is the ONLY reliable source for which
+    threshold was actually calibrated to English's operating point -- it
+    must not be guessed (e.g. as "the middle of the sorted list"), since
+    that doesn't generally match t_anchor's actual position. Returns None
+    if no such file exists, so callers can fall back with a clear warning
+    instead of silently mis-starring a threshold."""
+    if not results_filename.endswith("_results.js"):
+        return None
+    base_name = results_filename[: -len("_results.js")]
+    csv_path = calibrated_dir / f"{base_name}_thresholds_summary.csv"
+    if not csv_path.exists():
+        return None
+
+    anchors = {}
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if "case" not in (reader.fieldnames or []) or "t_anchor" not in (reader.fieldnames or []):
+            print(
+                f"  warning: {csv_path} missing 'case'/'t_anchor' columns "
+                f"(got {reader.fieldnames}); ignoring",
+                file=sys.stderr,
+            )
+            return None
+        for row in reader:
+            try:
+                anchors[row["case"]] = round(float(row["t_anchor"]), 4)
+            except (TypeError, ValueError):
+                continue
+    return anchors or None
+
+
+def compute_modes_meta(lang_data: list[dict], anchor_thresholds: dict[str, float] | None) -> dict:
     """Derive MODES_META {mode: {label, score, thresholds, anchor_idx}} from
     whatever raw_entropy_t_*/raw_monotonicity_t_* columns actually exist in
     this model's data (these thresholds are run-specific, so they can't be
-    copied from the reference template)."""
+    copied from the reference template).
+
+    anchor_idx (which threshold gets the star) is set from
+    anchor_thresholds (the real calibrated t_anchor per case, read from
+    <model>_thresholds_summary.csv) whenever available -- it is NOT
+    guessed, since "middle of the sorted list" does not reliably match
+    where the actual calibrated threshold falls."""
     thresholds_by_mode: dict[str, set[float]] = {}
     for rec in lang_data:
         for key in rec:
@@ -189,9 +234,22 @@ def compute_modes_meta(lang_data: list[dict]) -> dict:
     for mode, tset in thresholds_by_mode.items():
         thresholds = sorted(tset)
         print(f"  {mode}: {len(thresholds)} thresholds found: {thresholds}")
-        # No fixed convention for which threshold is "the" anchor for a
-        # given run -- default to the middle of the range.
-        anchor_idx = len(thresholds) // 2
+
+        t_anchor = (anchor_thresholds or {}).get(mode)
+        if t_anchor is not None and t_anchor in thresholds:
+            anchor_idx = thresholds.index(t_anchor)
+            print(f"  {mode}: anchor from thresholds_summary.csv = {t_anchor} (index {anchor_idx})")
+        else:
+            anchor_idx = len(thresholds) // 2
+            reason = (
+                "no thresholds_summary.csv found" if anchor_thresholds is None
+                else f"t_anchor={t_anchor!r} not in thresholds list"
+            )
+            print(
+                f"  warning: {mode}: could not determine real anchor ({reason}); "
+                f"falling back to middle index {anchor_idx} -- the star may be wrong",
+                file=sys.stderr,
+            )
         modes_meta[mode] = {
             "label": MODE_LABELS.get(mode, mode),
             "score": "Raw",
@@ -323,10 +381,15 @@ def main() -> None:
 
     # If a subfolder of the default results_JS dir (or any other directory)
     # was explicitly given, fold its name into the output chart filenames,
-    # e.g. eval_results_chart_own_models_<subfolder>_balanced.html
+    # e.g. eval_results_chart_own_models_<subfolder>_balanced.html -- and
+    # look for calibration files under the matching calibrated_thresholds/
+    # subfolder, since that directory mirrors results_JS/'s layout
+    # (e.g. results_JS/char_level/ <-> calibrated_thresholds/char_level/).
     subfolder_label = None
+    calibrated_dir = CALIBRATED_THRESHOLDS_BASE_DIR
     if results_dir != DEFAULT_RESULTS_JS_DIR.resolve():
         subfolder_label = results_dir.name
+        calibrated_dir = CALIBRATED_THRESHOLDS_BASE_DIR / subfolder_label
 
     if not TEMPLATE_PATH.exists():
         raise FileNotFoundError(f"Template not found: {TEMPLATE_PATH}")
@@ -335,6 +398,7 @@ def main() -> None:
     chosen_codes = load_chosen_codes()
     print(f"Loaded {len(chosen_codes)} chosen language codes from {LANGS_CSV}")
     print(f"Looking for results in: {results_dir}")
+    print(f"Looking for calibration files in: {calibrated_dir}")
     if subfolder_label:
         print(f"Subfolder label added to output names: {subfolder_label!r}")
 
@@ -350,7 +414,15 @@ def main() -> None:
         print(f"  GROUPS = {groups}")
         print(f"  BOUNDS = {bounds}")
 
-        modes_meta = compute_modes_meta(lang_data)
+        anchor_thresholds = load_anchor_thresholds(filename, calibrated_dir)
+        if anchor_thresholds is None:
+            print(
+                f"  warning: no thresholds_summary.csv found for {filename!r} "
+                f"under {calibrated_dir}; anchor star will fall back "
+                "to a guessed index",
+                file=sys.stderr,
+            )
+        modes_meta = compute_modes_meta(lang_data, anchor_thresholds)
         print(f"  MODES_META = {modes_meta}")
 
         out_html = inject_into_template(template_html, lang_data, groups, bounds, modes_meta)
