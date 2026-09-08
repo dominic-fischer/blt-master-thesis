@@ -34,11 +34,13 @@ CC_CRAWL = "CC-MAIN-2026-17"
 PREMIUM_COLS = {
     "raw_entropy":      "raw_entropy_t_1.3340_pps_premium",
     "raw_monotonicity": "raw_monotonicity_t_0.3662_pps_premium",
+    "norm_entropy":      "norm_entropy_t_0.5293_pps_premium",
 }
 
 TITLE_LABELS = {
     "raw_entropy":      "Raw Entropy",
     "raw_monotonicity": "Monotonicity",
+    "norm_entropy":      "Normalisation",
 }
 
 # ── Style ─────────────────────────────────────────────────────────────────────
