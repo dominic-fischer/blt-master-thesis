@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 """
 script_type_anova.py
-Tests whether script type explains variance in the monotonicity premium,
-and compares that to how much the log(CC pages) regression explains --
-i.e., does script type account for more of the premium's variance than
-training-data volume does?
-
-Run after correlate_w_cc_pages.py-style data loading (reuses load_data,
-build_matched, get_script from that script).
+One-way ANOVA of premium on script type, for both monotonicity and
+normalisation, to test whether script structure explains variance in the
+premium better than training-data volume does.
 """
 
 import numpy as np
@@ -17,87 +13,87 @@ from pathlib import Path
 
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
-from config import SCRIPT_LABELS, SCRIPT_COLORS
+from correlate_w_cc_pages import load_data, build_matched, MASTER_CSV
 
-# Reuse the same loading logic as correlate_w_cc_pages.py
-from correlate_w_cc_pages import load_data, build_matched, get_script, MASTER_CSV
+PREMIUM_COLS = {
+    "monotonicity":  "raw_monotonicity_t_0.3662_pps_premium",
+    "normalisation": "norm_entropy_t_0.5293_pps_premium",
+}
 
-PREMIUM_COL = "raw_monotonicity_t_0.3662_pps_premium"
-MIN_GROUP_SIZE = 3  # drop script groups with too few points for a meaningful comparison
+MIN_GROUP_SIZE = 3
 
-# ── Load data ───────────────────────────────────────────────────────────────
 
-data = load_data(MASTER_CSV, PREMIUM_COL)
-matched, unmatched = build_matched(data)
-df = pd.DataFrame(matched)
+def run_anova(premium_col, mode_label):
+    data = load_data(MASTER_CSV, premium_col)
+    matched, unmatched = build_matched(data)
+    df = pd.DataFrame(matched)
 
-print(f"Premium column : {PREMIUM_COL}")
-print(f"Total matched  : {len(df)}")
+    script_counts = df['script'].value_counts()
+    kept_scripts = script_counts[script_counts >= MIN_GROUP_SIZE].index
+    dropped_scripts = script_counts[script_counts < MIN_GROUP_SIZE]
 
-# ── One-way ANOVA: does script type explain variance in premium? ──────────────
+    df_anova = df[df['script'].isin(kept_scripts)]
+    groups = [g['premium'].values for _, g in df_anova.groupby('script')]
 
-script_counts = df['script'].value_counts()
-kept_scripts = script_counts[script_counts >= MIN_GROUP_SIZE].index
-dropped_scripts = script_counts[script_counts < MIN_GROUP_SIZE]
+    f_stat, p_val = stats.f_oneway(*groups)
 
-if len(dropped_scripts) > 0:
-    print(f"\nDropped {len(dropped_scripts)} script group(s) with < {MIN_GROUP_SIZE} "
-          f"languages (too small for group comparison):")
-    for s, n in dropped_scripts.items():
-        print(f"  {s}: n={n}")
+    grand_mean = df_anova['premium'].mean()
+    ss_between = sum(
+        len(g) * (g['premium'].mean() - grand_mean) ** 2
+        for _, g in df_anova.groupby('script')
+    )
+    ss_total = ((df_anova['premium'] - grand_mean) ** 2).sum()
+    eta_sq = ss_between / ss_total
 
-df_anova = df[df['script'].isin(kept_scripts)]
-groups = [g['premium'].values for _, g in df_anova.groupby('script')]
+    k = len(kept_scripts)
+    n = len(df_anova)
+    ms_within = (ss_total - ss_between) / (n - k)
+    omega_sq = (ss_between - (k - 1) * ms_within) / (ss_total + ms_within)
 
-f_stat, p_val = stats.f_oneway(*groups)
+    print(f"\n{'='*70}\n{mode_label.upper()}\n{'='*70}")
+    print(f"Premium column: {premium_col}")
+    print(f"Total matched: {len(df)}")
+    print(f"Dropped {len(dropped_scripts)} script group(s) with < {MIN_GROUP_SIZE} languages: "
+          f"{dict(dropped_scripts)}")
 
-# eta-squared: proportion of total variance explained by script group membership
-grand_mean = df_anova['premium'].mean()
-ss_between = sum(
-    len(g) * (g['premium'].mean() - grand_mean) ** 2
-    for _, g in df_anova.groupby('script')
-)
-ss_total = ((df_anova['premium'] - grand_mean) ** 2).sum()
-eta_sq = ss_between / ss_total
+    print(f"\n--- One-way ANOVA: premium ~ script ---")
+    print(f"n = {n} (across {k} script groups, {len(df) - n} languages excluded)")
+    print(f"F({k-1}, {n-k}) = {f_stat:.3f}")
+    print(f"p = {p_val:.4g}")
+    print(f"eta² = {eta_sq:.4f}  ({eta_sq*100:.1f}% of variance)")
+    print(f"omega² = {omega_sq:.4f}  ({omega_sq*100:.1f}% bias-corrected)")
 
-# omega-squared: bias-corrected version of eta-squared, penalizing for the
-# number of groups (eta² alone can overstate explained variance simply
-# because a categorical predictor with more groups has more free parameters)
-k = len(kept_scripts)
-n = len(df_anova)
-ms_within = (ss_total - ss_between) / (n - k)
-omega_sq = (ss_between - (k - 1) * ms_within) / (ss_total + ms_within)
+    print("\nPer-script group means (sorted by mean premium):")
+    group_stats = (
+        df_anova.groupby('script')['premium']
+        .agg(['mean', 'std', 'count'])
+        .sort_values('mean')
+    )
+    print(group_stats.round(3).to_string())
 
-print(f"\n--- One-way ANOVA: premium ~ script ---")
-print(f"n = {len(df_anova)} (across {len(kept_scripts)} script groups, "
-      f"{len(df) - len(df_anova)} languages excluded for small group size)")
-print(f"F({len(kept_scripts)-1}, {len(df_anova)-len(kept_scripts)}) = {f_stat:.3f}")
-print(f"p = {p_val:.4g}")
-print(f"eta² = {eta_sq:.4f}  (i.e. script type explains {eta_sq*100:.1f}% of premium variance)")
-print(f"omega² = {omega_sq:.4f}  (bias-corrected estimate: {omega_sq*100:.1f}%)")
+    log_cc = np.log10(df_anova['cc_pages'])
+    slope, intercept, r_val, p_val_reg, se = stats.linregress(log_cc, df_anova['premium'])
+    r_sq = r_val ** 2
+    print(f"\n--- For comparison: log(CC pages) regression on the same {n} languages ---")
+    print(f"r = {r_val:.3f}, p = {p_val_reg:.4g}, r² = {r_sq:.4f}  "
+          f"({r_sq*100:.1f}% explained)")
 
-# ── Per-group means, for context / a table in the thesis ──────────────────────
+    return {
+        "mode": mode_label, "n": n, "k": k,
+        "f_stat": f_stat, "p_val": p_val,
+        "eta_sq": eta_sq, "omega_sq": omega_sq,
+        "r_val": r_val, "p_val_reg": p_val_reg, "r_sq": r_sq,
+        "kept_scripts": list(kept_scripts),
+        "group_stats": group_stats,
+    }
 
-print("\nPer-script group means (sorted by mean premium):")
-group_stats = (
-    df_anova.groupby('script')['premium']
-    .agg(['mean', 'std', 'count'])
-    .sort_values('mean', ascending=False)
-)
-print(group_stats.round(3).to_string())
 
-# ── For comparison: r² from the log(CC pages) regression on the SAME subset ───
-# (so eta² and r² are computed over the identical set of languages, making the
-# "which explains more" comparison apples-to-apples)
+results = {}
+for mode_label, premium_col in PREMIUM_COLS.items():
+    results[mode_label] = run_anova(premium_col, mode_label)
 
-log_cc = np.log10(df_anova['cc_pages'])
-slope, intercept, r_val, p_val_reg, se = stats.linregress(log_cc, df_anova['premium'])
-r_sq = r_val ** 2
-
-print(f"\n--- For comparison: log(CC pages) regression on the same {len(df_anova)} languages ---")
-print(f"r = {r_val:.3f}, p = {p_val_reg:.4g}, r² = {r_sq:.4f}  "
-      f"(training data explains {r_sq*100:.1f}% of premium variance)")
-
-print(f"\n=== Summary ===")
-print(f"Script type explains {eta_sq*100:.1f}% of variance (eta², p={p_val:.4g})")
-print(f"Training data (log CC pages) explains {r_sq*100:.1f}% of variance (r², p={p_val_reg:.4g})")
+print(f"\n{'='*70}\nSUMMARY\n{'='*70}")
+for mode_label, r in results.items():
+    print(f"{mode_label:15s}  eta²={r['eta_sq']:.3f}  omega²={r['omega_sq']:.3f}  "
+          f"F={r['f_stat']:.1f}  p={r['p_val']:.3g}  |  "
+          f"CC r²={r['r_sq']:.3f}  p={r['p_val_reg']:.3g}")
