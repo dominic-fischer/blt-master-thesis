@@ -3,7 +3,7 @@
   ALPHABET
 ══════════════════════════════════════════════════════════════════════
 
-  ── 1-byte  (raw boundaries: 14,530,865  |  mono boundaries: 6,705,647  |  norm boundaries: 5,747,260) ──
+  ── 1-byte  (boundary counts — raw: 14,530,865  |  mono: 6,705,647 (-53.85%, fewer)  |  norm: 5,747,260 (-60.45%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -23,7 +23,7 @@
     109       m     2.57     0.53     -2.05           108       l     2.97     0.68     -2.29
     115       s     3.16     1.15     -2.01           109       m     2.57     0.41     -2.17
 
-  ── 2-byte  (raw boundaries: 3,025,069  |  mono boundaries: 2,308,004  |  norm boundaries: 1,743,638) ──
+  ── 2-byte  (boundary counts — raw: 3,025,069  |  mono: 2,308,004 (-23.70%, fewer)  |  norm: 1,743,638 (-42.36%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -47,7 +47,7 @@
   ABJAD
 ══════════════════════════════════════════════════════════════════════
 
-  ── 2-byte  (raw boundaries: 3,219,900  |  mono boundaries: 1,965,669  |  norm boundaries: 1,598,898) ──
+  ── 2-byte  (boundary counts — raw: 3,219,900  |  mono: 1,965,669 (-38.95%, fewer)  |  norm: 1,598,898 (-50.34%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -71,7 +71,7 @@
   ABUGIDA
 ══════════════════════════════════════════════════════════════════════
 
-  ── 3-byte  (raw boundaries: 3,988,663  |  mono boundaries: 5,032,512  |  norm boundaries: 3,418,379) ──
+  ── 3-byte  (boundary counts — raw: 3,988,663  |  mono: 5,032,512 (+26.17%, more)  |  norm: 3,418,379 (-14.30%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -95,7 +95,7 @@
   SYLLABARY
 ══════════════════════════════════════════════════════════════════════
 
-  ── 3-byte  (raw boundaries: 71,587  |  mono boundaries: 58,471  |  norm boundaries: 39,285) ──
+  ── 3-byte  (boundary counts — raw: 71,587  |  mono: 58,471 (-18.32%, fewer)  |  norm: 39,285 (-45.12%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -119,7 +119,7 @@
   LOGOSYLLABARY
 ══════════════════════════════════════════════════════════════════════
 
-  ── 3-byte  (raw boundaries: 60,768  |  mono boundaries: 59,983  |  norm boundaries: 45,631) ──
+  ── 3-byte  (boundary counts — raw: 60,768  |  mono: 59,983 (-1.29%, fewer)  |  norm: 45,631 (-24.91%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%
@@ -143,7 +143,7 @@
   LOGOGRAPHIC
 ══════════════════════════════════════════════════════════════════════
 
-  ── 3-byte  (raw boundaries: 330,273  |  mono boundaries: 195,585  |  norm boundaries: 127,764) ──
+  ── 3-byte  (boundary counts — raw: 330,273  |  mono: 195,585 (-40.78%, fewer)  |  norm: 127,764 (-61.32%, fewer)) ──
 
   Top gainers under mono:                           Top gainers under norm:
    byte    char    raw_%   mono_%   delta_%          byte    char    raw_%   norm_%   delta_%

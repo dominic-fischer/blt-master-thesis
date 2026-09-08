@@ -14,6 +14,24 @@ MODES = [
     {"key": "norm_entropy",     "t": NORM_T, "label": "norm"},
 ]
 
+
+def boundary_delta_line(rt, cts, modes):
+    """One-line summary of boundary count change per mode, relative to raw entropy.
+    Negative delta = fewer boundaries than raw (coarser patching, 'improvement' in
+    boundary count terms). Positive delta = more boundaries than raw ('worse')."""
+    parts = [f"raw: {rt:,}"]
+    for m in modes:
+        lbl = m["label"]
+        ct = cts[lbl]
+        if rt == 0:
+            delta_pct = float("nan")
+        else:
+            delta_pct = (ct - rt) / rt * 100
+        direction = "fewer" if delta_pct < 0 else "more" if delta_pct > 0 else "same"
+        parts.append(f"{lbl}: {ct:,} ({delta_pct:+.2f}%, {direction})")
+    return "  |  ".join(parts)
+
+
 # ── Load master ───────────────────────────────────────────────────────────────
 df = pd.read_csv(MASTER_CSV)
 
@@ -142,10 +160,7 @@ with open(out_path, "w") as out:
             rt = raw_totals.get(group_key, 0)
             cts = {m["label"]: mode_totals[m["label"]].get(group_key, 0) for m in MODES}
 
-            boundary_line = f"raw boundaries: {rt:,}"
-            for m in MODES:
-                lbl = m["label"]
-                boundary_line += f"  |  {lbl} boundaries: {cts[lbl]:,}"
+            boundary_line = f"boundary counts — {boundary_delta_line(rt, cts, MODES)}"
             out.write(f"\n  ── {BPC_LABEL[bpc]}  ({boundary_line}) ──\n\n")
 
             raw_counts = raw_byte_counts.get(group_key, {})
