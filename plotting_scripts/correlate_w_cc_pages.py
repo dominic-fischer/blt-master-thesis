@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """
 plot_cc_correlation.py
-Standalone script. Reads florespluis_MASTER_CSV.csv — which now contains BOTH the
-BLT patch-premium results and the Common Crawl page counts in a single file — then
-plots BLT patch premium vs. Common Crawl page count with per-script colouring and a
-log-scale x-axis.
-
-(Previously this joined results/summary.txt against commoncrawl_stats.csv via an
-ISO 639-3 remapping. The master CSV already carries CC_Pages per row, so that whole
-join — the second CSV, the OVERRIDE table, and code_to_iso3 — is gone.)
+Standalone script. Reads results/results_CSV/base_model_results.csv — which
+contains BOTH the BLT patch-premium results and the Common Crawl page counts
+in a single file — then plots BLT patch premium vs. Common Crawl page count
+with per-script colouring and a log-scale x-axis, for both raw entropy and
+monotonicity premiums.
 """
 
 import csv
@@ -26,23 +23,23 @@ from config import SCRIPT_LABELS, SCRIPT_COLORS
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-MASTER_CSV = Path("floresplus_MASTER.csv")
+MASTER_CSV = Path("results/results_CSV/base_model_results.csv")
 OUT_DIR    = Path("charts/")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Cosmetic label for the x-axis only (the master CSV no longer tags the crawl).
 CC_CRAWL = "CC-MAIN-2026-17"
 
-# Which premium column to plot on the y-axis. Every option below is a
-# "<model>_t_<threshold>_pps_premium" column present in the CSV:
-#
-#   combined_t_0.0000          combined_t_0.2578          combined_t_0.4688          combined_t_0.9375
-#   norm_entropy_t_0.4072      norm_entropy_t_0.5293      norm_entropy_t_0.7222      norm_entropy_t_1.0371
-#   raw_entropy_t_1.1904       raw_entropy_t_1.3340       raw_entropy_t_1.4946       raw_entropy_t_1.7988
-#   raw_monotonicity_t_0.2359  raw_monotonicity_t_0.3662  raw_monotonicity_t_0.5928  raw_monotonicity_t_0.9496
-#
-# Set the full column name (i.e. with the "_pps_premium" suffix).
-PREMIUM_COL = "raw_entropy_t_1.3340_pps_premium"
+# Which premium columns to plot. Each produces its own chart.
+PREMIUM_COLS = {
+    "raw_entropy":      "raw_entropy_t_1.3340_pps_premium",
+    "raw_monotonicity": "raw_monotonicity_t_0.3662_pps_premium",
+}
+
+TITLE_LABELS = {
+    "raw_entropy":      "Raw Entropy",
+    "raw_monotonicity": "Monotonicity",
+}
 
 # ── Style ─────────────────────────────────────────────────────────────────────
 
@@ -86,8 +83,6 @@ def load_data(path, premium_col):
             })
     return rows
 
-data = load_data(MASTER_CSV, PREMIUM_COL)
-
 # ── 2. Assign script ──────────────────────────────────────────────────────────
 
 def get_script(row):
@@ -102,92 +97,102 @@ def get_script(row):
 
 # ── 3. Build matched dataset (rows that actually have a CC page count) ─────────
 
-matched, unmatched = [], []
-for row in data:
-    raw = row["cc_pages_raw"]
-    if not raw:
-        unmatched.append(f"  {row['language']} ({row['code']}) — no CC_Pages")
-        continue
-    try:
-        pages = int(float(raw.replace(",", "")))
-    except ValueError:
-        unmatched.append(f"  {row['language']} ({row['code']}) — bad CC_Pages={raw!r}")
-        continue
-    if pages <= 0:  # log scale needs strictly positive values
-        unmatched.append(f"  {row['language']} ({row['code']}) — CC_Pages={pages}")
-        continue
-    row["cc_pages"] = pages
-    row["script"]   = get_script(row)
-    matched.append(row)
+def build_matched(data):
+    matched, unmatched = [], []
+    for row in data:
+        raw = row["cc_pages_raw"]
+        if not raw:
+            unmatched.append(f"  {row['language']} ({row['code']}) — no CC_Pages")
+            continue
+        try:
+            pages = int(float(raw.replace(",", "")))
+        except ValueError:
+            unmatched.append(f"  {row['language']} ({row['code']}) — bad CC_Pages={raw!r}")
+            continue
+        if pages <= 0:  # log scale needs strictly positive values
+            unmatched.append(f"  {row['language']} ({row['code']}) — CC_Pages={pages}")
+            continue
+        row["cc_pages"] = pages
+        row["script"]   = get_script(row)
+        matched.append(row)
+    return matched, unmatched
 
-print(f"Premium column : {PREMIUM_COL}")
-print(f"Matched        : {len(matched)}")
-print(f"Unmatched      : {len(unmatched)}")
-if unmatched:
-    print("\n".join(unmatched))
+# ── 4 & 5. Regression + plot, per premium mode ─────────────────────────────────
 
-if not matched:
-    raise SystemExit("No rows with a usable CC_Pages value — nothing to plot.")
+def make_chart(matched, mode_title, out_path):
+    log_x  = np.log10([r["cc_pages"] for r in matched])
+    y      = np.array([r["premium"]  for r in matched])
+    slope, intercept, r_val, p_val, _ = stats.linregress(log_x, y)
+    print(f"Log regression ({mode_title}): r={r_val:.3f}, p={p_val:.4f}, slope={slope:.3f}")
 
-# ── 4. Log regression ─────────────────────────────────────────────────────────
+    scripts_present = sorted(set(r["script"] for r in matched))
+    PALETTE         = plt.cm.tab20.colors
+    fallback        = {s: PALETTE[i % len(PALETTE)] for i, s in enumerate(scripts_present)}
 
-log_x  = np.log10([r["cc_pages"] for r in matched])
-y      = np.array([r["premium"]  for r in matched])
-slope, intercept, r_val, p_val, _ = stats.linregress(log_x, y)
-print(f"\nLog regression: r={r_val:.3f}, p={p_val:.4f}, slope={slope:.3f}")
+    def get_color(script):
+        return SCRIPT_COLORS.get(script, fallback.get(script, "#888888"))
 
-# ── 5. Plot ───────────────────────────────────────────────────────────────────
+    fig, ax = plt.subplots(figsize=(13, 7))
+    fig.patch.set_facecolor("#f8f9fa")
+    ax.set_facecolor("#f8f9fa")
 
-scripts_present = sorted(set(r["script"] for r in matched))
-PALETTE         = plt.cm.tab20.colors
-fallback        = {s: PALETTE[i % len(PALETTE)] for i, s in enumerate(scripts_present)}
+    for script in scripts_present:
+        pts = [r for r in matched if r["script"] == script]
+        ax.scatter(
+            [r["cc_pages"] for r in pts],
+            [r["premium"]  for r in pts],
+            color=get_color(script), label=script,
+            s=55, zorder=4, alpha=0.85,
+            edgecolors="white", linewidths=0.4,
+        )
 
-def get_color(script):
-    return SCRIPT_COLORS.get(script, fallback.get(script, "#888888"))
+    for r in matched:
+        ax.annotate(
+            r["language"],
+            xy=(r["cc_pages"], r["premium"]),
+            xytext=(4, 3), textcoords="offset points",
+            fontsize=5, color="#444444", zorder=5,
+        )
 
-fig, ax = plt.subplots(figsize=(13, 7))
-fig.patch.set_facecolor("#f8f9fa")
-ax.set_facecolor("#f8f9fa")
-
-for script in scripts_present:
-    pts = [r for r in matched if r["script"] == script]
-    ax.scatter(
-        [r["cc_pages"] for r in pts],
-        [r["premium"]  for r in pts],
-        color=get_color(script), label=script,
-        s=55, zorder=4, alpha=0.85,
-        edgecolors="white", linewidths=0.4,
+    x_range = np.linspace(log_x.min(), log_x.max(), 300)
+    ax.plot(
+        10**x_range, intercept + slope * x_range,
+        color="#c0392b", linewidth=1.6, linestyle="--", zorder=3,
+        label=f"Log fit  r={r_val:.2f}, p={p_val:.3f}",
     )
 
-for r in matched:
-    ax.annotate(
-        r["language"],
-        xy=(r["cc_pages"], r["premium"]),
-        xytext=(4, 3), textcoords="offset points",
-        fontsize=5, color="#444444", zorder=5,
-    )
+    ax.set_xscale("log")
+    ax.set_xlabel(f"Pages in Common Crawl ({CC_CRAWL}, log scale)", **FONT_AXIS)
+    ax.set_ylabel("BLT Patch Premium vs. English", **FONT_AXIS)
+    ax.set_title(f"BLT Patch Premium vs. Common Crawl Presence ({mode_title})", **FONT_TITLE, pad=10)
+    ax.grid(axis="y", color="#cccccc", linewidth=0.6, linestyle=":", alpha=0.7, zorder=1)
+    ax.grid(axis="x", color="#cccccc", linewidth=0.4, linestyle=":", alpha=0.5, zorder=1)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.spines[["left", "bottom"]].set_color("#aaaaaa")
+    ax.tick_params(**FONT_TICK)
+    ax.legend(fontsize=7, framealpha=0.6, ncol=2, loc="lower left",
+              title="Script", title_fontsize=7)
 
-x_range = np.linspace(log_x.min(), log_x.max(), 300)
-ax.plot(
-    10**x_range, intercept + slope * x_range,
-    color="#c0392b", linewidth=1.6, linestyle="--", zorder=3,
-    label=f"Log fit  r={r_val:.2f}, p={p_val:.3f}",
-)
+    plt.tight_layout()
+    fig.savefig(out_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved -> {out_path}\n")
 
-ax.set_xscale("log")
-ax.set_xlabel(f"Pages in Common Crawl ({CC_CRAWL}, log scale)", **FONT_AXIS)
-ax.set_ylabel("BLT Patch Premium vs. English", **FONT_AXIS)
-ax.set_title("BLT Patch Premium vs. Common Crawl Presence", **FONT_TITLE, pad=10)
-ax.grid(axis="y", color="#cccccc", linewidth=0.6, linestyle=":", alpha=0.7, zorder=1)
-ax.grid(axis="x", color="#cccccc", linewidth=0.4, linestyle=":", alpha=0.5, zorder=1)
-ax.spines[["top", "right"]].set_visible(False)
-ax.spines[["left", "bottom"]].set_color("#aaaaaa")
-ax.tick_params(**FONT_TICK)
-ax.legend(fontsize=7, framealpha=0.6, ncol=2, loc="lower left",
-          title="Script", title_fontsize=7)
 
-plt.tight_layout()
-out_path = OUT_DIR / f"premium_vs_cc_pages_{PREMIUM_COL.replace('_pps_premium', '')}.png"
-fig.savefig(out_path, dpi=160, bbox_inches="tight")
-plt.close(fig)
-print(f"\nSaved -> {out_path}")
+for mode_label, premium_col in PREMIUM_COLS.items():
+    data = load_data(MASTER_CSV, premium_col)
+    matched, unmatched = build_matched(data)
+
+    print(f"Premium column : {premium_col}")
+    print(f"Matched        : {len(matched)}")
+    print(f"Unmatched      : {len(unmatched)}")
+    if unmatched:
+        print("\n".join(unmatched))
+
+    if not matched:
+        print(f"WARNING: no rows with a usable CC_Pages value for {premium_col} — skipping.\n")
+        continue
+
+    mode_title = TITLE_LABELS.get(mode_label, mode_label)
+    out_path = OUT_DIR / f"premium_vs_cc_pages_{premium_col.replace('_pps_premium', '')}.png"
+    make_chart(matched, mode_title, out_path)
