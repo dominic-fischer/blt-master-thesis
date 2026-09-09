@@ -234,7 +234,7 @@ def main() -> None:
     out_dir = Path(args.out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    make_single_boxplot(out_dir / "premium_boxplot_merged.png")
+    make_single_boxplot(out_dir / "premium_boxplot_merged_V2.png")
     print("Done.")
 
 

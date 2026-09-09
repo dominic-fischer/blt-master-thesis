@@ -28,18 +28,51 @@ lookups match what run_patching.py actually produced (norm_entropy/
 combined are never present in chars-mode, matching KNOWN_CASES below).
 Output additionally nests under a "char_level" folder (see Output below)
 so byte-mode and chars-mode runs never share a directory even if pointed
-at the same --out-dir.
+at the same --out-dir. This script does NOT chain both score sources
+automatically -- run it twice (once per --score-source), pointing at the
+matching --csv-in-path/--summary-csv pair each time (see Usage below).
+
+ENTROPY MEAN/VARIANCE: for each language, we additionally compute the
+mean and (population) variance of its entropy signal, giving a sense of
+how high and how oscillating that language's entropy signal is overall.
+These are read from the per-language JSON files under results/base_model/
+or results/own_models/<raw_run_stem>/<step>/ -- NOT from --csv-in-path,
+which only carries aggregate pps/bpp/premium columns. The JSON directory
+is auto-derived from the CSV's filename (or --filename-prefix, reversed
+back through RUN_NAME_ALIASES if it's an alias rather than a raw stem)
+unless --results-json-dir is given explicitly. Values are computed once
+per language (not per case/threshold, since the underlying entropy
+signal is shared across all cases within a given score source) and are
+the SAME for every output file of a given run + score source.
+
+Which entropy signal is used depends on --score-source, matching the
+granularity that mode's patch boundaries were actually thresholded over
+(see blt_patcher.py / inspect_results.py):
+  - bytes (default): raw per-byte entropy, i.e. bytes_entropies[i][1]
+    ("entropy_raw"), flattened across every byte of every sentence.
+  - chars: summed raw per-CHARACTER entropy, i.e. chars_entropies[i][1],
+    flattened across every character of every sentence. This is NOT the
+    same quantity as flattening bytes_entropies in chars mode -- it is
+    the actual per-character SUM that char-mode patching thresholds
+    over, so using it keeps EntropyMean/EntropyVar consistent with what
+    that mode's boundaries were computed from.
+If no JSON directory is found, or the relevant key is absent for a
+language, entropy columns are simply omitted -- see load_entropy_stats /
+default_results_json_dir.
 
 RUN NAME ALIASING: raw run-name stems (e.g.
 "entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3")
 are long and not meant for human-facing filenames/folders. RUN_NAME_ALIASES
 maps known raw stems to short, readable names (e.g. "Balanced-Custom") --
-applied via apply_run_name_alias() to whichever raw name is in play (either
-the CSV-filename-derived stem, or an explicit --filename-prefix) BEFORE it's
-used for any output path or filename, so aliasing is transparent to the rest
-of this script's logic. Add new entries to RUN_NAME_ALIASES as new runs are
-evaluated; anything not in the map passes through unchanged (falls back to
-the raw stem), so this is purely additive/non-breaking.
+applied via apply_run_name_alias() to the FULL raw run stem (see
+resolve_raw_run_stem) BEFORE it's used for any output path or filename,
+so aliasing is transparent to the rest of this script's logic. Add new
+entries to RUN_NAME_ALIASES as new runs are evaluated; anything not in
+the map passes through unchanged (falls back to the raw stem), so this is
+purely additive/non-breaking. REVERSE_RUN_NAME_ALIASES is the
+automatically-derived inverse mapping, used to recover the raw run stem
+(for locating the JSON results directory) when --filename-prefix was
+given as a human-readable alias rather than the raw stem itself.
 
 Output:
     results/txt_premiums/t_anchor/<subfolder>/[<step_subfolder>/][<prefix>_]<case>_t_<value>_premiums_sorted.txt
@@ -49,14 +82,17 @@ Output:
   (--score-source=chars nests all of the above one level deeper, under
   results/txt_premiums/char_level/<bound>/... -- see build_out_dir.)
 
-where <subfolder> and <prefix> are determined by --filename-prefix if specified,
-otherwise automatically parsed as the portion of the CSV filename preceding the 
-second underscore. If "step_X" is present in the CSV filename, it is nested inside 
-an extra step subfolder. Either way, the raw stem is passed through
-apply_run_name_alias() first -- see RUN NAME ALIASING above.
+where <subfolder> and <prefix> are BOTH the aliased full raw run stem
+(see RUN NAME ALIASING above) -- i.e. --filename-prefix (or the
+auto-derived stem from the CSV filename) after being resolved to its
+full raw form and passed through apply_run_name_alias(). If "step_X" is
+present in the CSV filename, it is additionally nested inside an extra
+step subfolder.
 
 Each file contains language code, sorted premium, and the absolute patches-per-sentence 
-(pps) and bytes-per-patch (bpp) values.
+(pps) and bytes-per-patch (bpp) values, followed by that language's entropy mean and
+variance (if the per-language JSON results could be located -- see ENTROPY MEAN/VARIANCE
+above).
 
 Each file's FINAL LINE records English's own (non-premium) pps/bpp for
 that exact case+threshold -- since English's own premium is trivially
@@ -65,13 +101,15 @@ that exact case+threshold -- since English's own premium is trivially
 
 Usage:
     python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/<stem>_results.csv --summary-csv calibrated_thresholds/<stem>_thresholds_summary.csv
-    python results/results_to_txt_premiums.py --csv-in-path <csv> --summary-csv <csv> --langs-csv training_setup/langs/langs_chosen.csv --filename-prefix <stem>
-    # Char-level score source:
-    python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/<stem>_results.csv --summary-csv calibrated_thresholds/char_level/<stem>_thresholds_summary.csv --score-source chars --filename-prefix <stem>
+    python results/results_to_txt_premiums.py --csv-in-path <csv> --summary-csv <csv> --langs-csv training_setup/langs/langs_chosen.csv --filename-prefix <stem_or_alias>
+    # Char-level score source (run separately, pointing at the char_level/ CSV + summary):
+    python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/<stem>_results.csv --summary-csv calibrated_thresholds/char_level/<stem>_thresholds_summary.csv --score-source chars --filename-prefix <stem_or_alias>
 """
 import argparse
+import json
 import os
 import re
+import statistics
 import sys
 from os import path
 
@@ -89,6 +127,11 @@ SCORE_SOURCES = ("bytes", "chars")
 # the front of every column name before parsing, in chars-mode.
 COLUMN_PREFIX = {"bytes": "", "chars": "char_"}
 CHAR_LEVEL_FOLDER = "char_level"
+
+# Which top-level JSON key holds the per-unit entropy list to use for
+# EntropyMean/EntropyVar, per score source -- see ENTROPY MEAN/VARIANCE
+# in the module docstring for why these are NOT interchangeable.
+ENTROPY_JSON_KEY = {"bytes": "bytes_entropies", "chars": "chars_entropies"}
 
 # Must match run_patching.py's CASES/COMBINED keys. Both bytes-mode and
 # chars-mode use the same KNOWN_CASES here since norm_entropy/combined
@@ -116,6 +159,12 @@ RUN_NAME_ALIASES = {
     "base_model":"_Base-Model"
 }
 
+# Reverse of RUN_NAME_ALIASES: alias -> raw stem. Lets us go from a
+# human-readable name (however --filename-prefix was given) back to the
+# raw run directory name under results/own_models/, for locating the
+# per-language JSON results (see resolve_raw_run_stem).
+REVERSE_RUN_NAME_ALIASES = {v: k for k, v in RUN_NAME_ALIASES.items()}
+
 
 def apply_run_name_alias(name: str) -> str:
     """Replaces the FIRST matching raw run-name stem found anywhere in
@@ -132,6 +181,71 @@ def apply_run_name_alias(name: str) -> str:
             name = name.replace(raw, RUN_NAME_ALIASES[raw])
             break
     return re.sub(r"_step_\d+", "", name)
+
+
+def resolve_raw_run_stem(csv_stem: str, filename_prefix: str | None) -> str:
+    """Recovers the FULL raw run stem (e.g.
+    'entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3'),
+    used both to locate the per-language JSON folder AND as the basis for
+    the output filename/subfolder prefix (before aliasing -- see main()).
+    If --filename-prefix was given, it might already be a human-readable
+    ALIAS (e.g. 'Balanced-Custom') rather than the raw stem --
+    REVERSE_RUN_NAME_ALIASES maps it back. Otherwise, falls back to the
+    CSV's own filename with the step suffix and a trailing '_results'
+    trimmed off, which is the raw stem as-is."""
+    if filename_prefix:
+        return REVERSE_RUN_NAME_ALIASES.get(filename_prefix, filename_prefix)
+    stem = re.sub(r"_step_\d+", "", csv_stem)
+    if stem.endswith("_results"):
+        stem = stem[: -len("_results")]
+    return stem
+
+
+def default_results_json_dir(raw_run_stem: str, step_subfolder: str | None) -> str:
+    """Derives the per-language JSON results directory from the FULL raw
+    run stem (not the aliased/short prefix used for output naming).
+    'base_model' is special-cased since it lives directly under
+    results/base_model/ rather than results/own_models/<stem>/."""
+    if raw_run_stem == "base_model":
+        return os.path.join("results", "base_model")
+    parts = ["results", "own_models", raw_run_stem]
+    if step_subfolder:
+        parts.append(step_subfolder)
+    return os.path.join(*parts)
+
+
+def load_entropy_stats(results_json_dir: str, lang_codes: set[str], score_source: str) -> dict[str, tuple[float, float]]:
+    """Returns {lang_code: (mean_entropy, var_entropy)}.
+
+    Which JSON key/quantity is used depends on score_source -- see
+    ENTROPY MEAN/VARIANCE in the module docstring:
+      - 'bytes': flattens raw per-byte entropy (bytes_entropies[i][1],
+        i.e. entropy_raw) across every byte of every sentence.
+      - 'chars': flattens summed raw per-character entropy
+        (chars_entropies[i][1]) across every character of every
+        sentence -- the actual quantity char-mode patching thresholds
+        over, NOT re-derived from bytes_entropies.
+
+    Languages whose JSON is missing, or which lack the relevant key
+    entirely, are silently omitted -- caller reports this against the
+    requested set."""
+    entropy_key = ENTROPY_JSON_KEY[score_source]
+    stats = {}
+    for lang in lang_codes:
+        fpath = os.path.join(results_json_dir, f"{lang}.json")
+        if not os.path.exists(fpath):
+            continue
+        with open(fpath, encoding="utf-8") as f:
+            sentences = json.load(f)
+        all_entropies = [
+            e[1]  # entropy_raw (bytes mode) / summed raw entropy per char (chars mode)
+            for sent in sentences
+            for e in sent.get(entropy_key, [])
+        ]
+        if not all_entropies:
+            continue
+        stats[lang] = (statistics.mean(all_entropies), statistics.pvariance(all_entropies))
+    return stats
 
 
 def load_chosen_languages(langs_csv: str) -> set[str]:
@@ -233,17 +347,29 @@ def parse_args():
         help="Must match the --score-source used for --csv-in-path "
              "(results_to_CSV.py) and --summary-csv (calibrate_thresholds.py). "
              "'bytes' (default) expects unprefixed columns; 'chars' expects "
-             "'char_'-prefixed columns and nests output under char_level/. "
-             "See module docstring."
+             "'char_'-prefixed columns, nests output under char_level/, and "
+             "computes EntropyMean/EntropyVar from chars_entropies instead "
+             "of bytes_entropies. See module docstring."
     )
     parser.add_argument(
         "--filename-prefix", 
         default=None,
-        help="Optional prefix (e.g. a model/checkpoint stem) for the "
-             "output filename and subfolder. If omitted, parsed automatically "
-             "from the input CSV's filename before the second underscore. "
-             "Either way, passed through apply_run_name_alias() -- see "
-             "RUN_NAME_ALIASES near the top of this file."
+        help="Optional prefix (e.g. a model/checkpoint stem, or one of its "
+             "short RUN_NAME_ALIASES) for the output filename and subfolder. "
+             "If omitted, the raw stem is parsed automatically from the "
+             "input CSV's filename. Either way, resolved to the full raw "
+             "run stem (see resolve_raw_run_stem) and passed through "
+             "apply_run_name_alias() before use -- see RUN NAME ALIASING."
+    )
+    parser.add_argument(
+        "--results-json-dir",
+        default=None,
+        help="Directory containing per-language {lang}.json result files, "
+             "used to compute per-language entropy mean/variance. If "
+             "omitted, auto-derived from the CSV filename / --filename-prefix "
+             "(reversed through RUN_NAME_ALIASES if needed) -- see ENTROPY "
+             "MEAN/VARIANCE in the module docstring. If the resulting "
+             "directory doesn't exist, entropy columns are simply omitted."
     )
     return parser.parse_args()
 
@@ -262,26 +388,36 @@ def main():
     csv_basename = os.path.basename(args.csv_in_path)
     csv_stem, _ = os.path.splitext(csv_basename)
 
-    # Check if there is a "step_X" pattern in the filename
+    # Locate the FULL raw run stem FIRST -- used both for JSON-dir lookup
+    # and as the basis for the output prefix/subfolder name, so a short
+    # alias (e.g. "Balanced") is correctly recovered even when
+    # --filename-prefix was not given explicitly. (Previously, automatic
+    # derivation truncated to the first two underscore-parts of the
+    # filename BEFORE attempting the alias lookup, so the alias -- keyed
+    # on the full stem -- never matched and the raw truncated name leaked
+    # through instead.)
+    raw_run_stem = resolve_raw_run_stem(csv_stem, args.filename_prefix)
     step_match = re.search(r"step_\d+", csv_stem)
     step_subfolder = step_match.group(0) if step_match else None
 
-    # Determine automatic prefix / subfolder name if not explicitly specified.
-    # Either way, run the result through apply_run_name_alias() so a known
-    # raw run stem (e.g. "entropy_10M_..._customenc_lr4.5e-3") is swapped
-    # for its short alias (e.g. "Balanced-Custom") before it's used in any
-    # output path or filename -- see RUN_NAME_ALIASES.
-    if args.filename_prefix:
-        prefix = apply_run_name_alias(args.filename_prefix)
-        subfolder_name = prefix
+    prefix = apply_run_name_alias(raw_run_stem)
+    subfolder_name = prefix
+
+    # Locate and load per-language entropy JSON, for the mean/variance
+    # columns -- see ENTROPY MEAN/VARIANCE in the module docstring.
+    results_json_dir = args.results_json_dir or default_results_json_dir(raw_run_stem, step_subfolder)
+
+    entropy_stats = {}
+    if os.path.isdir(results_json_dir):
+        entropy_stats = load_entropy_stats(results_json_dir, chosen_langs, source)
+        missing_entropy = chosen_langs - set(entropy_stats)
+        if missing_entropy:
+            print(f"  NOTE: no entropy JSON found for {len(missing_entropy)} language(s) "
+                  f"in {results_json_dir} (score_source={source!r}, key={ENTROPY_JSON_KEY[source]!r}): "
+                  f"{sorted(missing_entropy)}")
     else:
-        parts = csv_stem.split("_")
-        if len(parts) >= 2:
-            prefix = f"{parts[0]}_{parts[1]}"
-        else:
-            prefix = csv_stem
-        prefix = apply_run_name_alias(prefix)
-        subfolder_name = prefix
+        print(f"  NOTE: results-json-dir {results_json_dir!r} not found -- "
+              f"entropy mean/variance columns will be omitted.")
 
     filtered = df[df["Code_Orig"].astype(str).isin(chosen_langs)]
     missing = chosen_langs - set(filtered["Code_Orig"].astype(str))
@@ -346,15 +482,27 @@ def main():
         for _, row in rows.iterrows():
             lang = str(row['Code_Orig'])
             prem = f"{row[col]:.4f}"
+            values = [lang, prem]
             if has_extra_cols:
-                pps = f"{row[pps_col]:.4f}"
-                bpp = f"{row[bpp_col]:.4f}"
-                formatted_rows.append((lang, prem, pps, bpp))
-            else:
-                formatted_rows.append((lang, prem))
+                values.append(f"{row[pps_col]:.4f}")
+                values.append(f"{row[bpp_col]:.4f}")
+            if entropy_stats:
+                if lang in entropy_stats:
+                    mean_e, var_e = entropy_stats[lang]
+                    values.append(f"{mean_e:.4f}")
+                    values.append(f"{var_e:.4f}")
+                else:
+                    values.append("")
+                    values.append("")
+            formatted_rows.append(tuple(values))
 
         # Dynamic alignment: compute max width of each column (including safety margin of 2 spaces)
-        headers = ["Language", "Premium", "PPS", "BPP"] if has_extra_cols else ["Language", "Premium"]
+        headers = ["Language", "Premium"]
+        if has_extra_cols:
+            headers += ["PPS", "BPP"]
+        if entropy_stats:
+            headers += ["EntropyMean", "EntropyVar"]
+
         col_widths = []
         for i, header in enumerate(headers):
             # Find length of longest value in this index across all formatted rows and the header itself
