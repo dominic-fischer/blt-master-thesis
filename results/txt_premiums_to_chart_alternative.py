@@ -10,7 +10,8 @@ Takes three input files:
 ...and visualizes how each language's "premium" changes between the two
 rankings, using color instead of raw numbers:
 
-  - Premium:              green (=1, baseline) -> red (=max, across both files)
+  - Premium:              green (=min in that column) -> red (=max in that column)
+                          EACH COLUMN GETS ITS OWN SCALE (see note below).
   - Entropy Mean / Var:   light grey (=min) -> black (=max, across both files)
                           (shown once per language - these don't change
                           between rankings)
@@ -18,6 +19,17 @@ rankings, using color instead of raw numbers:
 Training-data volume isn't color-coded; instead each language's rank by
 training-data size (1 = most bytes) is shown in brackets next to its name,
 e.g. "English (#1)", "Mandarin Chinese (#2)".
+
+PREMIUM COLOR SCALE (per-column, not shared):
+    The two Premium columns each get their OWN green->red scale, based on
+    that column's own min/max, rather than a scale shared across both
+    columns. This matters because the two rankings can have different
+    minimums - e.g. under one ranking English's premium of 1.00 might be
+    the lowest value in that column (and should render as pure green),
+    while under the other ranking some other language dips below 1.00.
+    A shared scale would use the lower of the two columns' minimums for
+    BOTH columns, making a column's own true "best" value not render as
+    pure green. Scoping each column to its own range fixes that.
 
 COLUMN ORDER (left to right):
     Language (full name, with training-data rank) | Premium -> Premium | Mean | Var
@@ -46,7 +58,7 @@ row per language. The script auto-detects:
   Numbers may contain thousands-separator commas; those are stripped.
 
 USAGE
-    python3 premium_color_chart.py <entropy_file> <monotonicity_file> [lang_data_csv]
+    python3 txt_premiums_to_chart_alternative.py <entropy_file> <monotonicity_file> [lang_data_csv]
 
     lang_data_csv defaults to "training_setup/langs/langs_chosen.csv" if
     omitted.
@@ -77,8 +89,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-
-TRAINING_DATA_LOG_SCALE = True  # see note above
 
 # Built-in language-name <-> code map. Extend this if you add languages
 # that aren't covered yet.
@@ -286,17 +296,9 @@ def green_red_gradient(t):
 
 
 def premium_color(p, p_min, p_max):
-    """Low premium (1) = green, high premium = red."""
+    """Low premium (column min) = green, high premium (column max) = red."""
     t = (p - p_min) / (p_max - p_min) if p_max > p_min else 0
     return green_red_gradient(t)
-
-
-def training_color(v, vmin, vmax, log_scale=TRAINING_DATA_LOG_SCALE):
-    """High byte count = green, low byte count = red (inverse of premium)."""
-    if log_scale:
-        v, vmin, vmax = np.log10(max(v, 1)), np.log10(max(vmin, 1)), np.log10(max(vmax, 1))
-    t = (v - vmin) / (vmax - vmin) if vmax > vmin else 0
-    return green_red_gradient(1 - t)  # invert: more data -> green
 
 
 def grey_color(v, vmin, vmax):
@@ -337,11 +339,17 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
         )
     }
 
-    all_premiums = [v[0] for v in table1.values()] + [v[0] for v in table2.values()]
     all_means = [table1[l][1] for l in langs] + [table2[l][1] for l in langs]
     all_vars = [table1[l][2] for l in langs] + [table2[l][2] for l in langs]
 
-    p_min, p_max = min(1.0, min(all_premiums)), max(all_premiums)
+    # Premium: separate scale PER COLUMN (see module docstring). table1's
+    # own min/max drives the left Premium column's color; table2's own
+    # min/max drives the right one. NOT shared across both columns.
+    p1_vals = [table1[l][0] for l in langs]
+    p2_vals = [table2[l][0] for l in langs]
+    p1_min, p1_max = min(p1_vals), max(p1_vals)
+    p2_min, p2_max = min(p2_vals), max(p2_vals)
+
     m_min, m_max = min(all_means), max(all_means)
     v_min, v_max = min(all_vars), max(all_vars)
 
@@ -354,10 +362,10 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
     extra_top = header_line_h * (title_lines - 1)
 
     n = len(langs)
-    fig_h = n * 0.5 + 2.3 + extra_top
+    fig_h = n * 0.5 + 3.2 + extra_top   # +3.2 to fit the 2-row legend below
     fig, ax = plt.subplots(figsize=(9, fig_h))
     ax.set_xlim(0, 7.6)
-    ax.set_ylim(-2.2, n + 1.5 + extra_top)
+    ax.set_ylim(-3.4, n + 1.5 + extra_top)
     ax.axis("off")
 
     sq = 0.8
@@ -405,15 +413,15 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
 
         ax.text(x_lang, y + sq / 2, lang_label, fontsize=9.5, va="center", fontweight="medium")
 
-        draw_square(x1_p, y, premium_color(p1, p_min, p_max), p1)
+        draw_square(x1_p, y, premium_color(p1, p1_min, p1_max), p1)
         ax.annotate("", xy=(x_arrow + 0.6, y + sq / 2), xytext=(x_arrow - 0.15, y + sq / 2),
                     arrowprops=dict(arrowstyle="->", color="#888888", lw=1.3))
-        draw_square(x2_p, y, premium_color(p2, p_min, p_max), p2)
+        draw_square(x2_p, y, premium_color(p2, p2_min, p2_max), p2)
 
         draw_square(x_mean, y, grey_color(mean, m_min, m_max), mean)
         draw_square(x_var, y, grey_color(var, v_min, v_max), var)
 
-    # ---- legend (single row, 3 gradients) ----
+    # ---- legend (2 rows: premium x2 on top, mean/var below) ----
     grad_w = 2.0
     n_steps = 60
 
@@ -429,16 +437,20 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
             ))
         ax.text(x0, y0 - 0.3, label_formatter(vmin), fontsize=8, ha="left")
         ax.text(x0 + grad_w, y0 - 0.3, label_formatter(vmax), fontsize=8, ha="right")
-        ax.text(x0 + grad_w / 2, y0 + 0.5, label, fontsize=8.5, ha="center")
+        ax.text(x0 + grad_w / 2, y0 + 0.5, label, fontsize=8.5, ha="center",
+                multialignment="center")
 
-    leg_y = -1.2
-    draw_gradient_legend(0.2, leg_y, p_min, p_max,
-                          lambda v: premium_color(v, p_min, p_max),
-                          "Premium (green=1\u2192red=max)")
-    draw_gradient_legend(2.8, leg_y, m_min, m_max,
+    row1_y, row2_y = -1.2, -2.6
+    draw_gradient_legend(0.2, row1_y, p1_min, p1_max,
+                          lambda v: premium_color(v, p1_min, p1_max),
+                          "Left-col Premium\n(green=min\u2192red=max)")
+    draw_gradient_legend(3.6, row1_y, p2_min, p2_max,
+                          lambda v: premium_color(v, p2_min, p2_max),
+                          "Right-col Premium\n(green=min\u2192red=max)")
+    draw_gradient_legend(0.2, row2_y, m_min, m_max,
                           lambda v: grey_color(v, m_min, m_max),
                           "Entropy Mean (light\u2192dark)")
-    draw_gradient_legend(5.4, leg_y, v_min, v_max,
+    draw_gradient_legend(3.6, row2_y, v_min, v_max,
                           lambda v: grey_color(v, v_min, v_max),
                           "Entropy Variance (light\u2192dark)")
 
