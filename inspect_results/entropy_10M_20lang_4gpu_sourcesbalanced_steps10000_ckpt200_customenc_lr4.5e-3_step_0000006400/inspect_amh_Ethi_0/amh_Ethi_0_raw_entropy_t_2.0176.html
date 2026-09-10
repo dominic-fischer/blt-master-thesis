@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BLT Entropy Patcher -- Visualisation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #f0f2f8;
+    --surface: #ffffff;
+    --border:  #d0d5e8;
+    --text:    #1a1d2e;
+    --muted:   #5a5f7a;
+    --accent:  #2a6db5;
+    --font:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page-header {
+    max-width: 98vw;
+    margin: 0 auto 2.5rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 1.2rem;
+  }
+  .page-header h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .page-header .subtitle {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
+  .result-card {
+    max-width: 98vw;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.65rem 1rem;
+    background: #e8ecf7;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .label-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(42,109,181,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(42,109,181,0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+    .char-group {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        border: 1px solid #d0d5e8;
+        border-radius: 4px;
+        padding: 3px 5px;
+        background: #ffffff;
+        margin: 2px 1px;
+        vertical-align: bottom;
+    }
+
+    .byte-row {
+        display: flex;
+        flex-direction: row;
+        gap: 1px;
+    }
+
+    .byte-sq {
+        width: 8px;
+        height: 8px;
+        border-radius: 1px;
+    }
+
+    .char-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+    }
+
+  .stats {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+
+  .text-preview {
+    padding: 0.55rem 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .text-preview.expanded {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    }
+
+  .patch-display {
+    padding: 0.85rem 1rem;
+    line-height: 2.4;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+  }
+
+  .patch-token {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 2px 1px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: default;
+    transition: transform 0.1s, box-shadow 0.1s;
+    white-space: pre;
+  }
+  .patch-token:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    z-index: 1;
+    position: relative;
+  }
+
+  .svg-wrap {
+    overflow-x: auto;
+    padding: 1rem;
+  }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>BLT Entropy Patcher &mdash; Visualisation</h1>
+  <p class="subtitle">Per-byte entropy &middot; patch boundaries &middot; byte&harr;character alignment</p>
+</header>
+
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">amh_Ethi [0] - raw_entropy t_2.0176</span>
+            <span class="stats">
+              <b>85</b> patches &middot; <b>342</b> bytes &middot; avg <b>4.02</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview" dir="auto" ondblclick="this.classList.toggle('expanded')">ሰኞ እለት፣ በስታንፎርድ ዩኒቨርሲቲ የህክምና ትምህርት ቤት ህዋሶችን በአይነት የሚያስቀምጥ አዲስ የምርመራ መሳሪያ እንደተፈጠረ አስታውቋል፡ እያንዳንዱን በአንደ የዩ.ኤስ ሳንቲም የሚሆን መደበኛ የኢንክጄት አታሚዎችን በመጠቀም ሊፈበረክ የሚችል ትንሽ መታተም የሚችል ቺፕ።</p>
+          <div class="patch-display"><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ሰ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ኞ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">እ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ለ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">፣</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ስ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ታ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ፎ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ር</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ድ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ዩ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ኒ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ቨ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ር</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ሲ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ቲ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ህ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ክ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ና</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ህ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ር</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ቤ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ህ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ዋ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ሶ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ች</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">አ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ይ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ነ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ሚ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ያ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ስ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ቀ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ጥ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">አ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">ዲ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ስ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ር</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">መ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ራ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">መ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ሳ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ሪ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ያ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">እ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ደ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ተ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ፈ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ጠ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ረ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">አ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ስ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">ታ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ው</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">ቋ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ል</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">፡</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">እ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ያ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ዳ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ዱ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">አ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ደ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">ዩ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">.</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ኤ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ስ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ሳ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ቲ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ሚ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">ሆ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">መ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">ደ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">ኛ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ኢ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">ክ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ጄ</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">አ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ታ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ሚ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ዎ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ች</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">መ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ጠ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ቀ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ሊ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ፈ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">በ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ረ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ክ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ሚ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ች</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ል</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ት</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ን</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ሽ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">መ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ታ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ተ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ም</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">የ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ሚ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ች</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ል</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ቺ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">ፕ</span></span><span class="char-group"><span class="byte-row"></span><span class="char-label">።</span></span></div>
+          <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="9644" height="306" style="display:block;overflow:visible;"><rect x="0" y="0" width="9644" height="306" fill="#f8f9fc" rx="0"/>
+<rect x="52" y="16" width="9576" height="200" fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>
+<line x1="52" y1="216.0" x2="9628" y2="216.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="220.0" text-anchor="end" font-size="9" fill="#888">0.0</text>
+<line x1="52" y1="176.0" x2="9628" y2="176.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="180.0" text-anchor="end" font-size="9" fill="#888">1.0</text>
+<line x1="52" y1="136.0" x2="9628" y2="136.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="140.0" text-anchor="end" font-size="9" fill="#888">2.0</text>
+<line x1="52" y1="96.0" x2="9628" y2="96.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="100.0" text-anchor="end" font-size="9" fill="#888">3.0</text>
+<line x1="52" y1="56.0" x2="9628" y2="56.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="60.0" text-anchor="end" font-size="9" fill="#888">4.0</text>
+<line x1="52" y1="16.0" x2="9628" y2="16.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="20.0" text-anchor="end" font-size="9" fill="#888">5.0</text>
+<line x1="52" y1="135.3" x2="9628" y2="135.3" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="9631" y="139.3" font-size="9" fill="#c0392b">t=2.02</text>
+<line x1="80" y1="16" x2="80" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="108" y1="16" x2="108" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="220" y1="16" x2="220" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="500" y1="16" x2="500" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="556" y1="16" x2="556" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="612" y1="16" x2="612" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="668" y1="16" x2="668" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="724" y1="16" x2="724" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="948" y1="16" x2="948" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1004" y1="16" x2="1004" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1060" y1="16" x2="1060" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1340" y1="16" x2="1340" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1396" y1="16" x2="1396" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1452" y1="16" x2="1452" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1676" y1="16" x2="1676" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1732" y1="16" x2="1732" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2012" y1="16" x2="2012" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2180" y1="16" x2="2180" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2236" y1="16" x2="2236" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2292" y1="16" x2="2292" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2516" y1="16" x2="2516" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2572" y1="16" x2="2572" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2628" y1="16" x2="2628" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2684" y1="16" x2="2684" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2852" y1="16" x2="2852" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2908" y1="16" x2="2908" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2964" y1="16" x2="2964" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3020" y1="16" x2="3020" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3076" y1="16" x2="3076" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3132" y1="16" x2="3132" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3300" y1="16" x2="3300" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3356" y1="16" x2="3356" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3524" y1="16" x2="3524" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3580" y1="16" x2="3580" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3636" y1="16" x2="3636" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3860" y1="16" x2="3860" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3916" y1="16" x2="3916" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4140" y1="16" x2="4140" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4308" y1="16" x2="4308" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4364" y1="16" x2="4364" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4420" y1="16" x2="4420" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4588" y1="16" x2="4588" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4644" y1="16" x2="4644" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5036" y1="16" x2="5036" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5092" y1="16" x2="5092" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5484" y1="16" x2="5484" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5540" y1="16" x2="5540" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5596" y1="16" x2="5596" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5764" y1="16" x2="5764" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5820" y1="16" x2="5820" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5932" y1="16" x2="5932" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5988" y1="16" x2="5988" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6100" y1="16" x2="6100" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6212" y1="16" x2="6212" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6380" y1="16" x2="6380" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6436" y1="16" x2="6436" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6492" y1="16" x2="6492" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6660" y1="16" x2="6660" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6716" y1="16" x2="6716" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6940" y1="16" x2="6940" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6996" y1="16" x2="6996" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7108" y1="16" x2="7108" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7220" y1="16" x2="7220" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7332" y1="16" x2="7332" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7388" y1="16" x2="7388" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7444" y1="16" x2="7444" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7500" y1="16" x2="7500" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7724" y1="16" x2="7724" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7780" y1="16" x2="7780" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7836" y1="16" x2="7836" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8060" y1="16" x2="8060" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8116" y1="16" x2="8116" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8396" y1="16" x2="8396" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8676" y1="16" x2="8676" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8788" y1="16" x2="8788" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8900" y1="16" x2="8900" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8956" y1="16" x2="8956" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9012" y1="16" x2="9012" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9068" y1="16" x2="9068" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9180" y1="16" x2="9180" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9236" y1="16" x2="9236" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9292" y1="16" x2="9292" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9460" y1="16" x2="9460" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9516" y1="16" x2="9516" y2="216" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<polygon points="66.0,216 66.0,123.9 94.0,93.8 122.0,173.3 150.0,188.7 178.0,212.9 206.0,37.6 234.0,209.2 262.0,148.1 290.0,214.9 318.0,185.6 346.0,213.9 374.0,151.9 402.0,216.0 430.0,210.9 458.0,215.9 486.0,67.9 514.0,215.2 542.0,56.0 570.0,215.7 598.0,80.1 626.0,208.2 654.0,131.8 682.0,215.9 710.0,100.1 738.0,215.0 766.0,169.8 794.0,215.9 822.0,204.0 850.0,216.0 878.0,197.5 906.0,215.8 934.0,58.5 962.0,212.3 990.0,118.0 1018.0,214.9 1046.0,85.0 1074.0,214.2 1102.0,213.0 1130.0,216.0 1158.0,169.6 1186.0,215.9 1214.0,208.8 1242.0,208.0 1270.0,182.8 1298.0,213.4 1326.0,72.3 1354.0,215.8 1382.0,60.3 1410.0,215.6 1438.0,114.0 1466.0,214.8 1494.0,207.9 1522.0,215.9 1550.0,213.4 1578.0,215.9 1606.0,206.4 1634.0,215.8 1662.0,76.3 1690.0,201.7 1718.0,117.2 1746.0,216.0 1774.0,212.4 1802.0,216.0 1830.0,215.5 1858.0,216.0 1886.0,194.5 1914.0,216.0 1942.0,200.1 1970.0,215.6 1998.0,91.4 2026.0,215.8 2054.0,187.0 2082.0,216.0 2110.0,198.5 2138.0,215.6 2166.0,53.2 2194.0,215.9 2222.0,115.5 2250.0,204.8 2278.0,104.1 2306.0,182.8 2334.0,163.9 2362.0,216.0 2390.0,169.6 2418.0,215.9 2446.0,203.7 2474.0,215.9 2502.0,97.6 2530.0,215.2 2558.0,77.5 2586.0,202.1 2614.0,81.5 2642.0,214.3 2670.0,88.3 2698.0,205.8 2726.0,163.4 2754.0,216.0 2782.0,195.1 2810.0,215.9 2838.0,79.0 2866.0,215.9 2894.0,59.6 2922.0,215.1 2950.0,115.4 2978.0,216.0 3006.0,102.1 3034.0,215.9 3062.0,112.6 3090.0,215.5 3118.0,127.6 3146.0,215.9 3174.0,162.1 3202.0,215.9 3230.0,209.5 3258.0,215.9 3286.0,80.5 3314.0,205.2 3342.0,96.5 3370.0,215.8 3398.0,184.8 3426.0,216.0 3454.0,214.0 3482.0,215.9 3510.0,93.7 3538.0,215.4 3566.0,60.6 3594.0,215.9 3622.0,109.9 3650.0,216.0 3678.0,161.1 3706.0,215.6 3734.0,210.7 3762.0,215.4 3790.0,212.5 3818.0,215.4 3846.0,91.5 3874.0,208.9 3902.0,87.6 3930.0,215.9 3958.0,214.6 3986.0,215.6 4014.0,215.7 4042.0,216.0 4070.0,166.7 4098.0,215.8 4126.0,64.7 4154.0,215.7 4182.0,143.5 4210.0,215.9 4238.0,171.5 4266.0,215.8 4294.0,133.4 4322.0,215.9 4350.0,86.2 4378.0,215.9 4406.0,133.7 4434.0,215.8 4462.0,181.0 4490.0,215.7 4518.0,167.1 4546.0,215.8 4574.0,88.7 4602.0,202.2 4630.0,97.3 4658.0,216.0 4686.0,152.0 4714.0,214.2 4742.0,175.0 4770.0,215.3 4798.0,170.6 4826.0,215.9 4854.0,215.6 4882.0,216.0 4910.0,177.9 4938.0,216.0 4966.0,214.7 4994.0,215.1 5022.0,80.5 5050.0,205.5 5078.0,114.8 5106.0,209.6 5134.0,141.4 5162.0,215.9 5190.0,208.2 5218.0,213.6 5246.0,214.4 5274.0,216.0 5302.0,201.7 5330.0,215.6 5358.0,203.7 5386.0,215.9 5414.0,207.4 5442.0,215.9 5470.0,64.9 5498.0,215.8 5526.0,62.1 5554.0,201.9 5582.0,98.4 5610.0,216.0 5638.0,176.9 5666.0,213.8 5694.0,192.2 5722.0,215.9 5750.0,77.8 5778.0,215.9 5806.0,62.6 5834.0,215.6 5862.0,192.1 5890.0,190.2 5918.0,75.1 5946.0,207.8 5974.0,134.0 6002.0,216.0 6030.0,145.7 6058.0,215.9 6086.0,51.5 6114.0,214.7 6142.0,136.2 6170.0,215.8 6198.0,80.8 6226.0,215.8 6254.0,143.4 6282.0,216.0 6310.0,197.4 6338.0,215.9 6366.0,80.5 6394.0,215.8 6422.0,62.4 6450.0,214.7 6478.0,96.4 6506.0,215.8 6534.0,173.5 6562.0,216.0 6590.0,182.3 6618.0,215.9 6646.0,82.3 6674.0,207.0 6702.0,88.9 6730.0,186.1 6758.0,160.5 6786.0,215.3 6814.0,213.2 6842.0,216.0 6870.0,200.8 6898.0,215.9 6926.0,87.5 6954.0,215.9 6982.0,63.5 7010.0,215.8 7038.0,135.6 7066.0,216.0 7094.0,127.2 7122.0,216.0 7150.0,146.9 7178.0,188.4 7206.0,127.2 7234.0,216.0 7262.0,173.2 7290.0,215.9 7318.0,67.8 7346.0,208.3 7374.0,81.7 7402.0,180.8 7430.0,126.3 7458.0,215.5 7486.0,124.8 7514.0,214.5 7542.0,208.9 7570.0,216.0 7598.0,177.3 7626.0,215.9 7654.0,202.9 7682.0,215.9 7710.0,99.1 7738.0,215.7 7766.0,93.0 7794.0,214.7 7822.0,70.8 7850.0,215.9 7878.0,160.0 7906.0,216.0 7934.0,206.2 7962.0,216.0 7990.0,203.2 8018.0,215.8 8046.0,85.8 8074.0,215.6 8102.0,86.8 8130.0,216.0 8158.0,138.7 8186.0,213.5 8214.0,143.0 8242.0,212.9 8270.0,168.8 8298.0,207.8 8326.0,136.1 8354.0,215.8 8382.0,116.2 8410.0,215.8 8438.0,174.0 8466.0,215.6 8494.0,191.8 8522.0,215.9 8550.0,176.9 8578.0,215.8 8606.0,191.6 8634.0,215.8 8662.0,98.9 8690.0,192.5 8718.0,171.4 8746.0,215.9 8774.0,103.5 8802.0,215.8 8830.0,203.5 8858.0,215.9 8886.0,66.1 8914.0,210.5 8942.0,77.5 8970.0,214.9 8998.0,133.0 9026.0,215.5 9054.0,127.0 9082.0,216.0 9110.0,198.3 9138.0,215.9 9166.0,94.7 9194.0,216.0 9222.0,103.9 9250.0,215.5 9278.0,109.6 9306.0,216.0 9334.0,176.8 9362.0,215.8 9390.0,192.1 9418.0,215.8 9446.0,107.1 9474.0,209.9 9502.0,128.1 9530.0,215.5 9558.0,156.7 9586.0,198.4 9614.0,170.5 9614.0,216" fill="rgba(42,109,181,0.08)"/>
+<polyline points="66.0,123.9 94.0,93.8 122.0,173.3 150.0,188.7 178.0,212.9 206.0,37.6 234.0,209.2 262.0,148.1 290.0,214.9 318.0,185.6 346.0,213.9 374.0,151.9 402.0,216.0 430.0,210.9 458.0,215.9 486.0,67.9 514.0,215.2 542.0,56.0 570.0,215.7 598.0,80.1 626.0,208.2 654.0,131.8 682.0,215.9 710.0,100.1 738.0,215.0 766.0,169.8 794.0,215.9 822.0,204.0 850.0,216.0 878.0,197.5 906.0,215.8 934.0,58.5 962.0,212.3 990.0,118.0 1018.0,214.9 1046.0,85.0 1074.0,214.2 1102.0,213.0 1130.0,216.0 1158.0,169.6 1186.0,215.9 1214.0,208.8 1242.0,208.0 1270.0,182.8 1298.0,213.4 1326.0,72.3 1354.0,215.8 1382.0,60.3 1410.0,215.6 1438.0,114.0 1466.0,214.8 1494.0,207.9 1522.0,215.9 1550.0,213.4 1578.0,215.9 1606.0,206.4 1634.0,215.8 1662.0,76.3 1690.0,201.7 1718.0,117.2 1746.0,216.0 1774.0,212.4 1802.0,216.0 1830.0,215.5 1858.0,216.0 1886.0,194.5 1914.0,216.0 1942.0,200.1 1970.0,215.6 1998.0,91.4 2026.0,215.8 2054.0,187.0 2082.0,216.0 2110.0,198.5 2138.0,215.6 2166.0,53.2 2194.0,215.9 2222.0,115.5 2250.0,204.8 2278.0,104.1 2306.0,182.8 2334.0,163.9 2362.0,216.0 2390.0,169.6 2418.0,215.9 2446.0,203.7 2474.0,215.9 2502.0,97.6 2530.0,215.2 2558.0,77.5 2586.0,202.1 2614.0,81.5 2642.0,214.3 2670.0,88.3 2698.0,205.8 2726.0,163.4 2754.0,216.0 2782.0,195.1 2810.0,215.9 2838.0,79.0 2866.0,215.9 2894.0,59.6 2922.0,215.1 2950.0,115.4 2978.0,216.0 3006.0,102.1 3034.0,215.9 3062.0,112.6 3090.0,215.5 3118.0,127.6 3146.0,215.9 3174.0,162.1 3202.0,215.9 3230.0,209.5 3258.0,215.9 3286.0,80.5 3314.0,205.2 3342.0,96.5 3370.0,215.8 3398.0,184.8 3426.0,216.0 3454.0,214.0 3482.0,215.9 3510.0,93.7 3538.0,215.4 3566.0,60.6 3594.0,215.9 3622.0,109.9 3650.0,216.0 3678.0,161.1 3706.0,215.6 3734.0,210.7 3762.0,215.4 3790.0,212.5 3818.0,215.4 3846.0,91.5 3874.0,208.9 3902.0,87.6 3930.0,215.9 3958.0,214.6 3986.0,215.6 4014.0,215.7 4042.0,216.0 4070.0,166.7 4098.0,215.8 4126.0,64.7 4154.0,215.7 4182.0,143.5 4210.0,215.9 4238.0,171.5 4266.0,215.8 4294.0,133.4 4322.0,215.9 4350.0,86.2 4378.0,215.9 4406.0,133.7 4434.0,215.8 4462.0,181.0 4490.0,215.7 4518.0,167.1 4546.0,215.8 4574.0,88.7 4602.0,202.2 4630.0,97.3 4658.0,216.0 4686.0,152.0 4714.0,214.2 4742.0,175.0 4770.0,215.3 4798.0,170.6 4826.0,215.9 4854.0,215.6 4882.0,216.0 4910.0,177.9 4938.0,216.0 4966.0,214.7 4994.0,215.1 5022.0,80.5 5050.0,205.5 5078.0,114.8 5106.0,209.6 5134.0,141.4 5162.0,215.9 5190.0,208.2 5218.0,213.6 5246.0,214.4 5274.0,216.0 5302.0,201.7 5330.0,215.6 5358.0,203.7 5386.0,215.9 5414.0,207.4 5442.0,215.9 5470.0,64.9 5498.0,215.8 5526.0,62.1 5554.0,201.9 5582.0,98.4 5610.0,216.0 5638.0,176.9 5666.0,213.8 5694.0,192.2 5722.0,215.9 5750.0,77.8 5778.0,215.9 5806.0,62.6 5834.0,215.6 5862.0,192.1 5890.0,190.2 5918.0,75.1 5946.0,207.8 5974.0,134.0 6002.0,216.0 6030.0,145.7 6058.0,215.9 6086.0,51.5 6114.0,214.7 6142.0,136.2 6170.0,215.8 6198.0,80.8 6226.0,215.8 6254.0,143.4 6282.0,216.0 6310.0,197.4 6338.0,215.9 6366.0,80.5 6394.0,215.8 6422.0,62.4 6450.0,214.7 6478.0,96.4 6506.0,215.8 6534.0,173.5 6562.0,216.0 6590.0,182.3 6618.0,215.9 6646.0,82.3 6674.0,207.0 6702.0,88.9 6730.0,186.1 6758.0,160.5 6786.0,215.3 6814.0,213.2 6842.0,216.0 6870.0,200.8 6898.0,215.9 6926.0,87.5 6954.0,215.9 6982.0,63.5 7010.0,215.8 7038.0,135.6 7066.0,216.0 7094.0,127.2 7122.0,216.0 7150.0,146.9 7178.0,188.4 7206.0,127.2 7234.0,216.0 7262.0,173.2 7290.0,215.9 7318.0,67.8 7346.0,208.3 7374.0,81.7 7402.0,180.8 7430.0,126.3 7458.0,215.5 7486.0,124.8 7514.0,214.5 7542.0,208.9 7570.0,216.0 7598.0,177.3 7626.0,215.9 7654.0,202.9 7682.0,215.9 7710.0,99.1 7738.0,215.7 7766.0,93.0 7794.0,214.7 7822.0,70.8 7850.0,215.9 7878.0,160.0 7906.0,216.0 7934.0,206.2 7962.0,216.0 7990.0,203.2 8018.0,215.8 8046.0,85.8 8074.0,215.6 8102.0,86.8 8130.0,216.0 8158.0,138.7 8186.0,213.5 8214.0,143.0 8242.0,212.9 8270.0,168.8 8298.0,207.8 8326.0,136.1 8354.0,215.8 8382.0,116.2 8410.0,215.8 8438.0,174.0 8466.0,215.6 8494.0,191.8 8522.0,215.9 8550.0,176.9 8578.0,215.8 8606.0,191.6 8634.0,215.8 8662.0,98.9 8690.0,192.5 8718.0,171.4 8746.0,215.9 8774.0,103.5 8802.0,215.8 8830.0,203.5 8858.0,215.9 8886.0,66.1 8914.0,210.5 8942.0,77.5 8970.0,214.9 8998.0,133.0 9026.0,215.5 9054.0,127.0 9082.0,216.0 9110.0,198.3 9138.0,215.9 9166.0,94.7 9194.0,216.0 9222.0,103.9 9250.0,215.5 9278.0,109.6 9306.0,216.0 9334.0,176.8 9362.0,215.8 9390.0,192.1 9418.0,215.8 9446.0,107.1 9474.0,209.9 9502.0,128.1 9530.0,215.5 9558.0,156.7 9586.0,198.4 9614.0,170.5" fill="none" stroke="#2a6db5" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="66.0" cy="123.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="94.0" cy="93.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="122.0" cy="173.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="150.0" cy="188.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="178.0" cy="212.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="206.0" cy="37.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="234.0" cy="209.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="262.0" cy="148.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="290.0" cy="214.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="318.0" cy="185.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="346.0" cy="213.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="374.0" cy="151.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="402.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="430.0" cy="210.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="458.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="486.0" cy="67.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="514.0" cy="215.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="542.0" cy="56.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="570.0" cy="215.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="598.0" cy="80.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="626.0" cy="208.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="654.0" cy="131.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="682.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="710.0" cy="100.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="738.0" cy="215.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="766.0" cy="169.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="794.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="822.0" cy="204.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="850.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="878.0" cy="197.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="906.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="934.0" cy="58.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="962.0" cy="212.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="990.0" cy="118.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1018.0" cy="214.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1046.0" cy="85.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1074.0" cy="214.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1102.0" cy="213.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1130.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1158.0" cy="169.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1186.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1214.0" cy="208.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1242.0" cy="208.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1270.0" cy="182.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1298.0" cy="213.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1326.0" cy="72.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1354.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1382.0" cy="60.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1410.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1438.0" cy="114.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1466.0" cy="214.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1494.0" cy="207.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1522.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1550.0" cy="213.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1578.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1606.0" cy="206.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1634.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1662.0" cy="76.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1690.0" cy="201.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1718.0" cy="117.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1746.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1774.0" cy="212.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1802.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1830.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1858.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1886.0" cy="194.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1914.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1942.0" cy="200.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1970.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1998.0" cy="91.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2026.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2054.0" cy="187.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2082.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2110.0" cy="198.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2138.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2166.0" cy="53.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2194.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2222.0" cy="115.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2250.0" cy="204.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2278.0" cy="104.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2306.0" cy="182.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2334.0" cy="163.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2362.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2390.0" cy="169.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2418.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2446.0" cy="203.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2474.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2502.0" cy="97.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2530.0" cy="215.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2558.0" cy="77.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2586.0" cy="202.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2614.0" cy="81.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2642.0" cy="214.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2670.0" cy="88.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2698.0" cy="205.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2726.0" cy="163.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2754.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2782.0" cy="195.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2810.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2838.0" cy="79.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2866.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2894.0" cy="59.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2922.0" cy="215.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2950.0" cy="115.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2978.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3006.0" cy="102.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3034.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3062.0" cy="112.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3090.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3118.0" cy="127.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3146.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3174.0" cy="162.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3202.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3230.0" cy="209.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3258.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3286.0" cy="80.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3314.0" cy="205.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3342.0" cy="96.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3370.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3398.0" cy="184.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3426.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3454.0" cy="214.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3482.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3510.0" cy="93.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3538.0" cy="215.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3566.0" cy="60.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3594.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3622.0" cy="109.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3650.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3678.0" cy="161.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3706.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3734.0" cy="210.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3762.0" cy="215.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3790.0" cy="212.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3818.0" cy="215.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3846.0" cy="91.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3874.0" cy="208.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3902.0" cy="87.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3930.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3958.0" cy="214.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3986.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4014.0" cy="215.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4042.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4070.0" cy="166.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4098.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4126.0" cy="64.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4154.0" cy="215.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4182.0" cy="143.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4210.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4238.0" cy="171.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4266.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4294.0" cy="133.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4322.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4350.0" cy="86.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4378.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4406.0" cy="133.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4434.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4462.0" cy="181.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4490.0" cy="215.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4518.0" cy="167.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4546.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4574.0" cy="88.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4602.0" cy="202.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4630.0" cy="97.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4658.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4686.0" cy="152.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4714.0" cy="214.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4742.0" cy="175.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4770.0" cy="215.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4798.0" cy="170.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4826.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4854.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4882.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4910.0" cy="177.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4938.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4966.0" cy="214.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4994.0" cy="215.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5022.0" cy="80.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5050.0" cy="205.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5078.0" cy="114.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5106.0" cy="209.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5134.0" cy="141.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5162.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5190.0" cy="208.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5218.0" cy="213.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5246.0" cy="214.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5274.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5302.0" cy="201.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5330.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5358.0" cy="203.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5386.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5414.0" cy="207.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5442.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5470.0" cy="64.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5498.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5526.0" cy="62.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5554.0" cy="201.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5582.0" cy="98.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5610.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5638.0" cy="176.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5666.0" cy="213.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5694.0" cy="192.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5722.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5750.0" cy="77.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5778.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5806.0" cy="62.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5834.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5862.0" cy="192.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5890.0" cy="190.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5918.0" cy="75.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5946.0" cy="207.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5974.0" cy="134.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6002.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6030.0" cy="145.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6058.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6086.0" cy="51.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6114.0" cy="214.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6142.0" cy="136.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6170.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6198.0" cy="80.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6226.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6254.0" cy="143.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6282.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6310.0" cy="197.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6338.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6366.0" cy="80.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6394.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6422.0" cy="62.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6450.0" cy="214.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6478.0" cy="96.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6506.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6534.0" cy="173.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6562.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6590.0" cy="182.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6618.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6646.0" cy="82.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6674.0" cy="207.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6702.0" cy="88.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6730.0" cy="186.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6758.0" cy="160.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6786.0" cy="215.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6814.0" cy="213.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6842.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6870.0" cy="200.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6898.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6926.0" cy="87.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6954.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6982.0" cy="63.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7010.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7038.0" cy="135.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7066.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7094.0" cy="127.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7122.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7150.0" cy="146.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7178.0" cy="188.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7206.0" cy="127.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7234.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7262.0" cy="173.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7290.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7318.0" cy="67.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7346.0" cy="208.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7374.0" cy="81.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7402.0" cy="180.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7430.0" cy="126.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7458.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7486.0" cy="124.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7514.0" cy="214.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7542.0" cy="208.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7570.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7598.0" cy="177.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7626.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7654.0" cy="202.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7682.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7710.0" cy="99.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7738.0" cy="215.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7766.0" cy="93.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7794.0" cy="214.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7822.0" cy="70.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7850.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7878.0" cy="160.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7906.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7934.0" cy="206.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7962.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7990.0" cy="203.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8018.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8046.0" cy="85.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8074.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8102.0" cy="86.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8130.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8158.0" cy="138.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8186.0" cy="213.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8214.0" cy="143.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8242.0" cy="212.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8270.0" cy="168.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8298.0" cy="207.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8326.0" cy="136.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8354.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8382.0" cy="116.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8410.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8438.0" cy="174.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8466.0" cy="215.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8494.0" cy="191.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8522.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8550.0" cy="176.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8578.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8606.0" cy="191.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8634.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8662.0" cy="98.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8690.0" cy="192.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8718.0" cy="171.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8746.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8774.0" cy="103.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8802.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8830.0" cy="203.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8858.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8886.0" cy="66.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8914.0" cy="210.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8942.0" cy="77.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8970.0" cy="214.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8998.0" cy="133.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9026.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9054.0" cy="127.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9082.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9110.0" cy="198.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9138.0" cy="215.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9166.0" cy="94.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9194.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9222.0" cy="103.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9250.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9278.0" cy="109.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9306.0" cy="216.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9334.0" cy="176.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9362.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9390.0" cy="192.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9418.0" cy="215.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9446.0" cy="107.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9474.0" cy="209.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9502.0" cy="128.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9530.0" cy="215.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9558.0" cy="156.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9586.0" cy="198.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9614.0" cy="170.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<text x="10" y="116" text-anchor="middle" font-size="10" fill="#444" transform="rotate(-90, 10, 116)">Entropy of NEXT byte</text>
+<text x="66.0" y="229" text-anchor="middle" font-size="8" fill="#555">0</text>
+<text x="290.0" y="229" text-anchor="middle" font-size="8" fill="#555">8</text>
+<text x="514.0" y="229" text-anchor="middle" font-size="8" fill="#555">16</text>
+<text x="738.0" y="229" text-anchor="middle" font-size="8" fill="#555">24</text>
+<text x="962.0" y="229" text-anchor="middle" font-size="8" fill="#555">32</text>
+<text x="1186.0" y="229" text-anchor="middle" font-size="8" fill="#555">40</text>
+<text x="1410.0" y="229" text-anchor="middle" font-size="8" fill="#555">48</text>
+<text x="1634.0" y="229" text-anchor="middle" font-size="8" fill="#555">56</text>
+<text x="1858.0" y="229" text-anchor="middle" font-size="8" fill="#555">64</text>
+<text x="2082.0" y="229" text-anchor="middle" font-size="8" fill="#555">72</text>
+<text x="2306.0" y="229" text-anchor="middle" font-size="8" fill="#555">80</text>
+<text x="2530.0" y="229" text-anchor="middle" font-size="8" fill="#555">88</text>
+<text x="2754.0" y="229" text-anchor="middle" font-size="8" fill="#555">96</text>
+<text x="2978.0" y="229" text-anchor="middle" font-size="8" fill="#555">104</text>
+<text x="3202.0" y="229" text-anchor="middle" font-size="8" fill="#555">112</text>
+<text x="3426.0" y="229" text-anchor="middle" font-size="8" fill="#555">120</text>
+<text x="3650.0" y="229" text-anchor="middle" font-size="8" fill="#555">128</text>
+<text x="3874.0" y="229" text-anchor="middle" font-size="8" fill="#555">136</text>
+<text x="4098.0" y="229" text-anchor="middle" font-size="8" fill="#555">144</text>
+<text x="4322.0" y="229" text-anchor="middle" font-size="8" fill="#555">152</text>
+<text x="4546.0" y="229" text-anchor="middle" font-size="8" fill="#555">160</text>
+<text x="4770.0" y="229" text-anchor="middle" font-size="8" fill="#555">168</text>
+<text x="4994.0" y="229" text-anchor="middle" font-size="8" fill="#555">176</text>
+<text x="5218.0" y="229" text-anchor="middle" font-size="8" fill="#555">184</text>
+<text x="5442.0" y="229" text-anchor="middle" font-size="8" fill="#555">192</text>
+<text x="5666.0" y="229" text-anchor="middle" font-size="8" fill="#555">200</text>
+<text x="5890.0" y="229" text-anchor="middle" font-size="8" fill="#555">208</text>
+<text x="6114.0" y="229" text-anchor="middle" font-size="8" fill="#555">216</text>
+<text x="6338.0" y="229" text-anchor="middle" font-size="8" fill="#555">224</text>
+<text x="6562.0" y="229" text-anchor="middle" font-size="8" fill="#555">232</text>
+<text x="6786.0" y="229" text-anchor="middle" font-size="8" fill="#555">240</text>
+<text x="7010.0" y="229" text-anchor="middle" font-size="8" fill="#555">248</text>
+<text x="7234.0" y="229" text-anchor="middle" font-size="8" fill="#555">256</text>
+<text x="7458.0" y="229" text-anchor="middle" font-size="8" fill="#555">264</text>
+<text x="7682.0" y="229" text-anchor="middle" font-size="8" fill="#555">272</text>
+<text x="7906.0" y="229" text-anchor="middle" font-size="8" fill="#555">280</text>
+<text x="8130.0" y="229" text-anchor="middle" font-size="8" fill="#555">288</text>
+<text x="8354.0" y="229" text-anchor="middle" font-size="8" fill="#555">296</text>
+<text x="8578.0" y="229" text-anchor="middle" font-size="8" fill="#555">304</text>
+<text x="8802.0" y="229" text-anchor="middle" font-size="8" fill="#555">312</text>
+<text x="9026.0" y="229" text-anchor="middle" font-size="8" fill="#555">320</text>
+<text x="9250.0" y="229" text-anchor="middle" font-size="8" fill="#555">328</text>
+<text x="9474.0" y="229" text-anchor="middle" font-size="8" fill="#555">336</text>
+<rect x="52" y="252" width="28" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="80" y="252" width="28" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="108" y="252" width="112" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="220" y="252" width="280" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="500" y="252" width="56" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="556" y="252" width="56" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="612" y="252" width="56" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="668" y="252" width="56" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="724" y="252" width="224" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="948" y="252" width="56" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="1004" y="252" width="56" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="1060" y="252" width="280" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="1340" y="252" width="56" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="1396" y="252" width="56" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="1452" y="252" width="224" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="1676" y="252" width="56" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="1732" y="252" width="280" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="2012" y="252" width="168" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="2180" y="252" width="56" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="2236" y="252" width="56" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="2292" y="252" width="224" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="2516" y="252" width="56" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="2572" y="252" width="56" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="2628" y="252" width="56" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="2684" y="252" width="168" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="2852" y="252" width="56" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="2908" y="252" width="56" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="2964" y="252" width="56" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="3020" y="252" width="56" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="3076" y="252" width="56" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="3132" y="252" width="168" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="3300" y="252" width="56" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="3356" y="252" width="168" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="3524" y="252" width="56" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="3580" y="252" width="56" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="3636" y="252" width="224" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="3860" y="252" width="56" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="3916" y="252" width="224" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="4140" y="252" width="168" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="4308" y="252" width="56" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="4364" y="252" width="56" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="4420" y="252" width="168" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="4588" y="252" width="56" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="4644" y="252" width="392" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="5036" y="252" width="56" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="5092" y="252" width="392" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="5484" y="252" width="56" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="5540" y="252" width="56" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="5596" y="252" width="168" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="5764" y="252" width="56" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="5820" y="252" width="112" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="5932" y="252" width="56" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="5988" y="252" width="112" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="6100" y="252" width="112" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="6212" y="252" width="168" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="6380" y="252" width="56" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="6436" y="252" width="56" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="6492" y="252" width="168" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="6660" y="252" width="56" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="6716" y="252" width="224" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="6940" y="252" width="56" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="6996" y="252" width="112" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="7108" y="252" width="112" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="7220" y="252" width="112" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="7332" y="252" width="56" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="7388" y="252" width="56" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="7444" y="252" width="56" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="7500" y="252" width="224" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="7724" y="252" width="56" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="7780" y="252" width="56" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="7836" y="252" width="224" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="8060" y="252" width="56" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="8116" y="252" width="280" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="8396" y="252" width="280" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="8676" y="252" width="112" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="8788" y="252" width="112" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="8900" y="252" width="56" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="8956" y="252" width="56" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="9012" y="252" width="56" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="9068" y="252" width="112" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="9180" y="252" width="56" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="9236" y="252" width="56" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="9292" y="252" width="168" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="9460" y="252" width="56" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="9516" y="252" width="112" height="22" fill="#a6cee3" opacity="0.85"/>
+<line x1="52" y1="234" x2="9628" y2="234" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="252" x2="9628" y2="252" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="274" x2="9628" y2="274" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="298" x2="9628" y2="298" stroke="#d0d5e8" stroke-width="0.8"/>
+<text x="47" y="247.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">idx</text>
+<text x="47" y="267.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">byte</text>
+<text x="47" y="290.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">char</text>
+<text x="66.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">0</text>
+<text x="94.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">1</text>
+<text x="122.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">2</text>
+<text x="150.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">3</text>
+<text x="178.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">4</text>
+<text x="206.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">5</text>
+<text x="234.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">6</text>
+<text x="262.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">7</text>
+<text x="290.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">8</text>
+<text x="318.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">9</text>
+<text x="346.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">10</text>
+<text x="374.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">11</text>
+<text x="402.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">12</text>
+<text x="430.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">13</text>
+<text x="458.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">14</text>
+<text x="486.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">15</text>
+<text x="514.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">16</text>
+<text x="542.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">17</text>
+<text x="570.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">18</text>
+<text x="598.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">19</text>
+<text x="626.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">20</text>
+<text x="654.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">21</text>
+<text x="682.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">22</text>
+<text x="710.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">23</text>
+<text x="738.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">24</text>
+<text x="766.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">25</text>
+<text x="794.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">26</text>
+<text x="822.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">27</text>
+<text x="850.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">28</text>
+<text x="878.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">29</text>
+<text x="906.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">30</text>
+<text x="934.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">31</text>
+<text x="962.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">32</text>
+<text x="990.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">33</text>
+<text x="1018.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">34</text>
+<text x="1046.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">35</text>
+<text x="1074.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">36</text>
+<text x="1102.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">37</text>
+<text x="1130.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">38</text>
+<text x="1158.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">39</text>
+<text x="1186.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">40</text>
+<text x="1214.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">41</text>
+<text x="1242.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">42</text>
+<text x="1270.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">43</text>
+<text x="1298.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">44</text>
+<text x="1326.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">45</text>
+<text x="1354.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">46</text>
+<text x="1382.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">47</text>
+<text x="1410.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">48</text>
+<text x="1438.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">49</text>
+<text x="1466.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">50</text>
+<text x="1494.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">51</text>
+<text x="1522.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">52</text>
+<text x="1550.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">53</text>
+<text x="1578.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">54</text>
+<text x="1606.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">55</text>
+<text x="1634.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">56</text>
+<text x="1662.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">57</text>
+<text x="1690.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">58</text>
+<text x="1718.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">59</text>
+<text x="1746.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">60</text>
+<text x="1774.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">61</text>
+<text x="1802.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">62</text>
+<text x="1830.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">63</text>
+<text x="1858.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">64</text>
+<text x="1886.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">65</text>
+<text x="1914.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">66</text>
+<text x="1942.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">67</text>
+<text x="1970.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">68</text>
+<text x="1998.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">69</text>
+<text x="2026.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">70</text>
+<text x="2054.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">71</text>
+<text x="2082.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">72</text>
+<text x="2110.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">73</text>
+<text x="2138.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">74</text>
+<text x="2166.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">75</text>
+<text x="2194.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">76</text>
+<text x="2222.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">77</text>
+<text x="2250.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">78</text>
+<text x="2278.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">79</text>
+<text x="2306.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">80</text>
+<text x="2334.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">81</text>
+<text x="2362.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">82</text>
+<text x="2390.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">83</text>
+<text x="2418.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">84</text>
+<text x="2446.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">85</text>
+<text x="2474.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">86</text>
+<text x="2502.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">87</text>
+<text x="2530.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">88</text>
+<text x="2558.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">89</text>
+<text x="2586.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">90</text>
+<text x="2614.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">91</text>
+<text x="2642.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">92</text>
+<text x="2670.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">93</text>
+<text x="2698.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">94</text>
+<text x="2726.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">95</text>
+<text x="2754.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">96</text>
+<text x="2782.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">97</text>
+<text x="2810.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">98</text>
+<text x="2838.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">99</text>
+<text x="2866.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">100</text>
+<text x="2894.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">101</text>
+<text x="2922.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">102</text>
+<text x="2950.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">103</text>
+<text x="2978.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">104</text>
+<text x="3006.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">105</text>
+<text x="3034.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">106</text>
+<text x="3062.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">107</text>
+<text x="3090.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">108</text>
+<text x="3118.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">109</text>
+<text x="3146.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">110</text>
+<text x="3174.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">111</text>
+<text x="3202.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">112</text>
+<text x="3230.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">113</text>
+<text x="3258.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">114</text>
+<text x="3286.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">115</text>
+<text x="3314.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">116</text>
+<text x="3342.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">117</text>
+<text x="3370.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">118</text>
+<text x="3398.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">119</text>
+<text x="3426.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">120</text>
+<text x="3454.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">121</text>
+<text x="3482.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">122</text>
+<text x="3510.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">123</text>
+<text x="3538.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">124</text>
+<text x="3566.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">125</text>
+<text x="3594.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">126</text>
+<text x="3622.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">127</text>
+<text x="3650.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">128</text>
+<text x="3678.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">129</text>
+<text x="3706.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">130</text>
+<text x="3734.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">131</text>
+<text x="3762.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">132</text>
+<text x="3790.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">133</text>
+<text x="3818.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">134</text>
+<text x="3846.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">135</text>
+<text x="3874.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">136</text>
+<text x="3902.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">137</text>
+<text x="3930.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">138</text>
+<text x="3958.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">139</text>
+<text x="3986.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">140</text>
+<text x="4014.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">141</text>
+<text x="4042.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">142</text>
+<text x="4070.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">143</text>
+<text x="4098.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">144</text>
+<text x="4126.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">145</text>
+<text x="4154.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">146</text>
+<text x="4182.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">147</text>
+<text x="4210.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">148</text>
+<text x="4238.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">149</text>
+<text x="4266.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">150</text>
+<text x="4294.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">151</text>
+<text x="4322.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">152</text>
+<text x="4350.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">153</text>
+<text x="4378.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">154</text>
+<text x="4406.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">155</text>
+<text x="4434.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">156</text>
+<text x="4462.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">157</text>
+<text x="4490.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">158</text>
+<text x="4518.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">159</text>
+<text x="4546.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">160</text>
+<text x="4574.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">161</text>
+<text x="4602.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">162</text>
+<text x="4630.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">163</text>
+<text x="4658.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">164</text>
+<text x="4686.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">165</text>
+<text x="4714.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">166</text>
+<text x="4742.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">167</text>
+<text x="4770.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">168</text>
+<text x="4798.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">169</text>
+<text x="4826.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">170</text>
+<text x="4854.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">171</text>
+<text x="4882.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">172</text>
+<text x="4910.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">173</text>
+<text x="4938.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">174</text>
+<text x="4966.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">175</text>
+<text x="4994.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">176</text>
+<text x="5022.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">177</text>
+<text x="5050.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">178</text>
+<text x="5078.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">179</text>
+<text x="5106.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">180</text>
+<text x="5134.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">181</text>
+<text x="5162.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">182</text>
+<text x="5190.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">183</text>
+<text x="5218.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">184</text>
+<text x="5246.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">185</text>
+<text x="5274.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">186</text>
+<text x="5302.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">187</text>
+<text x="5330.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">188</text>
+<text x="5358.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">189</text>
+<text x="5386.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">190</text>
+<text x="5414.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">191</text>
+<text x="5442.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">192</text>
+<text x="5470.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">193</text>
+<text x="5498.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">194</text>
+<text x="5526.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">195</text>
+<text x="5554.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">196</text>
+<text x="5582.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">197</text>
+<text x="5610.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">198</text>
+<text x="5638.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">199</text>
+<text x="5666.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">200</text>
+<text x="5694.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">201</text>
+<text x="5722.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">202</text>
+<text x="5750.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">203</text>
+<text x="5778.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">204</text>
+<text x="5806.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">205</text>
+<text x="5834.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">206</text>
+<text x="5862.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">207</text>
+<text x="5890.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">208</text>
+<text x="5918.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">209</text>
+<text x="5946.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">210</text>
+<text x="5974.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">211</text>
+<text x="6002.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">212</text>
+<text x="6030.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">213</text>
+<text x="6058.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">214</text>
+<text x="6086.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">215</text>
+<text x="6114.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">216</text>
+<text x="6142.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">217</text>
+<text x="6170.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">218</text>
+<text x="6198.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">219</text>
+<text x="6226.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">220</text>
+<text x="6254.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">221</text>
+<text x="6282.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">222</text>
+<text x="6310.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">223</text>
+<text x="6338.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">224</text>
+<text x="6366.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">225</text>
+<text x="6394.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">226</text>
+<text x="6422.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">227</text>
+<text x="6450.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">228</text>
+<text x="6478.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">229</text>
+<text x="6506.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">230</text>
+<text x="6534.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">231</text>
+<text x="6562.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">232</text>
+<text x="6590.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">233</text>
+<text x="6618.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">234</text>
+<text x="6646.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">235</text>
+<text x="6674.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">236</text>
+<text x="6702.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">237</text>
+<text x="6730.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">238</text>
+<text x="6758.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">239</text>
+<text x="6786.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">240</text>
+<text x="6814.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">241</text>
+<text x="6842.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">242</text>
+<text x="6870.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">243</text>
+<text x="6898.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">244</text>
+<text x="6926.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">245</text>
+<text x="6954.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">246</text>
+<text x="6982.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">247</text>
+<text x="7010.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">248</text>
+<text x="7038.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">249</text>
+<text x="7066.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">250</text>
+<text x="7094.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">251</text>
+<text x="7122.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">252</text>
+<text x="7150.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">253</text>
+<text x="7178.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">254</text>
+<text x="7206.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">255</text>
+<text x="7234.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">256</text>
+<text x="7262.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">257</text>
+<text x="7290.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">258</text>
+<text x="7318.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">259</text>
+<text x="7346.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">260</text>
+<text x="7374.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">261</text>
+<text x="7402.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">262</text>
+<text x="7430.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">263</text>
+<text x="7458.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">264</text>
+<text x="7486.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">265</text>
+<text x="7514.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">266</text>
+<text x="7542.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">267</text>
+<text x="7570.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">268</text>
+<text x="7598.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">269</text>
+<text x="7626.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">270</text>
+<text x="7654.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">271</text>
+<text x="7682.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">272</text>
+<text x="7710.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">273</text>
+<text x="7738.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">274</text>
+<text x="7766.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">275</text>
+<text x="7794.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">276</text>
+<text x="7822.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">277</text>
+<text x="7850.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">278</text>
+<text x="7878.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">279</text>
+<text x="7906.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">280</text>
+<text x="7934.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">281</text>
+<text x="7962.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">282</text>
+<text x="7990.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">283</text>
+<text x="8018.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">284</text>
+<text x="8046.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">285</text>
+<text x="8074.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">286</text>
+<text x="8102.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">287</text>
+<text x="8130.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">288</text>
+<text x="8158.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">289</text>
+<text x="8186.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">290</text>
+<text x="8214.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">291</text>
+<text x="8242.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">292</text>
+<text x="8270.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">293</text>
+<text x="8298.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">294</text>
+<text x="8326.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">295</text>
+<text x="8354.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">296</text>
+<text x="8382.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">297</text>
+<text x="8410.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">298</text>
+<text x="8438.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">299</text>
+<text x="8466.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">300</text>
+<text x="8494.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">301</text>
+<text x="8522.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">302</text>
+<text x="8550.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">303</text>
+<text x="8578.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">304</text>
+<text x="8606.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">305</text>
+<text x="8634.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">306</text>
+<text x="8662.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">307</text>
+<text x="8690.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">308</text>
+<text x="8718.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">309</text>
+<text x="8746.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">310</text>
+<text x="8774.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">311</text>
+<text x="8802.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">312</text>
+<text x="8830.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">313</text>
+<text x="8858.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">314</text>
+<text x="8886.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">315</text>
+<text x="8914.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">316</text>
+<text x="8942.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">317</text>
+<text x="8970.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">318</text>
+<text x="8998.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">319</text>
+<text x="9026.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">320</text>
+<text x="9054.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">321</text>
+<text x="9082.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">322</text>
+<text x="9110.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">323</text>
+<text x="9138.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">324</text>
+<text x="9166.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">325</text>
+<text x="9194.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">326</text>
+<text x="9222.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">327</text>
+<text x="9250.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">328</text>
+<text x="9278.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">329</text>
+<text x="9306.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">330</text>
+<text x="9334.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">331</text>
+<text x="9362.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">332</text>
+<text x="9390.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">333</text>
+<text x="9418.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">334</text>
+<text x="9446.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">335</text>
+<text x="9474.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">336</text>
+<text x="9502.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">337</text>
+<text x="9530.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">338</text>
+<text x="9558.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">339</text>
+<text x="9586.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">340</text>
+<text x="9614.0" y="247" text-anchor="middle" font-size="8" fill="#aaa">341</text>
+<text x="66.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="94.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="122.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">176</text>
+<text x="150.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="178.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">138</text>
+<text x="206.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">158</text>
+<text x="234.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">32</text>
+<text x="262.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="290.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">138</text>
+<text x="318.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">165</text>
+<text x="346.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="374.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">136</text>
+<text x="402.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">136</text>
+<text x="430.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="458.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">137</text>
+<text x="486.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">181</text>
+<text x="514.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="542.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">141</text>
+<text x="570.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">163</text>
+<text x="598.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="626.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="654.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">137</text>
+<text x="682.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">160</text>
+<text x="710.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="738.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">136</text>
+<text x="766.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">181</text>
+<text x="794.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="822.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">137</text>
+<text x="850.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">179</text>
+<text x="878.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="906.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">138</text>
+<text x="934.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">149</text>
+<text x="962.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="990.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">141</text>
+<text x="1018.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">142</text>
+<text x="1046.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="1074.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">136</text>
+<text x="1102.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">173</text>
+<text x="1130.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="1158.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">139</text>
+<text x="1186.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">181</text>
+<text x="1214.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">32</text>
+<text x="1242.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="1270.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">139</text>
+<text x="1298.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">169</text>
+<text x="1326.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="1354.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">138</text>
+<text x="1382.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">146</text>
+<text x="1410.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="1438.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">137</text>
+<text x="1466.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">168</text>
+<text x="1494.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="1522.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">136</text>
+<text x="1550.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">173</text>
+<text x="1578.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="1606.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">136</text>
+<text x="1634.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">178</text>
+<text x="1662.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="1690.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">137</text>
+<text x="1718.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">178</text>
+<text x="1746.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="1774.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="1802.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">139</text>
+<text x="1830.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">168</text>
+<text x="1858.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="1886.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">136</text>
+<text x="1914.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">133</text>
+<text x="1942.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="1970.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">138</text>
+<text x="1998.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">173</text>
+<text x="2026.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="2054.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="2082.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">157</text>
+<text x="2110.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="2138.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">138</text>
+<text x="2166.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">147</text>
+<text x="2194.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="2222.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="2250.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">137</text>
+<text x="2278.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">181</text>
+<text x="2306.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="2334.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">136</text>
+<text x="2362.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">157</text>
+<text x="2390.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="2418.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">136</text>
+<text x="2446.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">133</text>
+<text x="2474.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="2502.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">136</text>
+<text x="2530.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">173</text>
+<text x="2558.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="2586.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">137</text>
+<text x="2614.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">181</text>
+<text x="2642.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">32</text>
+<text x="2670.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="2698.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">137</text>
+<text x="2726.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">164</text>
+<text x="2754.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="2782.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">137</text>
+<text x="2810.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">181</text>
+<text x="2838.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">32</text>
+<text x="2866.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="2894.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="2922.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">133</text>
+<text x="2950.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="2978.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">139</text>
+<text x="3006.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">139</text>
+<text x="3034.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="3062.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">136</text>
+<text x="3090.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">182</text>
+<text x="3118.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="3146.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">137</text>
+<text x="3174.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">189</text>
+<text x="3202.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="3230.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">138</text>
+<text x="3258.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">149</text>
+<text x="3286.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="3314.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="3342.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">137</text>
+<text x="3370.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">160</text>
+<text x="3398.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="3426.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">138</text>
+<text x="3454.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">160</text>
+<text x="3482.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="3510.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">139</text>
+<text x="3538.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">173</text>
+<text x="3566.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="3594.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">138</text>
+<text x="3622.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">144</text>
+<text x="3650.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="3678.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">137</text>
+<text x="3706.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">181</text>
+<text x="3734.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">32</text>
+<text x="3762.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="3790.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">139</text>
+<text x="3818.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">168</text>
+<text x="3846.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="3874.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">136</text>
+<text x="3902.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">154</text>
+<text x="3930.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="3958.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">139</text>
+<text x="3986.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">171</text>
+<text x="4014.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="4042.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="4070.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">181</text>
+<text x="4098.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="4126.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">137</text>
+<text x="4154.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">128</text>
+<text x="4182.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="4210.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">136</text>
+<text x="4238.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">157</text>
+<text x="4266.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="4294.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">140</text>
+<text x="4322.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">165</text>
+<text x="4350.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">32</text>
+<text x="4378.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="4406.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">138</text>
+<text x="4434.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">160</text>
+<text x="4462.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="4490.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">139</text>
+<text x="4518.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">178</text>
+<text x="4546.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="4574.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="4602.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">181</text>
+<text x="4630.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="4658.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="4686.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">139</text>
+<text x="4714.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">168</text>
+<text x="4742.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="4770.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">136</text>
+<text x="4798.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">157</text>
+<text x="4826.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="4854.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">136</text>
+<text x="4882.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">173</text>
+<text x="4910.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="4938.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">136</text>
+<text x="4966.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">152</text>
+<text x="4994.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="5022.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">136</text>
+<text x="5050.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">171</text>
+<text x="5078.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">32</text>
+<text x="5106.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="5134.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">136</text>
+<text x="5162.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">152</text>
+<text x="5190.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="5218.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">136</text>
+<text x="5246.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">179</text>
+<text x="5274.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="5302.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">136</text>
+<text x="5330.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">170</text>
+<text x="5358.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="5386.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">139</text>
+<text x="5414.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">171</text>
+<text x="5442.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">32</text>
+<text x="5470.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="5498.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">138</text>
+<text x="5526.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">165</text>
+<text x="5554.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="5582.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">138</text>
+<text x="5610.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">149</text>
+<text x="5638.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="5666.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">139</text>
+<text x="5694.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">176</text>
+<text x="5722.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="5750.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">137</text>
+<text x="5778.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">176</text>
+<text x="5806.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="5834.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">141</text>
+<text x="5862.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">136</text>
+<text x="5890.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="5918.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">140</text>
+<text x="5946.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">160</text>
+<text x="5974.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="6002.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">136</text>
+<text x="6030.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">168</text>
+<text x="6058.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="6086.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">225</text>
+<text x="6114.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">138</text>
+<text x="6142.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">160</text>
+<text x="6170.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="6198.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="6226.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">181</text>
+<text x="6254.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="6282.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">137</text>
+<text x="6310.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">179</text>
+<text x="6338.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="6366.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">139</text>
+<text x="6394.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">141</text>
+<text x="6422.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="6450.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">137</text>
+<text x="6478.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">139</text>
+<text x="6506.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="6534.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">136</text>
+<text x="6562.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">141</text>
+<text x="6590.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="6618.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">141</text>
+<text x="6646.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">161</text>
+<text x="6674.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">32</text>
+<text x="6702.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="6730.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">138</text>
+<text x="6758.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">165</text>
+<text x="6786.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="6814.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">139</text>
+<text x="6842.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">171</text>
+<text x="6870.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="6898.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">138</text>
+<text x="6926.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">149</text>
+<text x="6954.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="6982.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">139</text>
+<text x="7010.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">179</text>
+<text x="7038.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="7066.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">138</text>
+<text x="7094.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">149</text>
+<text x="7122.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="7150.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">139</text>
+<text x="7178.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">177</text>
+<text x="7206.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="7234.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">138</text>
+<text x="7262.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">149</text>
+<text x="7290.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">32</text>
+<text x="7318.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="7346.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">137</text>
+<text x="7374.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">160</text>
+<text x="7402.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="7430.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">138</text>
+<text x="7458.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">160</text>
+<text x="7486.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="7514.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">138</text>
+<text x="7542.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">149</text>
+<text x="7570.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="7598.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">139</text>
+<text x="7626.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">176</text>
+<text x="7654.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">32</text>
+<text x="7682.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="7710.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">139</text>
+<text x="7738.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">168</text>
+<text x="7766.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">225</text>
+<text x="7794.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">139</text>
+<text x="7822.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">169</text>
+<text x="7850.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">46</text>
+<text x="7878.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="7906.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">138</text>
+<text x="7934.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">164</text>
+<text x="7962.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="7990.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">136</text>
+<text x="8018.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">181</text>
+<text x="8046.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">32</text>
+<text x="8074.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="8102.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">136</text>
+<text x="8130.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">179</text>
+<text x="8158.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="8186.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">138</text>
+<text x="8214.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">149</text>
+<text x="8242.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="8270.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">137</text>
+<text x="8298.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">178</text>
+<text x="8326.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="8354.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">136</text>
+<text x="8382.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">157</text>
+<text x="8410.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">32</text>
+<text x="8438.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="8466.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">139</text>
+<text x="8494.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">168</text>
+<text x="8522.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="8550.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="8578.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">154</text>
+<text x="8606.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">225</text>
+<text x="8634.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="8662.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">134</text>
+<text x="8690.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">225</text>
+<text x="8718.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">138</text>
+<text x="8746.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">149</text>
+<text x="8774.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">32</text>
+<text x="8802.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="8830.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">136</text>
+<text x="8858.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">152</text>
+<text x="8886.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">225</text>
+<text x="8914.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">139</text>
+<text x="8942.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">176</text>
+<text x="8970.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">225</text>
+<text x="8998.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">137</text>
+<text x="9026.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">160</text>
+<text x="9054.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">225</text>
+<text x="9082.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">138</text>
+<text x="9110.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">155</text>
+<text x="9138.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">32</text>
+<text x="9166.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">225</text>
+<text x="9194.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">139</text>
+<text x="9222.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">168</text>
+<text x="9250.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">225</text>
+<text x="9278.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">138</text>
+<text x="9306.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">162</text>
+<text x="9334.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="9362.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">138</text>
+<text x="9390.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">149</text>
+<text x="9418.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">225</text>
+<text x="9446.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">138</text>
+<text x="9474.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">173</text>
+<text x="9502.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">225</text>
+<text x="9530.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">140</text>
+<text x="9558.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">132</text>
+<text x="9586.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">225</text>
+<text x="9614.0" y="267" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">137</text>
+<rect x="52" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="94.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሰ</text>
+<rect x="136" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="178.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ኞ</text>
+<rect x="220" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="234.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="248" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="290.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">እ</text>
+<rect x="332" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="374.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ለ</text>
+<rect x="416" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="458.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<rect x="500" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="542.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">፣</text>
+<rect x="584" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="598.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="612" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="654.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">በ</text>
+<rect x="696" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="738.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ስ</text>
+<rect x="780" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="822.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ታ</text>
+<rect x="864" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="906.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="948" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="990.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ፎ</text>
+<rect x="1032" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1074.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ር</text>
+<rect x="1116" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1158.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ድ</text>
+<rect x="1200" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1214.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1228" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1270.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዩ</text>
+<rect x="1312" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1354.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ኒ</text>
+<rect x="1396" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1438.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቨ</text>
+<rect x="1480" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1522.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ር</text>
+<rect x="1564" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1606.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሲ</text>
+<rect x="1648" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1690.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቲ</text>
+<rect x="1732" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1746.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1760" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1802.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="1844" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1886.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ህ</text>
+<rect x="1928" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1970.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ክ</text>
+<rect x="2012" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2054.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ም</text>
+<rect x="2096" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2138.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ና</text>
+<rect x="2180" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2194.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2208" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2250.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<rect x="2292" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2334.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ም</text>
+<rect x="2376" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2418.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ህ</text>
+<rect x="2460" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2502.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ር</text>
+<rect x="2544" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2586.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<rect x="2628" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2642.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2656" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2698.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቤ</text>
+<rect x="2740" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2782.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<rect x="2824" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2838.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2852" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2894.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ህ</text>
+<rect x="2936" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2978.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዋ</text>
+<rect x="3020" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3062.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሶ</text>
+<rect x="3104" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3146.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ች</text>
+<rect x="3188" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3230.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="3272" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3286.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="3300" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3342.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">በ</text>
+<rect x="3384" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3426.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">አ</text>
+<rect x="3468" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3510.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ይ</text>
+<rect x="3552" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3594.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ነ</text>
+<rect x="3636" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3678.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<rect x="3720" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3734.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="3748" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3790.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="3832" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3874.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሚ</text>
+<rect x="3916" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3958.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ያ</text>
+<rect x="4000" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4042.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ስ</text>
+<rect x="4084" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4126.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቀ</text>
+<rect x="4168" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4210.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ም</text>
+<rect x="4252" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4294.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ጥ</text>
+<rect x="4336" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4350.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4364" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4406.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">አ</text>
+<rect x="4448" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4490.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዲ</text>
+<rect x="4532" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4574.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ስ</text>
+<rect x="4616" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4630.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4644" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4686.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="4728" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4770.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ም</text>
+<rect x="4812" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4854.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ር</text>
+<rect x="4896" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4938.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">መ</text>
+<rect x="4980" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5022.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ራ</text>
+<rect x="5064" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5078.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="5092" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5134.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">መ</text>
+<rect x="5176" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5218.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሳ</text>
+<rect x="5260" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5302.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሪ</text>
+<rect x="5344" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5386.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ያ</text>
+<rect x="5428" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5442.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="5456" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5498.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">እ</text>
+<rect x="5540" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5582.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="5624" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5666.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ደ</text>
+<rect x="5708" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5750.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ተ</text>
+<rect x="5792" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5834.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ፈ</text>
+<rect x="5876" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5918.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ጠ</text>
+<rect x="5960" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6002.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ረ</text>
+<rect x="6044" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6058.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="6072" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6114.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">አ</text>
+<rect x="6156" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6198.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ስ</text>
+<rect x="6240" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6282.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ታ</text>
+<rect x="6324" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6366.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ው</text>
+<rect x="6408" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6450.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቋ</text>
+<rect x="6492" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6534.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ል</text>
+<rect x="6576" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6618.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">፡</text>
+<rect x="6660" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6674.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="6688" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6730.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">እ</text>
+<rect x="6772" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6814.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ያ</text>
+<rect x="6856" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6898.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="6940" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6982.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዳ</text>
+<rect x="7024" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7066.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="7108" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7150.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዱ</text>
+<rect x="7192" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7234.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="7276" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7290.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7304" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7346.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">በ</text>
+<rect x="7388" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7430.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">አ</text>
+<rect x="7472" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7514.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="7556" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7598.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ደ</text>
+<rect x="7640" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7654.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7668" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7710.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="7752" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7794.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ዩ</text>
+<rect x="7836" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7850.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">.</text>
+<rect x="7864" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7906.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ኤ</text>
+<rect x="7948" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7990.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ስ</text>
+<rect x="8032" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8046.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8060" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8102.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሳ</text>
+<rect x="8144" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8186.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="8228" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8270.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ቲ</text>
+<rect x="8312" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8354.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ም</text>
+<rect x="8396" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8410.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8424" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8466.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="8508" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8550.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሚ</text>
+<rect x="8592" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8634.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ሆ</text>
+<rect x="8676" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8718.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="8760" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8774.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8788" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8830.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">መ</text>
+<rect x="8872" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8914.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ደ</text>
+<rect x="8956" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8998.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">በ</text>
+<rect x="9040" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9082.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ኛ</text>
+<rect x="9124" y="274" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9138.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="9152" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9194.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">የ</text>
+<rect x="9236" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9278.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ኢ</text>
+<rect x="9320" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9362.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ን</text>
+<rect x="9404" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9446.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ክ</text>
+<rect x="9488" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9530.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ጄ</text>
+<rect x="9572" y="274" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9614.0" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">ት</text>
+<line x1="80" y1="234" x2="80" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="108" y1="234" x2="108" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="220" y1="234" x2="220" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="500" y1="234" x2="500" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="556" y1="234" x2="556" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="612" y1="234" x2="612" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="668" y1="234" x2="668" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="724" y1="234" x2="724" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="948" y1="234" x2="948" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1004" y1="234" x2="1004" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1060" y1="234" x2="1060" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1340" y1="234" x2="1340" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1396" y1="234" x2="1396" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1452" y1="234" x2="1452" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1676" y1="234" x2="1676" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1732" y1="234" x2="1732" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2012" y1="234" x2="2012" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2180" y1="234" x2="2180" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2236" y1="234" x2="2236" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2292" y1="234" x2="2292" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2516" y1="234" x2="2516" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2572" y1="234" x2="2572" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2628" y1="234" x2="2628" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2684" y1="234" x2="2684" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2852" y1="234" x2="2852" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2908" y1="234" x2="2908" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2964" y1="234" x2="2964" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3020" y1="234" x2="3020" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3076" y1="234" x2="3076" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3132" y1="234" x2="3132" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3300" y1="234" x2="3300" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3356" y1="234" x2="3356" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3524" y1="234" x2="3524" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3580" y1="234" x2="3580" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3636" y1="234" x2="3636" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3860" y1="234" x2="3860" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3916" y1="234" x2="3916" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4140" y1="234" x2="4140" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4308" y1="234" x2="4308" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4364" y1="234" x2="4364" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4420" y1="234" x2="4420" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4588" y1="234" x2="4588" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4644" y1="234" x2="4644" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5036" y1="234" x2="5036" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5092" y1="234" x2="5092" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5484" y1="234" x2="5484" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5540" y1="234" x2="5540" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5596" y1="234" x2="5596" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5764" y1="234" x2="5764" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5820" y1="234" x2="5820" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5932" y1="234" x2="5932" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5988" y1="234" x2="5988" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6100" y1="234" x2="6100" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6212" y1="234" x2="6212" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6380" y1="234" x2="6380" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6436" y1="234" x2="6436" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6492" y1="234" x2="6492" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6660" y1="234" x2="6660" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6716" y1="234" x2="6716" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6940" y1="234" x2="6940" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6996" y1="234" x2="6996" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7108" y1="234" x2="7108" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7220" y1="234" x2="7220" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7332" y1="234" x2="7332" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7388" y1="234" x2="7388" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7444" y1="234" x2="7444" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7500" y1="234" x2="7500" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7724" y1="234" x2="7724" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7780" y1="234" x2="7780" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7836" y1="234" x2="7836" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8060" y1="234" x2="8060" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8116" y1="234" x2="8116" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8396" y1="234" x2="8396" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8676" y1="234" x2="8676" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8788" y1="234" x2="8788" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8900" y1="234" x2="8900" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8956" y1="234" x2="8956" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9012" y1="234" x2="9012" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9068" y1="234" x2="9068" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9180" y1="234" x2="9180" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9236" y1="234" x2="9236" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9292" y1="234" x2="9292" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9460" y1="234" x2="9460" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9516" y1="234" x2="9516" y2="274" stroke="rgba(0,0,0,0.2)" stroke-width="1"/></svg></div>
+        </section>
+
+</body>
+</html>

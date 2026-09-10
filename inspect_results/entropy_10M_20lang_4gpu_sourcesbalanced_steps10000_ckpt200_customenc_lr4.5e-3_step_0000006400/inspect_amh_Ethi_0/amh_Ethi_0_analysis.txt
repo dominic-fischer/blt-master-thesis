@@ -1,0 +1,1387 @@
+================================================================================
+  Language : amh_Ethi
+  Index    : 0
+  Entropy repo: dumps/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3/checkpoints/0000006400/consolidated
+  Text     : ሰኞ እለት፣ በስታንፎርድ ዩኒቨርሲቲ የህክምና ትምህርት ቤት ህዋሶችን በአይነት የሚያስቀምጥ አዲስ የምርመራ መሳሪያ እንደተፈጠረ አስታውቋል፡ እያንዳንዱን በአንደ የዩ.ኤስ ሳንቲም የሚሆን መደበኛ የኢንክጄት አታሚዎችን በመጠቀም ሊፈበረክ የሚችል ትንሽ መታተም የሚችል ቺፕ።
+  English  : On Monday, scientists from the Stanford University School of Medicine announced the invention of a new diagnostic tool that can sort cells by type: a tiny printable chip that can be manufactured using standard inkjet printers for possibly about one U.S. cent each.
+  Bytes    : 453
+
+  [   0]  0xe1    1110|0001   entropy=0.957  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.833  0100011=35                         ASCII(0-127)                                      
+
+  [   1]  0x88    10|001000   entropy=3.432  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.285  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [   2]  0xb0    10|110000   entropy=4.336  0001+001000+110000=4656            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.150  ?                                  ?                                                 
+  ---
+  [   3]  0xe1    1110|0001   entropy=2.758  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xed    1110|1101   prob=   0.482  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
+
+  [   4]  0x8a    10|001010   entropy=3.984  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.097  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [   5]  0x9e    10|011110   entropy=3.607  0001+001010+011110=4766            Ethiopic(4608-5119)                               
+       ->  0xfe    11110|110   prob=   0.188  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
+  ---
+  [   6]  ' '     0|0100000   entropy=1.694  0100000=32                         ASCII(0-127)                                      
+       ->  'N'     0|1001110   prob=   0.691  1001110=78                         ASCII(0-127)                                      
+  ---
+  [   7]  0xe1    1110|0001   entropy=4.770  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x06    0|0000110   prob=   0.083  0000110=6                          ASCII(0-127)                                      
+
+  [   8]  0x8a    10|001010   entropy=4.293  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.137  0000110=6                          ASCII(0-127)                                      
+
+  [   9]  0xa5    10|100101   entropy=2.912  0001+001010+100101=4773            Ethiopic(4608-5119)                               
+       ->  0xac    10|101100   prob=   0.233  ?                                  ?                                                 
+  ---
+  [  10]  0xe1    1110|0001   entropy=0.670  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.874  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  11]  0x88    10|001000   entropy=2.861  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.363  0001+001000+111101=4669            Ethiopic(4608-5119)                               
+
+  [  12]  0x88    10|001000   entropy=2.281  0001+001000+001000=4616            Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.305  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  ---
+  [  13]  0xe1    1110|0001   entropy=4.621  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.086  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [  14]  0x89    10|001001   entropy=2.654  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.280  0000110=6                          ASCII(0-127)                                      
+
+  [  15]  0xb5    10|110101   entropy=4.281  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  '*'     0|0101010   prob=   0.089  0101010=42                         ASCII(0-127)                                      
+  ---
+  [  16]  0xe1    1110|0001   entropy=3.189  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcb    110|01011   prob=   0.316  01011+bbbbbb=704-767               Other_a(688-879)                                  
+
+  [  17]  0x8d    10|001101   entropy=4.246  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  0xa8    10|101000   prob=   0.105  0001+001101+101000=4968            Ethiopic(4608-5119)                               
+
+  [  18]  0xa3    10|100011   entropy=4.031  0001+001101+100011=4963            Ethiopic(4608-5119)                               
+       ->  0xd7    110|10111   prob=   0.149  10111+bbbbbb=1472-1535             Hebrew(1424-1535)                                 
+  ---
+  [  19]  ' '     0|0100000   entropy=4.125  0100000=32                         ASCII(0-127)                                      
+       ->  0x06    0|0000110   prob=   0.218  0000110=6                          ASCII(0-127)                                      
+  ---
+  [  20]  0xe1    1110|0001   entropy=4.195  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'U'     0|1010101   prob=   0.103  1010101=85                         ASCII(0-127)                                      
+
+  [  21]  0x89    10|001001   entropy=2.492  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.318  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [  22]  0xa0    10|100000   entropy=4.664  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.099  ?                                  ?                                                 
+  ---
+  [  23]  0xe1    1110|0001   entropy=3.740  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.163  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  24]  0x88    10|001000   entropy=2.268  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  'i'     0|1101001   prob=   0.408  1101001=105                        ASCII(0-127)                                      
+
+  [  25]  0xb5    10|110101   entropy=4.703  0001+001000+110101=4661            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.097  0000110=6                          ASCII(0-127)                                      
+  ---
+  [  26]  0xe1    1110|0001   entropy=3.992  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xb4    10|110100   prob=   0.142  0001+110100+bbbbbb=7424-7487       Other_d(6320-11903)                               
+
+  [  27]  0x89    10|001001   entropy=3.484  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0x16    0|0010110   prob=   0.168  0010110=22                         ASCII(0-127)                                      
+
+  [  28]  0xb3    10|110011   entropy=4.305  0001+001001+110011=4723            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.166  0000110=6                          ASCII(0-127)                                      
+  ---
+  [  29]  0xe1    1110|0001   entropy=3.730  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.216  1110010=114                        ASCII(0-127)                                      
+
+  [  30]  0x8a    10|001010   entropy=3.514  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x9e    10|011110   prob=   0.227  0001+001010+011110=4766            Ethiopic(4608-5119)                               
+
+  [  31]  0x95    10|010101   entropy=3.426  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  '/'     0|0101111   prob=   0.241  0101111=47                         ASCII(0-127)                                      
+  ---
+  [  32]  0xe1    1110|0001   entropy=4.312  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.154  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  33]  0x8d    10|001101   entropy=3.922  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  0xe7    1110|0111   prob=   0.096  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+
+  [  34]  0x8e    10|001110   entropy=3.867  0001+001101+001110=4942            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.120  ?                                  ?                                                 
+  ---
+  [  35]  0xe1    1110|0001   entropy=3.480  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.324  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  36]  0x88    10|001000   entropy=2.734  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.325  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+
+  [  37]  0xad    10|101101   entropy=4.719  0001+001000+101101=4653            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.079  ?                                  ?                                                 
+  ---
+  [  38]  0xe1    1110|0001   entropy=3.680  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.127  0100011=35                         ASCII(0-127)                                      
+
+  [  39]  0x8b    10|001011   entropy=4.129  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.159  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [  40]  0xb5    10|110101   entropy=4.816  0001+001011+110101=4853            Ethiopic(4608-5119)                               
+       ->  'k'     0|1101011   prob=   0.040  1101011=107                        ASCII(0-127)                                      
+  ---
+  [  41]  ' '     0|0100000   entropy=3.205  0100000=32                         ASCII(0-127)                                      
+       ->  0xda    110|11010   prob=   0.359  11010+bbbbbb=1664-1727             Arabic(1536-1791)                                 
+  ---
+  [  42]  0xe1    1110|0001   entropy=4.922  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.055  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  43]  0x8b    10|001011   entropy=4.062  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xb5    10|110101   prob=   0.107  0001+001011+110101=4853            Ethiopic(4608-5119)                               
+
+  [  44]  0xa9    10|101001   entropy=4.059  0001+001011+101001=4841            Ethiopic(4608-5119)                               
+       ->  'H'     0|1001000   prob=   0.114  1001000=72                         ASCII(0-127)                                      
+  ---
+  [  45]  0xe1    1110|0001   entropy=4.781  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.054  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [  46]  0x8a    10|001010   entropy=3.957  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.204  0000110=6                          ASCII(0-127)                                      
+
+  [  47]  0x92    10|010010   entropy=3.311  0001+001010+010010=4754            Ethiopic(4608-5119)                               
+       ->  0x95    10|010101   prob=   0.143  ?                                  ?                                                 
+  ---
+  [  48]  0xe1    1110|0001   entropy=3.654  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.281  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  49]  0x89    10|001001   entropy=1.710  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.648  1000110=70                         ASCII(0-127)                                      
+
+  [  50]  0xa8    10|101000   entropy=2.377  0001+001001+101000=4712            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.518  ?                                  ?                                                 
+  ---
+  [  51]  0xe1    1110|0001   entropy=3.811  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.274  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [  52]  0x88    10|001000   entropy=3.225  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x0b    0|0001011   prob=   0.284  0001011=11                         ASCII(0-127)                                      
+
+  [  53]  0xad    10|101101   entropy=4.355  0001+001000+101101=4653            Ethiopic(4608-5119)                               
+       ->  0xf7    11110|111   prob=   0.091  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  ---
+  [  54]  0xe1    1110|0001   entropy=3.346  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.231  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  55]  0x88    10|001000   entropy=3.311  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.196  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [  56]  0xb2    10|110010   entropy=4.160  0001+001000+110010=4658            Ethiopic(4608-5119)                               
+       ->  0xac    10|101100   prob=   0.143  ?                                  ?                                                 
+  ---
+  [  57]  0xe1    1110|0001   entropy=4.539  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.089  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  58]  0x89    10|001001   entropy=4.133  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xde    110|11110   prob=   0.102  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+
+  [  59]  0xb2    10|110010   entropy=3.016  0001+001001+110010=4722            Ethiopic(4608-5119)                               
+       ->  'U'     0|1010101   prob=   0.203  1010101=85                         ASCII(0-127)                                      
+  ---
+  [  60]  ' '     0|0100000   entropy=1.212  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.805  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  61]  0xe1    1110|0001   entropy=4.891  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.060  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  62]  0x8b    10|001011   entropy=3.627  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xb5    10|110101   prob=   0.294  0001+001011+110101=4853            Ethiopic(4608-5119)                               
+
+  [  63]  0xa8    10|101000   entropy=4.219  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.080  0000110=6                          ASCII(0-127)                                      
+  ---
+  [  64]  0xe1    1110|0001   entropy=3.559  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.193  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  65]  0x88    10|001000   entropy=3.396  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.165  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [  66]  0x85    10|000101   entropy=3.896  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+       ->  0xe9    1110|1001   prob=   0.246  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+  ---
+  [  67]  0xe1    1110|0001   entropy=1.476  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.566  0100011=35                         ASCII(0-127)                                      
+
+  [  68]  0x8a    10|001010   entropy=3.715  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.274  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [  69]  0xad    10|101101   entropy=4.051  0001+001010+101101=4781            Ethiopic(4608-5119)                               
+       ->  'w'     0|1110111   prob=   0.136  1110111=119                        ASCII(0-127)                                      
+  ---
+  [  70]  0xe1    1110|0001   entropy=3.406  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.270  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  71]  0x88    10|001000   entropy=3.330  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.159  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [  72]  0x9d    10|011101   entropy=4.578  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  0xb1    10|110001   prob=   0.081  ?                                  ?                                                 
+  ---
+  [  73]  0xe1    1110|0001   entropy=3.285  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.241  0100011=35                         ASCII(0-127)                                      
+
+  [  74]  0x8a    10|001010   entropy=4.133  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.143  0000110=6                          ASCII(0-127)                                      
+
+  [  75]  0x93    10|010011   entropy=2.562  0001+001010+010011=4755            Ethiopic(4608-5119)                               
+       ->  '`'     0|1100000   prob=   0.433  1100000=96                         ASCII(0-127)                                      
+  ---
+  [  76]  ' '     0|0100000   entropy=3.303  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.373  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  77]  0xe1    1110|0001   entropy=4.129  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.146  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [  78]  0x89    10|001001   entropy=2.859  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.426  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+
+  [  79]  0xb5    10|110101   entropy=3.248  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.253  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [  80]  0xe1    1110|0001   entropy=4.250  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.164  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [  81]  0x88    10|001000   entropy=2.613  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.403  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [  82]  0x9d    10|011101   entropy=4.680  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.072  0000110=6                          ASCII(0-127)                                      
+  ---
+  [  83]  0xe1    1110|0001   entropy=4.082  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.122  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  84]  0x88    10|001000   entropy=2.596  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  'b'     0|1100010   prob=   0.237  1100010=98                         ASCII(0-127)                                      
+
+  [  85]  0x85    10|000101   entropy=3.797  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+       ->  0xe9    1110|1001   prob=   0.250  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+  ---
+  [  86]  0xe1    1110|0001   entropy=2.092  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.401  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [  87]  0x88    10|001000   entropy=2.088  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.468  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [  88]  0xad    10|101101   entropy=4.059  0001+001000+101101=4653            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.157  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  89]  0xe1    1110|0001   entropy=3.975  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '%'     0|0100101   prob=   0.120  0100101=37                         ASCII(0-127)                                      
+
+  [  90]  0x89    10|001001   entropy=4.309  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xde    110|11110   prob=   0.134  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+
+  [  91]  0xb5    10|110101   entropy=3.014  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xde    110|11110   prob=   0.205  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+  ---
+  [  92]  ' '     0|0100000   entropy=3.018  0100000=32                         ASCII(0-127)                                      
+       ->  '\'     0|1011100   prob=   0.188  1011100=92                         ASCII(0-127)                                      
+  ---
+  [  93]  0xe1    1110|0001   entropy=4.914  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.038  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [  94]  0x89    10|001001   entropy=1.845  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.676  1000110=70                         ASCII(0-127)                                      
+
+  [  95]  0xa4    10|100100   entropy=2.863  0001+001001+100100=4708            Ethiopic(4608-5119)                               
+       ->  0x8f    10|001111   prob=   0.297  ?                                  ?                                                 
+  ---
+  [  96]  0xe1    1110|0001   entropy=4.676  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.073  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [  97]  0x89    10|001001   entropy=3.467  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.156  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [  98]  0xb5    10|110101   entropy=3.217  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.202  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [  99]  ' '     0|0100000   entropy=3.484  0100000=32                         ASCII(0-127)                                      
+       ->  0x0c    0|0001100   prob=   0.211  0001100=12                         ASCII(0-127)                                      
+  ---
+  [ 100]  0xe1    1110|0001   entropy=4.516  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xf8    11110|000   prob=   0.068  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+
+  [ 101]  0x88    10|001000   entropy=4.629  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  'U'     0|1010101   prob=   0.068  1010101=85                         ASCII(0-127)                                      
+
+  [ 102]  0x85    10|000101   entropy=3.635  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+       ->  0xe9    1110|1001   prob=   0.217  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+  ---
+  [ 103]  0xe1    1110|0001   entropy=0.982  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.704  0100011=35                         ASCII(0-127)                                      
+
+  [ 104]  0x8b    10|001011   entropy=4.363  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  '/'     0|0101111   prob=   0.072  0101111=47                         ASCII(0-127)                                      
+
+  [ 105]  0x8b    10|001011   entropy=3.814  0001+001011+001011=4811            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.212  ?                                  ?                                                 
+  ---
+  [ 106]  0xe1    1110|0001   entropy=4.234  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.105  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 107]  0x88    10|001000   entropy=1.765  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.592  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [ 108]  0xb6    10|110110   entropy=4.730  0001+001000+110110=4662            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.120  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 109]  0xe1    1110|0001   entropy=5.082  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.030  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 110]  0x89    10|001001   entropy=3.297  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.200  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [ 111]  0xbd    10|111101   entropy=3.100  0001+001001+111101=4733            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.282  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [ 112]  0xe1    1110|0001   entropy=4.598  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.069  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 113]  0x8a    10|001010   entropy=4.227  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.093  0000110=6                          ASCII(0-127)                                      
+
+  [ 114]  0x95    10|010101   entropy=3.545  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xcb    110|01011   prob=   0.156  01011+bbbbbb=704-767               Other_a(688-879)                                  
+  ---
+  [ 115]  ' '     0|0100000   entropy=3.758  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.170  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 116]  0xe1    1110|0001   entropy=4.512  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'U'     0|1010101   prob=   0.105  1010101=85                         ASCII(0-127)                                      
+
+  [ 117]  0x89    10|001001   entropy=2.004  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.643  1000110=70                         ASCII(0-127)                                      
+
+  [ 118]  0xa0    10|100000   entropy=4.082  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.159  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 119]  0xe1    1110|0001   entropy=3.658  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x08    0|0001000   prob=   0.158  0001000=8                          ASCII(0-127)                                      
+
+  [ 120]  0x8a    10|001010   entropy=4.277  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.121  0000110=6                          ASCII(0-127)                                      
+
+  [ 121]  0xa0    10|100000   entropy=1.644  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.616  ?                                  ?                                                 
+  ---
+  [ 122]  0xe1    1110|0001   entropy=3.791  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.250  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 123]  0x8b    10|001011   entropy=3.562  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.188  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 124]  0xad    10|101101   entropy=4.039  0001+001011+101101=4845            Ethiopic(4608-5119)                               
+       ->  0xcb    110|01011   prob=   0.138  01011+bbbbbb=704-767               Other_a(688-879)                                  
+  ---
+  [ 125]  0xe1    1110|0001   entropy=3.365  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'Q'     0|1010001   prob=   0.194  1010001=81                         ASCII(0-127)                                      
+
+  [ 126]  0x8a    10|001010   entropy=3.223  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.343  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 127]  0x90    10|010000   entropy=0.900  0001+001010+010000=4752            Ethiopic(4608-5119)                               
+       ->  0x82    10|000010   prob=   0.868  ?                                  ?                                                 
+  ---
+  [ 128]  0xe1    1110|0001   entropy=3.766  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.299  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 129]  0x89    10|001001   entropy=3.387  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.304  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+
+  [ 130]  0xb5    10|110101   entropy=3.520  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.272  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [ 131]  ' '     0|0100000   entropy=1.367  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.646  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 132]  0xe1    1110|0001   entropy=4.613  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.064  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 133]  0x8b    10|001011   entropy=4.184  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.097  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 134]  0xa8    10|101000   entropy=4.125  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.157  ?                                  ?                                                 
+  ---
+  [ 135]  0xe1    1110|0001   entropy=3.592  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.150  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 136]  0x88    10|001000   entropy=4.082  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.167  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [ 137]  0x9a    10|011010   entropy=4.273  0001+001000+011010=4634            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.255  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 138]  0xe1    1110|0001   entropy=4.570  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x97    10|010111   prob=   0.069  0001+010111+bbbbbb=5568-5631       Other_c(5120-6015)                                
+
+  [ 139]  0x8b    10|001011   entropy=3.215  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.290  0001+001011+111101=4861            Ethiopic(4608-5119)                               
+
+  [ 140]  0xab    10|101011   entropy=4.145  0001+001011+101011=4843            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.138  ?                                  ?                                                 
+  ---
+  [ 141]  0xe1    1110|0001   entropy=2.354  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.495  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 142]  0x88    10|001000   entropy=2.244  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.423  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 143]  0xb5    10|110101   entropy=4.875  0001+001000+110101=4661            Ethiopic(4608-5119)                               
+       ->  'k'     0|1101011   prob=   0.076  1101011=107                        ASCII(0-127)                                      
+  ---
+  [ 144]  0xe1    1110|0001   entropy=3.680  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xd1    110|10001   prob=   0.136  10001+bbbbbb=1088-1151             Cyrillic(1024-1327)                               
+
+  [ 145]  0x89    10|001001   entropy=4.160  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.096  1000110=70                         ASCII(0-127)                                      
+
+  [ 146]  0x80    10|000000   entropy=4.723  0001+001001+000000=4672            Ethiopic(4608-5119)                               
+       ->  'Y'     0|1011001   prob=   0.059  1011001=89                         ASCII(0-127)                                      
+  ---
+  [ 147]  0xe1    1110|0001   entropy=2.205  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.387  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 148]  0x88    10|001000   entropy=3.197  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.290  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 149]  0x9d    10|011101   entropy=4.660  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  0xb1    10|110001   prob=   0.073  ?                                  ?                                                 
+  ---
+  [ 150]  0xe1    1110|0001   entropy=4.352  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.069  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 151]  0x8c    10|001100   entropy=4.270  0001+001100+bbbbbb=4864-4927       Ethiopic(4608-5119)                               
+       ->  0x12    0|0010010   prob=   0.085  0010010=18                         ASCII(0-127)                                      
+
+  [ 152]  0xa5    10|100101   entropy=4.035  0001+001100+100101=4901            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.135  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 153]  ' '     0|0100000   entropy=3.203  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.266  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 154]  0xe1    1110|0001   entropy=3.844  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.260  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 155]  0x8a    10|001010   entropy=3.668  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.290  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 156]  0xa0    10|100000   entropy=3.166  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.285  ?                                  ?                                                 
+  ---
+  [ 157]  0xe1    1110|0001   entropy=0.594  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.896  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 158]  0x8b    10|001011   entropy=2.990  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.441  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 159]  0xb2    10|110010   entropy=4.336  0001+001011+110010=4850            Ethiopic(4608-5119)                               
+       ->  0xcc    110|01100   prob=   0.143  01100+bbbbbb=768-831               Other_a(688-879)                                  
+  ---
+  [ 160]  0xe1    1110|0001   entropy=2.824  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.447  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 161]  0x88    10|001000   entropy=3.561  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.203  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 162]  0xb5    10|110101   entropy=4.832  0001+001000+110101=4661            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.059  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 163]  ' '     0|0100000   entropy=0.377  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.954  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 164]  0xe1    1110|0001   entropy=4.629  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.049  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 165]  0x8b    10|001011   entropy=4.113  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  '6'     0|0110110   prob=   0.101  0110110=54                         ASCII(0-127)                                      
+
+  [ 166]  0xa8    10|101000   entropy=4.203  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.180  ?                                  ?                                                 
+  ---
+  [ 167]  0xe1    1110|0001   entropy=4.000  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xd1    110|10001   prob=   0.128  10001+bbbbbb=1088-1151             Cyrillic(1024-1327)                               
+
+  [ 168]  0x88    10|001000   entropy=4.344  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.118  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [ 169]  0x9d    10|011101   entropy=3.443  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  0xf7    11110|111   prob=   0.217  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  ---
+  [ 170]  0xe1    1110|0001   entropy=3.736  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.221  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 171]  0x88    10|001000   entropy=1.697  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.538  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+
+  [ 172]  0xad    10|101101   entropy=4.734  0001+001000+101101=4653            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.098  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 173]  0xe1    1110|0001   entropy=3.428  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xf8    11110|000   prob=   0.212  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+
+  [ 174]  0x88    10|001000   entropy=3.820  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdc    110|11100   prob=   0.174  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+
+  [ 175]  0x98    10|011000   entropy=3.148  0001+001000+011000=4632            Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.271  ?                                  ?                                                 
+  ---
+  [ 176]  0xe1    1110|0001   entropy=4.289  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.158  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 177]  0x88    10|001000   entropy=2.744  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.336  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 178]  0xab    10|101011   entropy=4.262  0001+001000+101011=4651            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.186  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 179]  ' '     0|0100000   entropy=2.223  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.608  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 180]  0xe1    1110|0001   entropy=4.801  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '%'     0|0100101   prob=   0.036  0100101=37                         ASCII(0-127)                                      
+
+  [ 181]  0x88    10|001000   entropy=2.023  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.575  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 182]  0x98    10|011000   entropy=4.637  0001+001000+011000=4632            Ethiopic(4608-5119)                               
+       ->  0xde    110|11110   prob=   0.060  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+  ---
+  [ 183]  0xe1    1110|0001   entropy=3.189  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.269  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 184]  0x88    10|001000   entropy=4.664  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.070  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+
+  [ 185]  0xb3    10|110011   entropy=4.777  0001+001000+110011=4659            Ethiopic(4608-5119)                               
+       ->  'U'     0|1010101   prob=   0.048  1010101=85                         ASCII(0-127)                                      
+  ---
+  [ 186]  0xe1    1110|0001   entropy=3.850  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x90    10|010000   prob=   0.200  0001+010000+bbbbbb=5120-5183       Other_c(5120-6015)                                
+
+  [ 187]  0x88    10|001000   entropy=3.996  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.126  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 188]  0xaa    10|101010   entropy=3.953  0001+001000+101010=4650            Ethiopic(4608-5119)                               
+       ->  0x8c    10|001100   prob=   0.230  ?                                  ?                                                 
+  ---
+  [ 189]  0xe1    1110|0001   entropy=4.398  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.137  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 190]  0x8b    10|001011   entropy=4.000  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  'e'     0|1100101   prob=   0.176  1100101=101                        ASCII(0-127)                                      
+
+  [ 191]  0xab    10|101011   entropy=4.234  0001+001011+101011=4843            Ethiopic(4608-5119)                               
+       ->  0xf2    11110|010   prob=   0.106  010+bbbbbb+bbbbbb+bbbbbb=524288-786431  Other(524288-786431)                              
+  ---
+  [ 192]  ' '     0|0100000   entropy=0.938  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.862  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 193]  0xe1    1110|0001   entropy=4.730  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.100  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 194]  0x8a    10|001010   entropy=4.625  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.093  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 195]  0xa5    10|100101   entropy=3.410  0001+001010+100101=4773            Ethiopic(4608-5119)                               
+       ->  0xac    10|101100   prob=   0.239  ?                                  ?                                                 
+  ---
+  [ 196]  0xe1    1110|0001   entropy=3.309  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.326  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 197]  0x8a    10|001010   entropy=4.574  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.107  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 198]  0x95    10|010101   entropy=3.684  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.183  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 199]  0xe1    1110|0001   entropy=3.568  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.303  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 200]  0x8b    10|001011   entropy=3.691  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xaf    10|101111   prob=   0.133  0001+001011+101111=4847            Ethiopic(4608-5119)                               
+
+  [ 201]  0xb0    10|110000   entropy=4.316  0001+001011+110000=4848            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.086  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 202]  0xe1    1110|0001   entropy=3.584  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xb4    10|110100   prob=   0.280  0001+110100+bbbbbb=7424-7487       Other_d(6320-11903)                               
+
+  [ 203]  0x89    10|001001   entropy=3.779  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  ')'     0|0101001   prob=   0.126  0101001=41                         ASCII(0-127)                                      
+
+  [ 204]  0xb0    10|110000   entropy=4.984  0001+001001+110000=4720            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.051  0000110=6                          ASCII(0-127)                                      
+  ---
+  [ 205]  0xe1    1110|0001   entropy=4.230  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.099  1110010=114                        ASCII(0-127)                                      
+
+  [ 206]  0x8d    10|001101   entropy=3.959  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  'R'     0|1010010   prob=   0.191  1010010=82                         ASCII(0-127)                                      
+
+  [ 207]  0x88    10|001000   entropy=0.858  0001+001101+001000=4936            Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.791  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  ---
+  [ 208]  0xe1    1110|0001   entropy=4.414  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.107  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 209]  0x8c    10|001100   entropy=3.641  0001+001100+bbbbbb=4864-4927       Ethiopic(4608-5119)                               
+       ->  0x11    0|0010001   prob=   0.147  0010001=17                         ASCII(0-127)                                      
+
+  [ 210]  0xa0    10|100000   entropy=4.824  0001+001100+100000=4896            Ethiopic(4608-5119)                               
+       ->  0xa1    10|100001   prob=   0.031  ?                                  ?                                                 
+  ---
+  [ 211]  0xe1    1110|0001   entropy=3.621  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x11    0|0010001   prob=   0.260  0010001=17                         ASCII(0-127)                                      
+
+  [ 212]  0x88    10|001000   entropy=3.703  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.154  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 213]  0xa8    10|101000   entropy=4.160  0001+001000+101000=4648            Ethiopic(4608-5119)                               
+       ->  0xad    10|101101   prob=   0.125  ?                                  ?                                                 
+  ---
+  [ 214]  ' '     0|0100000   entropy=0.954  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.850  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 215]  0xe1    1110|0001   entropy=4.062  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.134  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 216]  0x8a    10|001010   entropy=4.426  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.115  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 217]  0xa0    10|100000   entropy=2.701  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.390  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 218]  0xe1    1110|0001   entropy=2.158  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.598  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 219]  0x88    10|001000   entropy=3.307  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.208  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [ 220]  0xb5    10|110101   entropy=4.820  0001+001000+110101=4661            Ethiopic(4608-5119)                               
+       ->  0x9e    10|011110   prob=   0.056  ?                                  ?                                                 
+  ---
+  [ 221]  0xe1    1110|0001   entropy=3.129  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xb4    10|110100   prob=   0.272  0001+110100+bbbbbb=7424-7487       Other_d(6320-11903)                               
+
+  [ 222]  0x89    10|001001   entropy=4.605  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcb    110|01011   prob=   0.071  01011+bbbbbb=704-767               Other_a(688-879)                                  
+
+  [ 223]  0xb3    10|110011   entropy=4.922  0001+001001+110011=4723            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.048  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 224]  0xe1    1110|0001   entropy=3.080  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.446  1110010=114                        ASCII(0-127)                                      
+
+  [ 225]  0x8b    10|001011   entropy=2.898  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.458  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 226]  0x8d    10|001101   entropy=4.633  0001+001011+001101=4813            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.090  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 227]  0xe1    1110|0001   entropy=2.836  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.326  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 228]  0x89    10|001001   entropy=4.531  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'H'     0|1001000   prob=   0.109  1001000=72                         ASCII(0-127)                                      
+
+  [ 229]  0x8b    10|001011   entropy=4.508  0001+001001+001011=4683            Ethiopic(4608-5119)                               
+       ->  'H'     0|1001000   prob=   0.064  1001000=72                         ASCII(0-127)                                      
+  ---
+  [ 230]  0xe1    1110|0001   entropy=3.654  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x08    0|0001000   prob=   0.145  0001000=8                          ASCII(0-127)                                      
+
+  [ 231]  0x88    10|001000   entropy=3.779  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x85    10|000101   prob=   0.170  0001+001000+000101=4613            Ethiopic(4608-5119)                               
+
+  [ 232]  0x8d    10|001101   entropy=4.203  0001+001000+001101=4621            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.144  0000110=6                          ASCII(0-127)                                      
+  ---
+  [ 233]  0xe1    1110|0001   entropy=1.542  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.740  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 234]  0x8d    10|001101   entropy=4.824  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  0xa8    10|101000   prob=   0.056  0001+001101+101000=4968            Ethiopic(4608-5119)                               
+
+  [ 235]  0xa1    10|100001   entropy=4.770  0001+001101+100001=4961            Ethiopic(4608-5119)                               
+       ->  0xac    10|101100   prob=   0.088  ?                                  ?                                                 
+  ---
+  [ 236]  ' '     0|0100000   entropy=4.820  0100000=32                         ASCII(0-127)                                      
+       ->  'N'     0|1001110   prob=   0.067  1001110=78                         ASCII(0-127)                                      
+  ---
+  [ 237]  0xe1    1110|0001   entropy=4.336  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x08    0|0001000   prob=   0.095  0001000=8                          ASCII(0-127)                                      
+
+  [ 238]  0x8a    10|001010   entropy=4.590  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.111  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 239]  0xa5    10|100101   entropy=3.719  0001+001010+100101=4773            Ethiopic(4608-5119)                               
+       ->  'B'     0|1000010   prob=   0.231  1000010=66                         ASCII(0-127)                                      
+  ---
+  [ 240]  0xe1    1110|0001   entropy=3.117  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.275  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 241]  0x8b    10|001011   entropy=4.586  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.082  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 242]  0xab    10|101011   entropy=4.051  0001+001011+101011=4843            Ethiopic(4608-5119)                               
+       ->  0xf2    11110|010   prob=   0.120  010+bbbbbb+bbbbbb+bbbbbb=524288-786431  Other(524288-786431)                              
+  ---
+  [ 243]  0xe1    1110|0001   entropy=3.191  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'U'     0|1010101   prob=   0.249  1010101=85                         ASCII(0-127)                                      
+
+  [ 244]  0x8a    10|001010   entropy=4.477  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.133  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 245]  0x95    10|010101   entropy=2.379  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.527  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 246]  0xe1    1110|0001   entropy=3.891  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.217  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 247]  0x8b    10|001011   entropy=3.229  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.342  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 248]  0xb3    10|110011   entropy=2.857  0001+001011+110011=4851            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.462  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 249]  0xe1    1110|0001   entropy=3.688  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.238  1110010=114                        ASCII(0-127)                                      
+
+  [ 250]  0x8a    10|001010   entropy=4.219  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.136  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 251]  0x95    10|010101   entropy=2.822  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  '/'     0|0101111   prob=   0.260  0101111=47                         ASCII(0-127)                                      
+  ---
+  [ 252]  0xe1    1110|0001   entropy=3.777  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.257  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 253]  0x8b    10|001011   entropy=3.273  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.304  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 254]  0xb1    10|110001   entropy=4.398  0001+001011+110001=4849            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.090  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 255]  0xe1    1110|0001   entropy=4.098  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.196  1110010=114                        ASCII(0-127)                                      
+
+  [ 256]  0x8a    10|001010   entropy=4.059  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.154  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 257]  0x95    10|010101   entropy=3.670  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.326  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 258]  ' '     0|0100000   entropy=0.835  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.878  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 259]  0xe1    1110|0001   entropy=3.836  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x08    0|0001000   prob=   0.164  0001000=8                          ASCII(0-127)                                      
+
+  [ 260]  0x89    10|001001   entropy=4.480  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.063  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+
+  [ 261]  0xa0    10|100000   entropy=2.215  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.461  ?                                  ?                                                 
+  ---
+  [ 262]  0xe1    1110|0001   entropy=3.613  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.157  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 263]  0x8a    10|001010   entropy=3.992  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.243  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+
+  [ 264]  0xa0    10|100000   entropy=2.473  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.376  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 265]  0xe1    1110|0001   entropy=1.340  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.777  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 266]  0x8a    10|001010   entropy=4.129  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.233  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+
+  [ 267]  0x95    10|010101   entropy=3.432  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.197  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 268]  0xe1    1110|0001   entropy=3.377  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.357  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 269]  0x8b    10|001011   entropy=2.600  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.430  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 270]  0xb0    10|110000   entropy=4.512  0001+001011+110000=4848            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.102  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 271]  ' '     0|0100000   entropy=0.596  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.891  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 272]  0xe1    1110|0001   entropy=4.438  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.099  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 273]  0x8b    10|001011   entropy=3.736  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.163  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 274]  0xa8    10|101000   entropy=4.496  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.059  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 275]  0xe1    1110|0001   entropy=4.156  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.095  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 276]  0x8b    10|001011   entropy=3.855  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.130  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 277]  0xa9    10|101001   entropy=4.359  0001+001011+101001=4841            Ethiopic(4608-5119)                               
+       ->  'H'     0|1001000   prob=   0.066  1001000=72                         ASCII(0-127)                                      
+  ---
+  [ 278]  '.'     0|0101110   entropy=2.799  0101110=46                         ASCII(0-127)                                      
+       ->  'B'     0|1000010   prob=   0.514  1000010=66                         ASCII(0-127)                                      
+  ---
+  [ 279]  0xe1    1110|0001   entropy=4.039  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.133  1110010=114                        ASCII(0-127)                                      
+
+  [ 280]  0x8a    10|001010   entropy=4.801  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.067  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 281]  0xa4    10|100100   entropy=3.518  0001+001010+100100=4772            Ethiopic(4608-5119)                               
+       ->  0x9b    10|011011   prob=   0.321  ?                                  ?                                                 
+  ---
+  [ 282]  0xe1    1110|0001   entropy=3.756  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.201  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 283]  0x88    10|001000   entropy=2.426  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.524  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+
+  [ 284]  0xb5    10|110101   entropy=4.840  0001+001000+110101=4661            Ethiopic(4608-5119)                               
+       ->  'k'     0|1101011   prob=   0.050  1101011=107                        ASCII(0-127)                                      
+  ---
+  [ 285]  ' '     0|0100000   entropy=4.512  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.108  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 286]  0xe1    1110|0001   entropy=4.527  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xf8    11110|000   prob=   0.060  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+
+  [ 287]  0x88    10|001000   entropy=3.004  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.278  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 288]  0xb3    10|110011   entropy=4.570  0001+001000+110011=4659            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.097  1110110=118                        ASCII(0-127)                                      
+  ---
+  [ 289]  0xe1    1110|0001   entropy=1.956  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x90    10|010000   prob=   0.657  0001+010000+bbbbbb=5120-5183       Other_c(5120-6015)                                
+
+  [ 290]  0x8a    10|001010   entropy=4.402  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.151  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 291]  0x95    10|010101   entropy=3.816  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.256  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 292]  0xe1    1110|0001   entropy=3.172  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.364  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 293]  0x89    10|001001   entropy=1.996  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.614  1000110=70                         ASCII(0-127)                                      
+
+  [ 294]  0xb2    10|110010   entropy=4.707  0001+001001+110010=4722            Ethiopic(4608-5119)                               
+       ->  0x06    0|0000110   prob=   0.058  0000110=6                          ASCII(0-127)                                      
+  ---
+  [ 295]  0xe1    1110|0001   entropy=2.266  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.345  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 296]  0x88    10|001000   entropy=4.324  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.170  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 297]  0x9d    10|011101   entropy=2.492  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  0xf7    11110|111   prob=   0.551  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  ---
+  [ 298]  ' '     0|0100000   entropy=4.055  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.179  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 299]  0xe1    1110|0001   entropy=4.555  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.107  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 300]  0x8b    10|001011   entropy=4.277  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0x8d    10|001101   prob=   0.096  0001+001011+001101=4813            Ethiopic(4608-5119)                               
+
+  [ 301]  0xa8    10|101000   entropy=2.586  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.574  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 302]  0xe1    1110|0001   entropy=4.254  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.088  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 303]  0x88    10|001000   entropy=3.174  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.252  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 304]  0x9a    10|011010   entropy=5.082  0001+001000+011010=4634            Ethiopic(4608-5119)                               
+       ->  0xcb    110|01011   prob=   0.034  01011+bbbbbb=704-767               Other_a(688-879)                                  
+  ---
+  [ 305]  0xe1    1110|0001   entropy=4.316  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xa1    10|100001   prob=   0.100  0001+100001+bbbbbb=6208-6271       Mongolian(6144-6319)                              
+
+  [ 306]  0x88    10|001000   entropy=3.982  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdc    110|11100   prob=   0.180  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+
+  [ 307]  0x86    10|000110   entropy=3.916  0001+001000+000110=4614            Ethiopic(4608-5119)                               
+       ->  'z'     0|1111010   prob=   0.135  1111010=122                        ASCII(0-127)                                      
+  ---
+  [ 308]  0xe1    1110|0001   entropy=4.031  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.142  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 309]  0x8a    10|001010   entropy=3.773  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.274  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 310]  0x95    10|010101   entropy=2.607  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.580  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 311]  ' '     0|0100000   entropy=0.517  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.925  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 312]  0xe1    1110|0001   entropy=4.312  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'U'     0|1010101   prob=   0.131  1010101=85                         ASCII(0-127)                                      
+
+  [ 313]  0x88    10|001000   entropy=2.705  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.427  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 314]  0x98    10|011000   entropy=3.971  0001+001000+011000=4632            Ethiopic(4608-5119)                               
+       ->  0xd2    110|10010   prob=   0.111  10010+bbbbbb=1152-1215             Cyrillic(1024-1327)                               
+  ---
+  [ 315]  0xe1    1110|0001   entropy=4.098  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.130  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 316]  0x8b    10|001011   entropy=3.619  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xee    1110|1110   prob=   0.247  1110+1bbbbb+bbbbbb=57344-61439     Other_i(55216-63743)                              
+
+  [ 317]  0xb0    10|110000   entropy=2.652  0001+001011+110000=4848            Ethiopic(4608-5119)                               
+       ->  0xdc    110|11100   prob=   0.411  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+  ---
+  [ 318]  0xe1    1110|0001   entropy=3.998  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x98    10|011000   prob=   0.129  0001+011000+bbbbbb=5632-5695       Other_c(5120-6015)                                
+
+  [ 319]  0x89    10|001001   entropy=3.951  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.131  1000110=70                         ASCII(0-127)                                      
+
+  [ 320]  0xa0    10|100000   entropy=2.879  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.356  ?                                  ?                                                 
+  ---
+  [ 321]  0xe1    1110|0001   entropy=3.939  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.140  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 322]  0x8a    10|001010   entropy=1.788  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xa0    10|100000   prob=   0.734  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+
+  [ 323]  0x9b    10|011011   entropy=1.566  0001+001010+011011=4763            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.748  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 324]  ' '     0|0100000   entropy=1.441  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.804  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 325]  0xe1    1110|0001   entropy=3.355  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.172  1110010=114                        ASCII(0-127)                                      
+
+  [ 326]  0x8b    10|001011   entropy=4.238  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0x1b    0|0011011   prob=   0.132  0011011=27                         ASCII(0-127)                                      
+
+  [ 327]  0xa8    10|101000   entropy=1.398  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.793  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 328]  0xe1    1110|0001   entropy=4.391  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbd    10|111101   prob=   0.107  0001+111101+bbbbbb=8000-8063       Other_d(6320-11903)                               
+
+  [ 329]  0x8a    10|001010   entropy=3.816  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.288  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 330]  0xa2    10|100010   entropy=3.639  0001+001010+100010=4770            Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.147  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  ---
+  [ 331]  0xe1    1110|0001   entropy=3.219  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.223  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 332]  0x8a    10|001010   entropy=4.820  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.087  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 333]  0x95    10|010101   entropy=3.877  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.139  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 334]  0xe1    1110|0001   entropy=3.273  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.401  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 335]  0x8a    10|001010   entropy=4.684  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.093  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 336]  0xad    10|101101   entropy=3.682  0001+001010+101101=4781            Ethiopic(4608-5119)                               
+       ->  '<'     0|0111100   prob=   0.182  0111100=60                         ASCII(0-127)                                      
+  ---
+  [ 337]  0xe1    1110|0001   entropy=3.916  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.175  0100011=35                         ASCII(0-127)                                      
+
+  [ 338]  0x8c    10|001100   entropy=3.389  0001+001100+bbbbbb=4864-4927       Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.215  1110110=118                        ASCII(0-127)                                      
+
+  [ 339]  0x84    10|000100   entropy=2.629  0001+001100+000100=4868            Ethiopic(4608-5119)                               
+       ->  0x82    10|000010   prob=   0.348  ?                                  ?                                                 
+  ---
+  [ 340]  0xe1    1110|0001   entropy=4.348  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xde    110|11110   prob=   0.135  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+
+  [ 341]  0x89    10|001001   entropy=1.400  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.497  1000110=70                         ASCII(0-127)                                      
+
+  [ 342]  0xb5    10|110101   entropy=4.445  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.091  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [ 343]  ' '     0|0100000   entropy=2.418  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.624  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 344]  0xe1    1110|0001   entropy=4.355  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.073  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 345]  0x8a    10|001010   entropy=4.246  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0x13    0|0010011   prob=   0.162  0010011=19                         ASCII(0-127)                                      
+
+  [ 346]  0xa0    10|100000   entropy=3.877  0001+001010+100000=4768            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.164  ?                                  ?                                                 
+  ---
+  [ 347]  0xe1    1110|0001   entropy=1.102  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.818  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 348]  0x89    10|001001   entropy=3.223  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.196  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [ 349]  0xb3    10|110011   entropy=4.406  0001+001001+110011=4723            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.141  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 350]  0xe1    1110|0001   entropy=3.221  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.356  1110010=114                        ASCII(0-127)                                      
+
+  [ 351]  0x88    10|001000   entropy=3.328  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.155  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 352]  0x9a    10|011010   entropy=3.049  0001+001000+011010=4634            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.469  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 353]  0xe1    1110|0001   entropy=4.125  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xa1    10|100001   prob=   0.104  0001+100001+bbbbbb=6208-6271       Mongolian(6144-6319)                              
+
+  [ 354]  0x8b    10|001011   entropy=3.301  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  'f'     0|1100110   prob=   0.171  1100110=102                        ASCII(0-127)                                      
+
+  [ 355]  0x8e    10|001110   entropy=3.344  0001+001011+001110=4814            Ethiopic(4608-5119)                               
+       ->  0x97    10|010111   prob=   0.182  ?                                  ?                                                 
+  ---
+  [ 356]  0xe1    1110|0001   entropy=3.932  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.124  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 357]  0x89    10|001001   entropy=2.303  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.335  1000110=70                         ASCII(0-127)                                      
+
+  [ 358]  0xbd    10|111101   entropy=4.656  0001+001001+111101=4733            Ethiopic(4608-5119)                               
+       ->  ';'     0|0111011   prob=   0.075  0111011=59                         ASCII(0-127)                                      
+  ---
+  [ 359]  0xe1    1110|0001   entropy=3.451  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.315  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 360]  0x8a    10|001010   entropy=4.316  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xcb    110|01011   prob=   0.095  01011+bbbbbb=704-767               Other_a(688-879)                                  
+
+  [ 361]  0x95    10|010101   entropy=3.369  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.237  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 362]  ' '     0|0100000   entropy=3.764  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.333  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 363]  0xe1    1110|0001   entropy=3.498  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.273  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 364]  0x89    10|001001   entropy=2.988  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.238  1000110=70                         ASCII(0-127)                                      
+
+  [ 365]  0xa0    10|100000   entropy=3.859  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0x91    10|010001   prob=   0.210  ?                                  ?                                                 
+  ---
+  [ 366]  0xe1    1110|0001   entropy=3.166  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.278  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 367]  0x88    10|001000   entropy=3.227  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.174  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 368]  0x98    10|011000   entropy=3.992  0001+001000+011000=4632            Ethiopic(4608-5119)                               
+       ->  0xd2    110|10010   prob=   0.133  10010+bbbbbb=1152-1215             Cyrillic(1024-1327)                               
+  ---
+  [ 369]  0xe1    1110|0001   entropy=2.379  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.452  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 370]  0x8c    10|001100   entropy=4.016  0001+001100+bbbbbb=4864-4927       Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.232  1110110=118                        ASCII(0-127)                                      
+
+  [ 371]  0xa0    10|100000   entropy=4.262  0001+001100+100000=4896            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.142  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 372]  0xe1    1110|0001   entropy=3.395  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.261  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 373]  0x89    10|001001   entropy=0.655  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.903  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [ 374]  0x80    10|000000   entropy=3.248  0001+001001+000000=4672            Ethiopic(4608-5119)                               
+       ->  'Y'     0|1011001   prob=   0.199  1011001=89                         ASCII(0-127)                                      
+  ---
+  [ 375]  0xe1    1110|0001   entropy=2.932  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.367  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 376]  0x88    10|001000   entropy=4.484  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.061  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+
+  [ 377]  0x9d    10|011101   entropy=3.051  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  'q'     0|1110001   prob=   0.285  1110001=113                        ASCII(0-127)                                      
+  ---
+  [ 378]  ' '     0|0100000   entropy=4.082  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.199  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 379]  0xe1    1110|0001   entropy=3.408  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.342  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 380]  0x88    10|001000   entropy=3.064  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  'b'     0|1100010   prob=   0.273  1100010=98                         ASCII(0-127)                                      
+
+  [ 381]  0x8a    10|001010   entropy=5.059  0001+001000+001010=4618            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.054  ?                                  ?                                                 
+  ---
+  [ 382]  0xe1    1110|0001   entropy=3.240  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.344  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 383]  0x8d    10|001101   entropy=3.994  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  '5'     0|0110101   prob=   0.162  0110101=53                         ASCII(0-127)                                      
+
+  [ 384]  0x88    10|001000   entropy=3.723  0001+001101+001000=4936            Ethiopic(4608-5119)                               
+       ->  0xdd    110|11101   prob=   0.271  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  ---
+  [ 385]  0xe1    1110|0001   entropy=3.760  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.278  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 386]  0x89    10|001001   entropy=1.063  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.793  1000110=70                         ASCII(0-127)                                      
+
+  [ 387]  0xa0    10|100000   entropy=4.344  0001+001001+100000=4704            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.113  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 388]  0xe1    1110|0001   entropy=3.307  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.201  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 389]  0x88    10|001000   entropy=2.889  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xdc    110|11100   prob=   0.295  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+
+  [ 390]  0xa8    10|101000   entropy=3.721  0001+001000+101000=4648            Ethiopic(4608-5119)                               
+       ->  0xd2    110|10010   prob=   0.304  10010+bbbbbb=1152-1215             Cyrillic(1024-1327)                               
+  ---
+  [ 391]  0xe1    1110|0001   entropy=4.219  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.182  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 392]  0x8a    10|001010   entropy=3.691  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.332  0001+001010+111101=4797            Ethiopic(4608-5119)                               
+
+  [ 393]  0xad    10|101101   entropy=4.332  0001+001010+101101=4781            Ethiopic(4608-5119)                               
+       ->  '<'     0|0111100   prob=   0.124  0111100=60                         ASCII(0-127)                                      
+  ---
+  [ 394]  ' '     0|0100000   entropy=2.729  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.509  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 395]  0xe1    1110|0001   entropy=3.639  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.181  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 396]  0x8b    10|001011   entropy=4.059  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.123  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 397]  0xa8    10|101000   entropy=3.830  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.326  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 398]  0xe1    1110|0001   entropy=4.004  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.142  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 399]  0x88    10|001000   entropy=3.363  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.231  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 400]  0x9a    10|011010   entropy=4.863  0001+001000+011010=4634            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.082  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 401]  0xe1    1110|0001   entropy=4.516  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.119  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 402]  0x89    10|001001   entropy=1.598  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.684  1000110=70                         ASCII(0-127)                                      
+
+  [ 403]  0xbd    10|111101   entropy=4.578  0001+001001+111101=4733            Ethiopic(4608-5119)                               
+       ->  ';'     0|0111011   prob=   0.088  0111011=59                         ASCII(0-127)                                      
+  ---
+  [ 404]  0xe1    1110|0001   entropy=3.184  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.344  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 405]  0x88    10|001000   entropy=2.703  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.199  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 406]  0x8d    10|001101   entropy=4.625  0001+001000+001101=4621            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.144  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 407]  ' '     0|0100000   entropy=0.469  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.940  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 408]  0xe1    1110|0001   entropy=4.012  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.215  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 409]  0x89    10|001001   entropy=3.068  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0x94    10|010100   prob=   0.204  0001+001001+010100=4692            Ethiopic(4608-5119)                               
+
+  [ 410]  0xb5    10|110101   entropy=3.945  0001+001001+110101=4725            Ethiopic(4608-5119)                               
+       ->  0xca    110|01010   prob=   0.104  01010+bbbbbb=640-703               IPA/Other_a(592-879)                              
+  ---
+  [ 411]  0xe1    1110|0001   entropy=3.438  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.174  0100011=35                         ASCII(0-127)                                      
+
+  [ 412]  0x8a    10|001010   entropy=4.398  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.083  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+
+  [ 413]  0x95    10|010101   entropy=3.479  0001+001010+010101=4757            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.153  ?                                  ?                                                 
+  ---
+  [ 414]  0xe1    1110|0001   entropy=2.783  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.527  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 415]  0x88    10|001000   entropy=4.672  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x1a    0|0011010   prob=   0.044  0011010=26                         ASCII(0-127)                                      
+
+  [ 416]  0xbd    10|111101   entropy=4.809  0001+001000+111101=4669            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.049  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 417]  ' '     0|0100000   entropy=1.990  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.681  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 418]  0xe1    1110|0001   entropy=4.293  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x08    0|0001000   prob=   0.103  0001000=8                          ASCII(0-127)                                      
+
+  [ 419]  0x88    10|001000   entropy=2.145  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.425  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 420]  0x98    10|011000   entropy=4.570  0001+001000+011000=4632            Ethiopic(4608-5119)                               
+       ->  0xde    110|11110   prob=   0.102  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+  ---
+  [ 421]  0xe1    1110|0001   entropy=2.088  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.595  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 422]  0x89    10|001001   entropy=2.611  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  0xcf    110|01111   prob=   0.381  01111+bbbbbb=960-1023              Greek(880-1023)                                   
+
+  [ 423]  0xb3    10|110011   entropy=4.262  0001+001001+110011=4723            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.197  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 424]  0xe1    1110|0001   entropy=3.266  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  'r'     0|1110010   prob=   0.282  1110010=114                        ASCII(0-127)                                      
+
+  [ 425]  0x89    10|001001   entropy=0.185  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.978  1000110=70                         ASCII(0-127)                                      
+
+  [ 426]  0xb0    10|110000   entropy=5.043  0001+001001+110000=4720            Ethiopic(4608-5119)                               
+       ->  0xbd    10|111101   prob=   0.048  ?                                  ?                                                 
+  ---
+  [ 427]  0xe1    1110|0001   entropy=4.133  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.099  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 428]  0x88    10|001000   entropy=3.807  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.162  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 429]  0x9d    10|011101   entropy=3.805  0001+001000+011101=4637            Ethiopic(4608-5119)                               
+       ->  'q'     0|1110001   prob=   0.192  1110001=113                        ASCII(0-127)                                      
+  ---
+  [ 430]  ' '     0|0100000   entropy=0.646  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.909  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 431]  0xe1    1110|0001   entropy=4.344  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xcd    110|01101   prob=   0.096  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+
+  [ 432]  0x8b    10|001011   entropy=4.160  0001+001011+bbbbbb=4800-4863       Ethiopic(4608-5119)                               
+       ->  0xe8    1110|1000   prob=   0.091  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+
+  [ 433]  0xa8    10|101000   entropy=0.703  0001+001011+101000=4840            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.911  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 434]  0xe1    1110|0001   entropy=4.203  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.126  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 435]  0x88    10|001000   entropy=3.197  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0x8e    10|001110   prob=   0.251  0001+001000+001110=4622            Ethiopic(4608-5119)                               
+
+  [ 436]  0x9a    10|011010   entropy=4.328  0001+001000+011010=4634            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.210  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 437]  0xe1    1110|0001   entropy=4.590  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.086  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 438]  0x89    10|001001   entropy=2.287  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.487  1000110=70                         ASCII(0-127)                                      
+
+  [ 439]  0xbd    10|111101   entropy=4.051  0001+001001+111101=4733            Ethiopic(4608-5119)                               
+       ->  ';'     0|0111011   prob=   0.186  0111011=59                         ASCII(0-127)                                      
+  ---
+  [ 440]  0xe1    1110|0001   entropy=3.607  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.270  0001+001010+bbbbbb=4736-4799       Ethiopic(4608-5119)                               
+
+  [ 441]  0x88    10|001000   entropy=3.236  0001+001000+bbbbbb=4608-4671       Ethiopic(4608-5119)                               
+       ->  0xa5    10|100101   prob=   0.215  0001+001000+100101=4645            Ethiopic(4608-5119)                               
+
+  [ 442]  0x8d    10|001101   entropy=3.783  0001+001000+001101=4621            Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.296  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 443]  ' '     0|0100000   entropy=0.131  0100000=32                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.986  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 444]  0xe1    1110|0001   entropy=4.367  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.123  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 445]  0x89    10|001001   entropy=1.304  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+       ->  'F'     0|1000110   prob=   0.705  1000110=70                         ASCII(0-127)                                      
+
+  [ 446]  0xba    10|111010   entropy=4.445  0001+001001+111010=4730            Ethiopic(4608-5119)                               
+       ->  0xff    11110|111   prob=   0.068  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  ---
+  [ 447]  0xe1    1110|0001   entropy=3.840  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.140  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 448]  0x8d    10|001101   entropy=3.912  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  0xe1    1110|0001   prob=   0.196  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+
+  [ 449]  0x95    10|010101   entropy=4.062  0001+001101+010101=4949            Ethiopic(4608-5119)                               
+       ->  0x92    10|010010   prob=   0.103  ?                                  ?                                                 
+  ---
+  [ 450]  0xe1    1110|0001   entropy=3.434  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x89    10|001001   prob=   0.275  0001+001001+bbbbbb=4672-4735       Ethiopic(4608-5119)                               
+
+  [ 451]  0x8d    10|001101   entropy=4.164  0001+001101+bbbbbb=4928-4991       Ethiopic(4608-5119)                               
+       ->  'R'     0|1010010   prob=   0.119  1010010=82                         ASCII(0-127)                                      
+
+  [ 452]  0xa2    10|100010   entropy=3.551  0001+001101+100010=4962            Ethiopic(4608-5119)                               
+       ->  'v'     0|1110110   prob=   0.170  1110110=118                        ASCII(0-127)                                      
+  ---
+
+--------------------------------------------------------------------------------
+  Patch summary from restructured results:
+
+  [bytes] raw_entropy          t_2.0176      n_patches=85  avg_bpp=4.0235  lengths=[1, 1, 4, 10, 2, 2, 2, 2, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 2, 6, 2, 14, 2, 14, 2, 2, 6, 2, 4, 2, 4, 4, 6, 2, 2, 6, 2, 8, 2, 4, 4, 4, 2, 2, 2, 8, 2, 2, 8, 2, 10, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [bytes] raw_entropy          t_1.9082      n_patches=89  avg_bpp=3.8427  lengths=[1, 1, 4, 10, 2, 2, 2, 2, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 2, 6, 2, 14, 2, 14, 2, 2, 6, 2, 4, 2, 4, 2, 2, 6, 2, 2, 6, 2, 8, 2, 2, 2, 4, 4, 2, 2, 2, 8, 2, 2, 8, 2, 2, 6, 2, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [bytes] raw_entropy          t_2.1782      n_patches=80  avg_bpp=4.2750  lengths=[1, 1, 4, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 4, 4, 4, 2, 2, 2, 8, 2, 2, 8, 2, 10, 10, 4, 4, 2, 4, 4, 2, 2, 6, 2, 4]
+  [bytes] raw_entropy          t_2.4482      n_patches=72  avg_bpp=4.7500  lengths=[2, 4, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 8, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 12, 2, 12, 2, 2, 8, 2, 10, 10, 4, 4, 2, 8, 2, 2, 6, 6]
+  [bytes] raw_monotonicity     t_2.0371      n_patches=80  avg_bpp=4.2750  lengths=[1, 5, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 2, 6, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 4, 8, 2, 4, 8, 2, 2, 8, 2, 10, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [bytes] raw_monotonicity     t_1.9182      n_patches=83  avg_bpp=4.1205  lengths=[1, 5, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 2, 6, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 2, 2, 6, 2, 2, 6, 2, 8, 2, 2, 2, 8, 2, 4, 8, 2, 2, 8, 2, 2, 8, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [bytes] raw_monotonicity     t_2.1985      n_patches=74  avg_bpp=4.6216  lengths=[1, 5, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 12, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 8, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 4, 8, 2, 4, 8, 2, 2, 8, 2, 10, 10, 4, 4, 2, 4, 4, 2, 2, 6, 6]
+  [bytes] raw_monotonicity     t_2.4789      n_patches=69  avg_bpp=4.9565  lengths=[1, 5, 10, 2, 2, 4, 8, 4, 10, 2, 2, 8, 12, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 8, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 16, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 12, 2, 12, 2, 2, 8, 2, 10, 10, 4, 4, 2, 8, 2, 2, 6, 6]
+  [chars] raw_entropy          t_1.9421      n_patches=90  avg_bpp=3.8000  lengths_chars=[1, 2, 5, 1, 1, 1, 1, 4, 1, 1, 5, 1, 1, 4, 1, 5, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 4, 1, 4, 3, 1, 1, 3, 1, 7, 1, 1, 6, 1, 1, 3, 1, 2, 1, 2, 1, 1, 3, 1, 1, 3, 1, 1, 3, 1, 1, 1, 2, 2, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 5, 2, 2, 1, 1, 1, 2, 1, 1, 3, 1, 2]  lengths_bytes=[2, 4, 10, 2, 2, 2, 2, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 2, 6, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 2, 6, 2, 14, 2, 2, 12, 2, 2, 6, 2, 4, 2, 4, 2, 2, 6, 2, 2, 6, 2, 2, 6, 2, 2, 2, 4, 4, 2, 2, 2, 8, 2, 2, 8, 2, 8, 2, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [chars] raw_entropy          t_2.2228      n_patches=79  avg_bpp=4.3291  lengths_chars=[1, 2, 5, 1, 1, 1, 1, 4, 1, 1, 5, 1, 1, 4, 1, 5, 3, 1, 1, 4, 1, 1, 1, 3, 1, 1, 1, 1, 4, 1, 3, 1, 1, 4, 1, 4, 4, 4, 1, 7, 1, 7, 1, 1, 3, 1, 2, 1, 2, 2, 3, 1, 1, 3, 1, 4, 1, 4, 2, 1, 1, 1, 4, 1, 1, 4, 1, 5, 5, 2, 2, 1, 2, 2, 1, 1, 3, 1, 2]  lengths_bytes=[2, 4, 10, 2, 2, 2, 2, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 8, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 2, 4, 4, 6, 2, 2, 6, 2, 8, 2, 8, 4, 2, 2, 2, 8, 2, 2, 8, 2, 10, 10, 4, 4, 2, 4, 4, 2, 2, 6, 2, 4]
+  [chars] raw_entropy          t_2.5034      n_patches=73  avg_bpp=4.6849  lengths_chars=[1, 2, 5, 1, 1, 2, 4, 1, 1, 5, 1, 1, 4, 1, 5, 3, 1, 1, 4, 1, 1, 1, 3, 1, 1, 1, 1, 4, 1, 3, 1, 1, 4, 1, 4, 4, 4, 1, 7, 1, 7, 1, 1, 3, 1, 2, 3, 2, 3, 1, 1, 3, 1, 4, 1, 4, 2, 1, 1, 5, 1, 1, 4, 1, 10, 2, 2, 1, 4, 1, 1, 3, 3]  lengths_bytes=[2, 4, 10, 2, 2, 4, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 8, 2, 2, 2, 6, 2, 2, 2, 2, 8, 2, 6, 2, 2, 8, 2, 8, 8, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 6, 4, 6, 2, 2, 6, 2, 8, 2, 8, 4, 2, 2, 10, 2, 2, 8, 2, 20, 4, 4, 2, 8, 2, 2, 6, 6]
+  [chars] raw_entropy          t_2.0630      n_patches=86  avg_bpp=3.9767  lengths_chars=[1, 2, 5, 1, 1, 1, 1, 4, 1, 1, 5, 1, 1, 4, 1, 5, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 4, 1, 4, 3, 1, 4, 1, 7, 1, 7, 1, 1, 3, 1, 2, 1, 2, 2, 3, 1, 1, 3, 1, 1, 3, 1, 2, 2, 2, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 5, 2, 2, 1, 1, 1, 2, 1, 1, 3, 1, 2]  lengths_bytes=[2, 4, 10, 2, 2, 2, 2, 8, 2, 2, 10, 2, 2, 8, 2, 10, 6, 2, 2, 2, 6, 2, 2, 2, 6, 2, 2, 2, 2, 2, 6, 2, 6, 2, 2, 8, 2, 8, 6, 2, 8, 2, 14, 2, 14, 2, 2, 6, 2, 4, 2, 4, 4, 6, 2, 2, 6, 2, 2, 6, 2, 4, 4, 4, 2, 2, 2, 8, 2, 2, 8, 2, 8, 2, 10, 4, 4, 2, 2, 2, 4, 2, 2, 6, 2, 4]
+  [chars] raw_monotonicity     t_0.5437      n_patches=49  avg_bpp=6.9796  lengths_chars=[1, 2, 3, 2, 4, 4, 2, 2, 2, 1, 6, 6, 3, 2, 4, 6, 8, 4, 1, 5, 4, 1, 3, 1, 4, 6, 2, 8, 5, 3, 3, 2, 3, 5, 5, 1, 4, 2, 5, 2, 2, 4, 5, 6, 2, 2, 5, 5, 3]  lengths_bytes=[2, 4, 6, 4, 8, 8, 4, 4, 4, 2, 12, 12, 6, 4, 8, 12, 16, 8, 2, 10, 8, 2, 6, 2, 8, 12, 4, 16, 10, 6, 6, 4, 6, 10, 10, 2, 8, 4, 10, 4, 4, 8, 10, 12, 4, 4, 10, 10, 6]
+  [chars] raw_monotonicity     t_0.9297      n_patches=40  avg_bpp=8.5500  lengths_chars=[1, 2, 5, 8, 4, 3, 6, 6, 3, 6, 6, 8, 4, 6, 4, 1, 3, 1, 4, 6, 2, 8, 5, 3, 3, 2, 3, 5, 5, 5, 2, 7, 6, 5, 6, 2, 2, 5, 5, 3]  lengths_bytes=[2, 4, 10, 16, 8, 6, 12, 12, 6, 12, 12, 16, 8, 12, 8, 2, 6, 2, 8, 12, 4, 16, 10, 6, 6, 4, 6, 10, 10, 10, 4, 14, 12, 10, 12, 4, 4, 10, 10, 6]
+  [chars] raw_monotonicity     t_1.3157      n_patches=32  avg_bpp=10.6875  lengths_chars=[1, 2, 5, 8, 7, 6, 6, 3, 6, 6, 8, 4, 6, 5, 8, 8, 8, 5, 3, 3, 2, 3, 5, 5, 7, 7, 6, 11, 4, 5, 5, 3]  lengths_bytes=[2, 4, 10, 16, 14, 12, 12, 6, 12, 12, 16, 8, 12, 10, 16, 16, 16, 10, 6, 6, 4, 6, 10, 10, 14, 14, 12, 22, 8, 10, 10, 6]
+  [chars] raw_monotonicity     t_0.6877      n_patches=45  avg_bpp=7.6000  lengths_chars=[1, 2, 3, 2, 8, 2, 2, 2, 1, 6, 6, 3, 6, 6, 8, 4, 1, 5, 4, 1, 3, 1, 4, 6, 2, 8, 5, 3, 3, 2, 3, 5, 5, 5, 2, 5, 2, 6, 5, 6, 2, 2, 5, 5, 3]  lengths_bytes=[2, 4, 6, 4, 16, 4, 4, 4, 2, 12, 12, 6, 12, 12, 16, 8, 2, 10, 8, 2, 6, 2, 8, 12, 4, 16, 10, 6, 6, 4, 6, 10, 10, 10, 4, 10, 4, 12, 10, 12, 4, 4, 10, 10, 6]

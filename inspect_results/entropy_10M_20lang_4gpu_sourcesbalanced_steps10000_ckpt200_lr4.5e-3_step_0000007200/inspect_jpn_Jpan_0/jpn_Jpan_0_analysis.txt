@@ -1,0 +1,988 @@
+================================================================================
+  Language : jpn_Jpan
+  Index    : 0
+  Entropy repo: dumps/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3/checkpoints/0000007200/consolidated
+  Text     : 月曜日にスタンフォード大学医学部の科学者たちは、細胞を種類別に分類できる新しい診断ツールを発明したと発表しました。それは標準的なインクジェットプリンタで印刷して製造できる小型チップであり、原価は1枚あたり1円ほどす。
+  English  : On Monday, scientists from the Stanford University School of Medicine announced the invention of a new diagnostic tool that can sort cells by type: a tiny printable chip that can be manufactured using standard inkjet printers for possibly about one U.S. cent each.
+  Bytes    : 320
+
+  [   0]  0xe6    1110|0110   entropy=3.367  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x9c    10|011100   prob=   0.167  0110+011100+bbbbbb=26368-26431     CJK(19968-40959)                                  
+
+  [   1]  0x9c    10|011100   entropy=1.363  0110+011100+bbbbbb=26368-26431     CJK(19968-40959)                                  
+       ->  0x80    10|000000   prob=   0.532  0110+011100+000000=26368           CJK(19968-40959)                                  
+
+  [   2]  0x88    10|001000   entropy=1.993  0110+011100+001000=26376           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.213  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [   3]  0xe6    1110|0110   entropy=2.564  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x96    10|010110   prob=   0.338  0110+010110+bbbbbb=25984-26047     CJK(19968-40959)                                  
+
+  [   4]  0x9b    10|011011   entropy=1.850  0110+011011+bbbbbb=26304-26367     CJK(19968-40959)                                  
+       ->  0xbf    10|111111   prob=   0.462  0110+011011+111111=26367           CJK(19968-40959)                                  
+
+  [   5]  0x9c    10|011100   entropy=2.055  0110+011011+011100=26332           CJK(19968-40959)                                  
+       ->  0xe6    1110|0110   prob=   0.386  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [   6]  0xe6    1110|0110   entropy=3.088  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x97    10|010111   prob=   0.153  0110+010111+bbbbbb=26048-26111     CJK(19968-40959)                                  
+
+  [   7]  0x97    10|010111   entropy=0.400  0110+010111+bbbbbb=26048-26111     CJK(19968-40959)                                  
+       ->  0xa5    10|100101   prob=   0.935  0110+010111+100101=26085           CJK(19968-40959)                                  
+
+  [   8]  0xa5    10|100101   entropy=2.117  0110+010111+100101=26085           CJK(19968-40959)                                  
+       ->  0xe6    1110|0110   prob=   0.346  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [   9]  0xe3    1110|0011   entropy=0.951  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.530  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  10]  0x81    10|000001   entropy=2.225  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xab    10|101011   prob=   0.257  0011+000001+101011=12395           Hiragana(12352-12447)                             
+
+  [  11]  0xab    10|101011   entropy=1.628  0011+000001+101011=12395           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.528  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  12]  0xe3    1110|0011   entropy=1.288  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.462  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  13]  0x82    10|000010   entropy=2.809  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x88    10|001000   prob=   0.302  0011+000010+001000=12424           Hiragana(12352-12447)                             
+
+  [  14]  0xb9    10|111001   entropy=0.006  0011+000010+111001=12473           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  15]  0xe3    1110|0011   entropy=0.760  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.536  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [  16]  0x82    10|000010   entropy=2.225  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xad    10|101101   prob=   0.235  0011+000010+101101=12461           Katakana(12448-12543)                             
+
+  [  17]  0xbf    10|111111   entropy=0.022  0011+000010+111111=12479           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.998  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  18]  0xe3    1110|0011   entropy=0.512  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.811  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [  19]  0x83    10|000011   entropy=0.712  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xbc    10|111100   prob=   0.833  0011+000011+111100=12540           Katakana(12448-12543)                             
+
+  [  20]  0xb3    10|110011   entropy=0.083  0011+000011+110011=12531           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.989  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  21]  0xe3    1110|0011   entropy=0.524  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.846  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [  22]  0x83    10|000011   entropy=2.857  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0x80    10|000000   prob=   0.224  0011+000011+000000=12480           Katakana(12448-12543)                             
+
+  [  23]  0x95    10|010101   entropy=0.422  0011+000011+010101=12501           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.928  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  24]  0xe3    1110|0011   entropy=0.743  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.612  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [  25]  0x82    10|000010   entropy=1.503  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xa3    10|100011   prob=   0.380  0011+000010+100011=12451           Katakana(12448-12543)                             
+
+  [  26]  0xa9    10|101001   entropy=0.029  0011+000010+101001=12457           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.997  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  27]  0xe3    1110|0011   entropy=0.119  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.979  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [  28]  0x83    10|000011   entropy=1.778  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xbc    10|111100   prob=   0.420  0011+000011+111100=12540           Katakana(12448-12543)                             
+
+  [  29]  0xbc    10|111100   entropy=0.260  0011+000011+111100=12540           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.959  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  30]  0xe3    1110|0011   entropy=0.626  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.709  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [  31]  0x83    10|000011   entropy=2.314  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xab    10|101011   prob=   0.288  0011+000011+101011=12523           Katakana(12448-12543)                             
+
+  [  32]  0x89    10|001001   entropy=1.510  0011+000011+001001=12489           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.629  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  33]  0xe5    1110|0101   entropy=3.463  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x90    10|010000   prob=   0.089  0101+010000+bbbbbb=21504-21567     CJK(19968-40959)                                  
+
+  [  34]  0xa4    10|100100   entropy=1.093  0101+100100+bbbbbb=22784-22847     CJK(19968-40959)                                  
+       ->  0xa7    10|100111   prob=   0.727  0101+100100+100111=22823           CJK(19968-40959)                                  
+
+  [  35]  0xa7    10|100111   entropy=1.850  0101+100100+100111=22823           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.276  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [  36]  0xe5    1110|0101   entropy=1.240  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xad    10|101101   prob=   0.780  0101+101101+bbbbbb=23360-23423     CJK(19968-40959)                                  
+
+  [  37]  0xad    10|101101   entropy=0.041  0101+101101+bbbbbb=23360-23423     CJK(19968-40959)                                  
+       ->  0xa6    10|100110   prob=   0.995  0101+101101+100110=23398           CJK(19968-40959)                                  
+
+  [  38]  0xa6    10|100110   entropy=1.795  0101+101101+100110=23398           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.512  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  39]  0xe5    1110|0101   entropy=2.850  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x8d    10|001101   prob=   0.317  0101+001101+bbbbbb=21312-21375     CJK(19968-40959)                                  
+
+  [  40]  0x8c    10|001100   entropy=1.633  0101+001100+bbbbbb=21248-21311     CJK(19968-40959)                                  
+       ->  0x96    10|010110   prob=   0.369  0101+001100+010110=21270           CJK(19968-40959)                                  
+
+  [  41]  0xbb    10|111011   entropy=1.249  0101+001100+111011=21307           CJK(19968-40959)                                  
+       ->  0xe7    1110|0111   prob=   0.500  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+  ---
+  [  42]  0xe5    1110|0101   entropy=2.555  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xa4    10|100100   prob=   0.261  0101+100100+bbbbbb=22784-22847     CJK(19968-40959)                                  
+
+  [  43]  0xad    10|101101   entropy=0.151  0101+101101+bbbbbb=23360-23423     CJK(19968-40959)                                  
+       ->  0xa6    10|100110   prob=   0.976  0101+101101+100110=23398           CJK(19968-40959)                                  
+
+  [  44]  0xa6    10|100110   entropy=2.076  0101+101101+100110=23398           CJK(19968-40959)                                  
+       ->  0xe7    1110|0111   prob=   0.229  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+  ---
+  [  45]  0xe9    1110|1001   entropy=0.874  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+       ->  0x83    10|000011   prob=   0.822  1001+000011+bbbbbb=37056-37119     CJK(19968-40959)                                  
+
+  [  46]  0x83    10|000011   entropy=0.077  1001+000011+bbbbbb=37056-37119     CJK(19968-40959)                                  
+       ->  0xa8    10|101000   prob=   0.989  1001+000011+101000=37096           CJK(19968-40959)                                  
+
+  [  47]  0xa8    10|101000   entropy=1.921  1001+000011+101000=37096           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.278  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [  48]  0xe3    1110|0011   entropy=0.745  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.780  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  49]  0x81    10|000001   entropy=1.857  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.343  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [  50]  0xae    10|101110   entropy=1.973  0011+000001+101110=12398           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.300  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  51]  0xe7    1110|0111   entropy=3.615  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0x94    10|010100   prob=   0.094  0111+010100+bbbbbb=29952-30015     CJK(19968-40959)                                  
+
+  [  52]  0xa7    10|100111   entropy=1.137  0111+100111+bbbbbb=31168-31231     CJK(19968-40959)                                  
+       ->  0x91    10|010001   prob=   0.715  0111+100111+010001=31185           CJK(19968-40959)                                  
+
+  [  53]  0x91    10|010001   entropy=0.943  0111+100111+010001=31185           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.723  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [  54]  0xe5    1110|0101   entropy=0.352  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xad    10|101101   prob=   0.946  0101+101101+bbbbbb=23360-23423     CJK(19968-40959)                                  
+
+  [  55]  0xad    10|101101   entropy=0.002  0101+101101+bbbbbb=23360-23423     CJK(19968-40959)                                  
+       ->  0xa6    10|100110   prob=   1.000  0101+101101+100110=23398           CJK(19968-40959)                                  
+
+  [  56]  0xa6    10|100110   entropy=1.977  0101+101101+100110=23398           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.247  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  57]  0xe8    1110|1000   entropy=2.525  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+       ->  0x80    10|000000   prob=   0.423  1000+000000+bbbbbb=32768-32831     CJK(19968-40959)                                  
+
+  [  58]  0x80    10|000000   entropy=0.138  1000+000000+bbbbbb=32768-32831     CJK(19968-40959)                                  
+       ->  0x85    10|000101   prob=   0.979  1000+000000+000101=32773           CJK(19968-40959)                                  
+
+  [  59]  0x85    10|000101   entropy=0.717  1000+000000+000101=32773           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.860  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  60]  0xe3    1110|0011   entropy=0.691  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.796  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  61]  0x81    10|000001   entropy=2.076  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.237  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [  62]  0x9f    10|011111   entropy=0.047  0011+000001+011111=12383           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.995  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  63]  0xe3    1110|0011   entropy=0.018  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.998  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  64]  0x81    10|000001   entropy=0.033  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa1    10|100001   prob=   0.996  0011+000001+100001=12385           Hiragana(12352-12447)                             
+
+  [  65]  0xa1    10|100001   entropy=0.426  0011+000001+100001=12385           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.932  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  66]  0xe3    1110|0011   entropy=0.432  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.894  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  67]  0x81    10|000001   entropy=1.423  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x8c    10|001100   prob=   0.484  0011+000001+001100=12364           Hiragana(12352-12447)                             
+
+  [  68]  0xaf    10|101111   entropy=1.656  0011+000001+101111=12399           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.589  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  69]  0xe3    1110|0011   entropy=0.511  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x80    10|000000   prob=   0.860  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+
+  [  70]  0x80    10|000000   entropy=0.149  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+       ->  0x81    10|000001   prob=   0.975  0011+000000+000001=12289           CJK-Sym(12288-12351)                              
+
+  [  71]  0x81    10|000001   entropy=2.166  0011+000000+000001=12289           CJK-Sym(12288-12351)                              
+       ->  0xe3    1110|0011   prob=   0.309  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  72]  0xe7    1110|0111   entropy=3.289  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0xa7    10|100111   prob=   0.235  0111+100111+bbbbbb=31168-31231     CJK(19968-40959)                                  
+
+  [  73]  0xb4    10|110100   entropy=2.303  0111+110100+bbbbbb=32000-32063     CJK(19968-40959)                                  
+       ->  0xb0    10|110000   prob=   0.293  0111+110100+110000=32048           CJK(19968-40959)                                  
+
+  [  74]  0xb0    10|110000   entropy=1.348  0111+110100+110000=32048           CJK(19968-40959)                                  
+       ->  0xe8    1110|1000   prob=   0.457  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+  ---
+  [  75]  0xe8    1110|1000   entropy=0.887  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+       ->  0x83    10|000011   prob=   0.725  1000+000011+bbbbbb=32960-33023     CJK(19968-40959)                                  
+
+  [  76]  0x83    10|000011   entropy=0.020  1000+000011+bbbbbb=32960-33023     CJK(19968-40959)                                  
+       ->  0x9e    10|011110   prob=   0.998  1000+000011+011110=32990           CJK(19968-40959)                                  
+
+  [  77]  0x9e    10|011110   entropy=1.625  1000+000011+011110=32990           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.410  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  78]  0xe3    1110|0011   entropy=0.753  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.770  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [  79]  0x82    10|000010   entropy=2.307  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x92    10|010010   prob=   0.387  0011+000010+010010=12434           Hiragana(12352-12447)                             
+
+  [  80]  0x92    10|010010   entropy=2.016  0011+000010+010010=12434           Hiragana(12352-12447)                             
+       ->  0xe5    1110|0101   prob=   0.262  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [  81]  0xe7    1110|0111   entropy=3.467  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0x94    10|010100   prob=   0.116  0111+010100+bbbbbb=29952-30015     CJK(19968-40959)                                  
+
+  [  82]  0xa8    10|101000   entropy=1.485  0111+101000+bbbbbb=31232-31295     CJK(19968-40959)                                  
+       ->  0xbc    10|111100   prob=   0.627  0111+101000+111100=31292           CJK(19968-40959)                                  
+
+  [  83]  0xae    10|101110   entropy=1.365  0111+101000+101110=31278           CJK(19968-40959)                                  
+       ->  0xe9    1110|1001   prob=   0.405  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+  ---
+  [  84]  0xe9    1110|1001   entropy=0.139  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+       ->  0xa1    10|100001   prob=   0.978  1001+100001+bbbbbb=38976-39039     CJK(19968-40959)                                  
+
+  [  85]  0xa1    10|100001   entropy=0.753  1001+100001+bbbbbb=38976-39039     CJK(19968-40959)                                  
+       ->  0x9e    10|011110   prob=   0.836  1001+100001+011110=39006           CJK(19968-40959)                                  
+
+  [  86]  0x9e    10|011110   entropy=0.292  1001+100001+011110=39006           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.951  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  87]  0xe5    1110|0101   entropy=3.020  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x88    10|001000   prob=   0.167  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+
+  [  88]  0x88    10|001000   entropy=1.379  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+       ->  0xa5    10|100101   prob=   0.630  0101+001000+100101=21029           CJK(19968-40959)                                  
+
+  [  89]  0xa5    10|100101   entropy=1.073  0101+001000+100101=21029           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.715  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  90]  0xe3    1110|0011   entropy=0.599  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.768  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [  91]  0x81    10|000001   entropy=1.573  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xab    10|101011   prob=   0.348  0011+000001+101011=12395           Hiragana(12352-12447)                             
+
+  [  92]  0xab    10|101011   entropy=1.764  0011+000001+101011=12395           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.406  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  93]  0xe5    1110|0101   entropy=3.422  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xbd    10|111101   prob=   0.099  0101+111101+bbbbbb=24384-24447     CJK(19968-40959)                                  
+
+  [  94]  0x88    10|001000   entropy=2.223  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+       ->  0x86    10|000110   prob=   0.257  0101+001000+000110=20998           CJK(19968-40959)                                  
+
+  [  95]  0x86    10|000110   entropy=1.489  0101+001000+000110=20998           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.432  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  96]  0xe9    1110|1001   entropy=0.713  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+       ->  0xa1    10|100001   prob=   0.829  1001+100001+bbbbbb=38976-39039     CJK(19968-40959)                                  
+
+  [  97]  0xa1    10|100001   entropy=0.093  1001+100001+bbbbbb=38976-39039     CJK(19968-40959)                                  
+       ->  0x9e    10|011110   prob=   0.987  1001+100001+011110=39006           CJK(19968-40959)                                  
+
+  [  98]  0x9e    10|011110   entropy=0.667  1001+100001+011110=39006           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.844  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [  99]  0xe3    1110|0011   entropy=0.246  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.950  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 100]  0x81    10|000001   entropy=1.138  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.564  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 101]  0xa7    10|100111   entropy=0.671  0011+000001+100111=12391           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.862  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 102]  0xe3    1110|0011   entropy=0.114  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.979  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 103]  0x81    10|000001   entropy=0.011  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x8d    10|001101   prob=   0.999  0011+000001+001101=12365           Hiragana(12352-12447)                             
+
+  [ 104]  0x8d    10|001101   entropy=0.190  0011+000001+001101=12365           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.969  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 105]  0xe3    1110|0011   entropy=0.746  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.616  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 106]  0x82    10|000010   entropy=0.114  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x8b    10|001011   prob=   0.982  0011+000010+001011=12427           Hiragana(12352-12447)                             
+
+  [ 107]  0x8b    10|001011   entropy=1.675  0011+000010+001011=12427           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.542  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 108]  0xe6    1110|0110   entropy=3.281  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x96    10|010110   prob=   0.170  0110+010110+bbbbbb=25984-26047     CJK(19968-40959)                                  
+
+  [ 109]  0x96    10|010110   entropy=0.795  0110+010110+bbbbbb=25984-26047     CJK(19968-40959)                                  
+       ->  0xb9    10|111001   prob=   0.814  0110+010110+111001=26041           CJK(19968-40959)                                  
+
+  [ 110]  0xb0    10|110000   entropy=1.522  0110+010110+110000=26032           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.501  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 111]  0xe3    1110|0011   entropy=0.354  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.921  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 112]  0x81    10|000001   entropy=0.763  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.788  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 113]  0x97    10|010111   entropy=0.028  0011+000001+010111=12375           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.997  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 114]  0xe3    1110|0011   entropy=0.016  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.998  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 115]  0x81    10|000001   entropy=0.484  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x84    10|000100   prob=   0.895  0011+000001+000100=12356           Hiragana(12352-12447)                             
+
+  [ 116]  0x84    10|000100   entropy=2.016  0011+000001+000100=12356           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.293  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 117]  0xe8    1110|1000   entropy=2.846  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+       ->  0x80    10|000000   prob=   0.279  1000+000000+bbbbbb=32768-32831     CJK(19968-40959)                                  
+
+  [ 118]  0xa8    10|101000   entropy=2.498  1000+101000+bbbbbb=35328-35391     CJK(19968-40959)                                  
+       ->  0x98    10|011000   prob=   0.226  1000+101000+011000=35352           CJK(19968-40959)                                  
+
+  [ 119]  0xba    10|111010   entropy=1.251  1000+101000+111010=35386           CJK(19968-40959)                                  
+       ->  0xe6    1110|0110   prob=   0.577  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [ 120]  0xe6    1110|0110   entropy=0.023  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x96    10|010110   prob=   0.998  0110+010110+bbbbbb=25984-26047     CJK(19968-40959)                                  
+
+  [ 121]  0x96    10|010110   entropy=0.051  0110+010110+bbbbbb=25984-26047     CJK(19968-40959)                                  
+       ->  0xad    10|101101   prob=   0.994  0110+010110+101101=26029           CJK(19968-40959)                                  
+
+  [ 122]  0xad    10|101101   entropy=0.709  0110+010110+101101=26029           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.839  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 123]  0xe3    1110|0011   entropy=0.840  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.658  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 124]  0x83    10|000011   entropy=2.352  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xbb    10|111011   prob=   0.473  0011+000011+111011=12539           Katakana(12448-12543)                             
+
+  [ 125]  0x84    10|000100   entropy=0.083  0011+000011+000100=12484           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.988  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 126]  0xe3    1110|0011   entropy=0.241  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.937  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 127]  0x83    10|000011   entropy=0.375  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xbc    10|111100   prob=   0.936  0011+000011+111100=12540           Katakana(12448-12543)                             
+
+  [ 128]  0xbc    10|111100   entropy=0.034  0011+000011+111100=12540           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.996  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 129]  0xe3    1110|0011   entropy=0.061  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.990  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 130]  0x83    10|000011   entropy=0.266  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xab    10|101011   prob=   0.956  0011+000011+101011=12523           Katakana(12448-12543)                             
+
+  [ 131]  0xab    10|101011   entropy=0.556  0011+000011+101011=12523           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.898  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 132]  0xe3    1110|0011   entropy=1.122  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.542  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 133]  0x82    10|000010   entropy=1.092  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x92    10|010010   prob=   0.716  0011+000010+010010=12434           Hiragana(12352-12447)                             
+
+  [ 134]  0x92    10|010010   entropy=1.936  0011+000010+010010=12434           Hiragana(12352-12447)                             
+       ->  0xe6    1110|0110   prob=   0.239  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [ 135]  0xe7    1110|0111   entropy=3.324  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0xa4    10|100100   prob=   0.097  0111+100100+bbbbbb=30976-31039     CJK(19968-40959)                                  
+
+  [ 136]  0x99    10|011001   entropy=0.629  0111+011001+bbbbbb=30272-30335     CJK(19968-40959)                                  
+       ->  0xba    10|111010   prob=   0.693  0111+011001+111010=30330           CJK(19968-40959)                                  
+
+  [ 137]  0xba    10|111010   entropy=1.336  0111+011001+111010=30330           CJK(19968-40959)                                  
+       ->  0xe8    1110|1000   prob=   0.544  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+  ---
+  [ 138]  0xe6    1110|0110   entropy=1.709  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x98    10|011000   prob=   0.443  0110+011000+bbbbbb=26112-26175     CJK(19968-40959)                                  
+
+  [ 139]  0x98    10|011000   entropy=0.055  0110+011000+bbbbbb=26112-26175     CJK(19968-40959)                                  
+       ->  0x8e    10|001110   prob=   0.994  0110+011000+001110=26126           CJK(19968-40959)                                  
+
+  [ 140]  0x8e    10|001110   entropy=0.075  0110+011000+001110=26126           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.991  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 141]  0xe3    1110|0011   entropy=0.407  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.899  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 142]  0x81    10|000001   entropy=0.872  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.642  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 143]  0x97    10|010111   entropy=0.196  0011+000001+010111=12375           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.970  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 144]  0xe3    1110|0011   entropy=0.287  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.931  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 145]  0x81    10|000001   entropy=1.028  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa6    10|100110   prob=   0.585  0011+000001+100110=12390           Hiragana(12352-12447)                             
+
+  [ 146]  0x9f    10|011111   entropy=1.159  0011+000001+011111=12383           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.735  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 147]  0xe3    1110|0011   entropy=1.150  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x80    10|000000   prob=   0.479  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+
+  [ 148]  0x81    10|000001   entropy=1.692  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x84    10|000100   prob=   0.601  0011+000001+000100=12356           Hiragana(12352-12447)                             
+
+  [ 149]  0xa8    10|101000   entropy=0.650  0011+000001+101000=12392           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.850  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 150]  0xe7    1110|0111   entropy=2.957  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0xb4    10|110100   prob=   0.338  0111+110100+bbbbbb=32000-32063     CJK(19968-40959)                                  
+
+  [ 151]  0x99    10|011001   entropy=0.681  0111+011001+bbbbbb=30272-30335     CJK(19968-40959)                                  
+       ->  0xba    10|111010   prob=   0.834  0111+011001+111010=30330           CJK(19968-40959)                                  
+
+  [ 152]  0xba    10|111010   entropy=1.610  0111+011001+111010=30330           CJK(19968-40959)                                  
+       ->  0xe6    1110|0110   prob=   0.351  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [ 153]  0xe8    1110|1000   entropy=1.055  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+       ->  0xa1    10|100001   prob=   0.784  1000+100001+bbbbbb=34880-34943     CJK(19968-40959)                                  
+
+  [ 154]  0xa1    10|100001   entropy=0.306  1000+100001+bbbbbb=34880-34943     CJK(19968-40959)                                  
+       ->  0xa8    10|101000   prob=   0.919  1000+100001+101000=34920           CJK(19968-40959)                                  
+
+  [ 155]  0xa8    10|101000   entropy=1.010  1000+100001+101000=34920           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.767  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 156]  0xe3    1110|0011   entropy=0.687  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.792  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 157]  0x81    10|000001   entropy=0.887  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.684  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 158]  0x97    10|010111   entropy=0.117  0011+000001+010111=12375           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.983  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 159]  0xe3    1110|0011   entropy=0.320  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.924  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 160]  0x81    10|000001   entropy=1.162  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa6    10|100110   prob=   0.449  0011+000001+100110=12390           Hiragana(12352-12447)                             
+
+  [ 161]  0xbe    10|111110   entropy=0.004  0011+000001+111110=12414           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 162]  0xe3    1110|0011   entropy=0.003  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   1.000  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 163]  0x81    10|000001   entropy=0.961  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.587  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 164]  0x97    10|010111   entropy=0.003  0011+000001+010111=12375           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 165]  0xe3    1110|0011   entropy=0.033  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.995  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 166]  0x81    10|000001   entropy=0.054  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x9f    10|011111   prob=   0.992  0011+000001+011111=12383           Hiragana(12352-12447)                             
+
+  [ 167]  0x9f    10|011111   entropy=0.408  0011+000001+011111=12383           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.934  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 168]  0xe3    1110|0011   entropy=0.093  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x80    10|000000   prob=   0.983  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+
+  [ 169]  0x80    10|000000   entropy=0.024  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+       ->  0x82    10|000010   prob=   0.997  0011+000000+000010=12290           CJK-Sym(12288-12351)                              
+
+  [ 170]  0x82    10|000010   entropy=1.680  0011+000000+000010=12290           CJK-Sym(12288-12351)                              
+       ->  \n      0|0001010   prob=   0.475  0001010=10                         ASCII(0-127)                                      
+  ---
+  [ 171]  0xe3    1110|0011   entropy=0.820  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.708  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 172]  0x81    10|000001   entropy=2.379  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x93    10|010011   prob=   0.330  0011+000001+010011=12371           Hiragana(12352-12447)                             
+
+  [ 173]  0x9d    10|011101   entropy=0.001  0011+000001+011101=12381           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 174]  0xe3    1110|0011   entropy=0.637  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.675  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 175]  0x82    10|000010   entropy=0.397  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x8c    10|001100   prob=   0.899  0011+000010+001100=12428           Hiragana(12352-12447)                             
+
+  [ 176]  0x8c    10|001100   entropy=0.170  0011+000010+001100=12428           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.971  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 177]  0xe3    1110|0011   entropy=0.351  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.892  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 178]  0x81    10|000001   entropy=2.068  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xaf    10|101111   prob=   0.282  0011+000001+101111=12399           Hiragana(12352-12447)                             
+
+  [ 179]  0xaf    10|101111   entropy=1.627  0011+000001+101111=12399           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.569  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 180]  0xe6    1110|0110   entropy=3.314  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x9c    10|011100   prob=   0.247  0110+011100+bbbbbb=26368-26431     CJK(19968-40959)                                  
+
+  [ 181]  0xa8    10|101000   entropy=1.599  0110+101000+bbbbbb=27136-27199     CJK(19968-40959)                                  
+       ->  0xaa    10|101010   prob=   0.369  0110+101000+101010=27178           CJK(19968-40959)                                  
+
+  [ 182]  0x99    10|011001   entropy=0.517  0110+101000+011001=27161           CJK(19968-40959)                                  
+       ->  0xe6    1110|0110   prob=   0.865  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  ---
+  [ 183]  0xe6    1110|0110   entropy=0.274  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0xba    10|111010   prob=   0.962  0110+111010+bbbbbb=28288-28351     CJK(19968-40959)                                  
+
+  [ 184]  0xba    10|111010   entropy=0.015  0110+111010+bbbbbb=28288-28351     CJK(19968-40959)                                  
+       ->  0x96    10|010110   prob=   0.998  0110+111010+010110=28310           CJK(19968-40959)                                  
+
+  [ 185]  0x96    10|010110   entropy=1.511  0110+111010+010110=28310           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.461  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 186]  0xe7    1110|0111   entropy=1.134  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0x9a    10|011010   prob=   0.737  0111+011010+bbbbbb=30336-30399     CJK(19968-40959)                                  
+
+  [ 187]  0x9a    10|011010   entropy=0.050  0111+011010+bbbbbb=30336-30399     CJK(19968-40959)                                  
+       ->  0x84    10|000100   prob=   0.993  0111+011010+000100=30340           CJK(19968-40959)                                  
+
+  [ 188]  0x84    10|000100   entropy=0.757  0111+011010+000100=30340           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.808  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 189]  0xe3    1110|0011   entropy=0.065  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.990  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 190]  0x81    10|000001   entropy=0.780  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xab    10|101011   prob=   0.699  0011+000001+101011=12395           Hiragana(12352-12447)                             
+
+  [ 191]  0xaa    10|101010   entropy=1.985  0011+000001+101010=12394           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.239  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 192]  0xe3    1110|0011   entropy=1.164  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.502  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 193]  0x82    10|000010   entropy=2.766  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x82    10|000010   prob=   0.250  0011+000010+000010=12418           Hiragana(12352-12447)                             
+
+  [ 194]  0xa4    10|100100   entropy=0.001  0011+000010+100100=12452           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 195]  0xe3    1110|0011   entropy=0.192  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.953  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 196]  0x83    10|000011   entropy=1.492  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xb3    10|110011   prob=   0.501  0011+000011+110011=12531           Katakana(12448-12543)                             
+
+  [ 197]  0xb3    10|110011   entropy=0.010  0011+000011+110011=12531           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.999  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 198]  0xe3    1110|0011   entropy=0.684  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.605  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [ 199]  0x82    10|000010   entropy=0.573  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xbf    10|111111   prob=   0.867  0011+000010+111111=12479           Katakana(12448-12543)                             
+
+  [ 200]  0xaf    10|101111   entropy=0.003  0011+000010+101111=12463           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 201]  0xe3    1110|0011   entropy=1.002  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.671  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 202]  0x82    10|000010   entropy=2.227  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xa2    10|100010   prob=   0.344  0011+000010+100010=12450           Katakana(12448-12543)                             
+
+  [ 203]  0xb8    10|111000   entropy=0.021  0011+000010+111000=12472           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.998  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 204]  0xe3    1110|0011   entropy=0.360  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.892  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 205]  0x82    10|000010   entropy=1.816  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xa7    10|100111   prob=   0.356  0011+000010+100111=12455           Katakana(12448-12543)                             
+
+  [ 206]  0xa7    10|100111   entropy=0.005  0011+000010+100111=12455           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 207]  0xe3    1110|0011   entropy=0.177  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.965  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 208]  0x83    10|000011   entropy=1.483  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0x83    10|000011   prob=   0.643  0011+000011+000011=12483           Katakana(12448-12543)                             
+
+  [ 209]  0x83    10|000011   entropy=0.001  0011+000011+000011=12483           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 210]  0xe3    1110|0011   entropy=0.486  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.912  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 211]  0x83    10|000011   entropy=0.336  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0x88    10|001000   prob=   0.943  0011+000011+001000=12488           Katakana(12448-12543)                             
+
+  [ 212]  0x88    10|001000   entropy=0.980  0011+000011+001000=12488           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.774  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 213]  0xe3    1110|0011   entropy=1.062  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.501  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 214]  0x83    10|000011   entropy=3.287  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xbb    10|111011   prob=   0.160  0011+000011+111011=12539           Katakana(12448-12543)                             
+
+  [ 215]  0x97    10|010111   entropy=0.019  0011+000011+010111=12503           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.998  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 216]  0xe3    1110|0011   entropy=0.053  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.992  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 217]  0x83    10|000011   entropy=1.524  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xa9    10|101001   prob=   0.366  0011+000011+101001=12521           Katakana(12448-12543)                             
+
+  [ 218]  0xaa    10|101010   entropy=0.758  0011+000011+101010=12522           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.854  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 219]  0xe3    1110|0011   entropy=1.119  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.462  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 220]  0x83    10|000011   entropy=2.105  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xb3    10|110011   prob=   0.532  0011+000011+110011=12531           Katakana(12448-12543)                             
+
+  [ 221]  0xb3    10|110011   entropy=0.138  0011+000011+110011=12531           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.982  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 222]  0xe3    1110|0011   entropy=0.409  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.888  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [ 223]  0x82    10|000010   entropy=1.819  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0xb0    10|110000   prob=   0.316  0011+000010+110000=12464           Katakana(12448-12543)                             
+
+  [ 224]  0xbf    10|111111   entropy=0.184  0011+000010+111111=12479           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.972  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 225]  0xe3    1110|0011   entropy=0.714  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.792  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 226]  0x81    10|000001   entropy=2.029  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.344  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [ 227]  0xa7    10|100111   entropy=1.225  0011+000001+100111=12391           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.697  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 228]  0xe5    1110|0101   entropy=3.338  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x88    10|001000   prob=   0.183  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+
+  [ 229]  0x8d    10|001101   entropy=2.477  0101+001101+bbbbbb=21312-21375     CJK(19968-40959)                                  
+       ->  0x81    10|000001   prob=   0.178  0101+001101+000001=21313           CJK(19968-40959)                                  
+
+  [ 230]  0xb0    10|110000   entropy=0.807  0101+001101+110000=21360           CJK(19968-40959)                                  
+       ->  0xe8    1110|1000   prob=   0.781  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+  ---
+  [ 231]  0xe5    1110|0101   entropy=1.158  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x88    10|001000   prob=   0.768  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+
+  [ 232]  0x88    10|001000   entropy=0.236  0101+001000+bbbbbb=20992-21055     CJK(19968-40959)                                  
+       ->  0xb7    10|110111   prob=   0.966  0101+001000+110111=21047           CJK(19968-40959)                                  
+
+  [ 233]  0xb7    10|110111   entropy=1.341  0101+001000+110111=21047           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.603  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 234]  0xe3    1110|0011   entropy=0.606  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.811  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 235]  0x81    10|000001   entropy=2.062  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x95    10|010101   prob=   0.275  0011+000001+010101=12373           Hiragana(12352-12447)                             
+
+  [ 236]  0x97    10|010111   entropy=1.199  0011+000001+010111=12375           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.695  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 237]  0xe3    1110|0011   entropy=0.403  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.902  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 238]  0x81    10|000001   entropy=1.474  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xbe    10|111110   prob=   0.355  0011+000001+111110=12414           Hiragana(12352-12447)                             
+
+  [ 239]  0xa6    10|100110   entropy=0.556  0011+000001+100110=12390           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.891  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 240]  0xe8    1110|1000   entropy=2.736  1000+1bbbbb+bbbbbb=32768-36863     CJK(19968-40959)                                  
+       ->  0xa8    10|101000   prob=   0.242  1000+101000+bbbbbb=35328-35391     CJK(19968-40959)                                  
+
+  [ 241]  0xa3    10|100011   entropy=1.062  1000+100011+bbbbbb=35008-35071     CJK(19968-40959)                                  
+       ->  0xbd    10|111101   prob=   0.716  1000+100011+111101=35069           CJK(19968-40959)                                  
+
+  [ 242]  0xbd    10|111101   entropy=1.471  1000+100011+111101=35069           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.385  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [ 243]  0xe9    1110|1001   entropy=0.147  1001+1bbbbb+bbbbbb=36864-40959     CJK(19968-40959)                                  
+       ->  0x80    10|000000   prob=   0.976  1001+000000+bbbbbb=36864-36927     CJK(19968-40959)                                  
+
+  [ 244]  0x80    10|000000   entropy=0.037  1001+000000+bbbbbb=36864-36927     CJK(19968-40959)                                  
+       ->  0xa0    10|100000   prob=   0.996  1001+000000+100000=36896           CJK(19968-40959)                                  
+
+  [ 245]  0xa0    10|100000   entropy=0.855  1001+000000+100000=36896           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.809  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 246]  0xe3    1110|0011   entropy=0.311  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.928  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 247]  0x81    10|000001   entropy=1.506  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x97    10|010111   prob=   0.395  0011+000001+010111=12375           Hiragana(12352-12447)                             
+
+  [ 248]  0xa7    10|100111   entropy=0.379  0011+000001+100111=12391           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.932  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 249]  0xe3    1110|0011   entropy=0.153  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.972  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 250]  0x81    10|000001   entropy=0.011  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x8d    10|001101   prob=   0.999  0011+000001+001101=12365           Hiragana(12352-12447)                             
+
+  [ 251]  0x8d    10|001101   entropy=0.010  0011+000001+001101=12365           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.999  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 252]  0xe3    1110|0011   entropy=0.653  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.692  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [ 253]  0x82    10|000010   entropy=0.072  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x8b    10|001011   prob=   0.988  0011+000010+001011=12427           Hiragana(12352-12447)                             
+
+  [ 254]  0x8b    10|001011   entropy=1.430  0011+000010+001011=12427           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.580  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 255]  0xe5    1110|0101   entropy=3.336  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xa0    10|100000   prob=   0.145  0101+100000+bbbbbb=22528-22591     CJK(19968-40959)                                  
+
+  [ 256]  0xb0    10|110000   entropy=1.945  0101+110000+bbbbbb=23552-23615     CJK(19968-40959)                                  
+       ->  0x8f    10|001111   prob=   0.315  0101+110000+001111=23567           CJK(19968-40959)                                  
+
+  [ 257]  0x8f    10|001111   entropy=1.739  0101+110000+001111=23567           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.271  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [ 258]  0xe5    1110|0101   entropy=1.585  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0x9e    10|011110   prob=   0.568  0101+011110+bbbbbb=22400-22463     CJK(19968-40959)                                  
+
+  [ 259]  0x9e    10|011110   entropy=0.047  0101+011110+bbbbbb=22400-22463     CJK(19968-40959)                                  
+       ->  0x8b    10|001011   prob=   0.994  0101+011110+001011=22411           CJK(19968-40959)                                  
+
+  [ 260]  0x8b    10|001011   entropy=0.770  0101+011110+001011=22411           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.841  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 261]  0xe3    1110|0011   entropy=0.909  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.691  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 262]  0x83    10|000011   entropy=3.357  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0x86    10|000110   prob=   0.119  0011+000011+000110=12486           Katakana(12448-12543)                             
+
+  [ 263]  0x81    10|000001   entropy=0.008  0011+000011+000001=12481           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 264]  0xe3    1110|0011   entropy=0.311  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.907  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 265]  0x83    10|000011   entropy=1.296  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0xa3    10|100011   prob=   0.482  0011+000011+100011=12515           Katakana(12448-12543)                             
+
+  [ 266]  0x83    10|000011   entropy=0.039  0011+000011+000011=12483           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.996  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 267]  0xe3    1110|0011   entropy=0.345  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.897  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 268]  0x83    10|000011   entropy=1.085  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+       ->  0x97    10|010111   prob=   0.622  0011+000011+010111=12503           Katakana(12448-12543)                             
+
+  [ 269]  0x97    10|010111   entropy=1.139  0011+000011+010111=12503           Katakana(12448-12543)                             
+       ->  0xe3    1110|0011   prob=   0.724  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 270]  0xe3    1110|0011   entropy=1.112  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x83    10|000011   prob=   0.465  0011+000011+bbbbbb=12480-12543     Katakana(12448-12543)                             
+
+  [ 271]  0x81    10|000001   entropy=2.469  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.183  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [ 272]  0xa7    10|100111   entropy=1.319  0011+000001+100111=12391           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.644  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 273]  0xe3    1110|0011   entropy=0.493  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.872  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 274]  0x81    10|000001   entropy=1.383  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0x99    10|011001   prob=   0.621  0011+000001+011001=12377           Hiragana(12352-12447)                             
+
+  [ 275]  0x82    10|000010   entropy=0.008  0011+000001+000010=12354           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   1.000  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 276]  0xe3    1110|0011   entropy=0.366  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.882  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [ 277]  0x82    10|000010   entropy=0.891  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x8b    10|001011   prob=   0.583  0011+000010+001011=12427           Hiragana(12352-12447)                             
+
+  [ 278]  0x8a    10|001010   entropy=0.293  0011+000010+001010=12426           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.955  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 279]  0xe3    1110|0011   entropy=0.350  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x80    10|000000   prob=   0.895  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+
+  [ 280]  0x80    10|000000   entropy=0.019  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+       ->  0x81    10|000001   prob=   0.998  0011+000000+000001=12289           CJK-Sym(12288-12351)                              
+
+  [ 281]  0x81    10|000001   entropy=2.086  0011+000000+000001=12289           CJK-Sym(12288-12351)                              
+       ->  0xe3    1110|0011   prob=   0.262  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 282]  0xe5    1110|0101   entropy=3.420  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xa4    10|100100   prob=   0.103  0101+100100+bbbbbb=22784-22847     CJK(19968-40959)                                  
+
+  [ 283]  0x8e    10|001110   entropy=0.658  0101+001110+bbbbbb=21376-21439     CJK(19968-40959)                                  
+       ->  0x9f    10|011111   prob=   0.831  0101+001110+011111=21407           CJK(19968-40959)                                  
+
+  [ 284]  0x9f    10|011111   entropy=1.139  0101+001110+011111=21407           CJK(19968-40959)                                  
+       ->  0xe5    1110|0101   prob=   0.632  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [ 285]  0xe4    1110|0100   entropy=0.622  0100+1bbbbb+bbbbbb=16384-20479     CJK-ExtA/Other_g/CJK(13312-40959)                 
+       ->  0xbd    10|111101   prob=   0.844  0100+111101+bbbbbb=20288-20351     CJK(19968-40959)                                  
+
+  [ 286]  0xbe    10|111110   entropy=0.838  0100+111110+bbbbbb=20352-20415     CJK(19968-40959)                                  
+       ->  0xa1    10|100001   prob=   0.843  0100+111110+100001=20385           CJK(19968-40959)                                  
+
+  [ 287]  0xa1    10|100001   entropy=0.941  0100+111110+100001=20385           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.754  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 288]  0xe3    1110|0011   entropy=0.799  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.688  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 289]  0x81    10|000001   entropy=1.906  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.373  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [ 290]  0xaf    10|101111   entropy=1.993  0011+000001+101111=12399           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.344  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 291]  '1'     0|0110001   entropy=2.650  0110001=49                         ASCII(0-127)                                      
+       ->  '9'     0|0111001   prob=   0.190  0111001=57                         ASCII(0-127)                                      
+  ---
+  [ 292]  0xe6    1110|0110   entropy=1.893  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+       ->  0x9c    10|011100   prob=   0.443  0110+011100+bbbbbb=26368-26431     CJK(19968-40959)                                  
+
+  [ 293]  0x9e    10|011110   entropy=0.773  0110+011110+bbbbbb=26496-26559     CJK(19968-40959)                                  
+       ->  0x9a    10|011010   prob=   0.801  0110+011110+011010=26522           CJK(19968-40959)                                  
+
+  [ 294]  0x9a    10|011010   entropy=1.410  0110+011110+011010=26522           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.662  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 295]  0xe3    1110|0011   entropy=0.651  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.823  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 296]  0x81    10|000001   entropy=1.465  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xae    10|101110   prob=   0.609  0011+000001+101110=12398           Hiragana(12352-12447)                             
+
+  [ 297]  0x82    10|000010   entropy=0.145  0011+000001+000010=12354           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.980  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 298]  0xe3    1110|0011   entropy=0.795  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.590  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 299]  0x81    10|000001   entropy=1.637  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xaa    10|101010   prob=   0.614  0011+000001+101010=12394           Hiragana(12352-12447)                             
+
+  [ 300]  0x9f    10|011111   entropy=0.057  0011+000001+011111=12383           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.993  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 301]  0xe3    1110|0011   entropy=0.279  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x82    10|000010   prob=   0.923  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+
+  [ 302]  0x82    10|000010   entropy=0.051  0011+000010+bbbbbb=12416-12479     Hiragana/Katakana(12352-12543)                    
+       ->  0x8a    10|001010   prob=   0.993  0011+000010+001010=12426           Hiragana(12352-12447)                             
+
+  [ 303]  0x8a    10|001010   entropy=1.960  0011+000010+001010=12426           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.430  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 304]  '1'     0|0110001   entropy=2.689  0110001=49                         ASCII(0-127)                                      
+       ->  '0'     0|0110000   prob=   0.161  0110000=48                         ASCII(0-127)                                      
+  ---
+  [ 305]  0xe5    1110|0101   entropy=2.082  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xb9    10|111001   prob=   0.430  0101+111001+bbbbbb=24128-24191     CJK(19968-40959)                                  
+
+  [ 306]  0x86    10|000110   entropy=0.400  0101+000110+bbbbbb=20864-20927     CJK(19968-40959)                                  
+       ->  0x86    10|000110   prob=   0.907  0101+000110+000110=20870           CJK(19968-40959)                                  
+
+  [ 307]  0x86    10|000110   entropy=1.381  0101+000110+000110=20870           CJK(19968-40959)                                  
+       ->  0xe3    1110|0011   prob=   0.666  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 308]  0xe3    1110|0011   entropy=0.564  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.849  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 309]  0x81    10|000001   entropy=2.025  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa7    10|100111   prob=   0.332  0011+000001+100111=12391           Hiragana(12352-12447)                             
+
+  [ 310]  0xbb    10|111011   entropy=0.028  0011+000001+111011=12411           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.997  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 311]  0xe3    1110|0011   entropy=0.013  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.999  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 312]  0x81    10|000001   entropy=0.010  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa9    10|101001   prob=   0.999  0011+000001+101001=12393           Hiragana(12352-12447)                             
+
+  [ 313]  0xa9    10|101001   entropy=1.693  0011+000001+101001=12393           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.445  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 314]  0xe3    1110|0011   entropy=0.958  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.686  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 315]  0x81    10|000001   entropy=2.230  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+       ->  0xa7    10|100111   prob=   0.321  0011+000001+100111=12391           Hiragana(12352-12447)                             
+
+  [ 316]  0x99    10|011001   entropy=0.295  0011+000001+011001=12377           Hiragana(12352-12447)                             
+       ->  0xe3    1110|0011   prob=   0.949  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+  ---
+  [ 317]  0xe3    1110|0011   entropy=0.476  0011+1bbbbb+bbbbbb=12288-16383     CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA(12288-19903)
+       ->  0x81    10|000001   prob=   0.818  0011+000001+bbbbbb=12352-12415     Hiragana(12352-12447)                             
+
+  [ 318]  0x80    10|000000   entropy=0.183  0011+000000+bbbbbb=12288-12351     CJK-Sym(12288-12351)                              
+       ->  0x82    10|000010   prob=   0.961  0011+000000+000010=12290           CJK-Sym(12288-12351)                              
+
+  [ 319]  0x82    10|000010   entropy=1.614  0011+000000+000010=12290           CJK-Sym(12288-12351)                              
+       ->  \n      0|0001010   prob=   0.564  0001010=10                         ASCII(0-127)                                      
+  ---
+
+--------------------------------------------------------------------------------
+  Patch summary from restructured results:
+
+  [bytes] raw_entropy          t_1.9458      n_patches=62  avg_bpp=5.1613  lengths=[1, 2, 1, 2, 1, 2, 2, 3, 3, 6, 9, 2, 6, 3, 2, 6, 1, 5, 1, 4, 10, 1, 1, 6, 1, 1, 6, 6, 1, 14, 8, 1, 1, 6, 11, 15, 22, 6, 2, 11, 2, 9, 12, 6, 6, 2, 1, 6, 5, 15, 7, 9, 10, 1, 8, 1, 12, 1, 1, 4, 6, 4]
+  [bytes] raw_entropy          t_1.8330      n_patches=70  avg_bpp=4.5714  lengths=[1, 2, 1, 1, 1, 1, 2, 2, 3, 3, 6, 9, 2, 2, 4, 3, 2, 3, 2, 1, 1, 5, 1, 4, 10, 1, 1, 6, 1, 1, 6, 6, 1, 14, 8, 1, 1, 6, 10, 1, 15, 22, 6, 2, 11, 2, 9, 12, 6, 6, 2, 1, 6, 5, 15, 1, 6, 9, 10, 1, 7, 1, 1, 1, 11, 1, 1, 4, 6, 4]
+  [bytes] raw_entropy          t_2.1167      n_patches=44  avg_bpp=7.2727  lengths=[1, 3, 3, 2, 2, 3, 3, 6, 9, 2, 6, 3, 9, 6, 14, 1, 1, 6, 2, 6, 6, 1, 14, 9, 1, 6, 11, 15, 22, 8, 13, 9, 12, 14, 1, 11, 15, 7, 9, 11, 9, 13, 11, 4]
+  [bytes] raw_entropy          t_2.4004      n_patches=32  avg_bpp=10.0000  lengths=[1, 3, 3, 7, 9, 11, 6, 3, 9, 6, 15, 9, 6, 6, 15, 9, 1, 17, 15, 30, 13, 21, 14, 1, 11, 15, 7, 9, 11, 9, 13, 15]
+  [bytes] raw_monotonicity     t_0.5191      n_patches=112  avg_bpp=2.8571  lengths=[1, 2, 1, 3, 2, 2, 3, 2, 1, 6, 3, 3, 3, 2, 2, 3, 1, 3, 2, 3, 2, 2, 5, 1, 2, 2, 6, 4, 1, 5, 2, 2, 4, 2, 4, 2, 5, 2, 5, 2, 1, 2, 6, 1, 5, 2, 8, 2, 1, 2, 8, 3, 2, 2, 3, 5, 3, 7, 2, 2, 4, 2, 5, 3, 2, 1, 2, 3, 2, 3, 1, 3, 3, 4, 2, 3, 3, 3, 2, 1, 2, 5, 2, 3, 2, 5, 2, 5, 2, 1, 5, 2, 3, 3, 3, 3, 3, 4, 1, 7, 2, 3, 2, 2, 1, 4, 1, 3, 2, 4, 2, 4]
+  [bytes] raw_monotonicity     t_0.8930      n_patches=73  avg_bpp=4.3836  lengths=[1, 6, 2, 2, 3, 3, 6, 6, 3, 2, 5, 1, 3, 2, 3, 2, 2, 5, 5, 6, 4, 1, 5, 2, 2, 6, 4, 2, 14, 1, 8, 8, 11, 15, 2, 11, 7, 2, 6, 2, 5, 6, 2, 3, 5, 1, 3, 3, 6, 3, 3, 3, 3, 2, 5, 2, 3, 2, 7, 7, 1, 7, 3, 6, 10, 1, 7, 14, 4, 2, 4, 2, 4]
+  [bytes] raw_monotonicity     t_1.2668      n_patches=55  avg_bpp=5.8182  lengths=[1, 8, 2, 3, 3, 6, 6, 3, 2, 5, 4, 2, 3, 4, 5, 5, 10, 6, 2, 2, 6, 6, 14, 1, 8, 8, 11, 15, 20, 2, 6, 2, 5, 8, 3, 9, 3, 6, 3, 6, 3, 2, 7, 5, 14, 1, 7, 9, 10, 1, 21, 6, 4, 2, 4]
+  [bytes] raw_monotonicity     t_0.6664      n_patches=94  avg_bpp=3.4043  lengths=[1, 6, 2, 2, 3, 2, 1, 6, 3, 3, 3, 2, 2, 3, 1, 3, 2, 3, 2, 2, 5, 5, 6, 4, 1, 5, 2, 2, 6, 4, 2, 7, 7, 1, 2, 6, 1, 7, 10, 1, 2, 8, 5, 2, 3, 5, 3, 7, 2, 6, 2, 5, 3, 2, 1, 2, 3, 2, 3, 1, 3, 3, 6, 3, 3, 3, 3, 2, 5, 2, 3, 2, 5, 2, 7, 1, 5, 2, 3, 3, 3, 3, 7, 1, 7, 7, 3, 4, 1, 3, 2, 4, 2, 4]
+  [chars] raw_entropy          t_1.8320      n_patches=82  avg_bpp=3.9024  lengths_chars=[1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 2, 1, 2, 3, 1, 1, 2, 1, 1, 1, 6, 2, 1, 2, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]  lengths_bytes=[3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 6, 3, 3, 6, 6, 3, 6, 3, 6, 9, 3, 3, 6, 3, 3, 3, 18, 6, 3, 6, 3, 3, 9, 3, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 3, 3, 3, 6, 3, 3, 6, 3, 3, 3, 1, 3, 3, 3, 3, 1, 3, 3, 6, 3]
+  [chars] raw_entropy          t_2.1167      n_patches=78  avg_bpp=4.1026  lengths_chars=[1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 4, 1, 2, 1, 2, 3, 1, 3, 1, 1, 1, 6, 2, 1, 3, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]  lengths_bytes=[3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 6, 3, 3, 12, 3, 6, 3, 6, 9, 3, 9, 3, 3, 3, 18, 6, 3, 9, 3, 9, 3, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 3, 3, 3, 6, 3, 9, 3, 3, 3, 1, 3, 3, 3, 3, 1, 3, 3, 6, 3]
+  [chars] raw_entropy          t_2.4014      n_patches=67  avg_bpp=4.7761  lengths_chars=[1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 4, 1, 2, 1, 2, 3, 1, 3, 1, 1, 7, 2, 1, 3, 1, 3, 4, 2, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 2, 1, 3, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1]  lengths_bytes=[3, 3, 3, 3, 3, 3, 6, 9, 3, 3, 3, 3, 3, 3, 3, 6, 3, 6, 3, 3, 3, 3, 3, 6, 3, 3, 12, 3, 6, 3, 6, 9, 3, 9, 3, 3, 21, 6, 3, 9, 3, 9, 12, 6, 3, 3, 3, 3, 3, 3, 3, 15, 3, 3, 6, 3, 9, 3, 6, 1, 3, 6, 4, 3, 3, 6, 3]
+  [chars] raw_entropy          t_1.9448      n_patches=79  avg_bpp=4.0506  lengths_chars=[1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 2, 1, 2, 3, 1, 3, 1, 1, 1, 6, 2, 1, 3, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]  lengths_bytes=[3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3, 6, 3, 3, 6, 6, 3, 6, 3, 6, 9, 3, 9, 3, 3, 3, 18, 6, 3, 9, 3, 9, 3, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 3, 3, 3, 6, 3, 9, 3, 3, 3, 1, 3, 3, 3, 3, 1, 3, 3, 6, 3]
+  [chars] raw_monotonicity     t_0.5206      n_patches=51  avg_bpp=6.2745  lengths_chars=[1, 7, 3, 1, 2, 3, 1, 2, 3, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 3, 1, 3, 1, 1, 6, 1, 2, 1, 3, 1, 3, 4, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 3, 1, 2, 2, 5, 3, 1]  lengths_bytes=[3, 21, 9, 3, 6, 9, 3, 6, 9, 6, 6, 3, 6, 6, 6, 6, 3, 6, 3, 6, 9, 3, 9, 3, 3, 18, 3, 6, 3, 9, 3, 9, 12, 6, 6, 3, 6, 6, 6, 6, 3, 6, 6, 3, 9, 3, 6, 4, 13, 9, 3]
+  [chars] raw_monotonicity     t_0.8922      n_patches=49  avg_bpp=6.5306  lengths_chars=[1, 7, 3, 1, 2, 3, 1, 2, 3, 2, 2, 1, 2, 2, 4, 1, 2, 1, 2, 3, 1, 3, 1, 1, 6, 1, 2, 1, 4, 3, 4, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 3, 1, 2, 2, 5, 3, 1]  lengths_bytes=[3, 21, 9, 3, 6, 9, 3, 6, 9, 6, 6, 3, 6, 6, 12, 3, 6, 3, 6, 9, 3, 9, 3, 3, 18, 3, 6, 3, 12, 9, 12, 6, 6, 3, 6, 6, 6, 6, 3, 6, 6, 3, 9, 3, 6, 4, 13, 9, 3]
+  [chars] raw_monotonicity     t_1.2639      n_patches=36  avg_bpp=8.8889  lengths_chars=[1, 7, 3, 1, 2, 3, 6, 2, 2, 3, 2, 4, 1, 2, 1, 2, 3, 6, 6, 1, 2, 1, 7, 4, 4, 1, 4, 4, 1, 2, 3, 4, 2, 2, 8, 1]  lengths_bytes=[3, 21, 9, 3, 6, 9, 18, 6, 6, 9, 6, 12, 3, 6, 3, 6, 9, 18, 18, 3, 6, 3, 21, 12, 12, 3, 12, 12, 3, 6, 9, 12, 6, 4, 22, 3]
+  [chars] raw_monotonicity     t_0.6646      n_patches=50  avg_bpp=6.4000  lengths_chars=[1, 7, 3, 1, 2, 3, 1, 2, 3, 2, 2, 1, 2, 2, 4, 1, 2, 1, 2, 3, 1, 3, 1, 1, 6, 1, 2, 1, 3, 1, 3, 4, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 3, 1, 2, 2, 5, 3, 1]  lengths_bytes=[3, 21, 9, 3, 6, 9, 3, 6, 9, 6, 6, 3, 6, 6, 12, 3, 6, 3, 6, 9, 3, 9, 3, 3, 18, 3, 6, 3, 9, 3, 9, 12, 6, 6, 3, 6, 6, 6, 6, 3, 6, 6, 3, 9, 3, 6, 4, 13, 9, 3]

@@ -1,0 +1,958 @@
+================================================================================
+  Language : vie_Latn
+  Index    : 0
+  Entropy repo: dumps/entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3/checkpoints/0000002600/consolidated
+  Text     : Vào hôm thứ Hai, các nhà khoa học thuộc Trường Y Đại học Stanford đã công bố phát minh một dụng cụ chẩn đoán mới có thể phân loại tế bào: một con chíp nhỏ có thể sản xuất bằng máy in phun tiêu chuẩn với giá khoảng một xu Mỹ mỗi chiếc.
+  English  : On Monday, scientists from the Stanford University School of Medicine announced the invention of a new diagnostic tool that can sort cells by type: a tiny printable chip that can be manufactured using standard inkjet printers for possibly about one U.S. cent each.
+  Bytes    : 310
+
+  [   0]  'V'     0|1010110   entropy=1.824  1010110=86                         ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.482  1101001=105                        ASCII(0-127)                                      
+  ---
+  [   1]  0xc3    110|00011   entropy=1.992  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa9    10|101001   prob=   0.334  00011+101001=233                   Latin-Ext(128-591)                                
+
+  [   2]  0xa0    10|100000   entropy=1.125  00011+100000=224                   Latin-Ext(128-591)                                
+       ->  ' '     0|0100000   prob=   0.773  0100000=32                         ASCII(0-127)                                      
+  ---
+  [   3]  'o'     0|1101111   entropy=2.299  1101111=111                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.359  0100000=32                         ASCII(0-127)                                      
+  ---
+  [   4]  ' '     0|0100000   entropy=3.586  0100000=32                         ASCII(0-127)                                      
+       ->  's'     0|1110011   prob=   0.098  1110011=115                        ASCII(0-127)                                      
+  ---
+  [   5]  'h'     0|1101000   entropy=1.805  1101000=104                        ASCII(0-127)                                      
+       ->  'a'     0|1100001   prob=   0.345  1100001=97                         ASCII(0-127)                                      
+  ---
+  [   6]  0xc3    110|00011   entropy=2.238  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa9    10|101001   prob=   0.228  00011+101001=233                   Latin-Ext(128-591)                                
+
+  [   7]  0xb4    10|110100   entropy=2.010  00011+110100=244                   Latin-Ext(128-591)                                
+       ->  'n'     0|1101110   prob=   0.344  1101110=110                        ASCII(0-127)                                      
+  ---
+  [   8]  'm'     0|1101101   entropy=2.232  1101101=109                        ASCII(0-127)                                      
+       ->  'a'     0|1100001   prob=   0.288  1100001=97                         ASCII(0-127)                                      
+  ---
+  [   9]  ' '     0|0100000   entropy=3.580  0100000=32                         ASCII(0-127)                                      
+       ->  'd'     0|1100100   prob=   0.088  1100100=100                        ASCII(0-127)                                      
+  ---
+  [  10]  't'     0|1110100   entropy=1.939  1110100=116                        ASCII(0-127)                                      
+       ->  'r'     0|1110010   prob=   0.279  1110010=114                        ASCII(0-127)                                      
+  ---
+  [  11]  'h'     0|1101000   entropy=1.708  1101000=104                        ASCII(0-127)                                      
+       ->  'e'     0|1100101   prob=   0.354  1100101=101                        ASCII(0-127)                                      
+  ---
+  [  12]  0xe1    1110|0001   entropy=0.809  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.581  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [  13]  0xbb    10|111011   entropy=2.607  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0xb1    10|110001   prob=   0.189  0001+111011+110001=7921            Other_d(6320-11903)                               
+
+  [  14]  0xa9    10|101001   entropy=1.100  0001+111011+101001=7913            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.750  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  15]  ' '     0|0100000   entropy=2.699  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.330  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  16]  'H'     0|1001000   entropy=2.096  1001000=72                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.321  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [  17]  'a'     0|1100001   entropy=2.289  1100001=97                         ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.237  1101001=105                        ASCII(0-127)                                      
+  ---
+  [  18]  'i'     0|1101001   entropy=1.932  1101001=105                        ASCII(0-127)                                      
+       ->  'r'     0|1110010   prob=   0.334  1110010=114                        ASCII(0-127)                                      
+  ---
+  [  19]  ','     0|0101100   entropy=0.115  0101100=44                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.982  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  20]  ' '     0|0100000   entropy=3.322  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.194  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  21]  'c'     0|1100011   entropy=1.474  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.450  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [  22]  0xc3    110|00011   entropy=1.231  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xb3    10|110011   prob=   0.649  00011+110011=243                   Latin-Ext(128-591)                                
+
+  [  23]  0xa1    10|100001   entropy=0.328  00011+100001=225                   Latin-Ext(128-591)                                
+       ->  'c'     0|1100011   prob=   0.940  1100011=99                         ASCII(0-127)                                      
+  ---
+  [  24]  'c'     0|1100011   entropy=0.368  1100011=99                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.926  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  25]  ' '     0|0100000   entropy=3.059  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.214  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  26]  'n'     0|1101110   entropy=1.155  1101110=110                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.710  1101000=104                        ASCII(0-127)                                      
+  ---
+  [  27]  'h'     0|1101000   entropy=1.469  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.478  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  28]  0xc3    110|00011   entropy=1.311  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa0    10|100000   prob=   0.642  00011+100000=224                   Latin-Ext(128-591)                                
+
+  [  29]  0xa0    10|100000   entropy=0.324  00011+100000=224                   Latin-Ext(128-591)                                
+       ->  ' '     0|0100000   prob=   0.943  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  30]  ' '     0|0100000   entropy=2.801  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.223  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  31]  'k'     0|1101011   entropy=1.047  1101011=107                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.644  1101000=104                        ASCII(0-127)                                      
+  ---
+  [  32]  'h'     0|1101000   entropy=1.487  1101000=104                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.494  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [  33]  'o'     0|1101111   entropy=1.236  1101111=111                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.723  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  34]  'a'     0|1100001   entropy=0.807  1100001=97                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.852  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  35]  ' '     0|0100000   entropy=3.076  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.152  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  36]  'h'     0|1101000   entropy=1.595  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.396  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  37]  0xe1    1110|0001   entropy=0.695  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.671  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [  38]  0xbb    10|111011   entropy=1.991  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x87    10|000111   prob=   0.502  0001+111011+000111=7879            Other_d(6320-11903)                               
+
+  [  39]  0x8d    10|001101   entropy=1.698  0001+111011+001101=7885            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.564  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  40]  'c'     0|1100011   entropy=0.855  1100011=99                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.777  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  41]  ' '     0|0100000   entropy=2.877  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.240  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  42]  't'     0|1110100   entropy=1.835  1110100=116                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.289  1101000=104                        ASCII(0-127)                                      
+  ---
+  [  43]  'h'     0|1101000   entropy=1.761  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.321  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  44]  'u'     0|1110101   entropy=1.340  1110101=117                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.590  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  45]  0xe1    1110|0001   entropy=0.629  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.707  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [  46]  0xbb    10|111011   entropy=1.832  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x91    10|010001   prob=   0.544  0001+111011+010001=7889            Other_d(6320-11903)                               
+
+  [  47]  0x99    10|011001   entropy=0.168  0001+111011+011001=7897            Other_d(6320-11903)                               
+       ->  'c'     0|1100011   prob=   0.975  1100011=99                         ASCII(0-127)                                      
+  ---
+  [  48]  'c'     0|1100011   entropy=0.856  1100011=99                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.787  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  49]  ' '     0|0100000   entropy=2.781  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.316  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  50]  'T'     0|1010100   entropy=2.059  1010100=84                         ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.475  1101000=104                        ASCII(0-127)                                      
+  ---
+  [  51]  'r'     0|1110010   entropy=1.867  1110010=114                        ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.294  1101001=105                        ASCII(0-127)                                      
+  ---
+  [  52]  0xc6    110|00110   entropy=0.810  00110+bbbbbb=384-447               Latin-Ext(128-591)                                
+       ->  0xb0    10|110000   prob=   0.737  00110+110000=432                   Latin-Ext(128-591)                                
+
+  [  53]  0xb0    10|110000   entropy=0.491  00110+110000=432                   Latin-Ext(128-591)                                
+       ->  0xe1    1110|0001   prob=   0.915  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  54]  0xe1    1110|0001   entropy=0.119  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.979  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [  55]  0xbb    10|111011   entropy=1.374  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x9b    10|011011   prob=   0.478  0001+111011+011011=7899            Other_d(6320-11903)                               
+
+  [  56]  0x9d    10|011101   entropy=0.236  0001+111011+011101=7901            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.951  1101110=110                        ASCII(0-127)                                      
+  ---
+  [  57]  'n'     0|1101110   entropy=0.613  1101110=110                        ASCII(0-127)                                      
+       ->  'g'     0|1100111   prob=   0.863  1100111=103                        ASCII(0-127)                                      
+  ---
+  [  58]  'g'     0|1100111   entropy=0.933  1100111=103                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.775  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  59]  ' '     0|0100000   entropy=3.223  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.199  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  60]  'Y'     0|1011001   entropy=2.297  1011001=89                         ASCII(0-127)                                      
+       ->  'o'     0|1101111   prob=   0.266  1101111=111                        ASCII(0-127)                                      
+  ---
+  [  61]  ' '     0|0100000   entropy=3.377  0100000=32                         ASCII(0-127)                                      
+       ->  'T'     0|1010100   prob=   0.191  1010100=84                         ASCII(0-127)                                      
+  ---
+  [  62]  0xc4    110|00100   entropy=0.598  00100+bbbbbb=256-319               Latin-Ext(128-591)                                
+       ->  0x91    10|010001   prob=   0.821  00100+010001=273                   Latin-Ext(128-591)                                
+
+  [  63]  0x90    10|010000   entropy=1.403  00100+010000=272                   Latin-Ext(128-591)                                
+       ->  0xe1    1110|0001   prob=   0.540  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  64]  0xe1    1110|0001   entropy=0.791  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.620  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [  65]  0xba    10|111010   entropy=1.842  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa1    10|100001   prob=   0.438  0001+111010+100001=7841            Other_d(6320-11903)                               
+
+  [  66]  0xa1    10|100001   entropy=1.320  0001+111010+100001=7841            Other_d(6320-11903)                               
+       ->  'i'     0|1101001   prob=   0.628  1101001=105                        ASCII(0-127)                                      
+  ---
+  [  67]  'i'     0|1101001   entropy=0.692  1101001=105                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.851  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  68]  ' '     0|0100000   entropy=3.588  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.100  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  69]  'h'     0|1101000   entropy=1.694  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.357  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  70]  0xe1    1110|0001   entropy=0.590  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.773  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [  71]  0xbb    10|111011   entropy=1.923  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x87    10|000111   prob=   0.357  0001+111011+000111=7879            Other_d(6320-11903)                               
+
+  [  72]  0x8d    10|001101   entropy=1.225  0001+111011+001101=7885            Other_d(6320-11903)                               
+       ->  'c'     0|1100011   prob=   0.667  1100011=99                         ASCII(0-127)                                      
+  ---
+  [  73]  'c'     0|1100011   entropy=0.632  1100011=99                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.857  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  74]  ' '     0|0100000   entropy=2.936  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.272  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  75]  'S'     0|1010011   entropy=2.480  1010011=83                         ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.272  1101001=105                        ASCII(0-127)                                      
+  ---
+  [  76]  't'     0|1110100   entropy=1.987  1110100=116                        ASCII(0-127)                                      
+       ->  'a'     0|1100001   prob=   0.353  1100001=97                         ASCII(0-127)                                      
+  ---
+  [  77]  'a'     0|1100001   entropy=2.139  1100001=97                         ASCII(0-127)                                      
+       ->  'n'     0|1101110   prob=   0.433  1101110=110                        ASCII(0-127)                                      
+  ---
+  [  78]  'n'     0|1101110   entropy=1.905  1101110=110                        ASCII(0-127)                                      
+       ->  'f'     0|1100110   prob=   0.320  1100110=102                        ASCII(0-127)                                      
+  ---
+  [  79]  'f'     0|1100110   entropy=0.625  1100110=102                        ASCII(0-127)                                      
+       ->  'o'     0|1101111   prob=   0.864  1101111=111                        ASCII(0-127)                                      
+  ---
+  [  80]  'o'     0|1101111   entropy=0.006  1101111=111                        ASCII(0-127)                                      
+       ->  'r'     0|1110010   prob=   1.000  1110010=114                        ASCII(0-127)                                      
+  ---
+  [  81]  'r'     0|1110010   entropy=0.016  1110010=114                        ASCII(0-127)                                      
+       ->  'd'     0|1100100   prob=   0.999  1100100=100                        ASCII(0-127)                                      
+  ---
+  [  82]  'd'     0|1100100   entropy=1.355  1100100=100                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.593  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  83]  ' '     0|0100000   entropy=3.676  0100000=32                         ASCII(0-127)                                      
+       ->  'T'     0|1010100   prob=   0.105  1010100=84                         ASCII(0-127)                                      
+  ---
+  [  84]  0xc4    110|00100   entropy=0.562  00100+bbbbbb=256-319               Latin-Ext(128-591)                                
+       ->  0x91    10|010001   prob=   0.814  00100+010001=273                   Latin-Ext(128-591)                                
+
+  [  85]  0x91    10|010001   entropy=1.381  00100+010001=273                   Latin-Ext(128-591)                                
+       ->  0xe1    1110|0001   prob=   0.573  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  86]  0xc3    110|00011   entropy=1.882  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa3    10|100011   prob=   0.356  00011+100011=227                   Latin-Ext(128-591)                                
+
+  [  87]  0xa3    10|100011   entropy=0.322  00011+100011=227                   Latin-Ext(128-591)                                
+       ->  ' '     0|0100000   prob=   0.946  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  88]  ' '     0|0100000   entropy=2.820  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.227  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  89]  'c'     0|1100011   entropy=1.325  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.503  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [  90]  0xc3    110|00011   entropy=0.679  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xb3    10|110011   prob=   0.858  00011+110011=243                   Latin-Ext(128-591)                                
+
+  [  91]  0xb4    10|110100   entropy=0.130  00011+110100=244                   Latin-Ext(128-591)                                
+       ->  'n'     0|1101110   prob=   0.980  1101110=110                        ASCII(0-127)                                      
+  ---
+  [  92]  'n'     0|1101110   entropy=0.015  1101110=110                        ASCII(0-127)                                      
+       ->  'g'     0|1100111   prob=   0.999  1100111=103                        ASCII(0-127)                                      
+  ---
+  [  93]  'g'     0|1100111   entropy=0.134  1100111=103                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.981  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  94]  ' '     0|0100000   entropy=2.764  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.214  1110100=116                        ASCII(0-127)                                      
+  ---
+  [  95]  'b'     0|1100010   entropy=1.359  1100010=98                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.474  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [  96]  0xe1    1110|0001   entropy=0.738  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.573  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [  97]  0xbb    10|111011   entropy=2.395  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x8b    10|001011   prob=   0.253  0001+111011+001011=7883            Other_d(6320-11903)                               
+
+  [  98]  0x91    10|010001   entropy=1.237  0001+111011+010001=7889            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.611  0100000=32                         ASCII(0-127)                                      
+  ---
+  [  99]  ' '     0|0100000   entropy=3.072  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.191  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 100]  'p'     0|1110000   entropy=0.063  1110000=112                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.992  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 101]  'h'     0|1101000   entropy=1.270  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.436  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 102]  0xc3    110|00011   entropy=1.798  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa1    10|100001   prob=   0.508  00011+100001=225                   Latin-Ext(128-591)                                
+
+  [ 103]  0xa1    10|100001   entropy=0.756  00011+100001=225                   Latin-Ext(128-591)                                
+       ->  'p'     0|1110000   prob=   0.729  1110000=112                        ASCII(0-127)                                      
+  ---
+  [ 104]  't'     0|1110100   entropy=0.589  1110100=116                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.875  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 105]  ' '     0|0100000   entropy=3.016  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.177  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 106]  'm'     0|1101101   entropy=1.129  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.607  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 107]  'i'     0|1101001   entropy=1.531  1101001=105                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.414  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 108]  'n'     0|1101110   entropy=0.733  1101110=110                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.853  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 109]  'h'     0|1101000   entropy=1.018  1101000=104                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.720  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 110]  ' '     0|0100000   entropy=2.889  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.251  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 111]  'm'     0|1101101   entropy=1.491  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.525  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 112]  0xe1    1110|0001   entropy=0.802  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.629  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 113]  0xbb    10|111011   entropy=2.443  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.320  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 114]  0x99    10|011001   entropy=0.151  0001+111011+011001=7897            Other_d(6320-11903)                               
+       ->  't'     0|1110100   prob=   0.976  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 115]  't'     0|1110100   entropy=0.131  1110100=116                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.979  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 116]  ' '     0|0100000   entropy=2.840  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.230  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 117]  'd'     0|1100100   entropy=1.805  1100100=100                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.402  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 118]  0xe1    1110|0001   entropy=0.711  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.583  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 119]  0xbb    10|111011   entropy=1.672  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0xa5    10|100101   prob=   0.567  0001+111011+100101=7909            Other_d(6320-11903)                               
+
+  [ 120]  0xa5    10|100101   entropy=1.092  0001+111011+100101=7909            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.608  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 121]  'n'     0|1101110   entropy=0.283  1101110=110                        ASCII(0-127)                                      
+       ->  'g'     0|1100111   prob=   0.940  1100111=103                        ASCII(0-127)                                      
+  ---
+  [ 122]  'g'     0|1100111   entropy=0.429  1100111=103                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.913  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 123]  ' '     0|0100000   entropy=3.068  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.258  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 124]  'c'     0|1100011   entropy=1.347  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.518  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 125]  0xe1    1110|0001   entropy=0.671  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.702  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 126]  0xbb    10|111011   entropy=1.349  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0xa7    10|100111   prob=   0.680  0001+111011+100111=7911            Other_d(6320-11903)                               
+
+  [ 127]  0xa5    10|100101   entropy=0.872  0001+111011+100101=7909            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.820  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 128]  ' '     0|0100000   entropy=2.670  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.327  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 129]  'c'     0|1100011   entropy=1.408  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.408  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 130]  'h'     0|1101000   entropy=1.590  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.428  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 131]  0xe1    1110|0001   entropy=0.670  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.643  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 132]  0xba    10|111010   entropy=2.166  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa5    10|100101   prob=   0.287  0001+111010+100101=7845            Other_d(6320-11903)                               
+
+  [ 133]  0xa9    10|101001   entropy=0.776  0001+111010+101001=7849            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.792  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 134]  'n'     0|1101110   entropy=0.452  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.903  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 135]  ' '     0|0100000   entropy=2.863  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.221  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 136]  0xc4    110|00100   entropy=0.038  00100+bbbbbb=256-319               Latin-Ext(128-591)                                
+       ->  0x91    10|010001   prob=   0.995  00100+010001=273                   Latin-Ext(128-591)                                
+
+  [ 137]  0x91    10|010001   entropy=1.292  00100+010001=273                   Latin-Ext(128-591)                                
+       ->  0xe1    1110|0001   prob=   0.590  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 138]  'o'     0|1101111   entropy=0.728  1101111=111                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.707  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 139]  0xc3    110|00011   entropy=0.998  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa0    10|100000   prob=   0.734  00011+100000=224                   Latin-Ext(128-591)                                
+
+  [ 140]  0xa1    10|100001   entropy=0.543  00011+100001=225                   Latin-Ext(128-591)                                
+       ->  'n'     0|1101110   prob=   0.888  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 141]  'n'     0|1101110   entropy=0.700  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.812  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 142]  ' '     0|0100000   entropy=2.721  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.267  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 143]  'm'     0|1101101   entropy=1.237  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.541  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 144]  0xe1    1110|0001   entropy=0.575  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.792  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 145]  0xbb    10|111011   entropy=2.172  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.391  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 146]  0x9b    10|011011   entropy=0.077  0001+111011+011011=7899            Other_d(6320-11903)                               
+       ->  'i'     0|1101001   prob=   0.990  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 147]  'i'     0|1101001   entropy=0.591  1101001=105                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.843  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 148]  ' '     0|0100000   entropy=2.920  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.179  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 149]  'c'     0|1100011   entropy=1.327  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.512  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 150]  0xc3    110|00011   entropy=1.693  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xb4    10|110100   prob=   0.290  00011+110100=244                   Latin-Ext(128-591)                                
+
+  [ 151]  0xb3    10|110011   entropy=0.157  00011+110011=243                   Latin-Ext(128-591)                                
+       ->  ' '     0|0100000   prob=   0.978  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 152]  ' '     0|0100000   entropy=2.609  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.329  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 153]  't'     0|1110100   entropy=0.672  1110100=116                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.861  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 154]  'h'     0|1101000   entropy=0.758  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.835  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 155]  0xe1    1110|0001   entropy=0.561  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.777  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 156]  0xbb    10|111011   entropy=0.271  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x83    10|000011   prob=   0.961  0001+111011+000011=7875            Other_d(6320-11903)                               
+
+  [ 157]  0x83    10|000011   entropy=0.228  0001+111011+000011=7875            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.959  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 158]  ' '     0|0100000   entropy=2.836  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.189  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 159]  'p'     0|1110000   entropy=0.055  1110000=112                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.993  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 160]  'h'     0|1101000   entropy=0.829  1101000=104                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.735  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 161]  0xc3    110|00011   entropy=1.305  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa1    10|100001   prob=   0.702  00011+100001=225                   Latin-Ext(128-591)                                
+
+  [ 162]  0xa2    10|100010   entropy=0.702  00011+100010=226                   Latin-Ext(128-591)                                
+       ->  'n'     0|1101110   prob=   0.855  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 163]  'n'     0|1101110   entropy=0.347  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.924  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 164]  ' '     0|0100000   entropy=3.055  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.183  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 165]  'l'     0|1101100   entropy=1.271  1101100=108                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.571  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 166]  'o'     0|1101111   entropy=1.091  1101111=111                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.678  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 167]  0xe1    1110|0001   entropy=0.219  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.947  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 168]  0xba    10|111010   entropy=0.301  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa1    10|100001   prob=   0.954  0001+111010+100001=7841            Other_d(6320-11903)                               
+
+  [ 169]  0xa1    10|100001   entropy=0.496  0001+111010+100001=7841            Other_d(6320-11903)                               
+       ->  'i'     0|1101001   prob=   0.868  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 170]  'i'     0|1101001   entropy=0.734  1101001=105                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.773  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 171]  ' '     0|0100000   entropy=2.885  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.189  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 172]  't'     0|1110100   entropy=1.658  1110100=116                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.344  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 173]  0xe1    1110|0001   entropy=0.739  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.646  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 174]  0xba    10|111010   entropy=1.915  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xbf    10|111111   prob=   0.328  0001+111010+111111=7871            Other_d(6320-11903)                               
+
+  [ 175]  0xbf    10|111111   entropy=1.188  0001+111010+111111=7871            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.694  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 176]  ' '     0|0100000   entropy=2.795  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.267  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 177]  'b'     0|1100010   entropy=1.104  1100010=98                         ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.648  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 178]  0xc3    110|00011   entropy=1.351  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa0    10|100000   prob=   0.635  00011+100000=224                   Latin-Ext(128-591)                                
+
+  [ 179]  0xa0    10|100000   entropy=1.655  00011+100000=224                   Latin-Ext(128-591)                                
+       ->  'y'     0|1111001   prob=   0.328  1111001=121                        ASCII(0-127)                                      
+  ---
+  [ 180]  'o'     0|1101111   entropy=0.258  1101111=111                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.948  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 181]  ':'     0|0111010   entropy=0.454  0111010=58                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.886  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 182]  ' '     0|0100000   entropy=3.277  0100000=32                         ASCII(0-127)                                      
+       ->  0xe2    1110|0010   prob=   0.159  0010+1bbbbb+bbbbbb=8192-12287      Other_d/CJK-Rad/Other_e(6320-12287)               
+  ---
+  [ 183]  'm'     0|1101101   entropy=1.183  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.612  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 184]  0xe1    1110|0001   entropy=0.665  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.699  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 185]  0xbb    10|111011   entropy=2.096  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.483  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 186]  0x99    10|011001   entropy=0.035  0001+111011+011001=7897            Other_d(6320-11903)                               
+       ->  't'     0|1110100   prob=   0.996  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 187]  't'     0|1110100   entropy=0.040  1110100=116                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.995  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 188]  ' '     0|0100000   entropy=2.756  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.206  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 189]  'c'     0|1100011   entropy=1.230  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.618  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 190]  'o'     0|1101111   entropy=1.227  1101111=111                        ASCII(0-127)                                      
+       ->  'n'     0|1101110   prob=   0.725  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 191]  'n'     0|1101110   entropy=1.434  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.656  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 192]  ' '     0|0100000   entropy=2.801  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.230  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 193]  'c'     0|1100011   entropy=1.311  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.585  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 194]  'h'     0|1101000   entropy=1.455  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.492  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 195]  0xc3    110|00011   entropy=1.506  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xba    10|111010   prob=   0.527  00011+111010=250                   Latin-Ext(128-591)                                
+
+  [ 196]  0xad    10|101101   entropy=0.591  00011+101101=237                   Latin-Ext(128-591)                                
+       ->  'n'     0|1101110   prob=   0.883  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 197]  'p'     0|1110000   entropy=1.260  1110000=112                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.675  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 198]  ' '     0|0100000   entropy=2.775  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.256  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 199]  'n'     0|1101110   entropy=1.620  1101110=110                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.422  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 200]  'h'     0|1101000   entropy=1.560  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.369  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 201]  0xe1    1110|0001   entropy=0.741  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.504  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 202]  0xbb    10|111011   entropy=0.773  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0xaf    10|101111   prob=   0.861  0001+111011+101111=7919            Other_d(6320-11903)                               
+
+  [ 203]  0x8f    10|001111   entropy=1.012  0001+111011+001111=7887            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.737  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 204]  ' '     0|0100000   entropy=2.816  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.227  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 205]  'c'     0|1100011   entropy=1.227  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.604  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 206]  0xc3    110|00011   entropy=1.607  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa1    10|100001   prob=   0.383  00011+100001=225                   Latin-Ext(128-591)                                
+
+  [ 207]  0xb3    10|110011   entropy=0.125  00011+110011=243                   Latin-Ext(128-591)                                
+       ->  ' '     0|0100000   prob=   0.983  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 208]  ' '     0|0100000   entropy=2.324  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.419  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 209]  't'     0|1110100   entropy=0.606  1110100=116                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.877  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 210]  'h'     0|1101000   entropy=0.492  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.907  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 211]  0xe1    1110|0001   entropy=0.459  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.838  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 212]  0xbb    10|111011   entropy=0.167  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x83    10|000011   prob=   0.978  0001+111011+000011=7875            Other_d(6320-11903)                               
+
+  [ 213]  0x83    10|000011   entropy=0.199  0001+111011+000011=7875            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.966  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 214]  ' '     0|0100000   entropy=2.797  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.208  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 215]  's'     0|1110011   entropy=1.649  1110011=115                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.491  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 216]  0xe1    1110|0001   entropy=0.629  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.712  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 217]  0xba    10|111010   entropy=1.786  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xbd    10|111101   prob=   0.442  0001+111010+111101=7869            Other_d(6320-11903)                               
+
+  [ 218]  0xa3    10|100011   entropy=0.136  0001+111010+100011=7843            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.981  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 219]  'n'     0|1101110   entropy=0.562  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.886  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 220]  ' '     0|0100000   entropy=2.656  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.264  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 221]  'x'     0|1111000   entropy=1.551  1111000=120                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.380  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 222]  'u'     0|1110101   entropy=1.329  1110101=117                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.589  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 223]  0xe1    1110|0001   entropy=0.793  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.574  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 224]  0xba    10|111010   entropy=0.393  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa5    10|100101   prob=   0.938  0001+111010+100101=7845            Other_d(6320-11903)                               
+
+  [ 225]  0xa5    10|100101   entropy=0.300  0001+111010+100101=7845            Other_d(6320-11903)                               
+       ->  't'     0|1110100   prob=   0.921  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 226]  't'     0|1110100   entropy=0.758  1110100=116                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.800  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 227]  ' '     0|0100000   entropy=2.730  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.193  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 228]  'b'     0|1100010   entropy=1.188  1100010=98                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.514  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 229]  0xe1    1110|0001   entropy=0.749  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.527  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 230]  0xba    10|111010   entropy=1.875  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa1    10|100001   prob=   0.355  0001+111010+100001=7841            Other_d(6320-11903)                               
+
+  [ 231]  0xb1    10|110001   entropy=0.129  0001+111010+110001=7857            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.981  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 232]  'n'     0|1101110   entropy=0.217  1101110=110                        ASCII(0-127)                                      
+       ->  'g'     0|1100111   prob=   0.960  1100111=103                        ASCII(0-127)                                      
+  ---
+  [ 233]  'g'     0|1100111   entropy=0.217  1100111=103                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.962  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 234]  ' '     0|0100000   entropy=2.818  0100000=32                         ASCII(0-127)                                      
+       ->  'c'     0|1100011   prob=   0.211  1100011=99                         ASCII(0-127)                                      
+  ---
+  [ 235]  'm'     0|1101101   entropy=1.146  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.630  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 236]  0xc3    110|00011   entropy=1.673  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa0    10|100000   prob=   0.565  00011+100000=224                   Latin-Ext(128-591)                                
+
+  [ 237]  0xa1    10|100001   entropy=1.728  00011+100001=225                   Latin-Ext(128-591)                                
+       ->  'y'     0|1111001   prob=   0.389  1111001=121                        ASCII(0-127)                                      
+  ---
+  [ 238]  'y'     0|1111001   entropy=0.441  1111001=121                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.905  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 239]  ' '     0|0100000   entropy=2.947  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.171  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 240]  'i'     0|1101001   entropy=2.010  1101001=105                        ASCII(0-127)                                      
+       ->  'n'     0|1101110   prob=   0.430  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 241]  'n'     0|1101110   entropy=1.559  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.604  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 242]  ' '     0|0100000   entropy=2.623  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.313  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 243]  'p'     0|1110000   entropy=0.396  1110000=112                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.935  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 244]  'h'     0|1101000   entropy=0.960  1101000=104                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.680  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 245]  'u'     0|1110101   entropy=2.082  1110101=117                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.279  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 246]  'n'     0|1101110   entropy=1.068  1101110=110                        ASCII(0-127)                                      
+       ->  'g'     0|1100111   prob=   0.784  1100111=103                        ASCII(0-127)                                      
+  ---
+  [ 247]  ' '     0|0100000   entropy=2.867  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.180  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 248]  't'     0|1110100   entropy=1.784  1110100=116                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.400  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 249]  'i'     0|1101001   entropy=1.180  1101001=105                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.465  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 250]  0xc3    110|00011   entropy=0.064  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xaa    10|101010   prob=   0.993  00011+101010=234                   Latin-Ext(128-591)                                
+
+  [ 251]  0xaa    10|101010   entropy=0.947  00011+101010=234                   Latin-Ext(128-591)                                
+       ->  'u'     0|1110101   prob=   0.488  1110101=117                        ASCII(0-127)                                      
+  ---
+  [ 252]  'u'     0|1110101   entropy=1.010  1110101=117                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.700  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 253]  ' '     0|0100000   entropy=2.645  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.307  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 254]  'c'     0|1100011   entropy=1.220  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.623  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 255]  'h'     0|1101000   entropy=1.698  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.314  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 256]  'u'     0|1110101   entropy=0.975  1110101=117                        ASCII(0-127)                                      
+       ->  'y'     0|1111001   prob=   0.752  1111001=121                        ASCII(0-127)                                      
+  ---
+  [ 257]  0xe1    1110|0001   entropy=0.714  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.503  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 258]  0xba    10|111010   entropy=0.465  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa9    10|101001   prob=   0.920  0001+111010+101001=7849            Other_d(6320-11903)                               
+
+  [ 259]  0xa9    10|101001   entropy=0.056  0001+111010+101001=7849            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.993  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 260]  'n'     0|1101110   entropy=0.933  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.696  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 261]  ' '     0|0100000   entropy=2.705  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.256  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 262]  'v'     0|1110110   entropy=1.081  1110110=118                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.643  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 263]  0xe1    1110|0001   entropy=0.526  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.815  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 264]  0xbb    10|111011   entropy=2.117  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x9b    10|011011   prob=   0.373  0001+111011+011011=7899            Other_d(6320-11903)                               
+
+  [ 265]  0x9b    10|011011   entropy=0.109  0001+111011+011011=7899            Other_d(6320-11903)                               
+       ->  'i'     0|1101001   prob=   0.984  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 266]  'i'     0|1101001   entropy=0.188  1101001=105                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.966  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 267]  ' '     0|0100000   entropy=2.834  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.196  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 268]  'g'     0|1100111   entropy=1.596  1100111=103                        ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.450  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 269]  'i'     0|1101001   entropy=1.183  1101001=105                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.398  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 270]  0xc3    110|00011   entropy=1.494  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  0xa1    10|100001   prob=   0.517  00011+100001=225                   Latin-Ext(128-591)                                
+
+  [ 271]  0xa1    10|100001   entropy=1.543  00011+100001=225                   Latin-Ext(128-591)                                
+       ->  'c'     0|1100011   prob=   0.489  1100011=99                         ASCII(0-127)                                      
+  ---
+  [ 272]  ' '     0|0100000   entropy=2.633  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.312  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 273]  'k'     0|1101011   entropy=0.898  1101011=107                        ASCII(0-127)                                      
+       ->  'h'     0|1101000   prob=   0.767  1101000=104                        ASCII(0-127)                                      
+  ---
+  [ 274]  'h'     0|1101000   entropy=1.578  1101000=104                        ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.433  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 275]  'o'     0|1101111   entropy=1.115  1101111=111                        ASCII(0-127)                                      
+       ->  'a'     0|1100001   prob=   0.584  1100001=97                         ASCII(0-127)                                      
+  ---
+  [ 276]  0xe1    1110|0001   entropy=0.246  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.939  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 277]  0xba    10|111010   entropy=0.524  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xa3    10|100011   prob=   0.907  0001+111010+100011=7843            Other_d(6320-11903)                               
+
+  [ 278]  0xa3    10|100011   entropy=0.132  0001+111010+100011=7843            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.981  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 279]  'n'     0|1101110   entropy=0.922  1101110=110                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.737  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 280]  'g'     0|1100111   entropy=0.497  1100111=103                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.889  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 281]  ' '     0|0100000   entropy=2.779  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.232  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 282]  'm'     0|1101101   entropy=1.373  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.421  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 283]  0xe1    1110|0001   entropy=0.640  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.724  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 284]  0xbb    10|111011   entropy=2.270  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.262  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 285]  0x99    10|011001   entropy=0.135  0001+111011+011001=7897            Other_d(6320-11903)                               
+       ->  't'     0|1110100   prob=   0.978  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 286]  't'     0|1110100   entropy=0.199  1110100=116                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.964  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 287]  ' '     0|0100000   entropy=2.740  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.163  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 288]  'x'     0|1111000   entropy=1.397  1111000=120                        ASCII(0-127)                                      
+       ->  'u'     0|1110101   prob=   0.448  1110101=117                        ASCII(0-127)                                      
+  ---
+  [ 289]  'u'     0|1110101   entropy=0.694  1110101=117                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.863  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 290]  ' '     0|0100000   entropy=2.855  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.164  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 291]  'M'     0|1001101   entropy=2.246  1001101=77                         ASCII(0-127)                                      
+       ->  'i'     0|1101001   prob=   0.314  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 292]  0xe1    1110|0001   entropy=0.600  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.774  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 293]  0xbb    10|111011   entropy=2.680  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.363  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 294]  0xb9    10|111001   entropy=0.729  0001+111011+111001=7929            Other_d(6320-11903)                               
+       ->  ' '     0|0100000   prob=   0.861  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 295]  ' '     0|0100000   entropy=3.436  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.163  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 296]  'm'     0|1101101   entropy=1.320  1101101=109                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.522  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 297]  0xe1    1110|0001   entropy=0.616  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xbb    10|111011   prob=   0.761  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+
+  [ 298]  0xbb    10|111011   entropy=2.082  0001+111011+bbbbbb=7872-7935       Other_d(6320-11903)                               
+       ->  0x99    10|011001   prob=   0.356  0001+111011+011001=7897            Other_d(6320-11903)                               
+
+  [ 299]  0x97    10|010111   entropy=0.035  0001+111011+010111=7895            Other_d(6320-11903)                               
+       ->  'i'     0|1101001   prob=   0.996  1101001=105                        ASCII(0-127)                                      
+  ---
+  [ 300]  'i'     0|1101001   entropy=0.285  1101001=105                        ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.953  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 301]  ' '     0|0100000   entropy=3.094  0100000=32                         ASCII(0-127)                                      
+       ->  't'     0|1110100   prob=   0.194  1110100=116                        ASCII(0-127)                                      
+  ---
+  [ 302]  'c'     0|1100011   entropy=1.481  1100011=99                         ASCII(0-127)                                      
+       ->  0xc3    110|00011   prob=   0.451  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+  ---
+  [ 303]  'h'     0|1101000   entropy=1.790  1101000=104                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.302  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 304]  'i'     0|1101001   entropy=1.317  1101001=105                        ASCII(0-127)                                      
+       ->  0xe1    1110|0001   prob=   0.661  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  ---
+  [ 305]  0xe1    1110|0001   entropy=0.647  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0xba    10|111010   prob=   0.670  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+
+  [ 306]  0xba    10|111010   entropy=0.074  0001+111010+bbbbbb=7808-7871       Other_d(6320-11903)                               
+       ->  0xbf    10|111111   prob=   0.991  0001+111010+111111=7871            Other_d(6320-11903)                               
+
+  [ 307]  0xbf    10|111111   entropy=1.173  0001+111010+111111=7871            Other_d(6320-11903)                               
+       ->  'n'     0|1101110   prob=   0.608  1101110=110                        ASCII(0-127)                                      
+  ---
+  [ 308]  'c'     0|1100011   entropy=0.446  1100011=99                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.902  0100000=32                         ASCII(0-127)                                      
+  ---
+  [ 309]  '.'     0|0101110   entropy=0.860  0101110=46                         ASCII(0-127)                                      
+       ->  ' '     0|0100000   prob=   0.614  0100000=32                         ASCII(0-127)                                      
+  ---
+
+--------------------------------------------------------------------------------
+  Patch summary from restructured results:
+
+  [bytes] raw_entropy          t_1.7510      n_patches=98  avg_bpp=3.1633  lengths=[1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1, 1, 2, 5, 5, 5, 3, 3, 1, 1, 3, 3, 1, 1, 8, 1, 1, 4, 3, 3, 3, 1, 1, 1, 1, 5, 3, 2, 6, 3, 2, 3, 3, 5, 3, 3, 1, 6, 5, 4, 3, 7, 3, 3, 4, 6, 6, 7, 3, 2, 6, 3, 3, 4, 6, 6, 4, 6, 3, 3, 7, 3, 4, 5, 1, 2, 3, 2, 1, 5, 8, 3, 3, 5, 9, 3, 3, 3, 1, 2, 2, 3, 3, 2, 6]
+  [bytes] raw_entropy          t_1.6279      n_patches=109  avg_bpp=2.8440  lengths=[1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 5, 5, 5, 3, 1, 2, 1, 1, 3, 3, 1, 1, 8, 1, 1, 4, 3, 1, 2, 3, 1, 1, 1, 1, 5, 3, 2, 6, 3, 2, 3, 3, 5, 3, 3, 1, 2, 4, 5, 4, 3, 7, 3, 3, 2, 2, 6, 6, 7, 1, 2, 2, 3, 3, 3, 3, 4, 6, 6, 4, 6, 1, 2, 3, 7, 3, 4, 2, 1, 2, 1, 2, 3, 2, 1, 5, 2, 6, 3, 3, 5, 9, 3, 3, 3, 1, 2, 2, 3, 3, 2, 6]
+  [bytes] raw_entropy          t_1.9185      n_patches=82  avg_bpp=3.7805  lengths=[2, 2, 1, 2, 1, 1, 1, 1, 3, 2, 1, 1, 1, 2, 5, 5, 5, 3, 3, 8, 1, 9, 1, 1, 7, 3, 3, 1, 1, 1, 6, 5, 6, 3, 2, 6, 5, 3, 3, 7, 5, 4, 3, 7, 3, 3, 4, 6, 6, 7, 5, 6, 3, 3, 4, 6, 6, 4, 6, 6, 7, 7, 5, 1, 2, 3, 2, 6, 8, 3, 3, 5, 9, 3, 3, 3, 1, 2, 2, 3, 3, 8]
+  [bytes] raw_entropy          t_2.2090      n_patches=65  avg_bpp=4.7692  lengths=[4, 1, 2, 2, 1, 4, 2, 2, 3, 5, 5, 5, 6, 8, 10, 1, 1, 7, 6, 1, 8, 5, 6, 3, 2, 6, 5, 3, 3, 7, 5, 7, 7, 6, 4, 6, 6, 7, 5, 6, 6, 4, 6, 6, 4, 6, 6, 7, 7, 5, 3, 5, 6, 8, 6, 5, 9, 3, 3, 3, 1, 2, 2, 6, 8]
+  [bytes] raw_monotonicity     t_0.5531      n_patches=90  avg_bpp=3.4444  lengths=[1, 3, 1, 5, 4, 2, 5, 5, 5, 5, 3, 3, 5, 2, 1, 6, 4, 2, 2, 2, 3, 3, 3, 8, 1, 2, 3, 6, 3, 2, 2, 4, 5, 3, 3, 3, 4, 3, 2, 4, 3, 2, 5, 3, 3, 4, 6, 2, 4, 7, 3, 2, 6, 3, 3, 4, 5, 1, 6, 4, 6, 3, 3, 7, 3, 4, 5, 3, 2, 1, 2, 4, 2, 7, 1, 3, 3, 5, 2, 5, 2, 3, 3, 3, 3, 2, 3, 3, 6, 2]
+  [bytes] raw_monotonicity     t_0.4229      n_patches=100  avg_bpp=3.1000  lengths=[1, 3, 1, 2, 3, 4, 2, 5, 5, 5, 2, 3, 3, 3, 5, 2, 1, 6, 4, 2, 2, 2, 3, 3, 3, 8, 1, 2, 1, 2, 6, 3, 2, 2, 1, 3, 5, 3, 3, 3, 4, 3, 2, 4, 3, 2, 5, 3, 2, 1, 4, 6, 2, 1, 3, 7, 3, 2, 6, 3, 3, 4, 5, 1, 6, 4, 6, 3, 2, 1, 6, 1, 3, 4, 2, 3, 3, 2, 1, 2, 4, 2, 2, 5, 1, 3, 3, 5, 2, 5, 2, 3, 3, 3, 3, 2, 3, 3, 6, 2]
+  [bytes] raw_monotonicity     t_0.7825      n_patches=84  avg_bpp=3.6905  lengths=[1, 3, 1, 5, 4, 2, 5, 5, 5, 5, 3, 3, 5, 3, 6, 4, 2, 2, 2, 3, 3, 3, 8, 1, 2, 3, 6, 3, 2, 2, 4, 5, 3, 3, 3, 4, 5, 4, 3, 2, 5, 3, 3, 4, 6, 6, 7, 3, 2, 6, 3, 3, 4, 6, 6, 4, 6, 3, 3, 7, 3, 4, 5, 3, 3, 2, 4, 2, 7, 1, 3, 3, 5, 7, 2, 3, 3, 3, 3, 2, 3, 3, 6, 2]
+  [bytes] raw_monotonicity     t_1.1422      n_patches=71  avg_bpp=4.3662  lengths=[1, 3, 1, 5, 4, 2, 5, 5, 5, 5, 3, 3, 5, 3, 6, 4, 9, 3, 3, 8, 1, 5, 6, 3, 2, 2, 4, 5, 3, 3, 7, 5, 4, 3, 2, 5, 3, 3, 4, 6, 6, 7, 3, 2, 6, 3, 3, 4, 6, 6, 4, 6, 3, 3, 7, 7, 5, 8, 6, 8, 3, 3, 14, 3, 3, 3, 3, 2, 3, 3, 8]
+  [chars] raw_entropy          t_1.6279      n_patches=117  avg_bpp=2.6496  lengths_chars=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 3, 1, 5, 2, 2, 1, 1, 2, 2, 1, 1, 2, 3, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 5, 1, 1, 1, 5, 2, 1, 3, 2, 5, 2, 2, 1, 1, 3, 2, 1, 3, 2, 5, 2, 2, 2, 1, 4, 3, 2, 5, 1, 1, 1, 2, 3, 2, 2, 4, 3, 2, 3, 1, 2, 1, 4, 1, 1, 2, 5, 2, 3, 2, 2, 1, 2, 3, 2, 1, 4, 2, 4, 2, 2, 3, 1, 7, 2, 2, 3, 1, 1, 1, 2, 2, 2, 2, 2]  lengths_bytes=[1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 3, 1, 1, 1, 1, 2, 5, 4, 1, 5, 4, 2, 1, 1, 4, 2, 1, 1, 5, 3, 1, 1, 2, 3, 2, 1, 3, 2, 1, 1, 1, 1, 5, 2, 2, 1, 6, 4, 1, 4, 2, 5, 4, 2, 1, 3, 3, 4, 1, 5, 2, 7, 4, 2, 3, 1, 6, 4, 2, 7, 1, 3, 1, 3, 3, 4, 2, 4, 4, 2, 5, 1, 3, 1, 6, 1, 3, 2, 7, 4, 3, 3, 2, 1, 2, 3, 2, 1, 5, 2, 6, 4, 2, 4, 1, 9, 4, 2, 3, 1, 3, 1, 4, 2, 2, 4, 2]
+  [chars] raw_entropy          t_1.9207      n_patches=98  avg_bpp=3.1633  lengths_chars=[2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 4, 4, 5, 2, 2, 4, 2, 1, 6, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 6, 1, 1, 1, 5, 2, 1, 3, 2, 5, 2, 2, 2, 3, 2, 1, 3, 2, 5, 2, 2, 3, 4, 3, 2, 5, 2, 1, 2, 3, 2, 2, 4, 3, 2, 3, 1, 3, 4, 2, 2, 5, 2, 3, 2, 2, 1, 2, 3, 2, 5, 6, 2, 2, 3, 1, 7, 2, 2, 3, 1, 1, 1, 2, 2, 6]  lengths_bytes=[3, 1, 1, 3, 1, 1, 1, 4, 1, 1, 1, 1, 2, 5, 5, 5, 4, 2, 6, 2, 1, 9, 1, 1, 2, 3, 2, 4, 2, 1, 1, 1, 6, 2, 2, 1, 6, 4, 1, 4, 2, 5, 4, 2, 4, 3, 4, 1, 5, 2, 7, 4, 2, 4, 6, 4, 2, 7, 4, 1, 3, 3, 4, 2, 4, 4, 2, 5, 1, 4, 6, 4, 2, 7, 4, 3, 3, 2, 1, 2, 3, 2, 6, 8, 4, 2, 4, 1, 9, 4, 2, 3, 1, 3, 1, 4, 2, 8]
+  [chars] raw_entropy          t_2.2134      n_patches=85  avg_bpp=3.6471  lengths_chars=[2, 1, 1, 2, 1, 1, 3, 1, 2, 3, 4, 4, 5, 2, 2, 4, 2, 7, 1, 1, 2, 2, 2, 2, 1, 8, 3, 5, 2, 1, 3, 2, 5, 2, 2, 2, 3, 2, 1, 3, 2, 5, 2, 2, 3, 4, 5, 5, 2, 1, 2, 3, 2, 2, 4, 5, 3, 1, 3, 4, 2, 2, 5, 2, 3, 2, 2, 3, 5, 5, 6, 2, 2, 3, 1, 7, 2, 2, 3, 1, 1, 1, 2, 2, 6]  lengths_bytes=[3, 1, 1, 3, 1, 1, 5, 1, 2, 3, 5, 5, 5, 4, 2, 6, 2, 10, 1, 1, 5, 2, 4, 2, 1, 8, 5, 6, 4, 1, 4, 2, 5, 4, 2, 4, 3, 4, 1, 5, 2, 7, 4, 2, 4, 6, 6, 7, 4, 1, 3, 3, 4, 2, 4, 6, 5, 1, 4, 6, 4, 2, 7, 4, 3, 3, 2, 3, 5, 6, 8, 4, 2, 4, 1, 9, 4, 2, 3, 1, 3, 1, 4, 2, 8]
+  [chars] raw_entropy          t_1.7488      n_patches=109  avg_bpp=2.8440  lengths_chars=[1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 4, 4, 5, 2, 2, 1, 1, 2, 2, 1, 1, 5, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 5, 1, 1, 1, 5, 2, 1, 3, 2, 5, 2, 2, 1, 1, 3, 2, 1, 3, 2, 5, 2, 2, 2, 1, 4, 3, 2, 5, 2, 1, 2, 3, 2, 2, 4, 3, 2, 3, 1, 3, 4, 2, 2, 5, 2, 3, 2, 2, 1, 2, 3, 2, 1, 4, 6, 2, 2, 3, 1, 7, 2, 2, 3, 1, 1, 1, 2, 2, 2, 2, 2]  lengths_bytes=[1, 2, 1, 1, 1, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 5, 5, 5, 4, 2, 1, 1, 4, 2, 1, 1, 8, 1, 1, 2, 3, 2, 4, 2, 1, 1, 1, 1, 5, 2, 2, 1, 6, 4, 1, 4, 2, 5, 4, 2, 1, 3, 3, 4, 1, 5, 2, 7, 4, 2, 3, 1, 6, 4, 2, 7, 4, 1, 3, 3, 4, 2, 4, 4, 2, 5, 1, 4, 6, 4, 2, 7, 4, 3, 3, 2, 1, 2, 3, 2, 1, 5, 8, 4, 2, 4, 1, 9, 4, 2, 3, 1, 3, 1, 4, 2, 2, 4, 2]
+  [chars] raw_monotonicity     t_0.4227      n_patches=88  avg_bpp=3.5227  lengths_chars=[1, 1, 2, 2, 2, 3, 6, 4, 4, 2, 3, 2, 2, 4, 2, 4, 3, 2, 2, 2, 2, 2, 8, 1, 3, 5, 2, 3, 1, 2, 5, 2, 2, 2, 3, 2, 4, 2, 3, 2, 2, 2, 2, 1, 4, 2, 1, 2, 5, 2, 3, 3, 2, 2, 4, 3, 2, 3, 3, 1, 4, 2, 2, 5, 2, 3, 2, 2, 3, 2, 1, 2, 5, 2, 4, 2, 2, 3, 3, 5, 2, 2, 3, 2, 3, 2, 4, 2]  lengths_bytes=[1, 2, 2, 3, 2, 5, 6, 5, 5, 2, 3, 4, 2, 6, 2, 7, 3, 2, 5, 2, 4, 2, 8, 1, 5, 6, 4, 3, 2, 2, 5, 4, 2, 4, 3, 4, 6, 2, 5, 2, 4, 2, 3, 1, 6, 2, 2, 2, 7, 4, 4, 3, 4, 2, 4, 4, 2, 5, 4, 1, 6, 4, 2, 7, 4, 3, 3, 2, 3, 2, 1, 2, 6, 2, 6, 4, 2, 4, 3, 7, 4, 2, 3, 4, 5, 2, 6, 2]
+  [chars] raw_monotonicity     t_0.7856      n_patches=75  avg_bpp=4.1333  lengths_chars=[1, 1, 2, 2, 2, 3, 6, 4, 4, 5, 2, 2, 4, 2, 7, 2, 2, 2, 2, 2, 8, 1, 8, 2, 3, 1, 2, 5, 2, 2, 2, 3, 2, 4, 2, 3, 2, 2, 2, 7, 3, 2, 5, 2, 3, 3, 2, 2, 4, 5, 3, 8, 2, 2, 5, 2, 3, 2, 2, 3, 3, 2, 5, 6, 2, 2, 3, 8, 2, 2, 3, 2, 3, 2, 6]  lengths_bytes=[1, 2, 2, 3, 2, 5, 6, 5, 5, 5, 4, 2, 6, 2, 10, 2, 5, 2, 4, 2, 8, 1, 11, 4, 3, 2, 2, 5, 4, 2, 4, 3, 4, 6, 2, 5, 2, 4, 2, 10, 4, 2, 7, 4, 4, 3, 4, 2, 4, 6, 5, 11, 4, 2, 7, 4, 3, 3, 2, 3, 3, 2, 6, 8, 4, 2, 4, 10, 4, 2, 3, 4, 5, 2, 8]
+  [chars] raw_monotonicity     t_1.1486      n_patches=69  avg_bpp=4.4928  lengths_chars=[1, 1, 2, 2, 2, 3, 6, 4, 4, 5, 2, 2, 4, 2, 7, 4, 2, 2, 2, 8, 1, 8, 2, 3, 1, 2, 5, 2, 2, 2, 3, 2, 4, 2, 5, 2, 2, 7, 3, 2, 5, 2, 3, 3, 2, 2, 4, 5, 11, 4, 5, 2, 3, 2, 2, 8, 5, 6, 2, 2, 3, 8, 2, 2, 3, 2, 3, 2, 6]  lengths_bytes=[1, 2, 2, 3, 2, 5, 6, 5, 5, 5, 4, 2, 6, 2, 10, 7, 2, 4, 2, 8, 1, 11, 4, 3, 2, 2, 5, 4, 2, 4, 3, 4, 6, 2, 7, 4, 2, 10, 4, 2, 7, 4, 4, 3, 4, 2, 4, 6, 16, 6, 7, 4, 3, 3, 2, 8, 6, 8, 4, 2, 4, 10, 4, 2, 3, 4, 5, 2, 8]
+  [chars] raw_monotonicity     t_0.5552      n_patches=83  avg_bpp=3.7349  lengths_chars=[1, 1, 2, 2, 2, 3, 6, 4, 4, 5, 2, 2, 4, 2, 7, 2, 2, 2, 2, 2, 8, 1, 3, 5, 2, 3, 1, 2, 5, 2, 2, 2, 3, 2, 4, 2, 3, 2, 2, 2, 3, 4, 2, 1, 2, 5, 2, 3, 3, 2, 2, 4, 3, 2, 3, 4, 4, 2, 2, 5, 2, 3, 2, 2, 3, 2, 1, 2, 5, 6, 2, 2, 3, 3, 5, 2, 2, 3, 2, 3, 2, 4, 2]  lengths_bytes=[1, 2, 2, 3, 2, 5, 6, 5, 5, 5, 4, 2, 6, 2, 10, 2, 5, 2, 4, 2, 8, 1, 5, 6, 4, 3, 2, 2, 5, 4, 2, 4, 3, 4, 6, 2, 5, 2, 4, 2, 4, 6, 2, 2, 2, 7, 4, 4, 3, 4, 2, 4, 4, 2, 5, 5, 6, 4, 2, 7, 4, 3, 3, 2, 3, 2, 1, 2, 6, 8, 4, 2, 4, 3, 7, 4, 2, 3, 4, 5, 2, 6, 2]

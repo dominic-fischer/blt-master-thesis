@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BLT Entropy Patcher -- Visualisation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #f0f2f8;
+    --surface: #ffffff;
+    --border:  #d0d5e8;
+    --text:    #1a1d2e;
+    --muted:   #5a5f7a;
+    --accent:  #2a6db5;
+    --font:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page-header {
+    max-width: 98vw;
+    margin: 0 auto 2.5rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 1.2rem;
+  }
+  .page-header h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .page-header .subtitle {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
+  .result-card {
+    max-width: 98vw;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.65rem 1rem;
+    background: #e8ecf7;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .label-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(42,109,181,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(42,109,181,0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+    .char-group {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        border: 1px solid #d0d5e8;
+        border-radius: 4px;
+        padding: 3px 5px;
+        background: #ffffff;
+        margin: 2px 1px;
+        vertical-align: bottom;
+    }
+
+    .byte-row {
+        display: flex;
+        flex-direction: row;
+        gap: 1px;
+    }
+
+    .byte-sq {
+        width: 8px;
+        height: 8px;
+        border-radius: 1px;
+    }
+
+    .char-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+    }
+
+  .stats {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+
+  .text-preview {
+    padding: 0.55rem 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .text-preview.expanded {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    }
+
+  .patch-display {
+    padding: 0.85rem 1rem;
+    line-height: 2.4;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+  }
+
+  .patch-token {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 2px 1px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: default;
+    transition: transform 0.1s, box-shadow 0.1s;
+    white-space: pre;
+  }
+  .patch-token:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    z-index: 1;
+    position: relative;
+  }
+
+  .svg-wrap {
+    overflow-x: auto;
+    padding: 1rem;
+  }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>BLT Entropy Patcher &mdash; Visualisation</h1>
+  <p class="subtitle">Per-byte entropy &middot; patch boundaries &middot; byte&harr;character alignment</p>
+</header>
+
+
+        <section class="result-card">
+          <div class="card-header">
+            <span class="label-badge">kor_Hang [0] - char:raw_entropy t_1.8320</span>
+            <span class="stats">
+              <b>82</b> patches &middot; <b>334</b> bytes &middot; avg <b>4.07</b> b/patch
+            </span>
+          </div>
+          <p class="text-preview" dir="auto" ondblclick="this.classList.toggle('expanded')">스탠포드 의과대학 연구진은 지난 월요일 세포를 유형별로 분류할 수 있는 새로운 진단도구를 개발했다고 밝혔다. 이는 아주 작은 크기의 인쇄가 가능한 칩으로, 일반적인 잉크젯 프린터를 이용해 개 당 미화 약 1센트로 생산이 가능할 것으로 예상된다.</p>
+          <div class="patch-display"><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">스</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">탠</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">포</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">드</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">의</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">과</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">대</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">학</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">연</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">구</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">진</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">은</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">지</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">난</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">월</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">요</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">일</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">세</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">포</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">를</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">유</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">형</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">별</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">로</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">분</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">류</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">할</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">수</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">있</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">는</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">새</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">로</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">운</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">진</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">단</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">도</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">구</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">를</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">개</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">발</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">했</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">다</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">고</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">밝</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">혔</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">다</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">.</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">이</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">는</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">아</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">주</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">작</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">은</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">크</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">기</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">의</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">인</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">쇄</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">가</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">가</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">능</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">한</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">칩</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">으</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">로</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">,</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">일</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">반</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">적</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">인</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">잉</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">크</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">젯</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">프</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">린</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">터</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">를</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">이</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">용</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">해</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">개</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">당</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">미</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">화</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">약</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ffff99"></span></span><span class="char-label">1</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span><span class="byte-sq" style="background:#b15928"></span></span><span class="char-label">센</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span><span class="byte-sq" style="background:#a6cee3"></span></span><span class="char-label">트</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span><span class="byte-sq" style="background:#1f78b4"></span></span><span class="char-label">로</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span><span class="byte-sq" style="background:#b2df8a"></span></span><span class="char-label">생</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span><span class="byte-sq" style="background:#33a02c"></span></span><span class="char-label">산</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span><span class="byte-sq" style="background:#fb9a99"></span></span><span class="char-label">이</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span><span class="byte-sq" style="background:#e31a1c"></span></span><span class="char-label">가</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">능</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">할</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">것</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">으</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">로</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">_</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span><span class="byte-sq" style="background:#fdbf6f"></span></span><span class="char-label">예</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span><span class="byte-sq" style="background:#ff7f00"></span></span><span class="char-label">상</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span><span class="byte-sq" style="background:#cab2d6"></span></span><span class="char-label">된</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">다</span></span><span class="char-group"><span class="byte-row"><span class="byte-sq" style="background:#6a3d9a"></span></span><span class="char-label">.</span></span></div>
+          <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="9420" height="386" style="display:block;overflow:visible;"><rect x="0" y="0" width="9420" height="386" fill="#f8f9fc" rx="0"/>
+<rect x="52" y="16" width="9352" height="280" fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>
+<line x1="52" y1="296.0" x2="9404" y2="296.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="300.0" text-anchor="end" font-size="9" fill="#888">0.0</text>
+<line x1="52" y1="256.0" x2="9404" y2="256.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="260.0" text-anchor="end" font-size="9" fill="#888">1.0</text>
+<line x1="52" y1="216.0" x2="9404" y2="216.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="220.0" text-anchor="end" font-size="9" fill="#888">2.0</text>
+<line x1="52" y1="176.0" x2="9404" y2="176.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="180.0" text-anchor="end" font-size="9" fill="#888">3.0</text>
+<line x1="52" y1="136.0" x2="9404" y2="136.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="140.0" text-anchor="end" font-size="9" fill="#888">4.0</text>
+<line x1="52" y1="96.0" x2="9404" y2="96.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="100.0" text-anchor="end" font-size="9" fill="#888">5.0</text>
+<line x1="52" y1="56.0" x2="9404" y2="56.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="60.0" text-anchor="end" font-size="9" fill="#888">6.0</text>
+<line x1="52" y1="16.0" x2="9404" y2="16.0" stroke="#e0e4f0" stroke-width="0.8"/>
+<text x="48" y="20.0" text-anchor="end" font-size="9" fill="#888">7.0</text>
+<line x1="52" y1="222.7" x2="9404" y2="222.7" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="5,4"/>
+<text x="9407" y="226.7" font-size="9" fill="#c0392b">t=1.83</text>
+<line x1="136" y1="16" x2="136" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="220" y1="16" x2="220" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="304" y1="16" x2="304" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="388" y1="16" x2="388" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="416" y1="16" x2="416" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="500" y1="16" x2="500" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="584" y1="16" x2="584" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="668" y1="16" x2="668" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="752" y1="16" x2="752" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="780" y1="16" x2="780" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="864" y1="16" x2="864" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="948" y1="16" x2="948" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1032" y1="16" x2="1032" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1116" y1="16" x2="1116" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1144" y1="16" x2="1144" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1228" y1="16" x2="1228" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1312" y1="16" x2="1312" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1340" y1="16" x2="1340" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1424" y1="16" x2="1424" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1508" y1="16" x2="1508" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1620" y1="16" x2="1620" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1704" y1="16" x2="1704" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1788" y1="16" x2="1788" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1872" y1="16" x2="1872" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1984" y1="16" x2="1984" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2068" y1="16" x2="2068" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2152" y1="16" x2="2152" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2348" y1="16" x2="2348" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2432" y1="16" x2="2432" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="2936" y1="16" x2="2936" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3216" y1="16" x2="3216" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3300" y1="16" x2="3300" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3384" y1="16" x2="3384" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3468" y1="16" x2="3468" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3552" y1="16" x2="3552" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3664" y1="16" x2="3664" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="3748" y1="16" x2="3748" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4112" y1="16" x2="4112" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4420" y1="16" x2="4420" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4504" y1="16" x2="4504" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4616" y1="16" x2="4616" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4700" y1="16" x2="4700" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="4812" y1="16" x2="4812" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5008" y1="16" x2="5008" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5092" y1="16" x2="5092" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5176" y1="16" x2="5176" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5288" y1="16" x2="5288" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5372" y1="16" x2="5372" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5456" y1="16" x2="5456" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5568" y1="16" x2="5568" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5652" y1="16" x2="5652" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5736" y1="16" x2="5736" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5848" y1="16" x2="5848" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="5932" y1="16" x2="5932" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6156" y1="16" x2="6156" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6240" y1="16" x2="6240" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6520" y1="16" x2="6520" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6604" y1="16" x2="6604" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6688" y1="16" x2="6688" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6800" y1="16" x2="6800" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6884" y1="16" x2="6884" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="6968" y1="16" x2="6968" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7164" y1="16" x2="7164" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7332" y1="16" x2="7332" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7444" y1="16" x2="7444" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7556" y1="16" x2="7556" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7668" y1="16" x2="7668" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7752" y1="16" x2="7752" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7864" y1="16" x2="7864" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7892" y1="16" x2="7892" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="7920" y1="16" x2="7920" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8004" y1="16" x2="8004" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8088" y1="16" x2="8088" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8172" y1="16" x2="8172" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8284" y1="16" x2="8284" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8368" y1="16" x2="8368" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8452" y1="16" x2="8452" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="8564" y1="16" x2="8564" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9124" y1="16" x2="9124" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9208" y1="16" x2="9208" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="9292" y1="16" x2="9292" y2="296" stroke="rgba(180,60,60,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+<polygon points="94.0,296 94.0,136.3 178.0,139.4 262.0,178.3 346.0,84.6 402.0,215.3 458.0,24.2 542.0,155.8 626.0,120.9 710.0,165.8 766.0,208.3 822.0,61.8 906.0,166.0 990.0,80.0 1074.0,175.5 1130.0,214.8 1186.0,66.1 1270.0,165.1 1326.0,206.6 1382.0,46.8 1466.0,190.1 1550.0,232.1 1606.0,206.4 1662.0,59.1 1746.0,172.3 1830.0,202.3 1886.0,241.5 1942.0,129.9 2026.0,156.7 2110.0,113.9 2194.0,284.8 2250.0,239.2 2306.0,87.3 2390.0,139.1 2474.0,241.1 2530.0,267.0 2586.0,272.6 2642.0,295.8 2698.0,252.8 2782.0,239.1 2838.0,230.6 2894.0,105.6 2978.0,272.1 3062.0,292.3 3118.0,236.7 3174.0,104.9 3258.0,127.6 3342.0,157.5 3426.0,206.3 3510.0,220.1 3566.0,245.9 3622.0,122.1 3706.0,206.7 3790.0,243.7 3874.0,256.3 3958.0,261.3 4014.0,239.4 4070.0,181.1 4154.0,264.8 4238.0,269.5 4294.0,268.3 4322.0,228.8 4378.0,97.2 4462.0,205.2 4518.0,235.8 4574.0,59.1 4658.0,193.1 4714.0,246.3 4770.0,37.9 4854.0,230.8 4910.0,237.8 4966.0,118.9 5050.0,194.7 5134.0,209.7 5190.0,241.8 5246.0,59.6 5330.0,119.4 5414.0,222.7 5470.0,243.6 5526.0,98.0 5610.0,189.9 5694.0,218.8 5750.0,244.5 5806.0,65.3 5890.0,200.7 5974.0,266.1 6030.0,294.8 6058.0,246.2 6114.0,74.9 6198.0,186.4 6282.0,261.3 6366.0,255.3 6422.0,246.0 6478.0,95.6 6562.0,174.0 6646.0,103.4 6702.0,241.8 6758.0,142.4 6842.0,180.4 6926.0,183.0 7010.0,229.9 7066.0,244.6 7122.0,68.8 7206.0,266.5 7290.0,215.1 7346.0,241.1 7402.0,139.4 7458.0,248.8 7514.0,96.9 7570.0,241.6 7626.0,115.5 7710.0,103.5 7766.0,248.5 7822.0,39.8 7878.0,205.9 7906.0,194.2 7962.0,135.9 8046.0,213.9 8130.0,192.1 8186.0,247.3 8242.0,67.5 8326.0,220.9 8410.0,127.0 8466.0,247.5 8522.0,144.6 8606.0,262.6 8690.0,226.3 8746.0,250.7 8802.0,249.1 8886.0,262.0 8970.0,280.3 9026.0,241.2 9082.0,111.7 9166.0,196.7 9250.0,222.0 9334.0,273.9 9390.0,260.7 9390.0,296" fill="rgba(42,109,181,0.08)"/>
+<polyline points="94.0,136.3 178.0,139.4 262.0,178.3 346.0,84.6 402.0,215.3 458.0,24.2 542.0,155.8 626.0,120.9 710.0,165.8 766.0,208.3 822.0,61.8 906.0,166.0 990.0,80.0 1074.0,175.5 1130.0,214.8 1186.0,66.1 1270.0,165.1 1326.0,206.6 1382.0,46.8 1466.0,190.1 1550.0,232.1 1606.0,206.4 1662.0,59.1 1746.0,172.3 1830.0,202.3 1886.0,241.5 1942.0,129.9 2026.0,156.7 2110.0,113.9 2194.0,284.8 2250.0,239.2 2306.0,87.3 2390.0,139.1 2474.0,241.1 2530.0,267.0 2586.0,272.6 2642.0,295.8 2698.0,252.8 2782.0,239.1 2838.0,230.6 2894.0,105.6 2978.0,272.1 3062.0,292.3 3118.0,236.7 3174.0,104.9 3258.0,127.6 3342.0,157.5 3426.0,206.3 3510.0,220.1 3566.0,245.9 3622.0,122.1 3706.0,206.7 3790.0,243.7 3874.0,256.3 3958.0,261.3 4014.0,239.4 4070.0,181.1 4154.0,264.8 4238.0,269.5 4294.0,268.3 4322.0,228.8 4378.0,97.2 4462.0,205.2 4518.0,235.8 4574.0,59.1 4658.0,193.1 4714.0,246.3 4770.0,37.9 4854.0,230.8 4910.0,237.8 4966.0,118.9 5050.0,194.7 5134.0,209.7 5190.0,241.8 5246.0,59.6 5330.0,119.4 5414.0,222.7 5470.0,243.6 5526.0,98.0 5610.0,189.9 5694.0,218.8 5750.0,244.5 5806.0,65.3 5890.0,200.7 5974.0,266.1 6030.0,294.8 6058.0,246.2 6114.0,74.9 6198.0,186.4 6282.0,261.3 6366.0,255.3 6422.0,246.0 6478.0,95.6 6562.0,174.0 6646.0,103.4 6702.0,241.8 6758.0,142.4 6842.0,180.4 6926.0,183.0 7010.0,229.9 7066.0,244.6 7122.0,68.8 7206.0,266.5 7290.0,215.1 7346.0,241.1 7402.0,139.4 7458.0,248.8 7514.0,96.9 7570.0,241.6 7626.0,115.5 7710.0,103.5 7766.0,248.5 7822.0,39.8 7878.0,205.9 7906.0,194.2 7962.0,135.9 8046.0,213.9 8130.0,192.1 8186.0,247.3 8242.0,67.5 8326.0,220.9 8410.0,127.0 8466.0,247.5 8522.0,144.6 8606.0,262.6 8690.0,226.3 8746.0,250.7 8802.0,249.1 8886.0,262.0 8970.0,280.3 9026.0,241.2 9082.0,111.7 9166.0,196.7 9250.0,222.0 9334.0,273.9 9390.0,260.7" fill="none" stroke="#2a6db5" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="94.0" cy="136.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="178.0" cy="139.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="262.0" cy="178.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="346.0" cy="84.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="402.0" cy="215.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="458.0" cy="24.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="542.0" cy="155.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="626.0" cy="120.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="710.0" cy="165.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="766.0" cy="208.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="822.0" cy="61.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="906.0" cy="166.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="990.0" cy="80.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1074.0" cy="175.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1130.0" cy="214.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1186.0" cy="66.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1270.0" cy="165.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1326.0" cy="206.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1382.0" cy="46.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1466.0" cy="190.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1550.0" cy="232.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1606.0" cy="206.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1662.0" cy="59.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1746.0" cy="172.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1830.0" cy="202.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1886.0" cy="241.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="1942.0" cy="129.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2026.0" cy="156.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2110.0" cy="113.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2194.0" cy="284.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2250.0" cy="239.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2306.0" cy="87.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2390.0" cy="139.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2474.0" cy="241.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2530.0" cy="267.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2586.0" cy="272.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2642.0" cy="295.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2698.0" cy="252.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2782.0" cy="239.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2838.0" cy="230.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2894.0" cy="105.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="2978.0" cy="272.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3062.0" cy="292.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3118.0" cy="236.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3174.0" cy="104.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3258.0" cy="127.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3342.0" cy="157.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3426.0" cy="206.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3510.0" cy="220.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3566.0" cy="245.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3622.0" cy="122.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3706.0" cy="206.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3790.0" cy="243.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3874.0" cy="256.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="3958.0" cy="261.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4014.0" cy="239.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4070.0" cy="181.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4154.0" cy="264.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4238.0" cy="269.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4294.0" cy="268.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4322.0" cy="228.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4378.0" cy="97.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4462.0" cy="205.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4518.0" cy="235.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4574.0" cy="59.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4658.0" cy="193.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4714.0" cy="246.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4770.0" cy="37.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4854.0" cy="230.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4910.0" cy="237.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="4966.0" cy="118.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5050.0" cy="194.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5134.0" cy="209.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5190.0" cy="241.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5246.0" cy="59.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5330.0" cy="119.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5414.0" cy="222.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5470.0" cy="243.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5526.0" cy="98.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5610.0" cy="189.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5694.0" cy="218.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5750.0" cy="244.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5806.0" cy="65.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5890.0" cy="200.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="5974.0" cy="266.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6030.0" cy="294.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6058.0" cy="246.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6114.0" cy="74.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6198.0" cy="186.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6282.0" cy="261.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6366.0" cy="255.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6422.0" cy="246.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6478.0" cy="95.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6562.0" cy="174.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6646.0" cy="103.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6702.0" cy="241.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6758.0" cy="142.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6842.0" cy="180.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="6926.0" cy="183.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7010.0" cy="229.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7066.0" cy="244.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7122.0" cy="68.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7206.0" cy="266.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7290.0" cy="215.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7346.0" cy="241.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7402.0" cy="139.4" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7458.0" cy="248.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7514.0" cy="96.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7570.0" cy="241.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7626.0" cy="115.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7710.0" cy="103.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7766.0" cy="248.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7822.0" cy="39.8" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7878.0" cy="205.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7906.0" cy="194.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="7962.0" cy="135.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8046.0" cy="213.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8130.0" cy="192.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8186.0" cy="247.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8242.0" cy="67.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8326.0" cy="220.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8410.0" cy="127.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8466.0" cy="247.5" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8522.0" cy="144.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8606.0" cy="262.6" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8690.0" cy="226.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8746.0" cy="250.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8802.0" cy="249.1" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8886.0" cy="262.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="8970.0" cy="280.3" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9026.0" cy="241.2" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9082.0" cy="111.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9166.0" cy="196.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9250.0" cy="222.0" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9334.0" cy="273.9" r="2" fill="#2a6db5" opacity="0.7"/>
+<circle cx="9390.0" cy="260.7" r="2" fill="#2a6db5" opacity="0.7"/>
+<text x="10" y="156" text-anchor="middle" font-size="10" fill="#444" transform="rotate(-90, 10, 156)">Summed entropy per CHARACTER</text>
+<text x="66.0" y="309" text-anchor="middle" font-size="8" fill="#555">0</text>
+<text x="290.0" y="309" text-anchor="middle" font-size="8" fill="#555">8</text>
+<text x="514.0" y="309" text-anchor="middle" font-size="8" fill="#555">16</text>
+<text x="738.0" y="309" text-anchor="middle" font-size="8" fill="#555">24</text>
+<text x="962.0" y="309" text-anchor="middle" font-size="8" fill="#555">32</text>
+<text x="1186.0" y="309" text-anchor="middle" font-size="8" fill="#555">40</text>
+<text x="1410.0" y="309" text-anchor="middle" font-size="8" fill="#555">48</text>
+<text x="1634.0" y="309" text-anchor="middle" font-size="8" fill="#555">56</text>
+<text x="1858.0" y="309" text-anchor="middle" font-size="8" fill="#555">64</text>
+<text x="2082.0" y="309" text-anchor="middle" font-size="8" fill="#555">72</text>
+<text x="2306.0" y="309" text-anchor="middle" font-size="8" fill="#555">80</text>
+<text x="2530.0" y="309" text-anchor="middle" font-size="8" fill="#555">88</text>
+<text x="2754.0" y="309" text-anchor="middle" font-size="8" fill="#555">96</text>
+<text x="2978.0" y="309" text-anchor="middle" font-size="8" fill="#555">104</text>
+<text x="3202.0" y="309" text-anchor="middle" font-size="8" fill="#555">112</text>
+<text x="3426.0" y="309" text-anchor="middle" font-size="8" fill="#555">120</text>
+<text x="3650.0" y="309" text-anchor="middle" font-size="8" fill="#555">128</text>
+<text x="3874.0" y="309" text-anchor="middle" font-size="8" fill="#555">136</text>
+<text x="4098.0" y="309" text-anchor="middle" font-size="8" fill="#555">144</text>
+<text x="4322.0" y="309" text-anchor="middle" font-size="8" fill="#555">152</text>
+<text x="4546.0" y="309" text-anchor="middle" font-size="8" fill="#555">160</text>
+<text x="4770.0" y="309" text-anchor="middle" font-size="8" fill="#555">168</text>
+<text x="4994.0" y="309" text-anchor="middle" font-size="8" fill="#555">176</text>
+<text x="5218.0" y="309" text-anchor="middle" font-size="8" fill="#555">184</text>
+<text x="5442.0" y="309" text-anchor="middle" font-size="8" fill="#555">192</text>
+<text x="5666.0" y="309" text-anchor="middle" font-size="8" fill="#555">200</text>
+<text x="5890.0" y="309" text-anchor="middle" font-size="8" fill="#555">208</text>
+<text x="6114.0" y="309" text-anchor="middle" font-size="8" fill="#555">216</text>
+<text x="6338.0" y="309" text-anchor="middle" font-size="8" fill="#555">224</text>
+<text x="6562.0" y="309" text-anchor="middle" font-size="8" fill="#555">232</text>
+<text x="6786.0" y="309" text-anchor="middle" font-size="8" fill="#555">240</text>
+<text x="7010.0" y="309" text-anchor="middle" font-size="8" fill="#555">248</text>
+<text x="7234.0" y="309" text-anchor="middle" font-size="8" fill="#555">256</text>
+<text x="7458.0" y="309" text-anchor="middle" font-size="8" fill="#555">264</text>
+<text x="7682.0" y="309" text-anchor="middle" font-size="8" fill="#555">272</text>
+<text x="7906.0" y="309" text-anchor="middle" font-size="8" fill="#555">280</text>
+<text x="8130.0" y="309" text-anchor="middle" font-size="8" fill="#555">288</text>
+<text x="8354.0" y="309" text-anchor="middle" font-size="8" fill="#555">296</text>
+<text x="8578.0" y="309" text-anchor="middle" font-size="8" fill="#555">304</text>
+<text x="8802.0" y="309" text-anchor="middle" font-size="8" fill="#555">312</text>
+<text x="9026.0" y="309" text-anchor="middle" font-size="8" fill="#555">320</text>
+<text x="9250.0" y="309" text-anchor="middle" font-size="8" fill="#555">328</text>
+<rect x="52" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="136" y="332" width="84" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="220" y="332" width="84" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="304" y="332" width="84" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="388" y="332" width="28" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="416" y="332" width="84" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="500" y="332" width="84" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="584" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="668" y="332" width="84" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="752" y="332" width="28" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="780" y="332" width="84" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="864" y="332" width="84" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="948" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="1032" y="332" width="84" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="1116" y="332" width="28" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="1144" y="332" width="84" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="1228" y="332" width="84" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="1312" y="332" width="28" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="1340" y="332" width="84" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="1424" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="1508" y="332" width="112" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="1620" y="332" width="84" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="1704" y="332" width="84" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="1788" y="332" width="84" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="1872" y="332" width="112" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="1984" y="332" width="84" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="2068" y="332" width="84" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="2152" y="332" width="196" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="2348" y="332" width="84" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="2432" y="332" width="504" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="2936" y="332" width="280" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="3216" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="3300" y="332" width="84" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="3384" y="332" width="84" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="3468" y="332" width="84" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="3552" y="332" width="112" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="3664" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="3748" y="332" width="364" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="4112" y="332" width="308" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="4420" y="332" width="84" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="4504" y="332" width="112" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="4616" y="332" width="84" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="4700" y="332" width="112" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="4812" y="332" width="196" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="5008" y="332" width="84" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="5092" y="332" width="84" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="5176" y="332" width="112" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="5288" y="332" width="84" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="5372" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="5456" y="332" width="112" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="5568" y="332" width="84" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="5652" y="332" width="84" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="5736" y="332" width="112" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="5848" y="332" width="84" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="5932" y="332" width="224" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="6156" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="6240" y="332" width="280" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="6520" y="332" width="84" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="6604" y="332" width="84" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="6688" y="332" width="112" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="6800" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="6884" y="332" width="84" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="6968" y="332" width="196" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="7164" y="332" width="168" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="7332" y="332" width="112" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="7444" y="332" width="112" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="7556" y="332" width="112" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="7668" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="7752" y="332" width="112" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="7864" y="332" width="28" height="22" fill="#6a3d9a" opacity="0.85"/>
+<rect x="7892" y="332" width="28" height="22" fill="#ffff99" opacity="0.85"/>
+<rect x="7920" y="332" width="84" height="22" fill="#b15928" opacity="0.85"/>
+<rect x="8004" y="332" width="84" height="22" fill="#a6cee3" opacity="0.85"/>
+<rect x="8088" y="332" width="84" height="22" fill="#1f78b4" opacity="0.85"/>
+<rect x="8172" y="332" width="112" height="22" fill="#b2df8a" opacity="0.85"/>
+<rect x="8284" y="332" width="84" height="22" fill="#33a02c" opacity="0.85"/>
+<rect x="8368" y="332" width="84" height="22" fill="#fb9a99" opacity="0.85"/>
+<rect x="8452" y="332" width="112" height="22" fill="#e31a1c" opacity="0.85"/>
+<rect x="8564" y="332" width="560" height="22" fill="#fdbf6f" opacity="0.85"/>
+<rect x="9124" y="332" width="84" height="22" fill="#ff7f00" opacity="0.85"/>
+<rect x="9208" y="332" width="84" height="22" fill="#cab2d6" opacity="0.85"/>
+<rect x="9292" y="332" width="112" height="22" fill="#6a3d9a" opacity="0.85"/>
+<line x1="52" y1="314" x2="9404" y2="314" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="332" x2="9404" y2="332" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="354" x2="9404" y2="354" stroke="#d0d5e8" stroke-width="0.8"/>
+<line x1="52" y1="378" x2="9404" y2="378" stroke="#d0d5e8" stroke-width="0.8"/>
+<text x="47" y="327.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">idx</text>
+<text x="47" y="347.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">byte</text>
+<text x="47" y="370.0" text-anchor="end" font-size="9" fill="#888" font-weight="bold">char</text>
+<text x="66.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">0</text>
+<text x="94.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">1</text>
+<text x="122.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">2</text>
+<text x="150.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">3</text>
+<text x="178.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">4</text>
+<text x="206.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">5</text>
+<text x="234.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">6</text>
+<text x="262.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">7</text>
+<text x="290.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">8</text>
+<text x="318.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">9</text>
+<text x="346.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">10</text>
+<text x="374.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">11</text>
+<text x="402.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">12</text>
+<text x="430.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">13</text>
+<text x="458.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">14</text>
+<text x="486.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">15</text>
+<text x="514.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">16</text>
+<text x="542.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">17</text>
+<text x="570.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">18</text>
+<text x="598.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">19</text>
+<text x="626.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">20</text>
+<text x="654.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">21</text>
+<text x="682.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">22</text>
+<text x="710.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">23</text>
+<text x="738.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">24</text>
+<text x="766.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">25</text>
+<text x="794.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">26</text>
+<text x="822.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">27</text>
+<text x="850.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">28</text>
+<text x="878.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">29</text>
+<text x="906.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">30</text>
+<text x="934.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">31</text>
+<text x="962.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">32</text>
+<text x="990.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">33</text>
+<text x="1018.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">34</text>
+<text x="1046.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">35</text>
+<text x="1074.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">36</text>
+<text x="1102.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">37</text>
+<text x="1130.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">38</text>
+<text x="1158.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">39</text>
+<text x="1186.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">40</text>
+<text x="1214.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">41</text>
+<text x="1242.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">42</text>
+<text x="1270.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">43</text>
+<text x="1298.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">44</text>
+<text x="1326.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">45</text>
+<text x="1354.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">46</text>
+<text x="1382.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">47</text>
+<text x="1410.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">48</text>
+<text x="1438.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">49</text>
+<text x="1466.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">50</text>
+<text x="1494.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">51</text>
+<text x="1522.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">52</text>
+<text x="1550.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">53</text>
+<text x="1578.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">54</text>
+<text x="1606.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">55</text>
+<text x="1634.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">56</text>
+<text x="1662.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">57</text>
+<text x="1690.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">58</text>
+<text x="1718.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">59</text>
+<text x="1746.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">60</text>
+<text x="1774.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">61</text>
+<text x="1802.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">62</text>
+<text x="1830.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">63</text>
+<text x="1858.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">64</text>
+<text x="1886.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">65</text>
+<text x="1914.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">66</text>
+<text x="1942.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">67</text>
+<text x="1970.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">68</text>
+<text x="1998.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">69</text>
+<text x="2026.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">70</text>
+<text x="2054.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">71</text>
+<text x="2082.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">72</text>
+<text x="2110.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">73</text>
+<text x="2138.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">74</text>
+<text x="2166.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">75</text>
+<text x="2194.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">76</text>
+<text x="2222.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">77</text>
+<text x="2250.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">78</text>
+<text x="2278.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">79</text>
+<text x="2306.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">80</text>
+<text x="2334.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">81</text>
+<text x="2362.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">82</text>
+<text x="2390.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">83</text>
+<text x="2418.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">84</text>
+<text x="2446.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">85</text>
+<text x="2474.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">86</text>
+<text x="2502.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">87</text>
+<text x="2530.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">88</text>
+<text x="2558.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">89</text>
+<text x="2586.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">90</text>
+<text x="2614.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">91</text>
+<text x="2642.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">92</text>
+<text x="2670.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">93</text>
+<text x="2698.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">94</text>
+<text x="2726.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">95</text>
+<text x="2754.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">96</text>
+<text x="2782.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">97</text>
+<text x="2810.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">98</text>
+<text x="2838.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">99</text>
+<text x="2866.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">100</text>
+<text x="2894.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">101</text>
+<text x="2922.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">102</text>
+<text x="2950.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">103</text>
+<text x="2978.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">104</text>
+<text x="3006.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">105</text>
+<text x="3034.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">106</text>
+<text x="3062.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">107</text>
+<text x="3090.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">108</text>
+<text x="3118.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">109</text>
+<text x="3146.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">110</text>
+<text x="3174.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">111</text>
+<text x="3202.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">112</text>
+<text x="3230.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">113</text>
+<text x="3258.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">114</text>
+<text x="3286.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">115</text>
+<text x="3314.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">116</text>
+<text x="3342.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">117</text>
+<text x="3370.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">118</text>
+<text x="3398.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">119</text>
+<text x="3426.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">120</text>
+<text x="3454.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">121</text>
+<text x="3482.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">122</text>
+<text x="3510.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">123</text>
+<text x="3538.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">124</text>
+<text x="3566.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">125</text>
+<text x="3594.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">126</text>
+<text x="3622.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">127</text>
+<text x="3650.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">128</text>
+<text x="3678.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">129</text>
+<text x="3706.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">130</text>
+<text x="3734.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">131</text>
+<text x="3762.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">132</text>
+<text x="3790.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">133</text>
+<text x="3818.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">134</text>
+<text x="3846.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">135</text>
+<text x="3874.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">136</text>
+<text x="3902.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">137</text>
+<text x="3930.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">138</text>
+<text x="3958.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">139</text>
+<text x="3986.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">140</text>
+<text x="4014.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">141</text>
+<text x="4042.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">142</text>
+<text x="4070.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">143</text>
+<text x="4098.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">144</text>
+<text x="4126.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">145</text>
+<text x="4154.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">146</text>
+<text x="4182.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">147</text>
+<text x="4210.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">148</text>
+<text x="4238.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">149</text>
+<text x="4266.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">150</text>
+<text x="4294.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">151</text>
+<text x="4322.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">152</text>
+<text x="4350.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">153</text>
+<text x="4378.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">154</text>
+<text x="4406.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">155</text>
+<text x="4434.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">156</text>
+<text x="4462.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">157</text>
+<text x="4490.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">158</text>
+<text x="4518.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">159</text>
+<text x="4546.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">160</text>
+<text x="4574.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">161</text>
+<text x="4602.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">162</text>
+<text x="4630.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">163</text>
+<text x="4658.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">164</text>
+<text x="4686.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">165</text>
+<text x="4714.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">166</text>
+<text x="4742.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">167</text>
+<text x="4770.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">168</text>
+<text x="4798.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">169</text>
+<text x="4826.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">170</text>
+<text x="4854.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">171</text>
+<text x="4882.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">172</text>
+<text x="4910.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">173</text>
+<text x="4938.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">174</text>
+<text x="4966.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">175</text>
+<text x="4994.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">176</text>
+<text x="5022.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">177</text>
+<text x="5050.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">178</text>
+<text x="5078.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">179</text>
+<text x="5106.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">180</text>
+<text x="5134.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">181</text>
+<text x="5162.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">182</text>
+<text x="5190.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">183</text>
+<text x="5218.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">184</text>
+<text x="5246.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">185</text>
+<text x="5274.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">186</text>
+<text x="5302.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">187</text>
+<text x="5330.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">188</text>
+<text x="5358.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">189</text>
+<text x="5386.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">190</text>
+<text x="5414.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">191</text>
+<text x="5442.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">192</text>
+<text x="5470.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">193</text>
+<text x="5498.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">194</text>
+<text x="5526.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">195</text>
+<text x="5554.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">196</text>
+<text x="5582.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">197</text>
+<text x="5610.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">198</text>
+<text x="5638.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">199</text>
+<text x="5666.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">200</text>
+<text x="5694.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">201</text>
+<text x="5722.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">202</text>
+<text x="5750.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">203</text>
+<text x="5778.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">204</text>
+<text x="5806.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">205</text>
+<text x="5834.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">206</text>
+<text x="5862.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">207</text>
+<text x="5890.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">208</text>
+<text x="5918.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">209</text>
+<text x="5946.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">210</text>
+<text x="5974.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">211</text>
+<text x="6002.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">212</text>
+<text x="6030.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">213</text>
+<text x="6058.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">214</text>
+<text x="6086.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">215</text>
+<text x="6114.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">216</text>
+<text x="6142.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">217</text>
+<text x="6170.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">218</text>
+<text x="6198.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">219</text>
+<text x="6226.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">220</text>
+<text x="6254.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">221</text>
+<text x="6282.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">222</text>
+<text x="6310.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">223</text>
+<text x="6338.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">224</text>
+<text x="6366.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">225</text>
+<text x="6394.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">226</text>
+<text x="6422.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">227</text>
+<text x="6450.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">228</text>
+<text x="6478.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">229</text>
+<text x="6506.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">230</text>
+<text x="6534.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">231</text>
+<text x="6562.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">232</text>
+<text x="6590.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">233</text>
+<text x="6618.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">234</text>
+<text x="6646.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">235</text>
+<text x="6674.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">236</text>
+<text x="6702.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">237</text>
+<text x="6730.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">238</text>
+<text x="6758.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">239</text>
+<text x="6786.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">240</text>
+<text x="6814.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">241</text>
+<text x="6842.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">242</text>
+<text x="6870.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">243</text>
+<text x="6898.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">244</text>
+<text x="6926.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">245</text>
+<text x="6954.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">246</text>
+<text x="6982.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">247</text>
+<text x="7010.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">248</text>
+<text x="7038.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">249</text>
+<text x="7066.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">250</text>
+<text x="7094.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">251</text>
+<text x="7122.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">252</text>
+<text x="7150.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">253</text>
+<text x="7178.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">254</text>
+<text x="7206.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">255</text>
+<text x="7234.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">256</text>
+<text x="7262.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">257</text>
+<text x="7290.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">258</text>
+<text x="7318.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">259</text>
+<text x="7346.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">260</text>
+<text x="7374.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">261</text>
+<text x="7402.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">262</text>
+<text x="7430.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">263</text>
+<text x="7458.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">264</text>
+<text x="7486.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">265</text>
+<text x="7514.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">266</text>
+<text x="7542.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">267</text>
+<text x="7570.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">268</text>
+<text x="7598.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">269</text>
+<text x="7626.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">270</text>
+<text x="7654.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">271</text>
+<text x="7682.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">272</text>
+<text x="7710.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">273</text>
+<text x="7738.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">274</text>
+<text x="7766.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">275</text>
+<text x="7794.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">276</text>
+<text x="7822.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">277</text>
+<text x="7850.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">278</text>
+<text x="7878.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">279</text>
+<text x="7906.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">280</text>
+<text x="7934.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">281</text>
+<text x="7962.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">282</text>
+<text x="7990.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">283</text>
+<text x="8018.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">284</text>
+<text x="8046.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">285</text>
+<text x="8074.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">286</text>
+<text x="8102.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">287</text>
+<text x="8130.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">288</text>
+<text x="8158.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">289</text>
+<text x="8186.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">290</text>
+<text x="8214.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">291</text>
+<text x="8242.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">292</text>
+<text x="8270.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">293</text>
+<text x="8298.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">294</text>
+<text x="8326.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">295</text>
+<text x="8354.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">296</text>
+<text x="8382.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">297</text>
+<text x="8410.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">298</text>
+<text x="8438.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">299</text>
+<text x="8466.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">300</text>
+<text x="8494.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">301</text>
+<text x="8522.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">302</text>
+<text x="8550.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">303</text>
+<text x="8578.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">304</text>
+<text x="8606.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">305</text>
+<text x="8634.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">306</text>
+<text x="8662.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">307</text>
+<text x="8690.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">308</text>
+<text x="8718.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">309</text>
+<text x="8746.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">310</text>
+<text x="8774.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">311</text>
+<text x="8802.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">312</text>
+<text x="8830.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">313</text>
+<text x="8858.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">314</text>
+<text x="8886.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">315</text>
+<text x="8914.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">316</text>
+<text x="8942.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">317</text>
+<text x="8970.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">318</text>
+<text x="8998.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">319</text>
+<text x="9026.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">320</text>
+<text x="9054.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">321</text>
+<text x="9082.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">322</text>
+<text x="9110.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">323</text>
+<text x="9138.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">324</text>
+<text x="9166.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">325</text>
+<text x="9194.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">326</text>
+<text x="9222.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">327</text>
+<text x="9250.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">328</text>
+<text x="9278.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">329</text>
+<text x="9306.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">330</text>
+<text x="9334.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">331</text>
+<text x="9362.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">332</text>
+<text x="9390.0" y="327" text-anchor="middle" font-size="8" fill="#aaa">333</text>
+<text x="66.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">236</text>
+<text x="94.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">138</text>
+<text x="122.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">164</text>
+<text x="150.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">237</text>
+<text x="178.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">131</text>
+<text x="206.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">160</text>
+<text x="234.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">237</text>
+<text x="262.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">143</text>
+<text x="290.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">172</text>
+<text x="318.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">235</text>
+<text x="346.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">147</text>
+<text x="374.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">156</text>
+<text x="402.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="430.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="458.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">157</text>
+<text x="486.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">152</text>
+<text x="514.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">234</text>
+<text x="542.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">179</text>
+<text x="570.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">188</text>
+<text x="598.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">235</text>
+<text x="626.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">140</text>
+<text x="654.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">128</text>
+<text x="682.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">237</text>
+<text x="710.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">149</text>
+<text x="738.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">153</text>
+<text x="766.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">32</text>
+<text x="794.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">236</text>
+<text x="822.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">151</text>
+<text x="850.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">176</text>
+<text x="878.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">234</text>
+<text x="906.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">181</text>
+<text x="934.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">172</text>
+<text x="962.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">236</text>
+<text x="990.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">167</text>
+<text x="1018.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">132</text>
+<text x="1046.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">236</text>
+<text x="1074.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">157</text>
+<text x="1102.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">128</text>
+<text x="1130.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">32</text>
+<text x="1158.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">236</text>
+<text x="1186.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">167</text>
+<text x="1214.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">128</text>
+<text x="1242.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">235</text>
+<text x="1270.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">130</text>
+<text x="1298.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">156</text>
+<text x="1326.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="1354.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="1382.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">155</text>
+<text x="1410.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">148</text>
+<text x="1438.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">236</text>
+<text x="1466.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">154</text>
+<text x="1494.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">148</text>
+<text x="1522.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">236</text>
+<text x="1550.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">157</text>
+<text x="1578.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">188</text>
+<text x="1606.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">32</text>
+<text x="1634.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">236</text>
+<text x="1662.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">132</text>
+<text x="1690.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">184</text>
+<text x="1718.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">237</text>
+<text x="1746.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">143</text>
+<text x="1774.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">172</text>
+<text x="1802.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">235</text>
+<text x="1830.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">165</text>
+<text x="1858.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">188</text>
+<text x="1886.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">32</text>
+<text x="1914.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">236</text>
+<text x="1942.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">156</text>
+<text x="1970.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">160</text>
+<text x="1998.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">237</text>
+<text x="2026.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">152</text>
+<text x="2054.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">149</text>
+<text x="2082.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">235</text>
+<text x="2110.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">179</text>
+<text x="2138.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">132</text>
+<text x="2166.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">235</text>
+<text x="2194.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">161</text>
+<text x="2222.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">156</text>
+<text x="2250.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">32</text>
+<text x="2278.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">235</text>
+<text x="2306.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">182</text>
+<text x="2334.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">132</text>
+<text x="2362.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">235</text>
+<text x="2390.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">165</text>
+<text x="2418.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">152</text>
+<text x="2446.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">237</text>
+<text x="2474.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">149</text>
+<text x="2502.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">160</text>
+<text x="2530.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="2558.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="2586.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="2614.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">152</text>
+<text x="2642.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="2670.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="2698.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">158</text>
+<text x="2726.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="2754.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">235</text>
+<text x="2782.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">138</text>
+<text x="2810.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">148</text>
+<text x="2838.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="2866.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="2894.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">131</text>
+<text x="2922.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">136</text>
+<text x="2950.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">235</text>
+<text x="2978.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">161</text>
+<text x="3006.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">156</text>
+<text x="3034.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="3062.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">154</text>
+<text x="3090.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">180</text>
+<text x="3118.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="3146.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="3174.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">167</text>
+<text x="3202.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">132</text>
+<text x="3230.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">235</text>
+<text x="3258.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">139</text>
+<text x="3286.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">168</text>
+<text x="3314.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">235</text>
+<text x="3342.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">143</text>
+<text x="3370.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">132</text>
+<text x="3398.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">234</text>
+<text x="3426.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">181</text>
+<text x="3454.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">172</text>
+<text x="3482.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">235</text>
+<text x="3510.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">165</text>
+<text x="3538.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">188</text>
+<text x="3566.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">32</text>
+<text x="3594.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">234</text>
+<text x="3622.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">176</text>
+<text x="3650.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">156</text>
+<text x="3678.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">235</text>
+<text x="3706.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">176</text>
+<text x="3734.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">156</text>
+<text x="3762.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">237</text>
+<text x="3790.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">150</text>
+<text x="3818.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">136</text>
+<text x="3846.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">235</text>
+<text x="3874.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">139</text>
+<text x="3902.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">164</text>
+<text x="3930.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">234</text>
+<text x="3958.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">179</text>
+<text x="3986.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">160</text>
+<text x="4014.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">32</text>
+<text x="4042.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">235</text>
+<text x="4070.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">176</text>
+<text x="4098.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">157</text>
+<text x="4126.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">237</text>
+<text x="4154.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">152</text>
+<text x="4182.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">148</text>
+<text x="4210.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">235</text>
+<text x="4238.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">139</text>
+<text x="4266.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">164</text>
+<text x="4294.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">46</text>
+<text x="4322.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">32</text>
+<text x="4350.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">236</text>
+<text x="4378.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">157</text>
+<text x="4406.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">180</text>
+<text x="4434.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">235</text>
+<text x="4462.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">138</text>
+<text x="4490.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">148</text>
+<text x="4518.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="4546.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">236</text>
+<text x="4574.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">149</text>
+<text x="4602.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">132</text>
+<text x="4630.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="4658.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">163</text>
+<text x="4686.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">188</text>
+<text x="4714.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="4742.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="4770.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">158</text>
+<text x="4798.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">145</text>
+<text x="4826.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">236</text>
+<text x="4854.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">157</text>
+<text x="4882.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">128</text>
+<text x="4910.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">32</text>
+<text x="4938.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">237</text>
+<text x="4966.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">129</text>
+<text x="4994.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">172</text>
+<text x="5022.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">234</text>
+<text x="5050.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">184</text>
+<text x="5078.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">176</text>
+<text x="5106.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">236</text>
+<text x="5134.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">157</text>
+<text x="5162.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">152</text>
+<text x="5190.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">32</text>
+<text x="5218.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">236</text>
+<text x="5246.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">157</text>
+<text x="5274.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">184</text>
+<text x="5302.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">236</text>
+<text x="5330.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">135</text>
+<text x="5358.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">132</text>
+<text x="5386.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">234</text>
+<text x="5414.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">176</text>
+<text x="5442.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">128</text>
+<text x="5470.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">32</text>
+<text x="5498.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">234</text>
+<text x="5526.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">176</text>
+<text x="5554.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">128</text>
+<text x="5582.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">235</text>
+<text x="5610.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">138</text>
+<text x="5638.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">165</text>
+<text x="5666.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">237</text>
+<text x="5694.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">149</text>
+<text x="5722.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">156</text>
+<text x="5750.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="5778.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">236</text>
+<text x="5806.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">185</text>
+<text x="5834.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">169</text>
+<text x="5862.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">236</text>
+<text x="5890.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">156</text>
+<text x="5918.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">188</text>
+<text x="5946.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">235</text>
+<text x="5974.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">161</text>
+<text x="6002.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">156</text>
+<text x="6030.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">44</text>
+<text x="6058.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="6086.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="6114.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">157</text>
+<text x="6142.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">188</text>
+<text x="6170.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">235</text>
+<text x="6198.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">176</text>
+<text x="6226.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">152</text>
+<text x="6254.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">236</text>
+<text x="6282.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">160</text>
+<text x="6310.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">129</text>
+<text x="6338.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">236</text>
+<text x="6366.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">157</text>
+<text x="6394.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">184</text>
+<text x="6422.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">32</text>
+<text x="6450.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">236</text>
+<text x="6478.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">158</text>
+<text x="6506.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">137</text>
+<text x="6534.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">237</text>
+<text x="6562.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">129</text>
+<text x="6590.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">172</text>
+<text x="6618.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">236</text>
+<text x="6646.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">160</text>
+<text x="6674.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">175</text>
+<text x="6702.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">32</text>
+<text x="6730.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">237</text>
+<text x="6758.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">148</text>
+<text x="6786.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">132</text>
+<text x="6814.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">235</text>
+<text x="6842.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">166</text>
+<text x="6870.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">176</text>
+<text x="6898.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">237</text>
+<text x="6926.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">132</text>
+<text x="6954.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">176</text>
+<text x="6982.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">235</text>
+<text x="7010.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">165</text>
+<text x="7038.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">188</text>
+<text x="7066.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">32</text>
+<text x="7094.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">236</text>
+<text x="7122.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">157</text>
+<text x="7150.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">180</text>
+<text x="7178.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">236</text>
+<text x="7206.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">154</text>
+<text x="7234.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">169</text>
+<text x="7262.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">237</text>
+<text x="7290.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">149</text>
+<text x="7318.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">180</text>
+<text x="7346.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">32</text>
+<text x="7374.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">234</text>
+<text x="7402.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">176</text>
+<text x="7430.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">156</text>
+<text x="7458.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="7486.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">235</text>
+<text x="7514.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">139</text>
+<text x="7542.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">185</text>
+<text x="7570.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="7598.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">235</text>
+<text x="7626.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">175</text>
+<text x="7654.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">184</text>
+<text x="7682.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">237</text>
+<text x="7710.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">153</text>
+<text x="7738.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">148</text>
+<text x="7766.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">32</text>
+<text x="7794.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">236</text>
+<text x="7822.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">149</text>
+<text x="7850.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">189</text>
+<text x="7878.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">32</text>
+<text x="7906.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a7a00">49</text>
+<text x="7934.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">236</text>
+<text x="7962.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">132</text>
+<text x="7990.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a3010">188</text>
+<text x="8018.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">237</text>
+<text x="8046.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">138</text>
+<text x="8074.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#1a4a6b">184</text>
+<text x="8102.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">235</text>
+<text x="8130.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">161</text>
+<text x="8158.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f4fb">156</text>
+<text x="8186.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">32</text>
+<text x="8214.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">236</text>
+<text x="8242.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">131</text>
+<text x="8270.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#2e5a0e">157</text>
+<text x="8298.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">236</text>
+<text x="8326.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">130</text>
+<text x="8354.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#e8f7e8">176</text>
+<text x="8382.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">236</text>
+<text x="8410.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">157</text>
+<text x="8438.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a1010">180</text>
+<text x="8466.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">32</text>
+<text x="8494.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">234</text>
+<text x="8522.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">176</text>
+<text x="8550.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#ffe8e8">128</text>
+<text x="8578.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">235</text>
+<text x="8606.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">138</text>
+<text x="8634.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">165</text>
+<text x="8662.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">237</text>
+<text x="8690.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">149</text>
+<text x="8718.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">160</text>
+<text x="8746.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="8774.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">234</text>
+<text x="8802.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">178</text>
+<text x="8830.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">131</text>
+<text x="8858.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="8886.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">156</text>
+<text x="8914.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">188</text>
+<text x="8942.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">235</text>
+<text x="8970.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">161</text>
+<text x="8998.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">156</text>
+<text x="9026.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">32</text>
+<text x="9054.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">236</text>
+<text x="9082.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">152</text>
+<text x="9110.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4400">136</text>
+<text x="9138.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">236</text>
+<text x="9166.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">131</text>
+<text x="9194.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#fff4e0">129</text>
+<text x="9222.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">235</text>
+<text x="9250.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">144</text>
+<text x="9278.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#3a1a5a">156</text>
+<text x="9306.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">235</text>
+<text x="9334.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">139</text>
+<text x="9362.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">164</text>
+<text x="9390.0" y="347" text-anchor="middle" font-size="9" font-weight="600" fill="#f0e8ff">46</text>
+<rect x="52" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="94.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">스</text>
+<rect x="136" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="178.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">탠</text>
+<rect x="220" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="262.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">포</text>
+<rect x="304" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="346.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">드</text>
+<rect x="388" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="402.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="416" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="458.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">의</text>
+<rect x="500" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="542.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">과</text>
+<rect x="584" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="626.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">대</text>
+<rect x="668" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="710.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">학</text>
+<rect x="752" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="766.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="780" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="822.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">연</text>
+<rect x="864" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="906.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">구</text>
+<rect x="948" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="990.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">진</text>
+<rect x="1032" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1074.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">은</text>
+<rect x="1116" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1130.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1144" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1186.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">지</text>
+<rect x="1228" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1270.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">난</text>
+<rect x="1312" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1326.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1340" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1382.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">월</text>
+<rect x="1424" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1466.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">요</text>
+<rect x="1508" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1550.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">일</text>
+<rect x="1592" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1606.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1620" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1662.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">세</text>
+<rect x="1704" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1746.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">포</text>
+<rect x="1788" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1830.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">를</text>
+<rect x="1872" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1886.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="1900" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="1942.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">유</text>
+<rect x="1984" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2026.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">형</text>
+<rect x="2068" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2110.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">별</text>
+<rect x="2152" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2194.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">로</text>
+<rect x="2236" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2250.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2264" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2306.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">분</text>
+<rect x="2348" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2390.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">류</text>
+<rect x="2432" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2474.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">할</text>
+<rect x="2516" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2530.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2544" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2586.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">수</text>
+<rect x="2628" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2642.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2656" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2698.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">있</text>
+<rect x="2740" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2782.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">는</text>
+<rect x="2824" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2838.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="2852" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2894.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">새</text>
+<rect x="2936" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="2978.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">로</text>
+<rect x="3020" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3062.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">운</text>
+<rect x="3104" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3118.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="3132" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3174.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">진</text>
+<rect x="3216" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3258.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">단</text>
+<rect x="3300" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3342.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">도</text>
+<rect x="3384" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3426.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">구</text>
+<rect x="3468" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3510.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">를</text>
+<rect x="3552" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3566.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="3580" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3622.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">개</text>
+<rect x="3664" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3706.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">발</text>
+<rect x="3748" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3790.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">했</text>
+<rect x="3832" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3874.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">다</text>
+<rect x="3916" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="3958.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">고</text>
+<rect x="4000" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4014.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4028" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4070.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">밝</text>
+<rect x="4112" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4154.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">혔</text>
+<rect x="4196" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4238.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">다</text>
+<rect x="4280" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4294.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">.</text>
+<rect x="4308" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4322.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4336" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4378.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">이</text>
+<rect x="4420" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4462.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">는</text>
+<rect x="4504" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4518.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4532" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4574.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">아</text>
+<rect x="4616" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4658.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">주</text>
+<rect x="4700" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4714.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4728" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4770.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">작</text>
+<rect x="4812" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4854.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">은</text>
+<rect x="4896" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4910.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="4924" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="4966.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">크</text>
+<rect x="5008" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5050.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">기</text>
+<rect x="5092" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5134.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">의</text>
+<rect x="5176" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5190.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="5204" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5246.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">인</text>
+<rect x="5288" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5330.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">쇄</text>
+<rect x="5372" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5414.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">가</text>
+<rect x="5456" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5470.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="5484" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5526.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">가</text>
+<rect x="5568" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5610.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">능</text>
+<rect x="5652" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5694.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">한</text>
+<rect x="5736" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5750.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="5764" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5806.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">칩</text>
+<rect x="5848" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5890.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">으</text>
+<rect x="5932" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="5974.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">로</text>
+<rect x="6016" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6030.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">,</text>
+<rect x="6044" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6058.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="6072" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6114.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">일</text>
+<rect x="6156" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6198.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">반</text>
+<rect x="6240" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6282.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">적</text>
+<rect x="6324" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6366.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">인</text>
+<rect x="6408" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6422.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="6436" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6478.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">잉</text>
+<rect x="6520" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6562.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">크</text>
+<rect x="6604" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6646.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">젯</text>
+<rect x="6688" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6702.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="6716" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6758.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">프</text>
+<rect x="6800" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6842.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">린</text>
+<rect x="6884" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="6926.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">터</text>
+<rect x="6968" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7010.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">를</text>
+<rect x="7052" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7066.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7080" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7122.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">이</text>
+<rect x="7164" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7206.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">용</text>
+<rect x="7248" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7290.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">해</text>
+<rect x="7332" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7346.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7360" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7402.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">개</text>
+<rect x="7444" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7458.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7472" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7514.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">당</text>
+<rect x="7556" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7570.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7584" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7626.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">미</text>
+<rect x="7668" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7710.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">화</text>
+<rect x="7752" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7766.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7780" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7822.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">약</text>
+<rect x="7864" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7878.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="7892" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7906.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">1</text>
+<rect x="7920" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="7962.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">센</text>
+<rect x="8004" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8046.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">트</text>
+<rect x="8088" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8130.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">로</text>
+<rect x="8172" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8186.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8200" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8242.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">생</text>
+<rect x="8284" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8326.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">산</text>
+<rect x="8368" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8410.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">이</text>
+<rect x="8452" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8466.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8480" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8522.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">가</text>
+<rect x="8564" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8606.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">능</text>
+<rect x="8648" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8690.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">할</text>
+<rect x="8732" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8746.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="8760" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8802.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">것</text>
+<rect x="8844" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8886.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">으</text>
+<rect x="8928" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="8970.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">로</text>
+<rect x="9012" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9026.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">_</text>
+<rect x="9040" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9082.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">예</text>
+<rect x="9124" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9166.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">상</text>
+<rect x="9208" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9250.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">된</text>
+<rect x="9292" y="354" width="84" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9334.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">다</text>
+<rect x="9376" y="354" width="28" height="24" fill="#f0f2f8" stroke="#d0d5e8" stroke-width="0.5"/>
+<text x="9390.0" y="371" text-anchor="middle" font-size="11" font-weight="600" fill="#1a1d2e">.</text>
+<line x1="136" y1="314" x2="136" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="220" y1="314" x2="220" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="304" y1="314" x2="304" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="388" y1="314" x2="388" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="416" y1="314" x2="416" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="500" y1="314" x2="500" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="584" y1="314" x2="584" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="668" y1="314" x2="668" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="752" y1="314" x2="752" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="780" y1="314" x2="780" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="864" y1="314" x2="864" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="948" y1="314" x2="948" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1032" y1="314" x2="1032" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1116" y1="314" x2="1116" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1144" y1="314" x2="1144" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1228" y1="314" x2="1228" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1312" y1="314" x2="1312" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1340" y1="314" x2="1340" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1424" y1="314" x2="1424" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1508" y1="314" x2="1508" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1620" y1="314" x2="1620" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1704" y1="314" x2="1704" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1788" y1="314" x2="1788" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1872" y1="314" x2="1872" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="1984" y1="314" x2="1984" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2068" y1="314" x2="2068" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2152" y1="314" x2="2152" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2348" y1="314" x2="2348" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2432" y1="314" x2="2432" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="2936" y1="314" x2="2936" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3216" y1="314" x2="3216" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3300" y1="314" x2="3300" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3384" y1="314" x2="3384" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3468" y1="314" x2="3468" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3552" y1="314" x2="3552" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3664" y1="314" x2="3664" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="3748" y1="314" x2="3748" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4112" y1="314" x2="4112" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4420" y1="314" x2="4420" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4504" y1="314" x2="4504" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4616" y1="314" x2="4616" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4700" y1="314" x2="4700" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="4812" y1="314" x2="4812" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5008" y1="314" x2="5008" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5092" y1="314" x2="5092" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5176" y1="314" x2="5176" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5288" y1="314" x2="5288" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5372" y1="314" x2="5372" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5456" y1="314" x2="5456" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5568" y1="314" x2="5568" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5652" y1="314" x2="5652" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5736" y1="314" x2="5736" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5848" y1="314" x2="5848" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="5932" y1="314" x2="5932" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6156" y1="314" x2="6156" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6240" y1="314" x2="6240" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6520" y1="314" x2="6520" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6604" y1="314" x2="6604" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6688" y1="314" x2="6688" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6800" y1="314" x2="6800" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6884" y1="314" x2="6884" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="6968" y1="314" x2="6968" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7164" y1="314" x2="7164" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7332" y1="314" x2="7332" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7444" y1="314" x2="7444" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7556" y1="314" x2="7556" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7668" y1="314" x2="7668" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7752" y1="314" x2="7752" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7864" y1="314" x2="7864" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7892" y1="314" x2="7892" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="7920" y1="314" x2="7920" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8004" y1="314" x2="8004" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8088" y1="314" x2="8088" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8172" y1="314" x2="8172" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8284" y1="314" x2="8284" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8368" y1="314" x2="8368" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8452" y1="314" x2="8452" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="8564" y1="314" x2="8564" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9124" y1="314" x2="9124" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9208" y1="314" x2="9208" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+<line x1="9292" y1="314" x2="9292" y2="354" stroke="rgba(0,0,0,0.2)" stroke-width="1"/></svg></div>
+        </section>
+
+</body>
+</html>
