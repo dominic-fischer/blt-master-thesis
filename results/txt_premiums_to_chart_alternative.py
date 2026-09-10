@@ -20,7 +20,8 @@ rankings, using color instead of raw numbers:
 
 Training-data volume isn't color-coded; instead each language's rank by
 training-data size (1 = most bytes) is shown in brackets next to its name,
-e.g. "English (#1)", "Mandarin Chinese (#2)".
+e.g. "English (#1)", "Mandarin Chinese (#2)". If 'balanced' or 'balanced custom'
+is detected in the premium input file names, ranks are computed using balanced allocation bytes.
 
 PREMIUM COLOR SCALE:
     - Evaluates colors using the larger span (max - min). Both columns evaluate
@@ -140,7 +141,7 @@ def _find_column(fieldnames, keyword_sets):
     return None
 
 
-def parse_training_data(path):
+def parse_training_data(path, is_balanced=False):
     with open(path, "r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames or []
@@ -149,13 +150,25 @@ def parse_training_data(path):
     if not rows:
         raise ValueError(f"No data rows parsed from {path}")
 
-    bytes_col = _find_column(fieldnames, [
-        ("imbalanced", "allocation", "bytes"),
-        ("allocation", "bytes"),
-        ("bytes",),
-    ])
+    if is_balanced:
+        print(f"Info: 'balanced' detected in premium file targets. Recomputing ranks using balanced allocation bytes.", file=sys.stderr)
+        bytes_col = _find_column(fieldnames, [
+            ("balanced", "allocation", "bytes"),
+            ("balanced", "bytes"),
+            ("allocation", "bytes"),
+            ("bytes",),
+        ])
+    else:
+        print(f"Info: Using imbalanced allocation bytes for language ranking.", file=sys.stderr)
+        bytes_col = _find_column(fieldnames, [
+            ("imbalanced", "allocation", "bytes"),
+            ("imbalanced", "bytes"),
+            ("allocation", "bytes"),
+            ("bytes",),
+        ])
+
     if bytes_col is None:
-        raise ValueError(f"Could not find a bytes column in {path}. Available columns: {fieldnames}")
+        raise ValueError(f"Could not find a matching bytes column in {path}. Available columns: {fieldnames}")
 
     code_col = None
     for fn in fieldnames:
@@ -412,7 +425,6 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
             span_rel = rel_max - rel_min
             delta = c_max - c_min
 
-            # If the span is too narrow (< 35% of bar width), place delta text to the right of max
             if span_rel < 0.35:
                 pos_x = x0 + rel_max * grad_w + 0.28
                 ha = "left"
@@ -468,9 +480,17 @@ def main():
         f"from '{args.file2}'."
     )
 
+    # Safely evaluate if target is 'balanced' (without matching 'txt_premiums' or 'imbalanced')
+    def is_balanced_path(path):
+        folder_and_file = os.path.join(os.path.basename(os.path.dirname(path)), os.path.basename(path)).lower()
+        tokens = re.split(r'[^a-z0-9]+', folder_and_file)
+        return "balanced" in tokens and "imbalanced" not in tokens
+
+    is_balanced = is_balanced_path(args.file1) or is_balanced_path(args.file2)
+
     table1 = parse_table(args.file1)
     table2 = parse_table(args.file2)
-    training_data = parse_training_data(args.lang_data_csv)
+    training_data = parse_training_data(args.lang_data_csv, is_balanced=is_balanced)
     label1 = get_label(args.file1)
     label2 = get_label(args.file2)
 
