@@ -35,8 +35,21 @@ always byte-spans regardless of which granularity determined them.
 
 import html as html_lib
 import json
+import math
 from dataclasses import dataclass
 from typing import List, Optional
+
+
+# Fixed pixels-per-entropy-unit, used by every chart. This is what makes
+# charts DIRECTLY comparable side by side: 1.0 entropy unit is always this
+# many pixels tall, everywhere, regardless of that particular text's own
+# max value. Each chart's y-axis always starts at 0.0 with gridlines at
+# integer increments, and the chart's pixel HEIGHT grows to reach
+# whichever integer covers that text's max entropy value -- so a text
+# with a higher max simply gets a taller box, rather than the same box
+# height being rescaled to fit. Align charts at the bottom (y=0) when
+# placing them side by side and they're on a shared, undistorted scale.
+PX_PER_UNIT = 40
 
 
 # --- colour palette ------------------------------------------------------------
@@ -162,7 +175,6 @@ class BLTPatchVisualizer:
         CELL_W      = 28       # px per byte column
         MARGIN_L    = 52       # left margin (y-axis labels)
         MARGIN_R    = 16
-        CHART_H     = 180      # height of the entropy chart area
         AXIS_H      = 18       # x-axis tick label row
         ROW_IDX_H   = 18       # byte index row
         ROW_VAL_H   = 22       # byte value row
@@ -188,10 +200,6 @@ class BLTPatchVisualizer:
         else:
             full_text = text
 
-        W = MARGIN_L + N * CELL_W + MARGIN_R
-        TABLE_TOP = PAD_TOP + CHART_H + AXIS_H
-        H = TABLE_TOP + ROW_IDX_H + ROW_VAL_H + ROW_CHR_H + PAD_BOT
-
         # x coordinate of byte i (centre of column)
         def cx(i):
             return MARGIN_L + i * CELL_W + CELL_W / 2
@@ -208,6 +216,32 @@ class BLTPatchVisualizer:
                 centers.append(MARGIN_L + byte_cursor * CELL_W + ch_bytes * CELL_W / 2)
                 byte_cursor += ch_bytes
             return centers
+
+        use_char_scores = char_scores is not None and len(char_scores) > 0
+
+        if use_char_scores:
+            centers = char_centers()
+            # Align lengths defensively (should already match 1:1 with full_text)
+            n_plot = min(len(centers), len(char_scores))
+            plot_xs = centers[:n_plot]
+            plot_vs = list(char_scores[:n_plot])
+        elif scores:
+            plot_xs = [cx(i) for i in range(min(len(scores), N))]
+            plot_vs = list(scores[:N])
+        else:
+            plot_xs = []
+            plot_vs = []
+
+        # Fixed-scale y-axis: always starts at 0.0, gridlines every 1.0 unit,
+        # chart height = ceil(max value) * PX_PER_UNIT so the box grows to
+        # fit that text's own max rather than rescaling to it. Falls back
+        # to a 5-unit-tall box when there's nothing to plot.
+        y_max = max(1, math.ceil(max(plot_vs))) if plot_vs else 5
+        CHART_H = y_max * PX_PER_UNIT
+
+        W = MARGIN_L + N * CELL_W + MARGIN_R
+        TABLE_TOP = PAD_TOP + CHART_H + AXIS_H
+        H = TABLE_TOP + ROW_IDX_H + ROW_VAL_H + ROW_CHR_H + PAD_BOT
 
         # --- entropy chart -----------------------------------------------------
         elements = []
@@ -226,42 +260,23 @@ class BLTPatchVisualizer:
             f'fill="#ffffff" stroke="#d0d5e8" stroke-width="1"/>'
         )
 
-        use_char_scores = char_scores is not None and len(char_scores) > 0
-
-        if use_char_scores:
-            centers = char_centers()
-            # Align lengths defensively (should already match 1:1 with full_text)
-            n_plot = min(len(centers), len(char_scores))
-            plot_xs = centers[:n_plot]
-            plot_vs = list(char_scores[:n_plot])
-        elif scores:
-            plot_xs = [cx(i) for i in range(min(len(scores), N))]
-            plot_vs = list(scores[:N])
-        else:
-            plot_xs = []
-            plot_vs = []
-
         if plot_vs:
-            s_min = min(plot_vs)
-            s_max = max(plot_vs)
-            s_range = max(s_max - s_min, 0.01)
 
             def sy(v):
-                norm = (v - s_min) / s_range
-                return chart_y + CHART_H - norm * (CHART_H - 10) - 5
+                # pure linear map, 0 -> bottom, y_max -> top, PX_PER_UNIT
+                # pixels per unit exactly -- no per-chart rescaling.
+                return chart_y + CHART_H - (v / y_max) * CHART_H
 
-            # Gridlines (5 levels)
-            for k in range(6):
-                frac = k / 5
-                gv = s_min + frac * s_range
-                gy = sy(gv)
+            # Gridlines at every integer unit from 0 to y_max
+            for k in range(y_max + 1):
+                gy = sy(k)
                 elements.append(
                     f'<line x1="{chart_x}" y1="{gy:.1f}" x2="{chart_x+chart_w}" y2="{gy:.1f}" '
                     f'stroke="#e0e4f0" stroke-width="0.8"/>'
                 )
                 elements.append(
                     f'<text x="{chart_x - 4}" y="{gy + 4:.1f}" text-anchor="end" '
-                    f'font-size="9" fill="#888">{gv:.2f}</text>'
+                    f'font-size="9" fill="#888">{k:.1f}</text>'
                 )
 
             # Threshold line
