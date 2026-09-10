@@ -10,8 +10,10 @@ Takes three input files:
 ...and visualizes how each language's "premium" changes between the two
 rankings, using color instead of raw numbers:
 
-  - Premium:              green (=min in that column) -> red (=max in that column)
-                          EACH COLUMN GETS ITS OWN SCALE (see note below).
+  - Premium:              green (=min) -> red (=max)
+                          Each column is plotted on a scale aligned by the larger span.
+                          Legend ticks are placed proportionally along the bar,
+                          including the delta span between min and max.
   - Entropy Mean / Var:   light grey (=min) -> black (=max, across both files)
                           (shown once per language - these don't change
                           between rankings)
@@ -20,58 +22,24 @@ Training-data volume isn't color-coded; instead each language's rank by
 training-data size (1 = most bytes) is shown in brackets next to its name,
 e.g. "English (#1)", "Mandarin Chinese (#2)".
 
-PREMIUM COLOR SCALE (per-column, not shared):
-    The two Premium columns each get their OWN green->red scale, based on
-    that column's own min/max, rather than a scale shared across both
-    columns. This matters because the two rankings can have different
-    minimums - e.g. under one ranking English's premium of 1.00 might be
-    the lowest value in that column (and should render as pure green),
-    while under the other ranking some other language dips below 1.00.
-    A shared scale would use the lower of the two columns' minimums for
-    BOTH columns, making a column's own true "best" value not render as
-    pure green. Scoping each column to its own range fixes that.
+PREMIUM COLOR SCALE:
+    - Evaluates colors using the larger span (max - min). Both columns evaluate
+      colors relative to their baseline across that span. The legend displays
+      both rows of ticks (with deltas) mapped proportionally along the bar.
 
 COLUMN ORDER (left to right):
     Language (full name, with training-data rank) | Premium -> Premium | Mean | Var
 
-Row order follows file 1's row order as-is (no re-sorting is done) - so
-whatever order your entropy-based ranking file is sorted in is what the
-chart displays top-to-bottom.
+Row order follows file 1's row order as-is (no re-sorting is done).
 
-Expected format for files 1 & 2 (same as before):
+Expected format for files 1 & 2:
 
     Language  Premium  PPS       BPP     EntropyMean  EntropyVar
     amh_Ethi  5.7097   186.6921  1.1733  2.7971       0.7736
     ...
-    # comment lines starting with '#' are ignored
-
-Expected format for file 3 (the training-data CSV): a header row plus one
-row per language. The script auto-detects:
-  - a language column: either a language-code column (values that look like
-    "eng_Latn") or a full-name column (values like "English") - if only
-    full names are present, they're mapped to codes using the built-in
-    LANG_NAME_TO_CODE table below (covers the 20 languages seen so far;
-    extend it if you add languages).
-  - a bytes column: any column whose (normalized) name contains
-    "imbalanced", "allocation" and "bytes" - falls back to any column
-    containing "bytes" if that exact combination isn't found.
-  Numbers may contain thousands-separator commas; those are stripped.
 
 USAGE
     python3 txt_premiums_to_chart_alternative.py <entropy_file> <monotonicity_file> [lang_data_csv]
-
-    lang_data_csv defaults to "training_setup/langs/langs_chosen.csv" if
-    omitted.
-
-The two ranking filenames must share the same prefix - the part of the
-filename before the first underscore, e.g.:
-
-    global_raw_entropy.txt   global_raw_monotonicity.txt
-    ^^^^^^                   ^^^^^^
-    (same prefix "global" -> output: global_premium_color_chart.png)
-
-The output chart is saved in the same directory as the two ranking files,
-named "<prefix>_premium_color_chart.png".
 
 Requires: matplotlib, numpy
     pip install matplotlib numpy
@@ -79,6 +47,7 @@ Requires: matplotlib, numpy
 
 import argparse
 import csv
+import math
 import os
 import re
 import sys
@@ -90,8 +59,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 
-# Built-in language-name <-> code map. Extend this if you add languages
-# that aren't covered yet.
 LANG_NAME_TO_CODE = {
     "english": "eng_Latn",
     "mandarin chinese": "cmn_Hans",
@@ -134,10 +101,6 @@ CODE_PATTERN = re.compile(r"^[a-z]{3}_[A-Z][a-z]{3}$")
 # ---------------------------------------------------------------------------
 
 def parse_table(path):
-    """Parse a whitespace-separated premium table file into an ordered dict:
-    lang_code -> (premium, entropy_mean, entropy_var).
-    Skips blank lines, '#' comments, and the header row.
-    """
     data = {}
     header_seen = False
     with open(path, "r", encoding="utf-8") as f:
@@ -169,9 +132,6 @@ def _normalize_colname(name):
 
 
 def _find_column(fieldnames, keyword_sets):
-    """keyword_sets: list of tuples of keywords; returns first column whose
-    normalized name contains ALL keywords in the first tuple that matches,
-    trying tuples in order (most specific first)."""
     normed = {fn: _normalize_colname(fn) for fn in fieldnames}
     for keywords in keyword_sets:
         for fn, norm in normed.items():
@@ -181,9 +141,6 @@ def _find_column(fieldnames, keyword_sets):
 
 
 def parse_training_data(path):
-    """Parse the training-data CSV into an ordered dict:
-    lang_code -> imbalanced_allocation_bytes (float).
-    """
     with open(path, "r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames or []
@@ -198,12 +155,8 @@ def parse_training_data(path):
         ("bytes",),
     ])
     if bytes_col is None:
-        raise ValueError(
-            f"Could not find a bytes column in {path}. "
-            f"Available columns: {fieldnames}"
-        )
+        raise ValueError(f"Could not find a bytes column in {path}. Available columns: {fieldnames}")
 
-    # Prefer an explicit language-code column (values like 'eng_Latn').
     code_col = None
     for fn in fieldnames:
         sample_vals = [r[fn].strip() for r in rows[:5] if r.get(fn)]
@@ -215,10 +168,7 @@ def parse_training_data(path):
     if code_col is None:
         name_col = _find_column(fieldnames, [("language",), ("lang", "name")])
         if name_col is None:
-            raise ValueError(
-                f"Could not find a language-code or language-name column in "
-                f"{path}. Available columns: {fieldnames}"
-            )
+            raise ValueError(f"Could not find a language column in {path}. Available columns: {fieldnames}")
 
     data = {}
     unmapped = []
@@ -242,8 +192,7 @@ def parse_training_data(path):
         data[code] = n_bytes
 
     if unmapped:
-        print(f"Warning: no code mapping for language name(s) {unmapped} in "
-              f"{path}; add them to LANG_NAME_TO_CODE. Skipped.", file=sys.stderr)
+        print(f"Warning: no code mapping for language name(s) {unmapped} in {path}. Skipped.", file=sys.stderr)
     if not data:
         raise ValueError(f"No usable training-data rows parsed from {path}")
     return data
@@ -255,9 +204,6 @@ def get_prefix(path):
 
 
 def get_label(path):
-    """Human-readable label for the column header, derived from the part
-    of the filename after the prefix, e.g. 'global_raw_entropy.txt' ->
-    'Raw Entropy'."""
     stem = os.path.splitext(os.path.basename(path))[0]
     parts = stem.split("_")[1:]
     if not parts:
@@ -265,22 +211,11 @@ def get_label(path):
     return " ".join(p.capitalize() for p in parts)
 
 
-def format_bytes(v):
-    if v >= 1e9:
-        return f"{v / 1e9:.2f}B"
-    if v >= 1e6:
-        return f"{v / 1e6:.1f}M"
-    if v >= 1e3:
-        return f"{v / 1e3:.1f}K"
-    return f"{v:.0f}"
-
-
 # ---------------------------------------------------------------------------
 # 2. COLOR SCALES
 # ---------------------------------------------------------------------------
 
 def green_red_gradient(t):
-    """t=0 -> green, t=0.5 -> yellow, t=1 -> red."""
     t = np.clip(t, 0, 1)
     if t < 0.5:
         tt = t / 0.5
@@ -296,13 +231,11 @@ def green_red_gradient(t):
 
 
 def premium_color(p, p_min, p_max):
-    """Low premium (column min) = green, high premium (column max) = red."""
     t = (p - p_min) / (p_max - p_min) if p_max > p_min else 0
     return green_red_gradient(t)
 
 
 def grey_color(v, vmin, vmax):
-    """Light grey (low) -> black (high)."""
     t = np.clip((v - vmin) / (vmax - vmin), 0, 1) if vmax > vmin else 0
     g = 0.88 - t * (0.88 - 0.05)
     return (g, g, g)
@@ -322,16 +255,13 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
 
     missing2 = [l for l in langs if l not in table2]
     if missing2:
-        print(f"Warning: {missing2} present in '{label1}' file but missing "
-              f"from '{label2}' file; skipped.", file=sys.stderr)
+        print(f"Warning: {missing2} present in '{label1}' file but missing from '{label2}' file; skipped.", file=sys.stderr)
         langs = [l for l in langs if l in table2]
 
     missing_td = [l for l in langs if l not in training_data]
     if missing_td:
-        print(f"Warning: no training-data entry for {missing_td}; "
-              f"no rank shown for these.", file=sys.stderr)
+        print(f"Warning: no training-data entry for {missing_td}; no rank shown for these.", file=sys.stderr)
 
-    # rank languages by training-data size, most bytes = rank #1
     rank_by_lang = {
         lang: i + 1
         for i, (lang, _) in enumerate(
@@ -342,18 +272,31 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
     all_means = [table1[l][1] for l in langs] + [table2[l][1] for l in langs]
     all_vars = [table1[l][2] for l in langs] + [table2[l][2] for l in langs]
 
-    # Premium: separate scale PER COLUMN (see module docstring). table1's
-    # own min/max drives the left Premium column's color; table2's own
-    # min/max drives the right one. NOT shared across both columns.
     p1_vals = [table1[l][0] for l in langs]
     p2_vals = [table2[l][0] for l in langs]
     p1_min, p1_max = min(p1_vals), max(p1_vals)
     p2_min, p2_max = min(p2_vals), max(p2_vals)
 
+    mins_equal = math.isclose(p1_min, p2_min, rel_tol=1e-9, abs_tol=1e-6)
+
+    if mins_equal:
+        shared_min = p1_min
+        shared_max = max(p1_max, p2_max)
+        scale1_min, scale1_max = shared_min, shared_max
+        scale2_min, scale2_max = shared_min, shared_max
+    else:
+        span1 = p1_max - p1_min
+        span2 = p2_max - p2_min
+        if span1 >= span2:
+            scale1_min, scale1_max = p1_min, p1_max
+            scale2_min, scale2_max = p2_min, p2_min + span1
+        else:
+            scale1_min, scale1_max = p1_min, p1_min + span2
+            scale2_min, scale2_max = p2_min, p2_max
+
     m_min, m_max = min(all_means), max(all_means)
     v_min, v_max = min(all_vars), max(all_vars)
 
-    # Wrap long group-title labels so they don't overlap each other.
     wrap_width = 16
     label1_wrapped = textwrap.fill(label1, wrap_width)
     label2_wrapped = textwrap.fill(label2, wrap_width)
@@ -362,15 +305,14 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
     extra_top = header_line_h * (title_lines - 1)
 
     n = len(langs)
-    fig_h = n * 0.5 + 3.2 + extra_top   # +3.2 to fit the 2-row legend below
+    fig_h = n * 0.5 + 2.8 + extra_top
     fig, ax = plt.subplots(figsize=(9, fig_h))
     ax.set_xlim(0, 7.6)
-    ax.set_ylim(-3.4, n + 1.5 + extra_top)
+    ax.set_ylim(-2.7, n + 1.5 + extra_top)
     ax.axis("off")
 
     sq = 0.8
 
-    # column order: Language (name + training-data rank) | Premium -> Premium | Mean | Var
     x_lang = 0.2
     x1_p = 2.3
     x_arrow = 3.4
@@ -413,15 +355,15 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
 
         ax.text(x_lang, y + sq / 2, lang_label, fontsize=9.5, va="center", fontweight="medium")
 
-        draw_square(x1_p, y, premium_color(p1, p1_min, p1_max), p1)
+        draw_square(x1_p, y, premium_color(p1, scale1_min, scale1_max), p1)
         ax.annotate("", xy=(x_arrow + 0.6, y + sq / 2), xytext=(x_arrow - 0.15, y + sq / 2),
                     arrowprops=dict(arrowstyle="->", color="#888888", lw=1.3))
-        draw_square(x2_p, y, premium_color(p2, p2_min, p2_max), p2)
+        draw_square(x2_p, y, premium_color(p2, scale2_min, scale2_max), p2)
 
         draw_square(x_mean, y, grey_color(mean, m_min, m_max), mean)
         draw_square(x_var, y, grey_color(var, v_min, v_max), var)
 
-    # ---- legend (2 rows: premium x2 on top, mean/var below) ----
+    # ---- LEGEND RENDERING ----
     grad_w = 2.0
     n_steps = 60
 
@@ -437,20 +379,66 @@ def draw_chart(table1, table2, training_data, label1, label2, out_path):
             ))
         ax.text(x0, y0 - 0.3, label_formatter(vmin), fontsize=8, ha="left")
         ax.text(x0 + grad_w, y0 - 0.3, label_formatter(vmax), fontsize=8, ha="right")
-        ax.text(x0 + grad_w / 2, y0 + 0.5, label, fontsize=8.5, ha="center",
-                multialignment="center")
+        ax.text(x0 + grad_w / 2, y0 + 0.35, label, fontsize=8.5, ha="center", multialignment="center")
 
-    row1_y, row2_y = -1.2, -2.6
-    draw_gradient_legend(0.2, row1_y, p1_min, p1_max,
-                          lambda v: premium_color(v, p1_min, p1_max),
-                          "Left-col Premium\n(green=min\u2192red=max)")
-    draw_gradient_legend(3.6, row1_y, p2_min, p2_max,
-                          lambda v: premium_color(v, p2_min, p2_max),
-                          "Right-col Premium\n(green=min\u2192red=max)")
-    draw_gradient_legend(0.2, row2_y, m_min, m_max,
+    def draw_premium_legend(x0, y0, c1_min, c1_max, s1_min, s1_max, c2_min, c2_max, s2_min, s2_max):
+        for k in range(n_steps):
+            t0 = k / n_steps
+            color = green_red_gradient(t0)
+            ax.add_patch(patches.Rectangle(
+                (x0 + t0 * grad_w, y0), grad_w / n_steps + 0.001, 0.25,
+                color=color, linewidth=0,
+            ))
+        ax.text(x0 + grad_w / 2, y0 + 0.35, "Premium\n(green=min\u2192red=max)",
+                fontsize=8.5, ha="center", va="bottom", multialignment="center")
+
+        def place_tick(val, ref_min, ref_max, y_offset):
+            rel_pos = np.clip((val - ref_min) / (ref_max - ref_min), 0, 1) if ref_max > ref_min else 0
+            x_pos = x0 + rel_pos * grad_w
+            
+            if rel_pos < 0.1:
+                ha = "left"
+            elif rel_pos > 0.9:
+                ha = "right"
+            else:
+                ha = "center"
+                
+            ax.text(x_pos, y0 + y_offset, f"{val:.2f}", fontsize=8, ha=ha, color="#111111", fontweight="semibold")
+
+        def place_span(c_min, c_max, ref_min, ref_max, y_offset):
+            rel_min = np.clip((c_min - ref_min) / (ref_max - ref_min), 0, 1) if ref_max > ref_min else 0
+            rel_max = np.clip((c_max - ref_min) / (ref_max - ref_min), 0, 1) if ref_max > ref_min else 0
+            
+            span_rel = rel_max - rel_min
+            delta = c_max - c_min
+
+            # If the span is too narrow (< 35% of bar width), place delta text to the right of max
+            if span_rel < 0.35:
+                pos_x = x0 + rel_max * grad_w + 0.28
+                ha = "left"
+            else:
+                pos_x = x0 + ((rel_min + rel_max) / 2.0) * grad_w
+                ha = "center"
+
+            ax.text(pos_x, y0 + y_offset, f"(\u0394 {delta:.2f})", fontsize=7.5, ha=ha, color="#555555", fontstyle="italic")
+
+        # Column 1 Row
+        place_tick(c1_min, s1_min, s1_max, -0.28)
+        place_span(c1_min, c1_max, s1_min, s1_max, -0.28)
+        place_tick(c1_max, s1_min, s1_max, -0.28)
+
+        # Column 2 Row — Always shown
+        place_tick(c2_min, s2_min, s2_max, -0.65)
+        place_span(c2_min, c2_max, s2_min, s2_max, -0.65)
+        place_tick(c2_max, s2_min, s2_max, -0.65)
+
+    leg_y = -1.2
+    draw_premium_legend(0.2, leg_y, p1_min, p1_max, scale1_min, scale1_max, p2_min, p2_max, scale2_min, scale2_max)
+
+    draw_gradient_legend(2.8, leg_y, m_min, m_max,
                           lambda v: grey_color(v, m_min, m_max),
                           "Entropy Mean (light\u2192dark)")
-    draw_gradient_legend(3.6, row2_y, v_min, v_max,
+    draw_gradient_legend(5.4, leg_y, v_min, v_max,
                           lambda v: grey_color(v, v_min, v_max),
                           "Entropy Variance (light\u2192dark)")
 
