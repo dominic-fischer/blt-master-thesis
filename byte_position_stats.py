@@ -33,6 +33,14 @@ information. This directly tests, from real corpus occurrences (not an
 idealized uniform-over-codepoints assumption), how much of a script's
 per-character identity is resolved at each byte position.
 
+Also computes, per language, a single-number SPREAD score in [0, 1]:
+the normalized Shannon entropy of the per-position entropy SHARES for
+the language's dominant (main) byte-length -- 0 = all identity entropy
+concentrated in one byte, 1 = perfectly even across every position.
+See spread_score() below for the exact definition. Undefined (null in
+the JSON) for 1-byte languages, since there's no "across positions" to
+measure with only one position.
+
 HOW POSITION IS DETERMINED
     Every byte's own top bits say whether it starts a new character (and
     how many continuation bytes to expect) or continues one already in
@@ -74,7 +82,6 @@ import os
 import sys
 from collections import defaultdict, Counter
 
-
 # The 20 languages used throughout this project. Filenames are expected as
 # "<code>.json" (e.g. "amh_Ethi.json") directly inside results/base_model/.
 OUR_20_LANGS = {
@@ -83,6 +90,35 @@ OUR_20_LANGS = {
     "fin_Latn", "heb_Hebr", "tam_Taml", "hrv_Latn", "srp_Cyrl", "kat_Geor",
     "amh_Ethi", "nya_Latn",
 }
+
+
+def spread_score(entropies):
+    """Single-number 'how evenly is this character's identity entropy
+    distributed across its byte positions' score, in [0, 1].
+
+    Treats the per-position entropies as a distribution in their own
+    right (what SHARE of the total identity entropy sits at each
+    position) and computes the (normalized) Shannon entropy of THAT
+    distribution:
+        shares = [e / sum(entropies) for e in entropies]
+        H = -sum(p * log2(p) for p in shares)
+        spread = H / log2(len(entropies))   # normalize to [0, 1]
+
+    0.0 = fully concentrated in a single byte (e.g. Georgian: ~0.05,
+          Hebrew: ~0.01 -- everything deferred to one identity byte).
+    1.0 = perfectly even across every position (e.g. Chinese: ~0.96).
+
+    Returns None for 1-byte characters (a single position has no
+    "distribution across positions" to measure -- this is a category
+    difference, not a spread value of 0) or if all entropies are 0.
+    """
+    n = len(entropies)
+    total = sum(entropies)
+    if n <= 1 or total <= 0:
+        return None
+    shares = [e / total for e in entropies]
+    h = -sum(p * math.log2(p) for p in shares if p > 0)
+    return h / math.log2(n)
 
 
 def utf8_lead_length(byte_val):
@@ -197,6 +233,7 @@ def analyze_file(path, label, top_n=15):
         for p in range(main_length)
     ]
     main_length_entropy_sum = sum(main_length_entropies)
+    spread = spread_score(main_length_entropies)
 
     # Build the result dict with compact summary fields FIRST and the bulky
     # per-value "lengths" breakdown LAST -- in an editor with JSON folding
@@ -208,12 +245,15 @@ def analyze_file(path, label, top_n=15):
         "main_length": main_length,
         "main_length_entropies": main_length_entropies,
         "main_length_entropy_sum": main_length_entropy_sum,
-        "lengths": lengths_dict,
+        "spread": spread,
+        # "lengths": lengths_dict,
     }
 
+    spread_str = f"{spread:.3f}" if spread is not None else "n/a (1-byte language)"
     print(f"  main_length: {main_length}  "
           f"main_length_entropies: {[round(e, 3) for e in main_length_entropies]}  "
-          f"main_length_entropy_sum: {main_length_entropy_sum:.3f} bits")
+          f"main_length_entropy_sum: {main_length_entropy_sum:.3f} bits  "
+          f"spread: {spread_str}")
     print()
 
     return result
