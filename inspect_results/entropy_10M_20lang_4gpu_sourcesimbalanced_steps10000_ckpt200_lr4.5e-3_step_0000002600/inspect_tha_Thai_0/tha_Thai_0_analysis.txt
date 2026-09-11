@@ -2460,20 +2460,20 @@
   [ 817]  0xa3    10|100011   entropy=0.141  0000+111000+100011=3619            Thai(3584-3711)                                   
        ->  0xe0    1110|0000   prob=   0.978  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
   ---
-  [ 818]  0xe0    1110|0000   entropy=0.341  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
-       ->  0xb8    10|111000   prob=   0.908  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
+  [ 818]  0xe0    1110|0000   entropy=0.339  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  0xb8    10|111000   prob=   0.909  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
 
-  [ 819]  0xb8    10|111000   entropy=1.305  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
+  [ 819]  0xb8    10|111000   entropy=1.304  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
        ->  0xb1    10|110001   prob=   0.499  0000+111000+110001=3633            Thai(3584-3711)                                   
 
   [ 820]  0xb1    10|110001   entropy=0.148  0000+111000+110001=3633            Thai(3584-3711)                                   
        ->  0xe0    1110|0000   prob=   0.978  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
   ---
-  [ 821]  0xe0    1110|0000   entropy=0.363  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
-       ->  0xb8    10|111000   prob=   0.901  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
+  [ 821]  0xe0    1110|0000   entropy=0.364  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  0xb8    10|111000   prob=   0.900  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
 
-  [ 822]  0xb8    10|111000   entropy=2.072  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
-       ->  0x9a    10|011010   prob=   0.580  0000+111000+011010=3610            Thai(3584-3711)                                   
+  [ 822]  0xb8    10|111000   entropy=2.074  0000+111000+bbbbbb=3584-3647       Thai(3584-3711)                                   
+       ->  0x9a    10|011010   prob=   0.579  0000+111000+011010=3610            Thai(3584-3711)                                   
 
   [ 823]  0x90    10|010000   entropy=0.609  0000+111000+010000=3600            Thai(3584-3711)                                   
        ->  0xe0    1110|0000   prob=   0.854  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)

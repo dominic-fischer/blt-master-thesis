@@ -4,1009 +4,823 @@
   Entropy repo: dumps/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3/checkpoints/0000006400/consolidated
   Text     : 스탠포드 의과대학 연구진은 지난 월요일 세포를 유형별로 분류할 수 있는 새로운 진단도구를 개발했다고 밝혔다. 이는 아주 작은 크기의 인쇄가 가능한 칩으로, 일반적인 잉크젯 프린터를 이용해 개 당 미화 약 1센트로 생산이 가능할 것으로 예상된다.
   English  : On Monday, scientists from the Stanford University School of Medicine announced the invention of a new diagnostic tool that can sort cells by type: a tiny printable chip that can be manufactured using standard inkjet printers for possibly about one U.S. cent each.
-  Bytes    : 334
+  Bytes    : 272
 
-  [   0]  0xec    1110|1100   entropy=1.009  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x95    10|010101   prob=   0.785  1100+010101+bbbbbb=50496-50559     Hangul(44032-55215)                               
+  [   0]  0xe7    1110|0111   entropy=1.299  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0xec    1110|1100   prob=   0.526  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
 
-  [   1]  0x8a    10|001010   entropy=4.258  1100+001010+bbbbbb=49792-49855     Hangul(44032-55215)                               
-       ->  0xad    10|101101   prob=   0.116  1100+001010+101101=49837           Hangul(44032-55215)                               
+  [   1]  0xeb    1110|1011   entropy=3.301  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+       ->  0xaf    10|101111   prob=   0.257  0111+101011+101111=31471           CJK(19968-40959)                                  
 
-  [   2]  0xa4    10|100100   entropy=2.734  1100+001010+100100=49828           Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.426  ?                                  ?                                                 
+  [   2]  0xf8    11110|000   entropy=0.845  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0xd5    110|10101   prob=   0.811  10101+bbbbbb=1344-1407             Armenian(1328-1423)                               
   ---
-  [   3]  0xed    1110|1101   entropy=3.441  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xb3    10|110011   prob=   0.193  1101+110011+bbbbbb=56512-56575     Other_i(55216-63743)                              
-
-  [   4]  0x83    10|000011   entropy=2.098  1101+000011+bbbbbb=53440-53503     Hangul(44032-55215)                               
-       ->  0xb6    10|110110   prob=   0.576  1101+000011+110110=53494           Hangul(44032-55215)                               
-
-  [   5]  0xa0    10|100000   entropy=3.625  1101+000011+100000=53472           Hangul(44032-55215)                               
-       ->  0xbd    10|111101   prob=   0.247  ?                                  ?                                                 
+  [   3]  'h'     0|1101000   entropy=3.465  1101000=104                        ASCII(0-127)                                      
+       ->  0x8c    10|001100   prob=   0.227  ?                                  ?                                                 
   ---
-  [   6]  0xed    1110|1101   entropy=2.605  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xdb    110|11011   prob=   0.291  11011+bbbbbb=1728-1791             Arabic(1536-1791)                                 
+  [   4]  0xa9    10|101001   entropy=2.414  ?                                  ?                                                 
+       ->  0x96    10|010110   prob=   0.325  01001+010110=598                   IPA(592-687)                                      
 
-  [   7]  0x8f    10|001111   entropy=4.492  1101+001111+bbbbbb=54208-54271     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.107  0000110=6                          ASCII(0-127)                                      
-
-  [   8]  0xac    10|101100   entropy=3.301  1101+001111+101100=54252           Hangul(44032-55215)                               
-       ->  0xee    1110|1110   prob=   0.249  1110+1bbbbb+bbbbbb=57344-61439     Other_i(55216-63743)                              
+  [   5]  0x96    10|010110   entropy=3.105  01001+010110=598                   IPA(592-687)                                      
+       ->  0xb5    10|110101   prob=   0.195  ?                                  ?                                                 
   ---
-  [   9]  0xeb    1110|1011   entropy=3.936  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  'H'     0|1001000   prob=   0.143  1001000=72                         ASCII(0-127)                                      
-
-  [  10]  0x93    10|010011   entropy=3.242  1011+010011+bbbbbb=46272-46335     Hangul(44032-55215)                               
-       ->  's'     0|1110011   prob=   0.219  1110011=115                        ASCII(0-127)                                      
-
-  [  11]  0x9c    10|011100   entropy=3.889  1011+010011+011100=46300           Hangul(44032-55215)                               
-       ->  0x83    10|000011   prob=   0.197  ?                                  ?                                                 
+  [   6]  0x04    0|0000100   entropy=0.729  0000100=4                          ASCII(0-127)                                      
+       ->  0xed    1110|1101   prob=   0.857  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
   ---
-  [  12]  ' '     0|0100000   entropy=3.582  0100000=32                         ASCII(0-127)                                      
-       ->  '`'     0|1100000   prob=   0.137  1100000=96                         ASCII(0-127)                                      
+  [   7]  0xed    1110|1101   entropy=2.006  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
+       ->  0xbd    10|111101   prob=   0.620  1101+111101+bbbbbb=57152-57215     Other_i(55216-63743)                              
+
+  [   8]  0xbd    10|111101   entropy=0.206  1101+111101+bbbbbb=57152-57215     Other_i(55216-63743)                              
+       ->  0xd6    110|10110   prob=   0.948  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [   9]  0xd6    110|10110   entropy=4.887  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.067  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [  13]  0xec    1110|1100   entropy=4.375  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.129  0000110=6                          ASCII(0-127)                                      
+  [  10]  0xf8    11110|000   entropy=0.683  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0xd5    110|10101   prob=   0.654  10101+bbbbbb=1344-1407             Armenian(1328-1423)                               
 
-  [  14]  0x9d    10|011101   entropy=2.654  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x17    0|0010111   prob=   0.306  0010111=23                         ASCII(0-127)                                      
+  [  11]  0xd5    110|10101   entropy=3.174  10101+bbbbbb=1344-1407             Armenian(1328-1423)                               
+       ->  0x0b    0|0001011   prob=   0.187  0001011=11                         ASCII(0-127)                                      
 
-  [  15]  0x98    10|011000   entropy=2.764  1100+011101+011000=51032           Hangul(44032-55215)                               
-       ->  'o'     0|1101111   prob=   0.318  1101111=111                        ASCII(0-127)                                      
+  [  12]  0xc4    110|00100   entropy=0.009  00100+bbbbbb=256-319               Latin-Ext(128-591)                                
+       ->  'X'     0|1011000   prob=   0.999  1011000=88                         ASCII(0-127)                                      
+
+  [  13]  'X'     0|1011000   entropy=0.872  1011000=88                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.858  ?                                  ?                                                 
   ---
-  [  16]  0xea    1110|1010   entropy=3.387  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  'e'     0|1100101   prob=   0.289  1100101=101                        ASCII(0-127)                                      
+  [  14]  0xef    1110|1111   entropy=0.421  1111+1bbbbb+bbbbbb=61440-65535     Other_i/CJK-Compat/Other_j(55216-65535)           
+       ->  0xe5    1110|0101   prob=   0.883  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
 
-  [  17]  0xb3    10|110011   entropy=3.996  1010+110011+bbbbbb=44224-44287     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.208  0000110=6                          ASCII(0-127)                                      
+  [  15]  0xe7    1110|0111   entropy=3.225  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+       ->  0x93    10|010011   prob=   0.213  1111+100111+010011=63955           CJK-Compat(63744-64255)                           
 
-  [  18]  0xbc    10|111100   entropy=3.568  1010+110011+111100=44284           Hangul(44032-55215)                               
-       ->  'v'     0|1110110   prob=   0.153  1110110=118                        ASCII(0-127)                                      
+  [  16]  0x0b    0|0001011   entropy=0.017  0001011=11                         ASCII(0-127)                                      
+       ->  0xa9    10|101001   prob=   0.998  ?                                  ?                                                 
   ---
-  [  19]  0xeb    1110|1011   entropy=2.770  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x93    10|010011   prob=   0.313  1011+010011+bbbbbb=46272-46335     Hangul(44032-55215)                               
+  [  17]  0xa9    10|101001   entropy=1.326  ?                                  ?                                                 
+       ->  0xaa    10|101010   prob=   0.737  01001+101010=618                   IPA(592-687)                                      
 
-  [  20]  0x8c    10|001100   entropy=4.184  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
-       ->  0xfd    11110|101   prob=   0.124  101+bbbbbb+bbbbbb+bbbbbb=1310720-1572863  Other(1310720-1572863)                            
-
-  [  21]  0x80    10|000000   entropy=4.320  1011+001100+000000=45824           Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.203  0000110=6                          ASCII(0-127)                                      
+  [  18]  0xbd    10|111101   entropy=0.261  01001+111101=637                   IPA(592-687)                                      
+       ->  0xd6    110|10110   prob=   0.928  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
   ---
-  [  22]  0xed    1110|1101   entropy=3.133  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
+  [  19]  0xd6    110|10110   entropy=4.852  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.057  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+
+  [  20]  0xcd    110|01101   entropy=0.121  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+       ->  0xa3    10|100011   prob=   0.982  ?                                  ?                                                 
+  ---
+  [  21]  0xa3    10|100011   entropy=3.098  ?                                  ?                                                 
+       ->  0xac    10|101100   prob=   0.299  00011+101100=236                   Latin-Ext(128-591)                                
+
+  [  22]  0xac    10|101100   entropy=0.032  00011+101100=236                   Latin-Ext(128-591)                                
+       ->  '0'     0|0110000   prob=   0.997  0110000=48                         ASCII(0-127)                                      
+  ---
+  [  23]  '0'     0|0110000   entropy=2.713  0110000=48                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.379  ?                                  ?                                                 
+  ---
+  [  24]  0x1b    0|0011011   entropy=0.396  0011011=27                         ASCII(0-127)                                      
+       ->  0xb1    10|110001   prob=   0.947  ?                                  ?                                                 
+  ---
+  [  25]  0xb1    10|110001   entropy=1.889  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.409  10001+111101=1149                  Cyrillic(1024-1327)                               
+
+  [  26]  'r'     0|1110010   entropy=0.057  1110010=114                        ASCII(0-127)                                      
+       ->  0xf1    11110|001   prob=   0.993  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+  ---
+  [  27]  0xf1    11110|001   entropy=0.199  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xbd    10|111101   prob=   0.971  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
+
+  [  28]  0xbd    10|111101   entropy=0.009  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  29]  0xd6    110|10110   entropy=4.805  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.085  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+
+  [  30]  '%'     0|0100101   entropy=0.077  0100101=37                         ASCII(0-127)                                      
+       ->  0xeb    1110|1011   prob=   0.989  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  ---
+  [  31]  0xeb    1110|1011   entropy=2.457  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+       ->  'd'     0|1100100   prob=   0.380  1100100=100                        ASCII(0-127)                                      
+
+  [  32]  'd'     0|1100100   entropy=0.005  1100100=100                        ASCII(0-127)                                      
+       ->  '-'     0|0101101   prob=   1.000  0101101=45                         ASCII(0-127)                                      
+
+  [  33]  '-'     0|0101101   entropy=1.365  0101101=45                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.421  ?                                  ?                                                 
+  ---
+  [  34]  0xbd    10|111101   entropy=0.006  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  35]  0xd6    110|10110   entropy=3.188  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '7'     0|0110111   prob=   0.230  0110111=55                         ASCII(0-127)                                      
+  ---
+  [  36]  0xad    10|101101   entropy=1.043  ?                                  ?                                                 
+       ->  0x99    10|011001   prob=   0.563  01101+011001=857                   Other_a(688-879)                                  
+
+  [  37]  0x93    10|010011   entropy=1.938  01101+010011=851                   Other_a(688-879)                                  
+       ->  0xbd    10|111101   prob=   0.579  ?                                  ?                                                 
+  ---
+  [  38]  ','     0|0101100   entropy=0.200  0101100=44                         ASCII(0-127)                                      
+       ->  'k'     0|1101011   prob=   0.970  1101011=107                        ASCII(0-127)                                      
+  ---
+  [  39]  'k'     0|1101011   entropy=0.341  1101011=107                        ASCII(0-127)                                      
+       ->  0xf2    11110|010   prob=   0.942  010+bbbbbb+bbbbbb+bbbbbb=524288-786431  Other(524288-786431)                              
+  ---
+  [  40]  0xf2    11110|010   entropy=0.015  010+bbbbbb+bbbbbb+bbbbbb=524288-786431  Other(524288-786431)                              
+       ->  0xb2    10|110010   prob=   0.998  010+110010+bbbbbb+bbbbbb=729088-733183  Other(729088-733183)                              
+
+  [  41]  0xb2    10|110010   entropy=2.490  010+110010+bbbbbb+bbbbbb=729088-733183  Other(729088-733183)                              
+       ->  0xbd    10|111101   prob=   0.391  010+110010+111101+bbbbbb=732992-733055  Other(732992-733055)                              
+
+  [  42]  0xbd    10|111101   entropy=0.083  010+110010+111101+bbbbbb=732992-733055  Other(732992-733055)                              
+       ->  0xd6    110|10110   prob=   0.984  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  43]  0xd6    110|10110   entropy=4.730  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  'B'     0|1000010   prob=   0.043  1000010=66                         ASCII(0-127)                                      
+  ---
+  [  44]  ']'     0|1011101   entropy=0.940  1011101=93                         ASCII(0-127)                                      
+       ->  0xbf    10|111111   prob=   0.597  ?                                  ?                                                 
+  ---
+  [  45]  0xbf    10|111111   entropy=1.514  ?                                  ?                                                 
+       ->  '>'     0|0111110   prob=   0.750  0111110=62                         ASCII(0-127)                                      
+
+  [  46]  0xa9    10|101001   entropy=0.031  11111+101001=2025                  Other_b(1872-2303)                                
+       ->  0x96    10|010110   prob=   0.997  ?                                  ?                                                 
+  ---
+  [  47]  0x96    10|010110   entropy=3.090  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.239  10110+111101=1469                  Hebrew(1424-1535)                                 
+
+  [  48]  0xc2    110|00010   entropy=0.003  00010+bbbbbb=128-191               Latin-Ext(128-591)                                
+       ->  0x7f    0|1111111   prob=   1.000  1111111=127                        ASCII(0-127)                                      
+  ---
+  [  49]  0x7f    0|1111111   entropy=0.111  1111111=127                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.983  ?                                  ?                                                 
+  ---
+  [  50]  0xbd    10|111101   entropy=0.003  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  51]  0xd6    110|10110   entropy=4.617  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '?'     0|0111111   prob=   0.061  0111111=63                         ASCII(0-127)                                      
+  ---
+  [  52]  '{'     0|1111011   entropy=0.049  1111011=123                        ASCII(0-127)                                      
+       ->  0x03    0|0000011   prob=   0.995  0000011=3                          ASCII(0-127)                                      
+  ---
+  [  53]  0x03    0|0000011   entropy=1.737  0000011=3                          ASCII(0-127)                                      
+       ->  '%'     0|0100101   prob=   0.666  0100101=37                         ASCII(0-127)                                      
+  ---
+  [  54]  's'     0|1110011   entropy=0.021  1110011=115                        ASCII(0-127)                                      
+       ->  'k'     0|1101011   prob=   0.998  1101011=107                        ASCII(0-127)                                      
+  ---
+  [  55]  'k'     0|1101011   entropy=2.729  1101011=107                        ASCII(0-127)                                      
+       ->  0xdc    110|11100   prob=   0.221  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+  ---
+  [  56]  0xb7    10|110111   entropy=0.135  ?                                  ?                                                 
+       ->  0xaf    10|101111   prob=   0.975  10111+101111=1519                  Hebrew(1424-1535)                                 
+
+  [  57]  'H'     0|1001000   entropy=1.202  1001000=72                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.535  ?                                  ?                                                 
+  ---
+  [  58]  0xe0    1110|0000   entropy=0.022  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  'w'     0|1110111   prob=   0.998  1110111=119                        ASCII(0-127)                                      
+
+  [  59]  'w'     0|1110111   entropy=0.308  1110111=119                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.958  0000+110111+111101=3581            Sinhala(3328-3583)                                
+
+  [  60]  0xbd    10|111101   entropy=0.021  0000+110111+111101=3581            Sinhala(3328-3583)                                
+       ->  0xd6    110|10110   prob=   0.997  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+  ---
+  [  61]  0xd6    110|10110   entropy=4.371  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xdc    110|11100   prob=   0.146  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
+
+  [  62]  0xac    10|101100   entropy=1.325  10110+101100=1452                  Hebrew(1424-1535)                                 
+       ->  '0'     0|0110000   prob=   0.375  0110000=48                         ASCII(0-127)                                      
+  ---
+  [  63]  0xee    1110|1110   entropy=2.312  1110+1bbbbb+bbbbbb=57344-61439     Other_i(55216-63743)                              
+       ->  0xce    110|01110   prob=   0.400  01110+bbbbbb=896-959               Greek(880-1023)                                   
+
+  [  64]  0xce    110|01110   entropy=0.022  01110+bbbbbb=896-959               Greek(880-1023)                                   
+       ->  0xeb    1110|1011   prob=   0.998  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+
+  [  65]  0xeb    1110|1011   entropy=2.498  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+       ->  0xc0    110|00000   prob=   0.268  00000+bbbbbb=0-63                  ASCII(0-127)                                      
+  ---
+  [  66]  0xc0    110|00000   entropy=0.017  00000+bbbbbb=0-63                  ASCII(0-127)                                      
+       ->  'F'     0|1000110   prob=   0.998  1000110=70                         ASCII(0-127)                                      
+
+  [  67]  'F'     0|1000110   entropy=0.349  1000110=70                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.942  ?                                  ?                                                 
+  ---
+  [  68]  0xbd    10|111101   entropy=0.007  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  69]  0xd6    110|10110   entropy=1.587  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '='     0|0111101   prob=   0.715  0111101=61                         ASCII(0-127)                                      
+  ---
+  [  70]  '='     0|0111101   entropy=0.002  0111101=61                         ASCII(0-127)                                      
+       ->  0xb8    10|111000   prob=   1.000  ?                                  ?                                                 
+  ---
+  [  71]  0xb8    10|111000   entropy=0.413  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.928  11000+111101=1597                  Arabic(1536-1791)                                 
+
+  [  72]  0xbd    10|111101   entropy=0.005  11000+111101=1597                  Arabic(1536-1791)                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+  ---
+  [  73]  0xd6    110|10110   entropy=0.328  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xab    10|101011   prob=   0.913  10110+101011=1451                  Hebrew(1424-1535)                                 
+
+  [  74]  0xab    10|101011   entropy=0.007  10110+101011=1451                  Hebrew(1424-1535)                                 
+       ->  0xd4    110|10100   prob=   1.000  10100+bbbbbb=1280-1343             Cyrillic/Armenian(1024-1423)                      
+  ---
+  [  75]  0xd4    110|10100   entropy=1.876  10100+bbbbbb=1280-1343             Cyrillic/Armenian(1024-1423)                      
+       ->  '~'     0|1111110   prob=   0.484  1111110=126                        ASCII(0-127)                                      
+
+  [  76]  0x95    10|010101   entropy=0.004  10100+010101=1301                  Cyrillic(1024-1327)                               
+       ->  '/'     0|0101111   prob=   1.000  0101111=47                         ASCII(0-127)                                      
+  ---
+  [  77]  '/'     0|0101111   entropy=0.602  0101111=47                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.848  ?                                  ?                                                 
+  ---
+  [  78]  0xbd    10|111101   entropy=0.003  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  79]  0xd6    110|10110   entropy=4.398  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.177  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+  ---
+  [  80]  0xfe    11110|110   entropy=1.189  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
+       ->  'c'     0|1100011   prob=   0.573  1100011=99                         ASCII(0-127)                                      
+
+  [  81]  'c'     0|1100011   entropy=1.098  1100011=99                         ASCII(0-127)                                      
+       ->  0xe0    1110|0000   prob=   0.744  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+
+  [  82]  0xe0    1110|0000   entropy=0.012  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  'w'     0|1110111   prob=   0.999  1110111=119                        ASCII(0-127)                                      
+
+  [  83]  'w'     0|1110111   entropy=0.180  1110111=119                        ASCII(0-127)                                      
+       ->  0xdb    110|11011   prob=   0.973  11011+bbbbbb=1728-1791             Arabic(1536-1791)                                 
+  ---
+  [  84]  0xdb    110|11011   entropy=0.000  11011+bbbbbb=1728-1791             Arabic(1536-1791)                                 
+       ->  0xa5    10|100101   prob=   1.000  11011+100101=1765                  Arabic(1536-1791)                                 
+
+  [  85]  0xa5    10|100101   entropy=0.044  11011+100101=1765                  Arabic(1536-1791)                                 
+       ->  0xbd    10|111101   prob=   0.995  ?                                  ?                                                 
+  ---
+  [  86]  0xbd    10|111101   entropy=0.007  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  87]  0xd6    110|10110   entropy=4.293  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.219  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
+  ---
+  [  88]  0x1b    0|0011011   entropy=0.665  0011011=27                         ASCII(0-127)                                      
+       ->  0xb1    10|110001   prob=   0.795  ?                                  ?                                                 
+  ---
+  [  89]  0xb1    10|110001   entropy=3.250  ?                                  ?                                                 
+       ->  0x81    10|000001   prob=   0.252  10001+000001=1089                  Cyrillic(1024-1327)                               
+
+  [  90]  0x81    10|000001   entropy=0.108  10001+000001=1089                  Cyrillic(1024-1327)                               
+       ->  0xb4    10|110100   prob=   0.982  ?                                  ?                                                 
+  ---
+  [  91]  0xb4    10|110100   entropy=2.674  ?                                  ?                                                 
+       ->  'i'     0|1101001   prob=   0.251  1101001=105                        ASCII(0-127)                                      
+
+  [  92]  0xef    1110|1111   entropy=0.439  1111+1bbbbb+bbbbbb=61440-65535     Other_i/CJK-Compat/Other_j(55216-65535)           
+       ->  0xe5    1110|0101   prob=   0.857  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+  ---
+  [  93]  0xe5    1110|0101   entropy=1.352  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xbd    10|111101   prob=   0.738  0101+111101+bbbbbb=24384-24447     CJK(19968-40959)                                  
+
+  [  94]  0xac    10|101100   entropy=0.490  0101+101100+bbbbbb=23296-23359     CJK(19968-40959)                                  
+       ->  '0'     0|0110000   prob=   0.870  0110000=48                         ASCII(0-127)                                      
+
+  [  95]  '0'     0|0110000   entropy=3.586  0110000=48                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.113  ?                                  ?                                                 
+  ---
+  [  96]  0xc2    110|00010   entropy=0.267  00010+bbbbbb=128-191               Latin-Ext(128-591)                                
+       ->  0x7f    0|1111111   prob=   0.957  1111111=127                        ASCII(0-127)                                      
+
+  [  97]  0x7f    0|1111111   entropy=0.052  1111111=127                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.993  ?                                  ?                                                 
+  ---
+  [  98]  0xbd    10|111101   entropy=0.002  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+
+  [  99]  0xd6    110|10110   entropy=4.684  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0x94    10|010100   prob=   0.061  ?                                  ?                                                 
+  ---
+  [ 100]  0x0c    0|0001100   entropy=0.568  0001100=12                         ASCII(0-127)                                      
+       ->  'J'     0|1001010   prob=   0.810  1001010=74                         ASCII(0-127)                                      
+  ---
+  [ 101]  'J'     0|1001010   entropy=2.756  1001010=74                         ASCII(0-127)                                      
        ->  'k'     0|1101011   prob=   0.255  1101011=107                        ASCII(0-127)                                      
-
-  [  23]  0x95    10|010101   entropy=4.090  1101+010101+bbbbbb=54592-54655     Hangul(44032-55215)                               
-       ->  0x89    10|001001   prob=   0.130  1101+010101+001001=54601           Hangul(44032-55215)                               
-
-  [  24]  0x99    10|011001   entropy=4.016  1101+010101+011001=54617           Hangul(44032-55215)                               
-       ->  'H'     0|1001000   prob=   0.113  1001000=72                         ASCII(0-127)                                      
   ---
-  [  25]  ' '     0|0100000   entropy=4.055  0100000=32                         ASCII(0-127)                                      
-       ->  0x08    0|0001000   prob=   0.135  0001000=8                          ASCII(0-127)                                      
+  [ 102]  'k'     0|1101011   entropy=0.096  1101011=107                        ASCII(0-127)                                      
+       ->  \0      0|0000000   prob=   0.986  0000000=0                          ASCII(0-127)                                      
   ---
-  [  26]  0xec    1110|1100   entropy=4.309  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9d    10|011101   prob=   0.069  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-
-  [  27]  0x97    10|010111   entropy=3.133  1100+010111+bbbbbb=50624-50687     Hangul(44032-55215)                               
-       ->  0xd3    110|10011   prob=   0.197  10011+bbbbbb=1216-1279             Cyrillic(1024-1327)                               
-
-  [  28]  0xb0    10|110000   entropy=4.148  1100+010111+110000=50672           Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.176  ?                                  ?                                                 
+  [ 103]  \0      0|0000000   entropy=2.148  0000000=0                          ASCII(0-127)                                      
+       ->  0xdc    110|11100   prob=   0.446  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
   ---
-  [  29]  0xea    1110|1010   entropy=1.403  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0x06    0|0000110   prob=   0.773  0000110=6                          ASCII(0-127)                                      
+  [ 104]  0xd0    110|10000   entropy=0.002  10000+bbbbbb=1024-1087             Cyrillic(1024-1327)                               
+       ->  0x14    0|0010100   prob=   1.000  0010100=20                         ASCII(0-127)                                      
 
-  [  30]  0xb5    10|110101   entropy=2.955  1010+110101+bbbbbb=44352-44415     Hangul(44032-55215)                               
-       ->  '~'     0|1111110   prob=   0.255  1111110=126                        ASCII(0-127)                                      
-
-  [  31]  0xac    10|101100   entropy=2.900  1010+110101+101100=44396           Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.318  0000110=6                          ASCII(0-127)                                      
+  [ 105]  0x14    0|0010100   entropy=1.287  0010100=20                         ASCII(0-127)                                      
+       ->  '~'     0|1111110   prob=   0.548  1111110=126                        ASCII(0-127)                                      
   ---
-  [  32]  0xec    1110|1100   entropy=3.861  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.192  0000110=6                          ASCII(0-127)                                      
-
-  [  33]  0xa7    10|100111   entropy=3.604  1100+100111+bbbbbb=51648-51711     Hangul(44032-55215)                               
-       ->  '7'     0|0110111   prob=   0.235  0110111=55                         ASCII(0-127)                                      
+  [ 106]  0xc5    110|00101   entropy=0.001  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
+       ->  0xdd    110|11101   prob=   1.000  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
 
-  [  34]  0x84    10|000100   entropy=4.629  1100+100111+000100=51652           Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.078  ?                                  ?                                                 
+  [ 107]  0xdd    110|11101   entropy=0.696  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+       ->  0x08    0|0001000   prob=   0.865  0001000=8                          ASCII(0-127)                                      
   ---
-  [  35]  0xec    1110|1100   entropy=4.125  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.201  0000110=6                          ASCII(0-127)                                      
+  [ 108]  0xac    10|101100   entropy=0.089  ?                                  ?                                                 
+       ->  0x1c    0|0011100   prob=   0.988  0011100=28                         ASCII(0-127)                                      
 
-  [  36]  0x9d    10|011101   entropy=1.498  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0xf7    11110|111   prob=   0.737  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
-
-  [  37]  0x80    10|000000   entropy=3.133  1100+011101+000000=51008           Hangul(44032-55215)                               
-       ->  0x92    10|010010   prob=   0.199  ?                                  ?                                                 
-  ---
-  [  38]  ' '     0|0100000   entropy=4.375  0100000=32                         ASCII(0-127)                                      
-       ->  0x06    0|0000110   prob=   0.074  0000110=6                          ASCII(0-127)                                      
+  [ 109]  0x1c    0|0011100   entropy=0.165  0011100=28                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.979  ?                                  ?                                                 
   ---
-  [  39]  0xec    1110|1100   entropy=2.637  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'c'     0|1100011   prob=   0.292  1100011=99                         ASCII(0-127)                                      
+  [ 110]  0xbd    10|111101   entropy=0.002  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [  40]  0xa7    10|100111   entropy=3.693  1100+100111+bbbbbb=51648-51711     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.177  1100+100111+011110=51678           Hangul(44032-55215)                               
-
-  [  41]  0x80    10|000000   entropy=4.480  1100+100111+000000=51648           Hangul(44032-55215)                               
-       ->  0xbd    10|111101   prob=   0.069  ?                                  ?                                                 
+  [ 111]  0xd6    110|10110   entropy=3.527  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xdc    110|11100   prob=   0.244  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
   ---
-  [  42]  0xeb    1110|1011   entropy=1.399  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.767  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
-
-  [  43]  0x82    10|000010   entropy=4.367  1011+000010+bbbbbb=45184-45247     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.125  1011+000010+001100=45196           Hangul(44032-55215)                               
-
-  [  44]  0x9c    10|011100   entropy=2.699  1011+000010+011100=45212           Hangul(44032-55215)                               
-       ->  'Y'     0|1011001   prob=   0.244  1011001=89                         ASCII(0-127)                                      
+  [ 112]  '<'     0|0111100   entropy=0.322  0111100=60                         ASCII(0-127)                                      
+       ->  '1'     0|0110001   prob=   0.932  0110001=49                         ASCII(0-127)                                      
   ---
-  [  45]  ' '     0|0100000   entropy=4.031  0100000=32                         ASCII(0-127)                                      
-       ->  0x06    0|0000110   prob=   0.159  0000110=6                          ASCII(0-127)                                      
+  [ 113]  '1'     0|0110001   entropy=1.267  0110001=49                         ASCII(0-127)                                      
+       ->  'R'     0|1010010   prob=   0.735  1010010=82                         ASCII(0-127)                                      
   ---
-  [  46]  0xec    1110|1100   entropy=1.276  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0xa7    10|100111   prob=   0.804  1100+100111+bbbbbb=51648-51711     Hangul(44032-55215)                               
-
-  [  47]  0x9b    10|011011   entropy=3.252  1100+011011+bbbbbb=50880-50943     Hangul(44032-55215)                               
-       ->  0xa1    10|100001   prob=   0.349  1100+011011+100001=50913           Hangul(44032-55215)                               
-
-  [  48]  0x94    10|010100   entropy=3.975  1100+011011+010100=50900           Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.145  ?                                  ?                                                 
+  [ 114]  'R'     0|1010010   entropy=0.046  1010010=82                         ASCII(0-127)                                      
+       ->  '/'     0|0101111   prob=   0.996  0101111=47                         ASCII(0-127)                                      
   ---
-  [  49]  0xec    1110|1100   entropy=3.021  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x1b    0|0011011   prob=   0.437  0011011=27                         ASCII(0-127)                                      
-
-  [  50]  0x9a    10|011010   entropy=2.855  1100+011010+bbbbbb=50816-50879     Hangul(44032-55215)                               
-       ->  0x1d    0|0011101   prob=   0.327  0011101=29                         ASCII(0-127)                                      
-
-  [  51]  0x94    10|010100   entropy=4.895  1100+011010+010100=50836           Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.066  ?                                  ?                                                 
+  [ 115]  '/'     0|0101111   entropy=0.755  0101111=47                         ASCII(0-127)                                      
+       ->  0xc5    110|00101   prob=   0.828  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
   ---
-  [  52]  0xec    1110|1100   entropy=3.250  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'c'     0|1100011   prob=   0.256  1100011=99                         ASCII(0-127)                                      
+  [ 116]  0xc5    110|00101   entropy=0.000  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
+       ->  0xdd    110|11101   prob=   1.000  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
 
-  [  53]  0x9d    10|011101   entropy=4.359  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.103  1100+011101+000000=51008           Hangul(44032-55215)                               
-
-  [  54]  0xbc    10|111100   entropy=3.156  1100+011101+111100=51068           Hangul(44032-55215)                               
-       ->  ':'     0|0111010   prob=   0.262  0111010=58                         ASCII(0-127)                                      
-  ---
-  [  55]  ' '     0|0100000   entropy=3.982  0100000=32                         ASCII(0-127)                                      
-       ->  'A'     0|1000001   prob=   0.123  1000001=65                         ASCII(0-127)                                      
+  [ 117]  0xdd    110|11101   entropy=0.228  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+       ->  0x08    0|0001000   prob=   0.970  0001000=8                          ASCII(0-127)                                      
   ---
-  [  56]  0xec    1110|1100   entropy=2.873  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0xa7    10|100111   prob=   0.239  1100+100111+bbbbbb=51648-51711     Hangul(44032-55215)                               
-
-  [  57]  0x84    10|000100   entropy=4.984  1100+000100+bbbbbb=49408-49471     Hangul(44032-55215)                               
-       ->  0x86    10|000110   prob=   0.045  1100+000100+000110=49414           Hangul(44032-55215)                               
-
-  [  58]  0xb8    10|111000   entropy=3.787  1100+000100+111000=49464           Hangul(44032-55215)                               
-       ->  0x85    10|000101   prob=   0.168  ?                                  ?                                                 
+  [ 118]  0x08    0|0001000   entropy=0.007  0001000=8                          ASCII(0-127)                                      
+       ->  '"'     0|0100010   prob=   1.000  0100010=34                         ASCII(0-127)                                      
   ---
-  [  59]  0xed    1110|1101   entropy=3.430  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xe1    1110|0001   prob=   0.283  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
-
-  [  60]  0x8f    10|001111   entropy=4.766  1101+001111+bbbbbb=54208-54271     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.111  1101+001111+011110=54238           Hangul(44032-55215)                               
-
-  [  61]  0xac    10|101100   entropy=0.570  1101+001111+101100=54252           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.923  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 119]  '"'     0|0100010   entropy=0.853  0100010=34                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.522  ?                                  ?                                                 
   ---
-  [  62]  0xeb    1110|1011   entropy=1.396  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.783  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
+  [ 120]  0xbd    10|111101   entropy=0.011  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [  63]  0xa5    10|100101   entropy=4.953  1011+100101+bbbbbb=47424-47487     Hangul(44032-55215)                               
-       ->  0x86    10|000110   prob=   0.033  1011+100101+000110=47430           Hangul(44032-55215)                               
-
-  [  64]  0xbc    10|111100   entropy=3.656  1011+100101+111100=47484           Hangul(44032-55215)                               
-       ->  '4'     0|0110100   prob=   0.170  0110100=52                         ASCII(0-127)                                      
-  ---
-  [  65]  ' '     0|0100000   entropy=4.523  0100000=32                         ASCII(0-127)                                      
-       ->  'I'     0|1001001   prob=   0.084  1001001=73                         ASCII(0-127)                                      
+  [ 121]  0xd6    110|10110   entropy=3.582  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.350  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [  66]  0xec    1110|1100   entropy=4.391  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  ')'     0|0101001   prob=   0.145  0101001=41                         ASCII(0-127)                                      
-
-  [  67]  0x9c    10|011100   entropy=3.225  1100+011100+bbbbbb=50944-51007     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.420  1100+011100+011100=50972           Hangul(44032-55215)                               
-
-  [  68]  0xa0    10|100000   entropy=4.816  1100+011100+100000=50976           Hangul(44032-55215)                               
-       ->  0x0f    0|0001111   prob=   0.077  0001111=15                         ASCII(0-127)                                      
+  [ 122]  'v'     0|1110110   entropy=0.343  1110110=118                        ASCII(0-127)                                      
+       ->  0x93    10|010011   prob=   0.927  ?                                  ?                                                 
   ---
-  [  69]  0xed    1110|1101   entropy=2.789  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x9b    10|011011   prob=   0.302  1101+011011+bbbbbb=54976-55039     Hangul(44032-55215)                               
-
-  [  70]  0x98    10|011000   entropy=2.625  1101+011000+bbbbbb=54784-54847     Hangul(44032-55215)                               
-       ->  '.'     0|0101110   prob=   0.239  0101110=46                         ASCII(0-127)                                      
+  [ 123]  0x93    10|010011   entropy=2.682  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.462  10011+111101=1277                  Cyrillic(1024-1327)                               
 
-  [  71]  0x95    10|010101   entropy=4.387  1101+011000+010101=54805           Hangul(44032-55215)                               
-       ->  ';'     0|0111011   prob=   0.074  0111011=59                         ASCII(0-127)                                      
+  [ 124]  0x95    10|010101   entropy=0.074  10011+010101=1237                  Cyrillic(1024-1327)                               
+       ->  '/'     0|0101111   prob=   0.987  0101111=47                         ASCII(0-127)                                      
   ---
-  [  72]  0xeb    1110|1011   entropy=3.469  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.357  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
-
-  [  73]  0xb3    10|110011   entropy=4.520  1011+110011+bbbbbb=48320-48383     Hangul(44032-55215)                               
-       ->  0xcb    110|01011   prob=   0.084  01011+bbbbbb=704-767               Other_a(688-879)                                  
-
-  [  74]  0x84    10|000100   entropy=4.461  1011+110011+000100=48324           Hangul(44032-55215)                               
-       ->  0x94    10|010100   prob=   0.105  ?                                  ?                                                 
+  [ 125]  '/'     0|0101111   entropy=0.092  0101111=47                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.989  ?                                  ?                                                 
   ---
-  [  75]  0xeb    1110|1011   entropy=3.359  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.252  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
+  [ 126]  0xbd    10|111101   entropy=0.002  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [  76]  0xa1    10|100001   entropy=4.801  1011+100001+bbbbbb=47168-47231     Hangul(44032-55215)                               
-       ->  '%'     0|0100101   prob=   0.060  0100101=37                         ASCII(0-127)                                      
-
-  [  77]  0x9c    10|011100   entropy=4.902  1011+100001+011100=47196           Hangul(44032-55215)                               
-       ->  0xff    11110|111   prob=   0.052  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
-  ---
-  [  78]  ' '     0|0100000   entropy=4.934  0100000=32                         ASCII(0-127)                                      
-       ->  'A'     0|1000001   prob=   0.063  1000001=65                         ASCII(0-127)                                      
+  [ 127]  0xd6    110|10110   entropy=4.566  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '%'     0|0100101   prob=   0.101  0100101=37                         ASCII(0-127)                                      
   ---
-  [  79]  0xeb    1110|1011   entropy=3.688  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.321  1011+001100+bbbbbb=45824-45887     Hangul(44032-55215)                               
+  [ 128]  0xe1    1110|0001   entropy=0.090  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  '#'     0|0100011   prob=   0.987  0100011=35                         ASCII(0-127)                                      
 
-  [  80]  0xb6    10|110110   entropy=4.914  1011+110110+bbbbbb=48512-48575     Hangul(44032-55215)                               
-       ->  0xe1    1110|0001   prob=   0.038  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+  [ 129]  '#'     0|0100011   entropy=2.883  0100011=35                         ASCII(0-127)                                      
+       ->  0xad    10|101101   prob=   0.211  0001+100011+101101=6381            Other_d(6320-11903)                               
 
-  [  81]  0x84    10|000100   entropy=3.037  1011+110110+000100=48516           Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.469  ?                                  ?                                                 
+  [ 130]  0xb2    10|110010   entropy=0.043  0001+100011+110010=6386            Other_d(6320-11903)                               
+       ->  0xe5    1110|0101   prob=   0.995  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
   ---
-  [  82]  0xeb    1110|1011   entropy=4.305  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.077  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
+  [ 131]  0xe5    1110|0101   entropy=0.123  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xbd    10|111101   prob=   0.985  0101+111101+bbbbbb=24384-24447     CJK(19968-40959)                                  
 
-  [  83]  0xa5    10|100101   entropy=3.451  1011+100101+bbbbbb=47424-47487     Hangul(44032-55215)                               
-       ->  0xdd    110|11101   prob=   0.261  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  [ 132]  0xbd    10|111101   entropy=0.008  0101+111101+bbbbbb=24384-24447     CJK(19968-40959)                                  
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [  84]  0x98    10|011000   entropy=3.324  1011+100101+011000=47448           Hangul(44032-55215)                               
-       ->  0xab    10|101011   prob=   0.323  ?                                  ?                                                 
+  [ 133]  0xd6    110|10110   entropy=4.703  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.093  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [  85]  0xed    1110|1101   entropy=3.916  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  'u'     0|1110101   prob=   0.131  1110101=117                        ASCII(0-127)                                      
+  [ 134]  0xa7    10|100111   entropy=0.263  ?                                  ?                                                 
+       ->  '0'     0|0110000   prob=   0.943  0110000=48                         ASCII(0-127)                                      
 
-  [  86]  0x95    10|010101   entropy=4.039  1101+010101+bbbbbb=54592-54655     Hangul(44032-55215)                               
-       ->  '1'     0|0110001   prob=   0.205  0110001=49                         ASCII(0-127)                                      
-
-  [  87]  0xa0    10|100000   entropy=4.586  1101+010101+100000=54624           Hangul(44032-55215)                               
-       ->  0xcb    110|01011   prob=   0.068  01011+bbbbbb=704-767               Other_a(688-879)                                  
+  [ 135]  '0'     0|0110000   entropy=2.053  0110000=48                         ASCII(0-127)                                      
+       ->  's'     0|1110011   prob=   0.417  1110011=115                        ASCII(0-127)                                      
   ---
-  [  88]  ' '     0|0100000   entropy=4.035  0100000=32                         ASCII(0-127)                                      
-       ->  0xa8    10|101000   prob=   0.106  ?                                  ?                                                 
+  [ 136]  'r'     0|1110010   entropy=0.008  1110010=114                        ASCII(0-127)                                      
+       ->  0xf1    11110|001   prob=   1.000  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
   ---
-  [  89]  0xec    1110|1100   entropy=4.949  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x02    0|0000010   prob=   0.056  0000010=2                          ASCII(0-127)                                      
-
-  [  90]  0x88    10|001000   entropy=1.289  1100+001000+bbbbbb=49664-49727     Hangul(44032-55215)                               
-       ->  0xa5    10|100101   prob=   0.627  1100+001000+100101=49701           Hangul(44032-55215)                               
+  [ 137]  0xf1    11110|001   entropy=0.128  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xbd    10|111101   prob=   0.985  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
 
-  [  91]  0x98    10|011000   entropy=5.074  1100+001000+011000=49688           Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.039  0000110=6                          ASCII(0-127)                                      
-  ---
-  [  92]  ' '     0|0100000   entropy=4.684  0100000=32                         ASCII(0-127)                                      
-       ->  0x88    10|001000   prob=   0.059  ?                                  ?                                                 
-  ---
-  [  93]  0xec    1110|1100   entropy=2.600  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x8e    10|001110   prob=   0.402  1100+001110+bbbbbb=50048-50111     Hangul(44032-55215)                               
+  [ 138]  0xbd    10|111101   entropy=0.005  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [  94]  0x9e    10|011110   entropy=0.425  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
-       ->  'O'     0|1001111   prob=   0.937  1001111=79                         ASCII(0-127)                                      
+  [ 139]  0xd6    110|10110   entropy=4.387  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.186  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
 
-  [  95]  0x88    10|001000   entropy=4.984  1100+011110+001000=51080           Hangul(44032-55215)                               
-       ->  0xa5    10|100101   prob=   0.045  ?                                  ?                                                 
+  [ 140]  'S'     0|1010011   entropy=0.608  1010011=83                         ASCII(0-127)                                      
+       ->  0xc5    110|00101   prob=   0.770  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
   ---
-  [  96]  0xeb    1110|1011   entropy=4.027  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.097  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-
-  [  97]  0x8a    10|001010   entropy=4.891  1011+001010+bbbbbb=45696-45759     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.069  1011+001010+011110=45726           Hangul(44032-55215)                               
+  [ 141]  0xc5    110|00101   entropy=1.945  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
+       ->  0x03    0|0000011   prob=   0.502  0000011=3                          ASCII(0-127)                                      
 
-  [  98]  0x94    10|010100   entropy=3.381  1011+001010+010100=45716           Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.412  ?                                  ?                                                 
+  [ 142]  0x03    0|0000011   entropy=0.032  0000011=3                          ASCII(0-127)                                      
+       ->  '-'     0|0101101   prob=   0.997  0101101=45                         ASCII(0-127)                                      
   ---
-  [  99]  ' '     0|0100000   entropy=4.535  0100000=32                         ASCII(0-127)                                      
-       ->  0x9e    10|011110   prob=   0.155  ?                                  ?                                                 
+  [ 143]  '-'     0|0101101   entropy=2.979  0101101=45                         ASCII(0-127)                                      
+       ->  '?'     0|0111111   prob=   0.296  0111111=63                         ASCII(0-127)                                      
   ---
-  [ 100]  0xec    1110|1100   entropy=3.197  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'c'     0|1100011   prob=   0.253  1100011=99                         ASCII(0-127)                                      
+  [ 144]  0xf8    11110|000   entropy=0.002  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0xd5    110|10101   prob=   1.000  10101+bbbbbb=1344-1407             Armenian(1328-1423)                               
 
-  [ 101]  0x83    10|000011   entropy=4.758  1100+000011+bbbbbb=49344-49407     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.100  1100+000011+011110=49374           Hangul(44032-55215)                               
+  [ 145]  0xd5    110|10101   entropy=0.031  10101+bbbbbb=1344-1407             Armenian(1328-1423)                               
+       ->  0xbd    10|111101   prob=   0.997  000+010101+111101+bbbbbb=89920-89983  Other(89920-89983)                                
 
-  [ 102]  0x88    10|001000   entropy=3.090  1100+000011+001000=49352           Hangul(44032-55215)                               
-       ->  ','     0|0101100   prob=   0.456  0101100=44                         ASCII(0-127)                                      
-  ---
-  [ 103]  0xeb    1110|1011   entropy=4.871  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x97    10|010111   prob=   0.039  1011+010111+bbbbbb=46528-46591     Hangul(44032-55215)                               
-
-  [ 104]  0xa1    10|100001   entropy=4.617  1011+100001+bbbbbb=47168-47231     Hangul(44032-55215)                               
-       ->  0x97    10|010111   prob=   0.081  1011+100001+010111=47191           Hangul(44032-55215)                               
+  [ 146]  0xbd    10|111101   entropy=0.004  000+010101+111101+bbbbbb=89920-89983  Other(89920-89983)                                
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 105]  0x9c    10|011100   entropy=5.000  1011+100001+011100=47196           Hangul(44032-55215)                               
-       ->  0xff    11110|111   prob=   0.033  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  [ 147]  0xd6    110|10110   entropy=4.605  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.140  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 106]  0xec    1110|1100   entropy=4.785  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x8e    10|001110   prob=   0.044  1100+001110+bbbbbb=50048-50111     Hangul(44032-55215)                               
+  [ 148]  0xb5    10|110101   entropy=0.825  ?                                  ?                                                 
+       ->  'k'     0|1101011   prob=   0.818  1101011=107                        ASCII(0-127)                                      
 
-  [ 107]  0x9a    10|011010   entropy=4.934  1100+011010+bbbbbb=50816-50879     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.034  1100+011010+011100=50844           Hangul(44032-55215)                               
-
-  [ 108]  0xb4    10|110100   entropy=4.527  1100+011010+110100=50868           Hangul(44032-55215)                               
-       ->  0xcd    110|01101   prob=   0.088  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
-  ---
-  [ 109]  ' '     0|0100000   entropy=4.594  0100000=32                         ASCII(0-127)                                      
-       ->  0x88    10|001000   prob=   0.081  ?                                  ?                                                 
+  [ 149]  'k'     0|1101011   entropy=3.777  1101011=107                        ASCII(0-127)                                      
+       ->  0x03    0|0000011   prob=   0.079  0000011=3                          ASCII(0-127)                                      
   ---
-  [ 110]  0xec    1110|1100   entropy=4.051  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'Y'     0|1011001   prob=   0.139  1011001=89                         ASCII(0-127)                                      
-
-  [ 111]  0xa7    10|100111   entropy=4.738  1100+100111+bbbbbb=51648-51711     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.046  1100+100111+011110=51678           Hangul(44032-55215)                               
-
-  [ 112]  0x84    10|000100   entropy=4.199  1100+100111+000100=51652           Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.161  ?                                  ?                                                 
+  [ 150]  0x15    0|0010101   entropy=0.079  0010101=21                         ASCII(0-127)                                      
+       ->  0xa8    10|101000   prob=   0.990  ?                                  ?                                                 
   ---
-  [ 113]  0xeb    1110|1011   entropy=4.055  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  'B'     0|1000010   prob=   0.138  1000010=66                         ASCII(0-127)                                      
+  [ 151]  0xa8    10|101000   entropy=3.496  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.250  01000+111101=573                   Latin-Ext(128-591)                                
 
-  [ 114]  0x8b    10|001011   entropy=4.836  1011+001011+bbbbbb=45760-45823     Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.060  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-
-  [ 115]  0xa8    10|101000   entropy=4.934  1011+001011+101000=45800           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.049  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 152]  '?'     0|0111111   entropy=0.045  0111111=63                         ASCII(0-127)                                      
+       ->  0xf1    11110|001   prob=   0.993  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
   ---
-  [ 116]  0xeb    1110|1011   entropy=4.652  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.099  1011+011110+bbbbbb=46976-47039     Hangul(44032-55215)                               
-
-  [ 117]  0x8f    10|001111   entropy=5.012  1011+001111+bbbbbb=46016-46079     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.061  0000110=6                          ASCII(0-127)                                      
+  [ 153]  0xf1    11110|001   entropy=0.791  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xbd    10|111101   prob=   0.879  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
 
-  [ 118]  0x84    10|000100   entropy=4.977  1011+001111+000100=46020           Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.039  ?                                  ?                                                 
-  ---
-  [ 119]  0xea    1110|1010   entropy=4.570  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0xde    110|11110   prob=   0.062  11110+bbbbbb=1920-1983             Other_b(1872-2303)                                
+  [ 154]  0xbd    10|111101   entropy=0.030  001+111101+bbbbbb+bbbbbb=512000-516095  Other(512000-516095)                              
+       ->  0xd6    110|10110   prob=   0.996  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 120]  0xb5    10|110101   entropy=4.754  1010+110101+bbbbbb=44352-44415     Hangul(44032-55215)                               
-       ->  0xac    10|101100   prob=   0.133  1010+110101+101100=44396           Hangul(44032-55215)                               
+  [ 155]  0xd6    110|10110   entropy=4.773  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  'v'     0|1110110   prob=   0.048  1110110=118                        ASCII(0-127)                                      
 
-  [ 121]  0xac    10|101100   entropy=4.172  1010+110101+101100=44396           Hangul(44032-55215)                               
-       ->  0x92    10|010010   prob=   0.134  ?                                  ?                                                 
+  [ 156]  '?'     0|0111111   entropy=0.342  0111111=63                         ASCII(0-127)                                      
+       ->  0xf1    11110|001   prob=   0.925  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
   ---
-  [ 122]  0xeb    1110|1011   entropy=4.359  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.079  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-
-  [ 123]  0xa5    10|100101   entropy=4.863  1011+100101+bbbbbb=47424-47487     Hangul(44032-55215)                               
-       ->  0xbc    10|111100   prob=   0.042  1011+100101+111100=47484           Hangul(44032-55215)                               
+  [ 157]  0xf1    11110|001   entropy=3.350  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xe5    1110|0101   prob=   0.226  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
 
-  [ 124]  0xbc    10|111100   entropy=3.643  1011+100101+111100=47484           Hangul(44032-55215)                               
-       ->  0x9a    10|011010   prob=   0.268  ?                                  ?                                                 
-  ---
-  [ 125]  ' '     0|0100000   entropy=4.723  0100000=32                         ASCII(0-127)                                      
-       ->  'I'     0|1001001   prob=   0.076  1001001=73                         ASCII(0-127)                                      
-  ---
-  [ 126]  0xea    1110|1010   entropy=4.117  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0x03    0|0000011   prob=   0.153  0000011=3                          ASCII(0-127)                                      
+  [ 158]  0xe5    1110|0101   entropy=0.007  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xfe    11110|110   prob=   1.000  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
 
-  [ 127]  0xb0    10|110000   entropy=4.727  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.060  1010+110000+011110=44062           Hangul(44032-55215)                               
+  [ 159]  0xfe    11110|110   entropy=1.334  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
+       ->  0xdc    110|11100   prob=   0.616  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
 
-  [ 128]  0x9c    10|011100   entropy=4.484  1010+110000+011100=44060           Hangul(44032-55215)                               
-       ->  ' '     0|0100000   prob=   0.164  0100000=32                         ASCII(0-127)                                      
+  [ 160]  'c'     0|1100011   entropy=0.026  1100011=99                         ASCII(0-127)                                      
+       ->  0x9b    10|011011   prob=   0.998  ?                                  ?                                                 
   ---
-  [ 129]  0xeb    1110|1011   entropy=4.043  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x97    10|010111   prob=   0.128  1011+010111+bbbbbb=46528-46591     Hangul(44032-55215)                               
+  [ 161]  0x9b    10|011011   entropy=0.103  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.986  11011+111101=1789                  Arabic(1536-1791)                                 
 
-  [ 130]  0xb0    10|110000   entropy=4.324  1011+110000+bbbbbb=48128-48191     Hangul(44032-55215)                               
-       ->  0x16    0|0010110   prob=   0.118  0010110=22                         ASCII(0-127)                                      
-
-  [ 131]  0x9c    10|011100   entropy=5.020  1011+110000+011100=48156           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.049  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 162]  0xbd    10|111101   entropy=0.004  11011+111101=1789                  Arabic(1536-1791)                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
   ---
-  [ 132]  0xed    1110|1101   entropy=4.004  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  'u'     0|1110101   prob=   0.123  1110101=117                        ASCII(0-127)                                      
-
-  [ 133]  0x96    10|010110   entropy=4.828  1101+010110+bbbbbb=54656-54719     Hangul(44032-55215)                               
-       ->  'u'     0|1110101   prob=   0.069  1110101=117                        ASCII(0-127)                                      
+  [ 163]  0xd6    110|10110   entropy=4.625  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.106  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
 
-  [ 134]  0x88    10|001000   entropy=4.434  1101+010110+001000=54664           Hangul(44032-55215)                               
-       ->  0xa5    10|100101   prob=   0.143  ?                                  ?                                                 
+  [ 164]  '@'     0|1000000   entropy=1.253  1000000=64                         ASCII(0-127)                                      
+       ->  'O'     0|1001111   prob=   0.534  1001111=79                         ASCII(0-127)                                      
   ---
-  [ 135]  0xeb    1110|1011   entropy=4.742  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.073  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
+  [ 165]  0xf8    11110|000   entropy=3.645  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0x8e    10|001110   prob=   0.178  000+001110+bbbbbb+bbbbbb=57344-61439  Other_i(55216-63743)                              
 
-  [ 136]  0x8b    10|001011   entropy=4.168  1011+001011+bbbbbb=45760-45823     Hangul(44032-55215)                               
-       ->  0xa8    10|101000   prob=   0.144  1011+001011+101000=45800           Hangul(44032-55215)                               
+  [ 166]  0xf0    11110|000   entropy=0.057  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0x8f    10|001111   prob=   0.992  000+110000+001111+bbbbbb=197568-197631  Other(197568-197631)                              
 
-  [ 137]  0xa4    10|100100   entropy=5.043  1011+001011+100100=45796           Hangul(44032-55215)                               
-       ->  0xed    1110|1101   prob=   0.033  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-  ---
-  [ 138]  0xea    1110|1010   entropy=2.285  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0x03    0|0000011   prob=   0.491  0000011=3                          ASCII(0-127)                                      
+  [ 167]  0x8f    10|001111   entropy=0.081  000+110000+001111+bbbbbb=197568-197631  Other(197568-197631)                              
+       ->  0xe0    1110|0000   prob=   0.990  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
 
-  [ 139]  0xb3    10|110011   entropy=4.738  1010+110011+bbbbbb=44224-44287     Hangul(44032-55215)                               
-       ->  0xe6    1110|0110   prob=   0.052  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
-
-  [ 140]  0xa0    10|100000   entropy=4.363  1010+110011+100000=44256           Hangul(44032-55215)                               
-       ->  'L'     0|1001100   prob=   0.079  1001100=76                         ASCII(0-127)                                      
-  ---
-  [ 141]  ' '     0|0100000   entropy=4.582  0100000=32                         ASCII(0-127)                                      
-       ->  0x88    10|001000   prob=   0.101  ?                                  ?                                                 
+  [ 168]  0xe0    1110|0000   entropy=0.002  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  'w'     0|1110111   prob=   1.000  1110111=119                        ASCII(0-127)                                      
   ---
-  [ 142]  0xeb    1110|1011   entropy=4.238  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.117  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-
-  [ 143]  0xb0    10|110000   entropy=4.965  1011+110000+bbbbbb=48128-48191     Hangul(44032-55215)                               
-       ->  0x89    10|001001   prob=   0.045  1011+110000+001001=48137           Hangul(44032-55215)                               
-
-  [ 144]  0x9d    10|011101   entropy=2.340  1011+110000+011101=48157           Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.543  ?                                  ?                                                 
+  [ 169]  'w'     0|1110111   entropy=1.027  1110111=119                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.769  ?                                  ?                                                 
   ---
-  [ 145]  0xed    1110|1101   entropy=4.812  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xed    1110|1101   prob=   0.083  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
+  [ 170]  0x97    10|010111   entropy=0.028  ?                                  ?                                                 
+       ->  '*'     0|0101010   prob=   0.996  0101010=42                         ASCII(0-127)                                      
 
-  [ 146]  0x98    10|011000   entropy=3.812  1101+011000+bbbbbb=54784-54847     Hangul(44032-55215)                               
-       ->  0xa7    10|100111   prob=   0.254  1101+011000+100111=54823           Hangul(44032-55215)                               
-
-  [ 147]  0x94    10|010100   entropy=4.426  1101+011000+010100=54804           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.232  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 171]  '*'     0|0101010   entropy=0.025  0101010=42                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.998  ?                                  ?                                                 
   ---
-  [ 148]  0xeb    1110|1011   entropy=4.500  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  'B'     0|1000010   prob=   0.068  1000010=66                         ASCII(0-127)                                      
-
-  [ 149]  0x8b    10|001011   entropy=4.895  1011+001011+bbbbbb=45760-45823     Hangul(44032-55215)                               
-       ->  0xa8    10|101000   prob=   0.043  1011+001011+101000=45800           Hangul(44032-55215)                               
+  [ 172]  0xbd    10|111101   entropy=0.001  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 150]  0xa4    10|100100   entropy=4.984  1011+001011+100100=45796           Hangul(44032-55215)                               
-       ->  0xf7    11110|111   prob=   0.059  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  [ 173]  0xd6    110|10110   entropy=4.477  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.147  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 151]  '.'     0|0101110   entropy=4.410  0101110=46                         ASCII(0-127)                                      
-       ->  0x18    0|0011000   prob=   0.092  0011000=24                         ASCII(0-127)                                      
-  ---
-  [ 152]  ' '     0|0100000   entropy=3.998  0100000=32                         ASCII(0-127)                                      
-       ->  '`'     0|1100000   prob=   0.171  1100000=96                         ASCII(0-127)                                      
-  ---
-  [ 153]  0xec    1110|1100   entropy=4.875  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.049  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
+  [ 174]  0xf2    11110|010   entropy=0.831  010+bbbbbb+bbbbbb+bbbbbb=524288-786431  Other(524288-786431)                              
+       ->  0xb2    10|110010   prob=   0.768  010+110010+bbbbbb+bbbbbb=729088-733183  Other(729088-733183)                              
 
-  [ 154]  0x9d    10|011101   entropy=3.590  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x17    0|0010111   prob=   0.294  0010111=23                         ASCII(0-127)                                      
+  [ 175]  0xb2    10|110010   entropy=3.377  010+110010+bbbbbb+bbbbbb=729088-733183  Other(729088-733183)                              
+       ->  0xf9    11110|001   prob=   0.224  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
 
-  [ 155]  0xb4    10|110100   entropy=4.570  1100+011101+110100=51060           Hangul(44032-55215)                               
-       ->  0x0b    0|0001011   prob=   0.074  0001011=11                         ASCII(0-127)                                      
-  ---
-  [ 156]  0xeb    1110|1011   entropy=4.852  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  'e'     0|1100101   prob=   0.060  1100101=101                        ASCII(0-127)                                      
+  [ 176]  0xf9    11110|001   entropy=0.123  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xf1    11110|001   prob=   0.982  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
 
-  [ 157]  0x8a    10|001010   entropy=4.973  1011+001010+bbbbbb=45696-45759     Hangul(44032-55215)                               
-       ->  0xbc    10|111100   prob=   0.044  1011+001010+111100=45756           Hangul(44032-55215)                               
-
-  [ 158]  0x94    10|010100   entropy=3.365  1011+001010+010100=45716           Hangul(44032-55215)                               
-       ->  0x8c    10|001100   prob=   0.362  ?                                  ?                                                 
-  ---
-  [ 159]  ' '     0|0100000   entropy=5.051  0100000=32                         ASCII(0-127)                                      
-       ->  0x9e    10|011110   prob=   0.058  ?                                  ?                                                 
+  [ 177]  0xf1    11110|001   entropy=0.910  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  \0      0|0000000   prob=   0.805  0000000=0                          ASCII(0-127)                                      
   ---
-  [ 160]  0xec    1110|1100   entropy=4.395  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x02    0|0000010   prob=   0.102  0000010=2                          ASCII(0-127)                                      
-
-  [ 161]  0x95    10|010101   entropy=4.055  1100+010101+bbbbbb=50496-50559     Hangul(44032-55215)                               
-       ->  'b'     0|1100010   prob=   0.112  1100010=98                         ASCII(0-127)                                      
-
-  [ 162]  0x84    10|000100   entropy=4.512  1100+010101+000100=50500           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.131  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 178]  \0      0|0000000   entropy=0.020  0000000=0                          ASCII(0-127)                                      
+       ->  0xb0    10|110000   prob=   0.998  ?                                  ?                                                 
   ---
-  [ 163]  0xec    1110|1100   entropy=4.586  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.076  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
+  [ 179]  0xb0    10|110000   entropy=1.074  ?                                  ?                                                 
+       ->  0xf0    11110|000   prob=   0.673  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
 
-  [ 164]  0xa3    10|100011   entropy=3.955  1100+100011+bbbbbb=51392-51455     Hangul(44032-55215)                               
-       ->  0xed    1110|1101   prob=   0.152  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-
-  [ 165]  0xbc    10|111100   entropy=4.980  1100+100011+111100=51452           Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.047  ?                                  ?                                                 
+  [ 180]  0xb5    10|110101   entropy=0.005  10000+110101=1077                  Cyrillic(1024-1327)                               
+       ->  'k'     0|1101011   prob=   1.000  1101011=107                        ASCII(0-127)                                      
   ---
-  [ 166]  ' '     0|0100000   entropy=4.199  0100000=32                         ASCII(0-127)                                      
-       ->  'I'     0|1001001   prob=   0.142  1001001=73                         ASCII(0-127)                                      
+  [ 181]  'k'     0|1101011   entropy=0.075  1101011=107                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.990  ?                                  ?                                                 
   ---
-  [ 167]  0xec    1110|1100   entropy=4.812  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9d    10|011101   prob=   0.109  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-
-  [ 168]  0x9e    10|011110   entropy=0.886  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
-       ->  'O'     0|1001111   prob=   0.871  1001111=79                         ASCII(0-127)                                      
+  [ 182]  0xbd    10|111101   entropy=0.009  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 169]  0x91    10|010001   entropy=5.000  1100+011110+010001=51089           Hangul(44032-55215)                               
-       ->  '3'     0|0110011   prob=   0.051  0110011=51                         ASCII(0-127)                                      
+  [ 183]  0xd6    110|10110   entropy=4.715  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.120  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 170]  0xec    1110|1100   entropy=4.645  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'y'     0|1111001   prob=   0.059  1111001=121                        ASCII(0-127)                                      
+  [ 184]  0xb5    10|110101   entropy=0.255  ?                                  ?                                                 
+       ->  'k'     0|1101011   prob=   0.956  1101011=107                        ASCII(0-127)                                      
 
-  [ 171]  0x9d    10|011101   entropy=4.867  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.045  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-
-  [ 172]  0x80    10|000000   entropy=1.979  1100+011101+000000=51008           Hangul(44032-55215)                               
-       ->  ' '     0|0100000   prob=   0.495  0100000=32                         ASCII(0-127)                                      
+  [ 185]  'u'     0|1110101   entropy=2.711  1110101=117                        ASCII(0-127)                                      
+       ->  0xba    10|111010   prob=   0.528  ?                                  ?                                                 
   ---
-  [ 173]  ' '     0|0100000   entropy=4.719  0100000=32                         ASCII(0-127)                                      
-       ->  'N'     0|1001110   prob=   0.076  1001110=78                         ASCII(0-127)                                      
+  [ 186]  'S'     0|1010011   entropy=0.011  1010011=83                         ASCII(0-127)                                      
+       ->  0xc5    110|00101   prob=   0.999  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
   ---
-  [ 174]  0xed    1110|1101   entropy=3.553  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x9b    10|011011   prob=   0.141  1101+011011+bbbbbb=54976-55039     Hangul(44032-55215)                               
-
-  [ 175]  0x81    10|000001   entropy=4.953  1101+000001+bbbbbb=53312-53375     Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.044  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 187]  0xc5    110|00101   entropy=3.393  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
+       ->  0x03    0|0000011   prob=   0.203  0000011=3                          ASCII(0-127)                                      
 
-  [ 176]  0xac    10|101100   entropy=4.293  1101+000001+101100=53356           Hangul(44032-55215)                               
-       ->  0x18    0|0011000   prob=   0.092  0011000=24                         ASCII(0-127)                                      
+  [ 188]  '0'     0|0110000   entropy=0.491  0110000=48                         ASCII(0-127)                                      
+       ->  0x96    10|010110   prob=   0.908  ?                                  ?                                                 
   ---
-  [ 177]  0xea    1110|1010   entropy=4.434  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0xac    10|101100   prob=   0.081  1010+101100+bbbbbb=43776-43839     Other_h(40960-44031)                              
-
-  [ 178]  0xb8    10|111000   entropy=5.027  1010+111000+bbbbbb=44544-44607     Hangul(44032-55215)                               
-       ->  0x18    0|0011000   prob=   0.046  0011000=24                         ASCII(0-127)                                      
-
-  [ 179]  0xb0    10|110000   entropy=4.547  1010+111000+110000=44592           Hangul(44032-55215)                               
-       ->  0x1f    0|0011111   prob=   0.065  0011111=31                         ASCII(0-127)                                      
+  [ 189]  '='     0|0111101   entropy=2.891  0111101=61                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.349  ?                                  ?                                                 
   ---
-  [ 180]  0xec    1110|1100   entropy=2.875  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'y'     0|1111001   prob=   0.391  1111001=121                        ASCII(0-127)                                      
-
-  [ 181]  0x9d    10|011101   entropy=4.887  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.066  1100+011101+000000=51008           Hangul(44032-55215)                               
+  [ 190]  0xbd    10|111101   entropy=0.099  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.980  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 182]  0x98    10|011000   entropy=2.758  1100+011101+011000=51032           Hangul(44032-55215)                               
-       ->  0xcd    110|01101   prob=   0.444  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
+  [ 191]  0xd6    110|10110   entropy=4.676  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.091  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 183]  ' '     0|0100000   entropy=4.578  0100000=32                         ASCII(0-127)                                      
-       ->  0x88    10|001000   prob=   0.131  ?                                  ?                                                 
+  [ 192]  0x06    0|0000110   entropy=0.764  0000110=6                          ASCII(0-127)                                      
+       ->  0xc6    110|00110   prob=   0.685  00110+bbbbbb=384-447               Latin-Ext(128-591)                                
   ---
-  [ 184]  0xec    1110|1100   entropy=4.109  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  's'     0|1110011   prob=   0.115  1110011=115                        ASCII(0-127)                                      
+  [ 193]  0xc6    110|00110   entropy=0.799  00110+bbbbbb=384-447               Latin-Ext(128-591)                                
+       ->  0xe0    1110|0000   prob=   0.863  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
 
-  [ 185]  0x9d    10|011101   entropy=4.527  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  'q'     0|1110001   prob=   0.081  1110001=113                        ASCII(0-127)                                      
-
-  [ 186]  0xb8    10|111000   entropy=4.121  1100+011101+111000=51064           Hangul(44032-55215)                               
-       ->  'A'     0|1000001   prob=   0.113  1000001=65                         ASCII(0-127)                                      
-  ---
-  [ 187]  0xec    1110|1100   entropy=4.094  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x1b    0|0011011   prob=   0.119  0011011=27                         ASCII(0-127)                                      
-
-  [ 188]  0x87    10|000111   entropy=3.846  1100+000111+bbbbbb=49600-49663     Hangul(44032-55215)                               
-       ->  '4'     0|0110100   prob=   0.096  0110100=52                         ASCII(0-127)                                      
-
-  [ 189]  0x84    10|000100   entropy=4.922  1100+000111+000100=49604           Hangul(44032-55215)                               
-       ->  0x03    0|0000011   prob=   0.040  0000011=3                          ASCII(0-127)                                      
+  [ 194]  '('     0|0101000   entropy=0.060  0101000=40                         ASCII(0-127)                                      
+       ->  'y'     0|1111001   prob=   0.990  1111001=121                        ASCII(0-127)                                      
   ---
-  [ 190]  0xea    1110|1010   entropy=4.703  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  'R'     0|1010010   prob=   0.039  1010010=82                         ASCII(0-127)                                      
-
-  [ 191]  0xb0    10|110000   entropy=3.340  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.277  1010+110000+011100=44060           Hangul(44032-55215)                               
-
-  [ 192]  0x80    10|000000   entropy=4.203  1010+110000+000000=44032           Hangul(44032-55215)                               
-       ->  0x81    10|000001   prob=   0.121  ?                                  ?                                                 
+  [ 195]  'y'     0|1111001   entropy=1.771  1111001=121                        ASCII(0-127)                                      
+       ->  '-'     0|0101101   prob=   0.451  0101101=45                         ASCII(0-127)                                      
   ---
-  [ 193]  ' '     0|0100000   entropy=4.863  0100000=32                         ASCII(0-127)                                      
-       ->  0xa1    10|100001   prob=   0.041  ?                                  ?                                                 
+  [ 196]  '-'     0|0101101   entropy=0.087  0101101=45                         ASCII(0-127)                                      
+       ->  'X'     0|1011000   prob=   0.986  1011000=88                         ASCII(0-127)                                      
   ---
-  [ 194]  0xea    1110|1010   entropy=4.520  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  'C'     0|1000011   prob=   0.073  1000011=67                         ASCII(0-127)                                      
-
-  [ 195]  0xb0    10|110000   entropy=4.566  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-       ->  0x94    10|010100   prob=   0.074  1010+110000+010100=44052           Hangul(44032-55215)                               
-
-  [ 196]  0x80    10|000000   entropy=4.191  1010+110000+000000=44032           Hangul(44032-55215)                               
-       ->  ' '     0|0100000   prob=   0.162  0100000=32                         ASCII(0-127)                                      
+  [ 197]  'X'     0|1011000   entropy=2.506  1011000=88                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.323  ?                                  ?                                                 
   ---
-  [ 197]  0xeb    1110|1011   entropy=4.422  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xa4    10|100100   prob=   0.084  1011+100100+bbbbbb=47360-47423     Hangul(44032-55215)                               
+  [ 198]  0xc2    110|00010   entropy=0.002  00010+bbbbbb=128-191               Latin-Ext(128-591)                                
+       ->  0x7f    0|1111111   prob=   1.000  1111111=127                        ASCII(0-127)                                      
 
-  [ 198]  0x8a    10|001010   entropy=4.734  1011+001010+bbbbbb=45696-45759     Hangul(44032-55215)                               
-       ->  ')'     0|0101001   prob=   0.081  0101001=41                         ASCII(0-127)                                      
-
-  [ 199]  0xa5    10|100101   entropy=4.191  1011+001010+100101=45733           Hangul(44032-55215)                               
-       ->  0xb2    10|110010   prob=   0.103  ?                                  ?                                                 
+  [ 199]  0x7f    0|1111111   entropy=0.054  1111111=127                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.992  ?                                  ?                                                 
   ---
-  [ 200]  0xed    1110|1101   entropy=4.266  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xe6    1110|0110   prob=   0.064  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
-
-  [ 201]  0x95    10|010101   entropy=4.766  1101+010101+bbbbbb=54592-54655     Hangul(44032-55215)                               
-       ->  0x06    0|0000110   prob=   0.124  0000110=6                          ASCII(0-127)                                      
+  [ 200]  0xbd    10|111101   entropy=0.009  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 202]  0x9c    10|011100   entropy=3.176  1101+010101+011100=54620           Hangul(44032-55215)                               
-       ->  0x8d    10|001101   prob=   0.350  ?                                  ?                                                 
+  [ 201]  0xd6    110|10110   entropy=4.668  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0x0c    0|0001100   prob=   0.078  0001100=12                         ASCII(0-127)                                      
   ---
-  [ 203]  ' '     0|0100000   entropy=4.930  0100000=32                         ASCII(0-127)                                      
-       ->  '`'     0|1100000   prob=   0.038  1100000=96                         ASCII(0-127)                                      
-  ---
-  [ 204]  0xec    1110|1100   entropy=4.723  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9d    10|011101   prob=   0.083  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-
-  [ 205]  0xb9    10|111001   entropy=4.664  1100+111001+bbbbbb=52800-52863     Hangul(44032-55215)                               
-       ->  'L'     0|1001100   prob=   0.050  1001100=76                         ASCII(0-127)                                      
-
-  [ 206]  0xa9    10|101001   entropy=4.883  1100+111001+101001=52841           Hangul(44032-55215)                               
-       ->  0x1c    0|0011100   prob=   0.045  0011100=28                         ASCII(0-127)                                      
+  [ 202]  'v'     0|1110110   entropy=0.462  1110110=118                        ASCII(0-127)                                      
+       ->  0x93    10|010011   prob=   0.868  ?                                  ?                                                 
   ---
-  [ 207]  0xec    1110|1100   entropy=3.775  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.217  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
-
-  [ 208]  0x9c    10|011100   entropy=4.336  1100+011100+bbbbbb=50944-51007     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.146  1100+011100+011110=50974           Hangul(44032-55215)                               
+  [ 203]  0x93    10|010011   entropy=2.754  ?                                  ?                                                 
+       ->  0xe4    1110|0100   prob=   0.287  0100+1bbbbb+bbbbbb=16384-20479     CJK-ExtA/Other_g/CJK(13312-40959)                 
 
-  [ 209]  0xbc    10|111100   entropy=4.703  1100+011100+111100=51004           Hangul(44032-55215)                               
-       ->  0x9a    10|011010   prob=   0.109  ?                                  ?                                                 
+  [ 204]  0xa4    10|100100   entropy=0.018  10011+100100=1252                  Cyrillic(1024-1327)                               
+       ->  0xa6    10|100110   prob=   0.998  ?                                  ?                                                 
   ---
-  [ 210]  0xeb    1110|1011   entropy=4.098  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  '!'     0|0100001   prob=   0.166  0100001=33                         ASCII(0-127)                                      
+  [ 205]  0xa6    10|100110   entropy=1.289  ?                                  ?                                                 
+       ->  0xdc    110|11100   prob=   0.621  11100+bbbbbb=1792-1855             Syriac(1792-1871)                                 
 
-  [ 211]  0xa1    10|100001   entropy=4.691  1011+100001+bbbbbb=47168-47231     Hangul(44032-55215)                               
-       ->  0x10    0|0010000   prob=   0.091  0010000=16                         ASCII(0-127)                                      
-
-  [ 212]  0x9c    10|011100   entropy=4.902  1011+100001+011100=47196           Hangul(44032-55215)                               
-       ->  0x83    10|000011   prob=   0.053  ?                                  ?                                                 
+  [ 206]  'o'     0|1101111   entropy=0.025  1101111=111                        ASCII(0-127)                                      
+       ->  'K'     0|1001011   prob=   0.997  1001011=75                         ASCII(0-127)                                      
   ---
-  [ 213]  ','     0|0101100   entropy=4.500  0101100=44                         ASCII(0-127)                                      
-       ->  'k'     0|1101011   prob=   0.082  1101011=107                        ASCII(0-127)                                      
+  [ 207]  'K'     0|1001011   entropy=1.285  1001011=75                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.708  ?                                  ?                                                 
   ---
-  [ 214]  ' '     0|0100000   entropy=4.469  0100000=32                         ASCII(0-127)                                      
-       ->  '`'     0|1100000   prob=   0.061  1100000=96                         ASCII(0-127)                                      
-  ---
-  [ 215]  0xec    1110|1100   entropy=4.672  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0xcb    110|01011   prob=   0.082  01011+bbbbbb=704-767               Other_a(688-879)                                  
-
-  [ 216]  0x9d    10|011101   entropy=4.742  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.059  1100+011101+000000=51008           Hangul(44032-55215)                               
+  [ 208]  0xbd    10|111101   entropy=0.010  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 217]  0xbc    10|111100   entropy=3.596  1100+011101+111100=51068           Hangul(44032-55215)                               
-       ->  0x9a    10|011010   prob=   0.302  ?                                  ?                                                 
+  [ 209]  0xd6    110|10110   entropy=4.402  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.203  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 218]  0xeb    1110|1011   entropy=3.111  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  '!'     0|0100001   prob=   0.381  0100001=33                         ASCII(0-127)                                      
-
-  [ 219]  0xb0    10|110000   entropy=5.105  1011+110000+bbbbbb=48128-48191     Hangul(44032-55215)                               
-       ->  ','     0|0101100   prob=   0.034  0101100=44                         ASCII(0-127)                                      
-
-  [ 220]  0x98    10|011000   entropy=5.020  1011+110000+011000=48152           Hangul(44032-55215)                               
-       ->  0x03    0|0000011   prob=   0.029  0000011=3                          ASCII(0-127)                                      
+  [ 210]  0x0c    0|0001100   entropy=0.236  0001100=12                         ASCII(0-127)                                      
+       ->  'J'     0|1001010   prob=   0.955  1001010=74                         ASCII(0-127)                                      
   ---
-  [ 221]  0xec    1110|1100   entropy=3.699  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9f    10|011111   prob=   0.171  1100+011111+bbbbbb=51136-51199     Hangul(44032-55215)                               
-
-  [ 222]  0xa0    10|100000   entropy=4.895  1100+100000+bbbbbb=51200-51263     Hangul(44032-55215)                               
-       ->  0xc9    110|01001   prob=   0.037  01001+bbbbbb=576-639               Latin-Ext/IPA(128-687)                            
-
-  [ 223]  0x81    10|000001   entropy=4.852  1100+100000+000001=51201           Hangul(44032-55215)                               
-       ->  0xf5    11110|101   prob=   0.033  101+bbbbbb+bbbbbb+bbbbbb=1310720-1572863  Other(1310720-1572863)                            
+  [ 211]  'J'     0|1001010   entropy=1.542  1001010=74                         ASCII(0-127)                                      
+       ->  'k'     0|1101011   prob=   0.726  1101011=107                        ASCII(0-127)                                      
   ---
-  [ 224]  0xec    1110|1100   entropy=4.219  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0xe6    1110|0110   prob=   0.089  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
+  [ 212]  0xbd    10|111101   entropy=0.079  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.985  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 225]  0x9d    10|011101   entropy=4.699  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0xbd    10|111101   prob=   0.070  1100+011101+111101=51069           Hangul(44032-55215)                               
-
-  [ 226]  0xb8    10|111000   entropy=4.332  1100+011101+111000=51064           Hangul(44032-55215)                               
-       ->  0xd8    110|11000   prob=   0.082  11000+bbbbbb=1536-1599             Arabic(1536-1791)                                 
+  [ 213]  0xd6    110|10110   entropy=4.738  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.097  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 227]  ' '     0|0100000   entropy=4.984  0100000=32                         ASCII(0-127)                                      
-       ->  0xff    11110|111   prob=   0.031  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
+  [ 214]  0x10    0|0010000   entropy=0.390  0010000=16                         ASCII(0-127)                                      
+       ->  0x12    0|0010010   prob=   0.877  0010010=18                         ASCII(0-127)                                      
   ---
-  [ 228]  0xec    1110|1100   entropy=4.371  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x1e    0|0011110   prob=   0.103  0011110=30                         ASCII(0-127)                                      
-
-  [ 229]  0x9e    10|011110   entropy=4.641  1100+011110+bbbbbb=51072-51135     Hangul(44032-55215)                               
-       ->  'O'     0|1001111   prob=   0.104  1001111=79                         ASCII(0-127)                                      
-
-  [ 230]  0x89    10|001001   entropy=4.027  1100+011110+001001=51081           Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.284  ?                                  ?                                                 
+  [ 215]  0x12    0|0010010   entropy=3.422  0010010=18                         ASCII(0-127)                                      
+       ->  'R'     0|1010010   prob=   0.258  1010010=82                         ASCII(0-127)                                      
   ---
-  [ 231]  0xed    1110|1101   entropy=4.738  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xbc    10|111100   prob=   0.074  1101+111100+bbbbbb=57088-57151     Other_i(55216-63743)                              
+  [ 216]  0xbd    10|111101   entropy=0.079  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.985  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 232]  0x81    10|000001   entropy=4.277  1101+000001+bbbbbb=53312-53375     Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.085  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-
-  [ 233]  0xac    10|101100   entropy=4.258  1101+000001+101100=53356           Hangul(44032-55215)                               
-       ->  0xea    1110|1010   prob=   0.110  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
+  [ 217]  0xd6    110|10110   entropy=4.773  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xe7    1110|0111   prob=   0.044  0111+1bbbbb+bbbbbb=28672-32767     CJK(19968-40959)                                  
   ---
-  [ 234]  0xec    1110|1100   entropy=4.246  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0xfc    11110|100   prob=   0.139  100+bbbbbb+bbbbbb+bbbbbb=1048576-1310719  Other(1048576-1310719)                            
-
-  [ 235]  0xa0    10|100000   entropy=5.109  1100+100000+bbbbbb=51200-51263     Hangul(44032-55215)                               
-       ->  'Y'     0|1011001   prob=   0.030  1011001=89                         ASCII(0-127)                                      
+  [ 218]  0xc3    110|00011   entropy=0.396  00011+bbbbbb=192-255               Latin-Ext(128-591)                                
+       ->  '='     0|0111101   prob=   0.915  0111101=61                         ASCII(0-127)                                      
 
-  [ 236]  0xaf    10|101111   entropy=4.973  1100+100000+101111=51247           Hangul(44032-55215)                               
-       ->  'T'     0|1010100   prob=   0.033  1010100=84                         ASCII(0-127)                                      
+  [ 219]  '='     0|0111101   entropy=3.297  0111101=61                         ASCII(0-127)                                      
+       ->  0x9a    10|011010   prob=   0.240  ?                                  ?                                                 
   ---
-  [ 237]  ' '     0|0100000   entropy=4.883  0100000=32                         ASCII(0-127)                                      
-       ->  0xda    110|11010   prob=   0.049  11010+bbbbbb=1664-1727             Arabic(1536-1791)                                 
+  [ 220]  '*'     0|0101010   entropy=1.219  0101010=42                         ASCII(0-127)                                      
+       ->  ';'     0|0111011   prob=   0.650  0111011=59                         ASCII(0-127)                                      
   ---
-  [ 238]  0xed    1110|1101   entropy=4.250  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x9b    10|011011   prob=   0.160  1101+011011+bbbbbb=54976-55039     Hangul(44032-55215)                               
-
-  [ 239]  0x94    10|010100   entropy=4.723  1101+010100+bbbbbb=54528-54591     Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.137  1101+010100+010110=54550           Hangul(44032-55215)                               
-
-  [ 240]  0x84    10|000100   entropy=4.816  1101+010100+000100=54532           Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.051  ?                                  ?                                                 
-  ---
-  [ 241]  0xeb    1110|1011   entropy=4.195  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xdd    110|11101   prob=   0.147  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
-
-  [ 242]  0xa6    10|100110   entropy=3.971  1011+100110+bbbbbb=47488-47551     Hangul(44032-55215)                               
-       ->  0xcd    110|01101   prob=   0.164  01101+bbbbbb=832-895               Other_a/Greek(688-1023)                           
-
-  [ 243]  0xb0    10|110000   entropy=4.887  1011+100110+110000=47536           Hangul(44032-55215)                               
-       ->  0x86    10|000110   prob=   0.035  ?                                  ?                                                 
+  [ 221]  ';'     0|0111011   entropy=2.807  0111011=59                         ASCII(0-127)                                      
+       ->  0xc2    110|00010   prob=   0.276  00010+bbbbbb=128-191               Latin-Ext(128-591)                                
   ---
-  [ 244]  0xed    1110|1101   entropy=4.605  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x9b    10|011011   prob=   0.054  1101+011011+bbbbbb=54976-55039     Hangul(44032-55215)                               
-
-  [ 245]  0x84    10|000100   entropy=4.484  1101+000100+bbbbbb=53504-53567     Hangul(44032-55215)                               
-       ->  0xf6    11110|110   prob=   0.108  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
+  [ 222]  0xbd    10|111101   entropy=0.100  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.980  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 246]  0xb0    10|110000   entropy=3.623  1101+000100+110000=53552           Hangul(44032-55215)                               
-       ->  0x17    0|0010111   prob=   0.214  0010111=23                         ASCII(0-127)                                      
+  [ 223]  0xd6    110|10110   entropy=4.629  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0x1c    0|0011100   prob=   0.056  0011100=28                         ASCII(0-127)                                      
   ---
-  [ 247]  0xeb    1110|1011   entropy=4.852  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.056  1011+011110+bbbbbb=46976-47039     Hangul(44032-55215)                               
-
-  [ 248]  0xa5    10|100101   entropy=4.336  1011+100101+bbbbbb=47424-47487     Hangul(44032-55215)                               
-       ->  0xb2    10|110010   prob=   0.055  1011+100101+110010=47474           Hangul(44032-55215)                               
-
-  [ 249]  0xbc    10|111100   entropy=4.770  1011+100101+111100=47484           Hangul(44032-55215)                               
-       ->  0x9a    10|011010   prob=   0.080  ?                                  ?                                                 
+  [ 224]  'n'     0|1101110   entropy=0.048  1101110=110                        ASCII(0-127)                                      
+       ->  0x11    0|0010001   prob=   0.995  0010001=17                         ASCII(0-127)                                      
   ---
-  [ 250]  ' '     0|0100000   entropy=4.742  0100000=32                         ASCII(0-127)                                      
-       ->  'I'     0|1001001   prob=   0.091  1001001=73                         ASCII(0-127)                                      
+  [ 225]  0x11    0|0010001   entropy=2.004  0010001=17                         ASCII(0-127)                                      
+       ->  0xf7    11110|111   prob=   0.604  111+bbbbbb+bbbbbb+bbbbbb=1835008-2097151  Other(1835008-2097151)                            
   ---
-  [ 251]  0xec    1110|1100   entropy=4.883  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x18    0|0011000   prob=   0.078  0011000=24                         ASCII(0-127)                                      
-
-  [ 252]  0x9d    10|011101   entropy=3.887  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x17    0|0010111   prob=   0.169  0010111=23                         ASCII(0-127)                                      
+  [ 226]  0xbd    10|111101   entropy=0.018  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.998  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 253]  0xb4    10|110100   entropy=4.910  1100+011101+110100=51060           Hangul(44032-55215)                               
-       ->  0x18    0|0011000   prob=   0.035  0011000=24                         ASCII(0-127)                                      
+  [ 227]  0xd6    110|10110   entropy=2.736  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '7'     0|0110111   prob=   0.237  0110111=55                         ASCII(0-127)                                      
   ---
-  [ 254]  0xec    1110|1100   entropy=4.203  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x1e    0|0011110   prob=   0.093  0011110=30                         ASCII(0-127)                                      
-
-  [ 255]  0x9a    10|011010   entropy=3.934  1100+011010+bbbbbb=50816-50879     Hangul(44032-55215)                               
-       ->  0xb4    10|110100   prob=   0.123  1100+011010+110100=50868           Hangul(44032-55215)                               
-
-  [ 256]  0xa9    10|101001   entropy=4.969  1100+011010+101001=50857           Hangul(44032-55215)                               
-       ->  0x86    10|000110   prob=   0.038  ?                                  ?                                                 
+  [ 228]  '7'     0|0110111   entropy=0.080  0110111=55                         ASCII(0-127)                                      
+       ->  0xf8    11110|000   prob=   0.988  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
   ---
-  [ 257]  0xed    1110|1101   entropy=1.811  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x9b    10|011011   prob=   0.494  1101+011011+bbbbbb=54976-55039     Hangul(44032-55215)                               
+  [ 229]  0xf8    11110|000   entropy=3.439  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0x17    0|0010111   prob=   0.219  0010111=23                         ASCII(0-127)                                      
 
-  [ 258]  0x95    10|010101   entropy=4.664  1101+010101+bbbbbb=54592-54655     Hangul(44032-55215)                               
-       ->  0xb4    10|110100   prob=   0.052  1101+010101+110100=54644           Hangul(44032-55215)                               
-
-  [ 259]  0xb4    10|110100   entropy=4.227  1101+010101+110100=54644           Hangul(44032-55215)                               
-       ->  0x0b    0|0001011   prob=   0.196  0001011=11                         ASCII(0-127)                                      
-  ---
-  [ 260]  ' '     0|0100000   entropy=4.035  0100000=32                         ASCII(0-127)                                      
-       ->  0x15    0|0010101   prob=   0.198  0010101=21                         ASCII(0-127)                                      
-  ---
-  [ 261]  0xea    1110|1010   entropy=3.928  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0x06    0|0000110   prob=   0.255  0000110=6                          ASCII(0-127)                                      
+  [ 230]  '`'     0|1100000   entropy=1.729  1100000=96                         ASCII(0-127)                                      
+       ->  'B'     0|1000010   prob=   0.545  1000010=66                         ASCII(0-127)                                      
 
-  [ 262]  0xb0    10|110000   entropy=4.594  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-       ->  0x80    10|000000   prob=   0.101  1010+110000+000000=44032           Hangul(44032-55215)                               
+  [ 231]  0x15    0|0010101   entropy=2.270  0010101=21                         ASCII(0-127)                                      
+       ->  '('     0|0101000   prob=   0.318  0101000=40                         ASCII(0-127)                                      
 
-  [ 263]  0x9c    10|011100   entropy=5.070  1010+110000+011100=44060           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.044  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-  ---
-  [ 264]  ' '     0|0100000   entropy=4.305  0100000=32                         ASCII(0-127)                                      
-       ->  '`'     0|1100000   prob=   0.198  1100000=96                         ASCII(0-127)                                      
+  [ 232]  0xe1    1110|0001   entropy=0.028  0001+1bbbbb+bbbbbb=4096-8191       Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d(4096-11903)
+       ->  0x8a    10|001010   prob=   0.996  ?                                  ?                                                 
   ---
-  [ 265]  0xeb    1110|1011   entropy=4.133  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  'Y'     0|1011001   prob=   0.135  1011001=89                         ASCII(0-127)                                      
+  [ 233]  0x8a    10|001010   entropy=2.771  ?                                  ?                                                 
+       ->  '~'     0|1111110   prob=   0.216  1111110=126                        ASCII(0-127)                                      
 
-  [ 266]  0x8b    10|001011   entropy=4.520  1011+001011+bbbbbb=45760-45823     Hangul(44032-55215)                               
-       ->  0x9f    10|011111   prob=   0.059  1011+001011+011111=45791           Hangul(44032-55215)                               
-
-  [ 267]  0xb9    10|111001   entropy=5.000  1011+001011+111001=45817           Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.034  ?                                  ?                                                 
+  [ 234]  0xe0    1110|0000   entropy=0.019  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  'w'     0|1110111   prob=   0.998  1110111=119                        ASCII(0-127)                                      
   ---
-  [ 268]  ' '     0|0100000   entropy=4.770  0100000=32                         ASCII(0-127)                                      
-       ->  'g'     0|1100111   prob=   0.049  1100111=103                        ASCII(0-127)                                      
+  [ 235]  'w'     0|1110111   entropy=0.876  1110111=119                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.845  ?                                  ?                                                 
   ---
-  [ 269]  0xeb    1110|1011   entropy=4.781  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.051  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
+  [ 236]  0xbd    10|111101   entropy=0.039  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   0.994  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 270]  0xaf    10|101111   entropy=4.973  1011+101111+bbbbbb=48064-48127     Hangul(44032-55215)                               
-       ->  0x8d    10|001101   prob=   0.042  1011+101111+001101=48077           Hangul(44032-55215)                               
-
-  [ 271]  0xb8    10|111000   entropy=4.785  1011+101111+111000=48120           Hangul(44032-55215)                               
-       ->  0x85    10|000101   prob=   0.048  ?                                  ?                                                 
+  [ 237]  0xd6    110|10110   entropy=4.754  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0xac    10|101100   prob=   0.067  ?                                  ?                                                 
   ---
-  [ 272]  0xed    1110|1101   entropy=4.586  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xe6    1110|0110   prob=   0.082  0110+1bbbbb+bbbbbb=24576-28671     CJK(19968-40959)                                  
-
-  [ 273]  0x99    10|011001   entropy=5.008  1101+011001+bbbbbb=54848-54911     Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.037  1101+011001+010110=54870           Hangul(44032-55215)                               
+  [ 238]  0xfc    11110|100   entropy=0.711  100+bbbbbb+bbbbbb+bbbbbb=1048576-1310719  Other(1048576-1310719)                            
+       ->  0xa2    10|100010   prob=   0.703  100+100010+bbbbbb+bbbbbb=1187840-1191935  Other(1187840-1191935)                            
 
-  [ 274]  0x94    10|010100   entropy=4.633  1101+011001+010100=54868           Hangul(44032-55215)                               
-       ->  'z'     0|1111010   prob=   0.060  1111010=122                        ASCII(0-127)                                      
-  ---
-  [ 275]  ' '     0|0100000   entropy=4.957  0100000=32                         ASCII(0-127)                                      
-       ->  0xd1    110|10001   prob=   0.033  10001+bbbbbb=1088-1151             Cyrillic(1024-1327)                               
-  ---
-  [ 276]  0xec    1110|1100   entropy=3.951  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  's'     0|1110011   prob=   0.107  1110011=115                        ASCII(0-127)                                      
+  [ 239]  0xa2    10|100010   entropy=2.996  100+100010+bbbbbb+bbbbbb=1187840-1191935  Other(1187840-1191935)                            
+       ->  '9'     0|0111001   prob=   0.247  0111001=57                         ASCII(0-127)                                      
 
-  [ 277]  0x95    10|010101   entropy=4.484  1100+010101+bbbbbb=50496-50559     Hangul(44032-55215)                               
-       ->  0x8d    10|001101   prob=   0.088  1100+010101+001101=50509           Hangul(44032-55215)                               
+  [ 240]  '-'     0|0101101   entropy=0.042  0101101=45                         ASCII(0-127)                                      
+       ->  0xa5    10|100101   prob=   0.995  100+100010+101101+100101=1190757   Other                                             
 
-  [ 278]  0xbd    10|111101   entropy=4.742  1100+010101+111101=50557           Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.070  ?                                  ?                                                 
+  [ 241]  0xa5    10|100101   entropy=2.488  100+100010+101101+100101=1190757   Other                                             
+       ->  '`'     0|1100000   prob=   0.350  1100000=96                         ASCII(0-127)                                      
   ---
-  [ 279]  ' '     0|0100000   entropy=5.094  0100000=32                         ASCII(0-127)                                      
-       ->  'S'     0|1010011   prob=   0.032  1010011=83                         ASCII(0-127)                                      
+  [ 242]  'v'     0|1110110   entropy=0.107  1110110=118                        ASCII(0-127)                                      
+       ->  0x93    10|010011   prob=   0.979  ?                                  ?                                                 
   ---
-  [ 280]  '1'     0|0110001   entropy=5.008  0110001=49                         ASCII(0-127)                                      
-       ->  'R'     0|1010010   prob=   0.065  1010010=82                         ASCII(0-127)                                      
-  ---
-  [ 281]  0xec    1110|1100   entropy=4.703  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  '('     0|0101000   prob=   0.040  0101000=40                         ASCII(0-127)                                      
-
-  [ 282]  0x84    10|000100   entropy=4.098  1100+000100+bbbbbb=49408-49471     Hangul(44032-55215)                               
-       ->  0x94    10|010100   prob=   0.095  1100+000100+010100=49428           Hangul(44032-55215)                               
+  [ 243]  0x93    10|010011   entropy=0.820  ?                                  ?                                                 
+       ->  0xbd    10|111101   prob=   0.826  10011+111101=1277                  Cyrillic(1024-1327)                               
 
-  [ 283]  0xbc    10|111100   entropy=5.078  1100+000100+111100=49468           Hangul(44032-55215)                               
-       ->  0xb7    10|110111   prob=   0.024  ?                                  ?                                                 
+  [ 244]  0xbd    10|111101   entropy=0.013  10011+111101=1277                  Cyrillic(1024-1327)                               
+       ->  0xd6    110|10110   prob=   0.999  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
   ---
-  [ 284]  0xed    1110|1101   entropy=4.176  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0xdd    110|11101   prob=   0.101  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+  [ 245]  0xd6    110|10110   entropy=4.316  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '`'     0|1100000   prob=   0.146  1100000=96                         ASCII(0-127)                                      
 
-  [ 285]  0x8a    10|001010   entropy=4.867  1101+001010+bbbbbb=53888-53951     Hangul(44032-55215)                               
-       ->  ')'     0|0101001   prob=   0.043  0101001=41                         ASCII(0-127)                                      
-
-  [ 286]  0xb8    10|111000   entropy=4.309  1101+001010+111000=53944           Hangul(44032-55215)                               
-       ->  0x01    0|0000001   prob=   0.120  0000001=1                          ASCII(0-127)                                      
+  [ 246]  '?'     0|0111111   entropy=0.410  0111111=63                         ASCII(0-127)                                      
+       ->  0xf1    11110|001   prob=   0.920  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
   ---
-  [ 287]  0xeb    1110|1011   entropy=3.791  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xec    1110|1100   prob=   0.274  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-
-  [ 288]  0xa1    10|100001   entropy=4.707  1011+100001+bbbbbb=47168-47231     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.132  1011+100001+011100=47196           Hangul(44032-55215)                               
+  [ 247]  0xf1    11110|001   entropy=0.241  001+bbbbbb+bbbbbb+bbbbbb=262144-524287  Other(262144-524287)                              
+       ->  0xe5    1110|0101   prob=   0.966  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
 
-  [ 289]  0x9c    10|011100   entropy=4.926  1011+100001+011100=47196           Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.054  ?                                  ?                                                 
-  ---
-  [ 290]  ' '     0|0100000   entropy=5.051  0100000=32                         ASCII(0-127)                                      
-       ->  'A'     0|1000001   prob=   0.042  1000001=65                         ASCII(0-127)                                      
-  ---
-  [ 291]  0xec    1110|1100   entropy=4.820  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x02    0|0000010   prob=   0.072  0000010=2                          ASCII(0-127)                                      
+  [ 248]  0xe5    1110|0101   entropy=0.008  0101+1bbbbb+bbbbbb=20480-24575     CJK(19968-40959)                                  
+       ->  0xfe    11110|110   prob=   1.000  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
 
-  [ 292]  0x83    10|000011   entropy=4.730  1100+000011+bbbbbb=49344-49407     Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.088  1100+000011+011110=49374           Hangul(44032-55215)                               
+  [ 249]  0xfe    11110|110   entropy=1.459  110+bbbbbb+bbbbbb+bbbbbb=1572864-1835007  Other(1572864-1835007)                            
+       ->  'c'     0|1100011   prob=   0.473  1100011=99                         ASCII(0-127)                                      
 
-  [ 293]  0x9d    10|011101   entropy=4.863  1100+000011+011101=49373           Hangul(44032-55215)                               
-       ->  '?'     0|0111111   prob=   0.062  0111111=63                         ASCII(0-127)                                      
+  [ 250]  0xc0    110|00000   entropy=0.000  00000+bbbbbb=0-63                  ASCII(0-127)                                      
+       ->  'F'     0|1000110   prob=   1.000  1000110=70                         ASCII(0-127)                                      
   ---
-  [ 294]  0xec    1110|1100   entropy=3.953  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  '?'     0|0111111   prob=   0.235  0111111=63                         ASCII(0-127)                                      
-
-  [ 295]  0x82    10|000010   entropy=4.414  1100+000010+bbbbbb=49280-49343     Hangul(44032-55215)                               
-       ->  0xac    10|101100   prob=   0.142  1100+000010+101100=49324           Hangul(44032-55215)                               
-
-  [ 296]  0xb0    10|110000   entropy=4.996  1100+000010+110000=49328           Hangul(44032-55215)                               
-       ->  'A'     0|1000001   prob=   0.040  1000001=65                         ASCII(0-127)                                      
+  [ 251]  'F'     0|1000110   entropy=0.207  1000110=70                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.966  ?                                  ?                                                 
   ---
-  [ 297]  0xec    1110|1100   entropy=4.836  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  '>'     0|0111110   prob=   0.055  0111110=62                         ASCII(0-127)                                      
-
-  [ 298]  0x9d    10|011101   entropy=4.344  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-       ->  0x89    10|001001   prob=   0.113  1100+011101+001001=51017           Hangul(44032-55215)                               
+  [ 252]  0xbd    10|111101   entropy=0.002  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 299]  0xb4    10|110100   entropy=4.348  1100+011101+110100=51060           Hangul(44032-55215)                               
-       ->  0xa2    10|100010   prob=   0.115  ?                                  ?                                                 
+  [ 253]  0xd6    110|10110   entropy=1.178  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  '='     0|0111101   prob=   0.789  0111101=61                         ASCII(0-127)                                      
   ---
-  [ 300]  ' '     0|0100000   entropy=4.914  0100000=32                         ASCII(0-127)                                      
-       ->  0x88    10|001000   prob=   0.061  ?                                  ?                                                 
+  [ 254]  0x04    0|0000100   entropy=0.014  0000100=4                          ASCII(0-127)                                      
+       ->  'G'     0|1000111   prob=   0.999  1000111=71                         ASCII(0-127)                                      
   ---
-  [ 301]  0xea    1110|1010   entropy=4.625  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0xb0    10|110000   prob=   0.135  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-
-  [ 302]  0xb0    10|110000   entropy=2.594  1010+110000+bbbbbb=44032-44095     Hangul(44032-55215)                               
-       ->  0x87    10|000111   prob=   0.451  1010+110000+000111=44039           Hangul(44032-55215)                               
-
-  [ 303]  0x80    10|000000   entropy=3.170  1010+110000+000000=44032           Hangul(44032-55215)                               
-       ->  ' '     0|0100000   prob=   0.285  0100000=32                         ASCII(0-127)                                      
+  [ 255]  'G'     0|1000111   entropy=1.574  1000111=71                         ASCII(0-127)                                      
+       ->  'v'     0|1110110   prob=   0.431  1110110=118                        ASCII(0-127)                                      
   ---
-  [ 304]  0xeb    1110|1011   entropy=4.406  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0xae    10|101110   prob=   0.119  1011+101110+bbbbbb=48000-48063     Hangul(44032-55215)                               
+  [ 256]  0xf0    11110|000   entropy=0.017  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
+       ->  0x8f    10|001111   prob=   0.999  000+001111+bbbbbb+bbbbbb=61440-65535  Other_i/CJK-Compat/Other_j(55216-65535)           
 
-  [ 305]  0x8a    10|001010   entropy=3.863  1011+001010+bbbbbb=45696-45759     Hangul(44032-55215)                               
-       ->  0xad    10|101101   prob=   0.228  1011+001010+101101=45741           Hangul(44032-55215)                               
+  [ 257]  0x8f    10|001111   entropy=0.191  000+001111+bbbbbb+bbbbbb=61440-65535  Other_i/CJK-Compat/Other_j(55216-65535)           
+       ->  0xe0    1110|0000   prob=   0.970  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
 
-  [ 306]  0xa5    10|100101   entropy=5.102  1011+001010+100101=45733           Hangul(44032-55215)                               
-       ->  0xbc    10|111100   prob=   0.036  ?                                  ?                                                 
-  ---
-  [ 307]  0xed    1110|1101   entropy=3.699  1101+1bbbbb+bbbbbb=53248-57343     Hangul/Other_i(44032-63743)                       
-       ->  0x7f    0|1111111   prob=   0.134  1111111=127                        ASCII(0-127)                                      
-
-  [ 308]  0x95    10|010101   entropy=4.910  1101+010101+bbbbbb=54592-54655     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.036  1101+010101+011100=54620           Hangul(44032-55215)                               
+  [ 258]  0xe0    1110|0000   entropy=0.003  0000+1bbbbb+bbbbbb=2048-4095       Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan(1872-4095)
+       ->  'w'     0|1110111   prob=   1.000  1110111=119                        ASCII(0-127)                                      
 
-  [ 309]  0xa0    10|100000   entropy=4.887  1101+010101+100000=54624           Hangul(44032-55215)                               
-       ->  \r      0|0001101   prob=   0.044  0001101=13                         ASCII(0-127)                                      
+  [ 259]  'w'     0|1110111   entropy=0.639  1110111=119                        ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.797  ?                                  ?                                                 
   ---
-  [ 310]  ' '     0|0100000   entropy=4.734  0100000=32                         ASCII(0-127)                                      
-       ->  0xa1    10|100001   prob=   0.086  ?                                  ?                                                 
-  ---
-  [ 311]  0xea    1110|1010   entropy=4.320  1010+1bbbbb+bbbbbb=40960-45055     Other_h/Hangul(40960-55215)                       
-       ->  0x89    10|001001   prob=   0.151  1010+001001+bbbbbb=41536-41599     Other_h(40960-44031)                              
+  [ 260]  0xbd    10|111101   entropy=0.005  ?                                  ?                                                 
+       ->  0xd6    110|10110   prob=   1.000  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
 
-  [ 312]  0xb2    10|110010   entropy=4.797  1010+110010+bbbbbb=44160-44223     Hangul(44032-55215)                               
-       ->  0xac    10|101100   prob=   0.055  1010+110010+101100=44204           Hangul(44032-55215)                               
-
-  [ 313]  0x83    10|000011   entropy=4.684  1010+110010+000011=44163           Hangul(44032-55215)                               
-       ->  0xfc    11110|100   prob=   0.086  100+bbbbbb+bbbbbb+bbbbbb=1048576-1310719  Other(1048576-1310719)                            
+  [ 261]  0xd6    110|10110   entropy=2.973  10110+bbbbbb=1408-1471             Armenian/Hebrew(1328-1535)                        
+       ->  0x03    0|0000011   prob=   0.328  0000011=3                          ASCII(0-127)                                      
   ---
-  [ 314]  0xec    1110|1100   entropy=4.922  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  0x9d    10|011101   prob=   0.037  1100+011101+bbbbbb=51008-51071     Hangul(44032-55215)                               
-
-  [ 315]  0x9c    10|011100   entropy=4.859  1100+011100+bbbbbb=50944-51007     Hangul(44032-55215)                               
-       ->  0x96    10|010110   prob=   0.044  1100+011100+010110=50966           Hangul(44032-55215)                               
-
-  [ 316]  0xbc    10|111100   entropy=4.875  1100+011100+111100=51004           Hangul(44032-55215)                               
-       ->  0x9a    10|011010   prob=   0.056  ?                                  ?                                                 
+  [ 262]  '@'     0|1000000   entropy=0.240  1000000=64                         ASCII(0-127)                                      
+       ->  0xf8    11110|000   prob=   0.964  000+bbbbbb+bbbbbb+bbbbbb=0-262143  ASCII/Latin-Ext/IPA/Other_a/Greek/Cyrillic/Armenian/Hebrew/Arabic/Syriac/Other_b/Devanagari/Bengali/Gurmukhi/Gujarati/Oriya/Tamil/Telugu/Kannada/Malayalam/Sinhala/Thai/Lao/Tibetan/Myanmar/Georgian/Hangul-Jamo/Ethiopic/Other_c/Khmer/Mongolian/Other_d/CJK-Rad/Other_e/CJK-Sym/Hiragana/Katakana/Other_f/CJK-ExtA/Other_g/CJK/Other_h/Hangul/Other_i/CJK-Compat/Other_j/Other(0-262143)
   ---
-  [ 317]  0xeb    1110|1011   entropy=4.309  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  '!'     0|0100001   prob=   0.132  0100001=33                         ASCII(0-127)                                      
-
-  [ 318]  0xa1    10|100001   entropy=3.805  1011+100001+bbbbbb=47168-47231     Hangul(44032-55215)                               
-       ->  0x9c    10|011100   prob=   0.335  1011+100001+011100=47196           Hangul(44032-55215)                               
-
-  [ 319]  0x9c    10|011100   entropy=5.078  1011+100001+011100=47196           Hangul(44032-55215)                               
-       ->  0x9e    10|011110   prob=   0.037  ?                                  ?                                                 
+  [ 263]  'O'     0|1001111   entropy=1.137  1001111=79                         ASCII(0-127)                                      
+       ->  0x12    0|0010010   prob=   0.815  0010010=18                         ASCII(0-127)                                      
   ---
-  [ 320]  ' '     0|0100000   entropy=5.078  0100000=32                         ASCII(0-127)                                      
-       ->  'A'     0|1000001   prob=   0.038  1000001=65                         ASCII(0-127)                                      
+  [ 264]  0x12    0|0010010   entropy=0.171  0010010=18                         ASCII(0-127)                                      
+       ->  'I'     0|1001001   prob=   0.962  1001001=73                         ASCII(0-127)                                      
   ---
-  [ 321]  0xec    1110|1100   entropy=4.555  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  ')'     0|0101001   prob=   0.067  0101001=41                         ASCII(0-127)                                      
-
-  [ 322]  0x98    10|011000   entropy=4.762  1100+011000+bbbbbb=50688-50751     Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.077  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-
-  [ 323]  0x88    10|001000   entropy=4.895  1100+011000+001000=50696           Hangul(44032-55215)                               
-       ->  0xa5    10|100101   prob=   0.059  ?                                  ?                                                 
+  [ 265]  'I'     0|1001001   entropy=1.623  1001001=73                         ASCII(0-127)                                      
+       ->  0x02    0|0000010   prob=   0.531  0000010=2                          ASCII(0-127)                                      
   ---
-  [ 324]  0xec    1110|1100   entropy=3.828  1100+1bbbbb+bbbbbb=49152-53247     Hangul(44032-55215)                               
-       ->  'c'     0|1100011   prob=   0.231  1100011=99                         ASCII(0-127)                                      
-
-  [ 325]  0x83    10|000011   entropy=4.887  1100+000011+bbbbbb=49344-49407     Hangul(44032-55215)                               
-       ->  'g'     0|1100111   prob=   0.043  1100111=103                        ASCII(0-127)                                      
-
-  [ 326]  0x81    10|000001   entropy=4.934  1100+000011+000001=49345           Hangul(44032-55215)                               
-       ->  0xeb    1110|1011   prob=   0.051  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
+  [ 266]  0x02    0|0000010   entropy=0.005  0000010=2                          ASCII(0-127)                                      
+       ->  0xcb    110|01011   prob=   1.000  01011+bbbbbb=704-767               Other_a(688-879)                                  
   ---
-  [ 327]  0xeb    1110|1011   entropy=4.754  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  '!'     0|0100001   prob=   0.068  0100001=33                         ASCII(0-127)                                      
+  [ 267]  0xcb    110|01011   entropy=0.161  01011+bbbbbb=704-767               Other_a(688-879)                                  
+       ->  0xc5    110|00101   prob=   0.969  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
 
-  [ 328]  0x90    10|010000   entropy=4.324  1011+010000+bbbbbb=46080-46143     Hangul(44032-55215)                               
-       ->  0x82    10|000010   prob=   0.140  1011+010000+000010=46082           Hangul(44032-55215)                               
-
-  [ 329]  0x9c    10|011100   entropy=4.859  1011+010000+011100=46108           Hangul(44032-55215)                               
-       ->  'Y'     0|1011001   prob=   0.071  1011001=89                         ASCII(0-127)                                      
+  [ 268]  0xc5    110|00101   entropy=0.003  00101+bbbbbb=320-383               Latin-Ext(128-591)                                
+       ->  0xdd    110|11101   prob=   1.000  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
   ---
-  [ 330]  0xeb    1110|1011   entropy=3.500  1011+1bbbbb+bbbbbb=45056-49151     Hangul(44032-55215)                               
-       ->  0x05    0|0000101   prob=   0.259  0000101=5                          ASCII(0-127)                                      
-
-  [ 331]  0x8b    10|001011   entropy=4.520  1011+001011+bbbbbb=45760-45823     Hangul(44032-55215)                               
-       ->  0x9f    10|011111   prob=   0.133  1011+001011+011111=45791           Hangul(44032-55215)                               
+  [ 269]  0xdd    110|11101   entropy=0.240  11101+bbbbbb=1856-1919             Syriac/Other_b(1792-2303)                         
+       ->  0x08    0|0001000   prob=   0.963  0001000=8                          ASCII(0-127)                                      
 
-  [ 332]  0xa4    10|100100   entropy=4.648  1011+001011+100100=45796           Hangul(44032-55215)                               
-       ->  '.'     0|0101110   prob=   0.096  0101110=46                         ASCII(0-127)                                      
+  [ 270]  0x08    0|0001000   entropy=0.013  0001000=8                          ASCII(0-127)                                      
+       ->  '"'     0|0100010   prob=   0.999  0100010=34                         ASCII(0-127)                                      
   ---
-  [ 333]  '.'     0|0101110   entropy=4.594  0101110=46                         ASCII(0-127)                                      
-       ->  0x18    0|0011000   prob=   0.058  0011000=24                         ASCII(0-127)                                      
+  [ 271]  '"'     0|0100010   entropy=0.783  0100010=34                         ASCII(0-127)                                      
+       ->  0xbd    10|111101   prob=   0.626  ?                                  ?                                                 
   ---
 
 --------------------------------------------------------------------------------

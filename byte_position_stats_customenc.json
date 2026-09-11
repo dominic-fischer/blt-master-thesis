@@ -1,0 +1,222 @@
+{
+  "amh_Ethi": {
+    "n_docs": 997,
+    "n_bytes_total": 170250,
+    "main_length": 2,
+    "main_length_entropies": [
+      5.748661332934121,
+      0.3732933952155018
+    ],
+    "main_length_entropy_sum": 6.121954728149623,
+    "spread": 0.3313078508317375
+  },
+  "arb_Arab": {
+    "n_docs": 997,
+    "n_bytes_total": 221148,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.2754982059906546,
+      0.3396707451818396
+    ],
+    "main_length_entropy_sum": 4.615168951172494,
+    "spread": 0.37921225506374634
+  },
+  "cmn_Hans": {
+    "n_docs": 997,
+    "n_bytes_total": 84358,
+    "main_length": 2,
+    "main_length_entropies": [
+      7.4494972081987445,
+      1.8212766244717964
+    ],
+    "main_length_entropy_sum": 9.27077383267054,
+    "spread": 0.7147782797466151
+  },
+  "deu_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 293116,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.501943652204086,
+      0.07763170900608973
+    ],
+    "main_length_entropy_sum": 4.579575361210176,
+    "spread": 0.12396494561485419
+  },
+  "eng_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 250388,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.410302698138225,
+      0.05109731706352451
+    ],
+    "main_length_entropy_sum": 4.4614000152017494,
+    "spread": 0.09027994451808284
+  },
+  "fin_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 267870,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.337100864490309,
+      0.02692199134149595
+    ],
+    "main_length_entropy_sum": 4.364022855831805,
+    "spread": 0.05415811097439609
+  },
+  "fra_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 297578,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.423550854000898,
+      0.04439201183171003
+    ],
+    "main_length_entropy_sum": 4.467942865832608,
+    "spread": 0.08036637603128638
+  },
+  "heb_Hebr": {
+    "n_docs": 997,
+    "n_bytes_total": 195002,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.354164346331283,
+      0.15623067665746496
+    ],
+    "main_length_entropy_sum": 4.510395022988748,
+    "spread": 0.2171423004634762
+  },
+  "hrv_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 247738,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.480853960206855,
+      0.06851337864834264
+    ],
+    "main_length_entropy_sum": 4.549367338855197,
+    "spread": 0.11272263600643351
+  },
+  "ita_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 294180,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.2994617168065545,
+      0.044653856003856705
+    ],
+    "main_length_entropy_sum": 4.344115572810411,
+    "spread": 0.08263815581810291
+  },
+  "jpn_Jpan": {
+    "n_docs": 997,
+    "n_bytes_total": 109316,
+    "main_length": 2,
+    "main_length_entropies": [
+      6.968287627899556,
+      1.219451241871187
+    ],
+    "main_length_entropy_sum": 8.187738869770742,
+    "spread": 0.6071718919345576
+  },
+  "kat_Geor": {
+    "n_docs": 997,
+    "n_bytes_total": 275886,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.46216324003151,
+      0.07487207039943669
+    ],
+    "main_length_entropy_sum": 4.537035310430946,
+    "spread": 0.12132421192394971
+  },
+  "kor_Hang": {
+    "n_docs": 997,
+    "n_bytes_total": 126022,
+    "main_length": 2,
+    "main_length_entropies": [
+      6.266838002461375,
+      0.8000745458679192
+    ],
+    "main_length_entropy_sum": 7.066912548329294,
+    "spread": 0.5095353461287467
+  },
+  "nya_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 282924,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.380206967484853,
+      0.06384965079955188
+    ],
+    "main_length_entropy_sum": 4.444056618284406,
+    "spread": 0.10852198666188997
+  },
+  "ron_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 282084,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.416537827025832,
+      0.04900669922220291
+    ],
+    "main_length_entropy_sum": 4.465544526248035,
+    "spread": 0.08718576212032186
+  },
+  "spa_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 298374,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.32758356811094,
+      0.05314834626755419
+    ],
+    "main_length_entropy_sum": 4.380731914378495,
+    "spread": 0.09461871627541309
+  },
+  "srp_Cyrl": {
+    "n_docs": 997,
+    "n_bytes_total": 249010,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.545109951653412,
+      0.03678175120579006
+    ],
+    "main_length_entropy_sum": 4.5818917028592026,
+    "spread": 0.06741365009480657
+  },
+  "tam_Taml": {
+    "n_docs": 997,
+    "n_bytes_total": 292256,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.640031454995825,
+      0.03986291755735666
+    ],
+    "main_length_entropy_sum": 4.679894372553181,
+    "spread": 0.07079931496965614
+  },
+  "tha_Thai": {
+    "n_docs": 997,
+    "n_bytes_total": 240536,
+    "main_length": 2,
+    "main_length_entropies": [
+      5.236160719920221,
+      0.26052413848987327
+    ],
+    "main_length_entropy_sum": 5.496684858410094,
+    "spread": 0.27523320918478567
+  },
+  "vie_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 263980,
+    "main_length": 2,
+    "main_length_entropies": [
+      4.972165958614991,
+      0.14588797402284395
+    ],
+    "main_length_entropy_sum": 5.118053932637835,
+    "spread": 0.1868360472964355
+  }
+}

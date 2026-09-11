@@ -161,20 +161,51 @@ def iter_positions(byte_vals):
         yield length, pos, i
 
 
-def analyze_file(path, label, top_n=15):
+def iter_positions_fixed(byte_vals, fixed_length):
+    """Like iter_positions(), but for a CUSTOM (non-UTF-8) encoding where
+    every character is a known, fixed number of bytes -- e.g. a
+    tokenizer that always emits 2 bytes per character regardless of
+    codepoint. Bypasses utf8_lead_length() entirely, since a custom
+    encoding's byte values have no reason to follow UTF-8's lead/
+    continuation bit-pattern conventions (0xxxxxxx / 110xxxxx / 10xxxxxx
+    / ...) -- using the UTF-8 classifier on such data would silently
+    misclassify every byte. Simply walks the stream in fixed-size
+    chunks: position 0, 1, ..., fixed_length-1, repeating.
+    """
+    for i, bv in enumerate(byte_vals):
+        yield fixed_length, i % fixed_length, i
+
+
+def analyze_file(path, label, top_n=15, fixed_length=None):
     with open(path, encoding="utf-8") as f:
         records = json.load(f)
 
-    # (length, pos) -> Counter(byte_value -> count)
+    # (length, pos) -> Counter(byte_value -> count)               [marginal]
     value_buckets = defaultdict(Counter)
+    # (length, pos) -> {prefix_tuple -> Counter(byte_value -> count)}  [conditional]
+    cond_buckets = defaultdict(lambda: defaultdict(Counter))
     n_docs = len(records)
     total_bytes = 0
 
     for rec in records:
         triples = rec.get("bytes_entropies", [])
         byte_vals = [t[0] for t in triples]
-        for length, pos, i in iter_positions(byte_vals):
-            value_buckets[(length, pos)][byte_vals[i]] += 1
+        if fixed_length is not None:
+            position_iter = iter_positions_fixed(byte_vals, fixed_length)
+        else:
+            position_iter = iter_positions(byte_vals)
+
+        char_buffer = []
+        for length, pos, i in position_iter:
+            if pos == 0:
+                char_buffer = []
+            bv = byte_vals[i]
+            char_buffer.append(bv)
+            value_buckets[(length, pos)][bv] += 1
+            # prefix = the bytes of THIS character seen before this
+            # position (char_buffer minus the byte just appended)
+            prefix = tuple(char_buffer[:pos])
+            cond_buckets[(length, pos)][prefix][bv] += 1
             total_bytes += 1
 
     lengths_present = sorted(set(l for l, p in value_buckets))
@@ -195,14 +226,34 @@ def analyze_file(path, label, top_n=15):
             counter = value_buckets.get((length, pos), Counter())
             total_here = sum(counter.values())
             n_distinct = len(counter)
-            ent_bits = (
+            marginal_ent = (
                 -sum((c / total_here) * math.log2(c / total_here) for c in counter.values())
                 if total_here else 0.0
             )
+
+            # CONDITIONAL entropy H(byte[pos] | byte[0:pos]) -- the actual
+            # chain-rule term: weighted average, over every distinct prefix
+            # seen at this position, of the entropy of byte[pos] WITHIN
+            # that prefix group. Equals the marginal entropy at pos=0
+            # (nothing to condition on), but can be far LOWER at later
+            # positions if earlier bytes predict this one -- e.g. a
+            # custom encoding where byte[0] fully determines byte[1].
+            prefix_groups = cond_buckets.get((length, pos), {})
+            cond_ent = 0.0
+            for prefix, pcounter in prefix_groups.items():
+                group_total = sum(pcounter.values())
+                w = group_total / total_here if total_here else 0
+                group_ent = (
+                    -sum((c / group_total) * math.log2(c / group_total) for c in pcounter.values())
+                    if group_total else 0.0
+                )
+                cond_ent += w * group_ent
+
             sorted_items = counter.most_common()  # descending by count
 
-            print(f"    byte[{pos}]: {n_distinct} distinct value(s), "
-                  f"empirical entropy={ent_bits:.2f} bits")
+            print(f"    byte[{pos}]: {n_distinct} distinct value(s)  |  "
+                  f"marginal entropy={marginal_ent:.2f} bits  |  "
+                  f"conditional entropy={cond_ent:.2f} bits")
             for bv, c in sorted_items[:top_n]:
                 share = c / total_here
                 print(f"        0x{bv:02x} ({bv:3d}): count={c:6d}  share={share:6.1%}")
@@ -212,7 +263,9 @@ def analyze_file(path, label, top_n=15):
 
             length_result["positions"][str(pos)] = {
                 "n_distinct_values": n_distinct,
-                "entropy_bits": ent_bits,
+                "entropy_bits": marginal_ent,               # kept for backward compatibility
+                "marginal_entropy_bits": marginal_ent,
+                "conditional_entropy_bits": cond_ent,
                 "values": [
                     {"byte": bv, "hex": f"0x{bv:02x}", "count": c, "share": c / total_here}
                     for bv, c in sorted_items
@@ -223,13 +276,17 @@ def analyze_file(path, label, top_n=15):
         print()
 
     # main_length: whichever byte-length accounts for the most characters
-    # in this language (its dominant encoding length). main_length_entropies:
-    # the per-position entropy profile for that length -- e.g. Georgian's
-    # [0.00, 0.00, 4.23] vs Serbian's [0.85, 3.52] is exactly the "how
-    # spread out is the entropy" comparison this whole analysis is for.
+    # in this language (its dominant encoding length). main_length_entropies
+    # uses CONDITIONAL entropy per position -- the correct chain-rule
+    # quantity, matching H(char) = sum_k H(byte_k | byte_0..k-1) exactly.
+    # (Marginal entropy is still available per-position above, under
+    # "marginal_entropy_bits", for the separate "how much does the raw
+    # encoding vary here" question -- but summing MARGINAL entropies would
+    # generally OVER-count the true joint/identity entropy whenever byte
+    # positions are correlated, so it is not used for main_length_entropies.)
     main_length = max(lengths_present, key=lambda l: lengths_dict[str(l)]["n_chars"])
     main_length_entropies = [
-        lengths_dict[str(main_length)]["positions"][str(p)]["entropy_bits"]
+        lengths_dict[str(main_length)]["positions"][str(p)]["conditional_entropy_bits"]
         for p in range(main_length)
     ]
     main_length_entropy_sum = sum(main_length_entropies)
@@ -246,7 +303,7 @@ def analyze_file(path, label, top_n=15):
         "main_length_entropies": main_length_entropies,
         "main_length_entropy_sum": main_length_entropy_sum,
         "spread": spread,
-        # "lengths": lengths_dict,
+        #"lengths": lengths_dict,
     }
 
     spread_str = f"{spread:.3f}" if spread is not None else "n/a (1-byte language)"
@@ -291,6 +348,14 @@ def main():
                          help="Path to write combined results as JSON "
                               "(default: byte_position_stats.json in the current directory). "
                               "Pass an empty string to skip writing.")
+    parser.add_argument("--fixed-length", type=int, default=None,
+                         help="Use this for a CUSTOM (non-UTF-8) encoding where every "
+                              "character is a known, fixed number of bytes (e.g. --fixed-length 2 "
+                              "for an encoding that always emits 2 bytes/character). Bypasses "
+                              "UTF-8 lead-byte detection entirely, since a custom encoding's byte "
+                              "values have no reason to follow UTF-8's bit-pattern conventions -- "
+                              "using the UTF-8 classifier on such data would silently misclassify "
+                              "every byte. Omit this for ordinary UTF-8 text.")
     args = parser.parse_args()
 
     files = collect_files(args.inputs, args.only_20)
@@ -302,7 +367,8 @@ def main():
     for path in files:
         label = os.path.splitext(os.path.basename(path))[0]
         try:
-            all_results[label] = analyze_file(path, label, top_n=args.top_n)
+            all_results[label] = analyze_file(path, label, top_n=args.top_n,
+                                               fixed_length=args.fixed_length)
         except Exception as e:
             print(f"Skipping {path}: {e}", file=sys.stderr)
 
