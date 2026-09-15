@@ -1,0 +1,142 @@
+{
+  "amh_Ethi": {
+    "n_docs": 997,
+    "n_bytes_total": 170250,
+    "n_codepoints": 85125,
+    "codepoints_per_baseline_codepoint": 0.6799447257855807,
+    "density_index": 1.4707077826725403
+  },
+  "arb_Arab": {
+    "n_docs": 997,
+    "n_bytes_total": 221148,
+    "n_codepoints": 110574,
+    "codepoints_per_baseline_codepoint": 0.8832212406345352,
+    "density_index": 1.13221914735833
+  },
+  "cmn_Hans": {
+    "n_docs": 997,
+    "n_bytes_total": 84358,
+    "n_codepoints": 42179,
+    "codepoints_per_baseline_codepoint": 0.3369091170503379,
+    "density_index": 2.968159510656962
+  },
+  "deu_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 293116,
+    "n_codepoints": 146558,
+    "codepoints_per_baseline_codepoint": 1.1706471556144864,
+    "density_index": 0.8542283601031674
+  },
+  "eng_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 250388,
+    "n_codepoints": 125194,
+    "codepoints_per_baseline_codepoint": 1.0,
+    "density_index": 1.0
+  },
+  "fin_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 267870,
+    "n_codepoints": 133935,
+    "codepoints_per_baseline_codepoint": 1.069819639918846,
+    "density_index": 0.9347369992907008
+  },
+  "fra_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 297578,
+    "n_codepoints": 148789,
+    "codepoints_per_baseline_codepoint": 1.1884674984424173,
+    "density_index": 0.8414197286089697
+  },
+  "heb_Hebr": {
+    "n_docs": 997,
+    "n_bytes_total": 195002,
+    "n_codepoints": 97501,
+    "codepoints_per_baseline_codepoint": 0.7787993034809975,
+    "density_index": 1.2840278561245526
+  },
+  "hrv_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 247738,
+    "n_codepoints": 123869,
+    "codepoints_per_baseline_codepoint": 0.9894164257073023,
+    "density_index": 1.0106967845062123
+  },
+  "ita_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 294180,
+    "n_codepoints": 147090,
+    "codepoints_per_baseline_codepoint": 1.174896560538045,
+    "density_index": 0.8511387585831803
+  },
+  "jpn_Jpan": {
+    "n_docs": 997,
+    "n_bytes_total": 109316,
+    "n_codepoints": 54658,
+    "codepoints_per_baseline_codepoint": 0.43658641787945107,
+    "density_index": 2.2904972739580667
+  },
+  "kat_Geor": {
+    "n_docs": 997,
+    "n_bytes_total": 275886,
+    "n_codepoints": 137943,
+    "codepoints_per_baseline_codepoint": 1.1018339537038517,
+    "density_index": 0.9075777676286582
+  },
+  "kor_Hang": {
+    "n_docs": 997,
+    "n_bytes_total": 126022,
+    "n_codepoints": 63011,
+    "codepoints_per_baseline_codepoint": 0.5033068677412655,
+    "density_index": 1.9868594372411166
+  },
+  "nya_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 282924,
+    "n_codepoints": 141462,
+    "codepoints_per_baseline_codepoint": 1.129942329504609,
+    "density_index": 0.885000918974707
+  },
+  "ron_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 282084,
+    "n_codepoints": 141042,
+    "codepoints_per_baseline_codepoint": 1.1265875361439046,
+    "density_index": 0.8876363069156705
+  },
+  "spa_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 298374,
+    "n_codepoints": 149187,
+    "codepoints_per_baseline_codepoint": 1.1916465645318466,
+    "density_index": 0.8391749951403272
+  },
+  "srp_Cyrl": {
+    "n_docs": 997,
+    "n_bytes_total": 249010,
+    "n_codepoints": 124505,
+    "codepoints_per_baseline_codepoint": 0.9944965413677972,
+    "density_index": 1.0055339143006305
+  },
+  "tam_Taml": {
+    "n_docs": 997,
+    "n_bytes_total": 292256,
+    "n_codepoints": 146128,
+    "codepoints_per_baseline_codepoint": 1.1672124862213844,
+    "density_index": 0.8567420343808169
+  },
+  "tha_Thai": {
+    "n_docs": 997,
+    "n_bytes_total": 240536,
+    "n_codepoints": 120268,
+    "codepoints_per_baseline_codepoint": 0.9606530664408838,
+    "density_index": 1.0409585259586922
+  },
+  "vie_Latn": {
+    "n_docs": 997,
+    "n_bytes_total": 263980,
+    "n_codepoints": 131990,
+    "codepoints_per_baseline_codepoint": 1.0542837516174897,
+    "density_index": 0.9485112508523373
+  }
+}
