@@ -2,13 +2,10 @@
 """
 Premium color-chart generator.
 
-Takes three input files:
-  1. An entropy-based ranking table
-  2. A monotonicity-based ranking table
-  3. A per-language training-data CSV (e.g. training_setup/langs/langs_chosen.csv)
-
-...and visualizes how each language's "premium" changes between the two
-rankings, using color instead of raw numbers.
+Can be run in two modes:
+  1. Auto-resolution mode: Pass a setup mode (e.g., 'balanced', 'imbalanced', 'balanced-custom')
+     and the script automatically resolves the folder and table files.
+  2. Manual mode: Pass file1 and file2 directly.
 """
 
 import argparse
@@ -82,12 +79,54 @@ SPREAD_ALIASES = {
     "spread_customenc_sum": "main_length_entropy_sum_customenc",
 }
 
+TRAIN_DATA_ALIASES = {
+    "train_bytes": "TrainBytes",
+    "training_bytes": "TrainBytes",
+    "bytes": "TrainBytes",
+    "log_train_bytes": "LogTrainBytes",
+    "log_bytes": "LogTrainBytes",
+    "training_data": "LogTrainBytes",
+}
+
 SPREAD_FIELD_SOURCE = {
     "spread": ("spread_json", "spread"),
     "main_length_entropy_sum": ("spread_json", "main_length_entropy_sum"),
     "spread_customenc": ("spread_customenc_json", "spread"),
     "main_length_entropy_sum_customenc": ("spread_customenc_json", "main_length_entropy_sum"),
 }
+
+PRESET_DIRS = {
+    "balanced": "results/txt_premiums/t_anchor/Balanced/step_0000007200",
+    "imbalanced": "results/txt_premiums/t_anchor/Imbalanced/step_0000002600",
+    "balanced-custom": "results/txt_premiums/t_anchor/Balanced_customenc/step_0000006400",
+}
+
+
+def resolve_inputs(args_inputs):
+    if len(args_inputs) == 1:
+        target = args_inputs[0]
+        folder = PRESET_DIRS.get(target.lower(), target)
+        if not os.path.isdir(folder):
+            raise ValueError(f"Target '{target}' is neither a known preset mode nor a valid directory.")
+        
+        files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith("_premiums_sorted.txt")]
+        
+        entropy_file = next((f for f in files if "entropy" in os.path.basename(f).lower()), None)
+        mono_file = next((f for f in files if "monotonicity" in os.path.basename(f).lower() or "mono" in os.path.basename(f).lower()), None)
+        
+        if not entropy_file or not mono_file:
+            if len(files) == 2:
+                entropy_file, mono_file = files[0], files[1]
+            else:
+                raise ValueError(f"Could not automatically locate entropy and monotonicity ranking files in {folder}")
+        
+        print(f"Resolved '{target}' ->\n  File 1: {entropy_file}\n  File 2: {mono_file}")
+        return entropy_file, mono_file
+
+    elif len(args_inputs) == 2:
+        return args_inputs[0], args_inputs[1]
+    else:
+        raise ValueError("Please provide either a single preset mode/directory or two file paths.")
 
 
 def load_spread_json(path):
@@ -99,6 +138,8 @@ def load_spread_json(path):
 
 def resolve_col_spec(name, header_fields):
     key = name.strip().lower()
+    if key in TRAIN_DATA_ALIASES:
+        return "train_data", TRAIN_DATA_ALIASES[key]
     if key in SPREAD_ALIASES:
         return "spread", SPREAD_ALIASES[key]
     resolved = COLUMN_ALIASES.get(key)
@@ -110,13 +151,13 @@ def resolve_col_spec(name, header_fields):
     if resolved is None or resolved not in header_fields:
         raise ValueError(
             f"Column '{name}' not found in header {header_fields}, and not "
-            f"a recognized spread alias either."
+            f"a recognized spread or training data alias either."
         )
     return "file", resolved
 
 
-def parse_table(path, file_extra_cols, spread_cols, spread_sources):
-    """Parses table file and injects external spread columns if requested."""
+def parse_table(path, file_extra_cols, spread_cols, train_data_cols, spread_sources, training_data):
+    """Parses table file and injects external spread and training data columns if requested."""
     data = {}
     header_fields = None
     with open(path, "r", encoding="utf-8") as f:
@@ -138,19 +179,22 @@ def parse_table(path, file_extra_cols, spread_cols, spread_sources):
             except (KeyError, ValueError):
                 continue
 
-            # Resolve external spread values
-            missing_spread = False
+            # Resolve external spread values (keep as None if missing instead of skipping)
             for col in spread_cols:
                 src_dict_name, field_name = SPREAD_FIELD_SOURCE[col]
                 src_dict = spread_sources.get(src_dict_name, {})
                 val = src_dict.get(lang, {}).get(field_name)
-                if val is None:
-                    missing_spread = True
-                    break
-                extras[col] = float(val)
+                extras[col] = float(val) if val is not None else None
 
-            if not missing_spread:
-                data[lang] = (premium, extras)
+            # Resolve external training data values
+            for col in train_data_cols:
+                bytes_val = float(training_data.get(lang, 0.0))
+                if col == "TrainBytes":
+                    extras[col] = bytes_val
+                elif col == "LogTrainBytes":
+                    extras[col] = math.log10(bytes_val) if bytes_val > 0 else 0.0
+
+            data[lang] = (premium, extras)
 
     if not data:
         raise ValueError(f"No valid data rows parsed from {path}")
@@ -279,7 +323,25 @@ def grey_color(v, vmin, vmax):
     return (g, g, g)
 
 
+def format_cell_value(col, val):
+    if val is None:
+        return "N/A"
+    if col == "TrainBytes":
+        if val >= 1e9:
+            return f"{val/1e9:.1f}G"
+        elif val >= 1e6:
+            return f"{val/1e6:.1f}M"
+        elif val >= 1e3:
+            return f"{val/1e3:.1f}K"
+        return f"{int(val)}"
+    elif col == "LogTrainBytes":
+        return f"10^{val:.1f}"
+    return f"{val:.2f}" if isinstance(val, (float, int)) else str(val)
+
+
 def text_color_for(bg):
+    if bg is None:
+        return "#aaaaaa"
     lum = 0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]
     return "black" if lum > 0.55 else "white"
 
@@ -297,8 +359,12 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
 
     extra_minmax = {}
     for col in display_cols:
-        vals = [table1[l][1][col] for l in langs] + [table2[l][1][col] for l in langs]
-        extra_minmax[col] = (min(vals), max(vals))
+        vals = [table1[l][1][col] for l in langs if table1[l][1][col] is not None] + \
+               [table2[l][1][col] for l in langs if table2[l][1][col] is not None]
+        if vals:
+            extra_minmax[col] = (min(vals), max(vals))
+        else:
+            extra_minmax[col] = (0.0, 1.0)
 
     p1_vals = [table1[l][0] for l in langs]
     p2_vals = [table2[l][0] for l in langs]
@@ -348,16 +414,29 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
     ax.set_ylim(-2.7, n + 1.5 + extra_top)
     ax.axis("off")
 
-    def draw_square(x, y, color, val, fmt="{:.2f}"):
-        rect = patches.FancyBboxPatch(
-            (x, y), sq, sq,
-            boxstyle="round,pad=0.02,rounding_size=0.06",
-            linewidth=0.6, edgecolor="#333333", facecolor=color,
-        )
-        ax.add_patch(rect)
-        ax.text(x + sq / 2, y + sq / 2, fmt.format(val) if not isinstance(val, str) else val,
-                ha="center", va="center", fontsize=7.2,
-                color=text_color_for(color), fontweight="bold")
+    def draw_square(x, y, color, val, fmt_str=None):
+        if color is None or val is None:
+            # Draw an empty, light dashed box for missing values
+            rect = patches.FancyBboxPatch(
+                (x, y), sq, sq,
+                boxstyle="round,pad=0.02,rounding_size=0.06",
+                linewidth=0.6, linestyle="--", edgecolor="#cccccc", facecolor="none",
+            )
+            ax.add_patch(rect)
+            ax.text(x + sq / 2, y + sq / 2, "N/A",
+                    ha="center", va="center", fontsize=7.2,
+                    color="#aaaaaa", fontweight="bold")
+        else:
+            rect = patches.FancyBboxPatch(
+                (x, y), sq, sq,
+                boxstyle="round,pad=0.02,rounding_size=0.06",
+                linewidth=0.6, edgecolor="#333333", facecolor=color,
+            )
+            ax.add_patch(rect)
+            display_text = fmt_str if fmt_str is not None else (f"{val:.2f}" if isinstance(val, (float, int)) else str(val))
+            ax.text(x + sq / 2, y + sq / 2, display_text,
+                    ha="center", va="center", fontsize=7.2,
+                    color=text_color_for(color), fontweight="bold")
 
     ytop = n + 0.6 + extra_top
     ax.text(x_lang, ytop, "Language", fontsize=10, fontweight="bold", va="bottom")
@@ -387,13 +466,16 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
 
         for col in display_cols:
             vmin, vmax = extra_minmax[col]
-            draw_square(x_extra[col], y, grey_color(extras1[col], vmin, vmax), extras1[col])
+            raw_val = extras1[col]
+            formatted_val = format_cell_value(col, raw_val)
+            cell_color = grey_color(raw_val, vmin, vmax) if raw_val is not None else None
+            draw_square(x_extra[col], y, cell_color, raw_val, fmt_str=formatted_val)
 
     # Legend rendering
     grad_w = 2.0
     n_steps = 60
 
-    def draw_gradient_legend(x0, y0, vmin, vmax, color_fn, label):
+    def draw_gradient_legend(x0, y0, vmin, vmax, color_fn, label, is_log=False):
         for k in range(n_steps):
             t0 = k / n_steps
             val = vmin + t0 * (vmax - vmin)
@@ -401,8 +483,10 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
                 (x0 + t0 * grad_w, y0), grad_w / n_steps + 0.001, 0.25,
                 color=color_fn(val), linewidth=0,
             ))
-        ax.text(x0, y0 - 0.3, f"{vmin:.2f}", fontsize=8, ha="left")
-        ax.text(x0 + grad_w, y0 - 0.3, f"{vmax:.2f}", fontsize=8, ha="right")
+        min_label = f"10^{vmin:.1f}" if is_log else f"{vmin:.2f}"
+        max_label = f"10^{vmax:.1f}" if is_log else f"{vmax:.2f}"
+        ax.text(x0, y0 - 0.3, min_label, fontsize=8, ha="left")
+        ax.text(x0 + grad_w, y0 - 0.3, max_label, fontsize=8, ha="right")
         ax.text(x0 + grad_w / 2, y0 + 0.35, label, fontsize=8.5, ha="center", multialignment="center")
 
     def draw_premium_legend(x0, y0, c1_min, c1_max, s1_min, s1_max, c2_min, c2_max, s2_min, s2_max):
@@ -445,10 +529,12 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
     legend_spacing = 2.6
     for i, col in enumerate(display_cols):
         vmin, vmax = extra_minmax[col]
+        is_log_col = (col == "LogTrainBytes")
         draw_gradient_legend(
             legend_x0 + i * legend_spacing, leg_y, vmin, vmax,
             lambda v, vmin=vmin, vmax=vmax: grey_color(v, vmin, vmax),
             f"{col} (light\u2192dark)",
+            is_log=is_log_col,
         )
 
     plt.tight_layout()
@@ -457,17 +543,20 @@ def draw_chart(table1, table2, training_data, label1, label2, display_cols, out_
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a premium color chart.")
-    parser.add_argument("file1", help="First ranking table file")
-    parser.add_argument("file2", help="Second ranking table file")
-    parser.add_argument("lang_data_csv", nargs="?", default="training_setup/langs/langs_chosen.csv")
-    parser.add_argument("--cols", default="mean,var", help="Comma-separated extra columns to show")
+    parser = argparse.ArgumentParser(
+        description="Generate a premium color chart. Accepts either a target mode (e.g., 'balanced') or explicit input files."
+    )
+    parser.add_argument("inputs", nargs="+", help="Preset mode name ('balanced', 'imbalanced'), folder path, or 2 file paths")
+    parser.add_argument("--lang-csv", default="training_setup/langs/langs_chosen.csv", help="Path to training data CSV")
+    parser.add_argument("--cols", default="mean,var", help="Comma-separated extra columns to show (e.g. mean,spread,log_bytes)")
     parser.add_argument("--spread-json", help="Path to byte position stats JSON file for standard spread")
     parser.add_argument("--spread-customenc-json", help="Path to byte position stats JSON file for custom encoding spread")
     args = parser.parse_args()
 
-    prefix1 = get_prefix(args.file1)
-    prefix2 = get_prefix(args.file2)
+    file1, file2 = resolve_inputs(args.inputs)
+
+    prefix1 = get_prefix(file1)
+    prefix2 = get_prefix(file2)
     assert prefix1 == prefix2, f"Ranking filenames must share the same prefix."
 
     def is_balanced_path(path):
@@ -475,15 +564,16 @@ def main():
         tokens = re.split(r'[^a-z0-9]+', folder_and_file)
         return "balanced" in tokens and "imbalanced" not in tokens
 
-    is_balanced = is_balanced_path(args.file1) or is_balanced_path(args.file2)
+    is_balanced = is_balanced_path(file1) or is_balanced_path(file2)
 
-    header_fields = peek_header(args.file1)
+    header_fields = peek_header(file1)
     col_specs = [c.strip() for c in args.cols.split(",") if c.strip()]
     if not col_specs:
         sys.exit(1)
 
     file_extra_cols = []
     spread_cols = []
+    train_data_cols = []
     display_cols = []
 
     for c in col_specs:
@@ -493,20 +583,23 @@ def main():
             file_extra_cols.append(resolved_name)
         elif source == "spread":
             spread_cols.append(resolved_name)
+        elif source == "train_data":
+            train_data_cols.append(resolved_name)
 
     spread_sources = {
         "spread_json": load_spread_json(args.spread_json),
         "spread_customenc_json": load_spread_json(args.spread_customenc_json),
     }
 
-    table1 = parse_table(args.file1, file_extra_cols, spread_cols, spread_sources)
-    table2 = parse_table(args.file2, file_extra_cols, spread_cols, spread_sources)
-    training_data = parse_training_data(args.lang_data_csv, is_balanced=is_balanced)
+    training_data = parse_training_data(args.lang_csv, is_balanced=is_balanced)
 
-    label1 = get_label(args.file1)
-    label2 = get_label(args.file2)
+    table1 = parse_table(file1, file_extra_cols, spread_cols, train_data_cols, spread_sources, training_data)
+    table2 = parse_table(file2, file_extra_cols, spread_cols, train_data_cols, spread_sources, training_data)
 
-    out_dir = os.path.dirname(os.path.abspath(args.file1))
+    label1 = get_label(file1)
+    label2 = get_label(file2)
+
+    out_dir = os.path.dirname(os.path.abspath(file1))
     out_path = os.path.join(out_dir, f"{prefix1}_premium_color_chart.png")
     draw_chart(table1, table2, training_data, label1, label2, display_cols, out_path)
 

@@ -285,16 +285,20 @@ def load_density_json(path):
         return json.load(f)
 
 
-def load_spread_json(path):
-    """Returns {language_code: {stat_name: value}} as produced by
-    byte_position_stats.py -- top-level keys are language codes (the
-    JSON file's stem per language, e.g. "eng_Latn"), same convention as
-    load_density_json. Values of None (1-byte-dominant languages -- see
-    spread_score()) are kept as None here; merge_external_columns skips
-    them so those rows simply don't get a spread value, same as any
-    other missing/blank field."""
+def load_spread_json(path, fill_nulls=None):
+    if not path or not os.path.exists(path):
+        return {}
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    if fill_nulls is not None:
+        for lang_code, stats in data.items():
+            if isinstance(stats, dict):
+                for stat_key, val in stats.items():
+                    if val is None:
+                        stats[stat_key] = fill_nulls
+
+    return data
 
 
 def merge_external_columns(rows, langs_csv_data, density_data,
@@ -722,6 +726,11 @@ def main():
                               "of byte_position_stats.py (--fixed-length), merged in as the "
                               "'spread_customenc' / 'spread_customenc_sum' columns. Silently "
                               "skipped if not found. Pass an empty string to disable.")
+    parser.add_argument(
+                            "--fill-spread-nulls",
+                            action="store_true",
+                            help="Replace null spread values (e.g. for 1-byte languages) with 1.0 to include all languages in charts.",
+                        )
     parser.add_argument("--out", default=None, help="Output PNG path (overrides --out-dir entirely -- used exactly as given)")
     parser.add_argument("--out-dir", default="correlation_plots",
                          help="Directory the auto-derived output filename is saved into (default: correlation_plots/). "
@@ -742,12 +751,15 @@ def main():
     density_data = {}
     if args.density_json and os.path.exists(args.density_json):
         density_data = load_density_json(args.density_json)
+    # Define fallback value depending on flag state
+    fill_value = 1.0 if args.fill_spread_nulls else None
+
     spread_data = {}
     if args.spread_json and os.path.exists(args.spread_json):
-        spread_data = load_spread_json(args.spread_json)
+        spread_data = load_spread_json(args.spread_json, fill_nulls=fill_value)
     spread_customenc_data = {}
     if args.spread_customenc_json and os.path.exists(args.spread_customenc_json):
-        spread_customenc_data = load_spread_json(args.spread_customenc_json)
+        spread_customenc_data = load_spread_json(args.spread_customenc_json, fill_nulls=fill_value)
 
     available_columns |= merge_external_columns(
         rows, langs_csv_data, density_data, spread_data, spread_customenc_data)
