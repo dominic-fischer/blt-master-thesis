@@ -9,7 +9,7 @@ COLUMN SPECS (--cols, --control-for)
         kurtosis/kurt, autocorr/autocorrelation, volatility/vol,
         training_data/training_data_balanced (RANK by training-data
         size, 1=most -- not raw bytes, see COLUMN_ALIASES), density,
-        codepoints, cp_per_baseline
+        codepoints, cp_per_baseline, spread, spread_customenc
       - the exact header text from the file (case-insensitive): Premium,
         PPS, BPP, EntropyMean, EntropyVar, EntropySkew, EntropyKurtosis,
         EntropyAutocorr1, EntropyVolatility
@@ -19,18 +19,33 @@ COLUMN SPECS (--cols, --control-for)
     --cols takes exactly two comma-separated specs: X,Y.
 
 USAGE
-    # plain correlation
-    python3 plot_correlation.py premiums_sorted.txt --cols mean,premium
+    # plain correlation, literal file path (--threshold still required,
+    # just unused when premium_file is a literal path)
+    python3 plot_correlation.py premiums_sorted.txt --threshold global --cols mean,premium
+
+    # shorthand run name instead of the full path -- resolves the step
+    # folder and exact calibrated threshold automatically via RUN_INFO
+    python3 plot_correlation.py balanced --threshold global --cols mean,premium
+    python3 plot_correlation.py imbalanced --char-level --threshold mono --cols mean,premium
+    python3 plot_correlation.py balanced-custom --threshold global --cols density,premium
 
     # ratio as one side
-    python3 plot_correlation.py premiums_sorted.txt --cols mean/variance,premium
+    python3 plot_correlation.py balanced --threshold global --cols mean/variance,premium
+
+    # log10 of a skewed column instead of its rank -- see add_log_columns
+    # and the training_data_log alias, or wrap ANY column/ratio directly:
+    python3 plot_correlation.py imbalanced --threshold global --cols log(imbalanced_allocation_bytes),mean
+
+    # entropy spread (see byte_position_stats.py) instead of autocorrelation --
+    # merged in from byte_position_stats.json by default, see --spread-json
+    python3 plot_correlation.py balanced --threshold global --cols spread,premium
 
     # partial correlation, controlling for a third column -- shows the
     # full 6-panel step-by-step walkthrough (same construction used
     # earlier for spread-vs-premium controlling for budget): X~control,
     # residual; Y~control, residual; then residual-vs-residual, with the
     # raw (uncontrolled) comparison shown separately for reference.
-    python3 plot_correlation.py premiums_sorted.txt --cols mean,premium --control-for variance
+    python3 plot_correlation.py balanced --threshold global --cols mean,premium --control-for variance
 
 PARSING THE INPUT FILE
     That file format is FIXED-WIDTH (built by left-justifying every
@@ -106,10 +121,15 @@ COLUMN_ALIASES = {
     "training_data_rank": "imbalanced_allocation_bytes_rank",
     "training_data_imbalanced": "imbalanced_allocation_bytes_rank",
     "imbalanced_rank": "imbalanced_allocation_bytes_rank",
+    "training_data_log": "imbalanced_allocation_bytes_log10",
+    "training_data_log10": "imbalanced_allocation_bytes_log10",
+    "imbalanced_log": "imbalanced_allocation_bytes_log10",
     "imbalanced_bytes": "imbalanced_allocation_bytes",  # raw bytes, unchanged
     "imbalanced_allocation_bytes": "imbalanced_allocation_bytes",  # raw bytes, unchanged
     "training_data_balanced": "balanced_allocation_bytes_rank",
     "balanced_rank": "balanced_allocation_bytes_rank",
+    "training_data_balanced_log": "balanced_allocation_bytes_log10",
+    "balanced_log": "balanced_allocation_bytes_log10",
     "balanced_bytes": "balanced_allocation_bytes",  # raw bytes, unchanged
     "balanced_allocation_bytes": "balanced_allocation_bytes",  # raw bytes, unchanged
     "documents": "documents", "n_documents": "documents",
@@ -124,6 +144,23 @@ COLUMN_ALIASES = {
     "cp_per_baseline": "codepoints_per_baseline_codepoint",
     "codepoints_per_baseline_codepoint": "codepoints_per_baseline_codepoint",
     "customenc_bytes": "n_bytes_total",
+
+    # --- from --spread-json / --spread-customenc-json (default:
+    # byte_position_stats.json / byte_position_stats_customenc.json,
+    # produced by byte_position_stats.py) --- normalized [0, 1] balance
+    # of a language's per-character identity entropy across its
+    # dominant byte-length's positions (0 = concentrated in one byte,
+    # 1 = perfectly even). None/blank for languages whose dominant
+    # length is 1 byte -- see spread_score() in byte_position_stats.py.
+    "spread": "spread", "entropy_spread": "spread",
+    "spread_customenc": "spread_customenc", "custom_spread": "spread_customenc",
+    "spread_custom_encoding": "spread_customenc",
+    # main_length_entropy_sum companions, merged in alongside spread --
+    # total identity-entropy (bits) of the dominant byte-length, useful
+    # to control for "how much information" while spread captures "how
+    # evenly spread out".
+    "spread_sum": "main_length_entropy_sum", "entropy_sum": "main_length_entropy_sum",
+    "spread_customenc_sum": "main_length_entropy_sum_customenc",
 }
 
 # Which literal column names get pulled in from each optional external
@@ -136,14 +173,80 @@ LANGS_CSV_COLUMNS = [
 DENSITY_JSON_COLUMNS = [
     "n_bytes_total", "n_codepoints", "codepoints_per_baseline_codepoint", "density_index",
 ]
+# Fields pulled per-language out of a byte_position_stats(.py)-style JSON
+# (keyed by language code at the top level, e.g. {"eng_Latn": {...}, ...}).
+# Mapped to the row-column names spread/spread_customenc resolve to above.
+SPREAD_JSON_FIELDS = {
+    "spread": "spread",
+    "main_length_entropy_sum": "main_length_entropy_sum",
+}
+SPREAD_CUSTOMENC_JSON_FIELDS = {
+    "spread": "spread_customenc",
+    "main_length_entropy_sum": "main_length_entropy_sum_customenc",
+}
+
+# Shorthand run names -> canonical folder/filename-prefix, matching
+# results_to_txt_premiums.py's RUN_NAME_ALIASES output. Lets you write
+# "balanced" instead of the full premiums_sorted.txt path -- see
+# resolve_premium_path. Known checkpoint steps and calibrated thresholds
+# for each run, both granularities -- update here if a run is
+# recalibrated or a new one is added; everything else derives from this.
+RUN_NAME_LOOKUP = {
+    "balanced": "Balanced",
+    "imbalanced": "Imbalanced",
+    "balanced-custom": "Balanced-Custom",
+    "balanced_custom": "Balanced-Custom",
+    "balancedcustom": "Balanced-Custom",
+}
+RUN_INFO = {
+    "Balanced": {
+        "step": "0000007200",
+        "byte": {"global": "1.9458", "mono": "0.6664"},
+        "char": {"global": "1.9448", "mono": "0.6646"},
+    },
+    "Imbalanced": {
+        "step": "0000002600",
+        "byte": {"global": "1.7510", "mono": "0.5531"},
+        "char": {"global": "1.7488", "mono": "0.5552"},
+    },
+    "Balanced-Custom": {
+        "step": "0000006400",
+        "byte": {"global": "2.0176", "mono": "2.0371"},
+        "char": {"global": "2.0630", "mono": "0.6877"},
+    },
+}
+
+
+def resolve_premium_path(spec, char_level, threshold, base_dir="results/txt_premiums"):
+    """If spec is a recognized shorthand (balanced / imbalanced /
+    balanced-custom, case-insensitive, hyphen or underscore), builds and
+    returns the full premiums_sorted.txt path for it using RUN_INFO.
+    Returns None if spec isn't a recognized shorthand -- caller should
+    then treat spec as a literal path, unchanged (so full paths still
+    work exactly as before)."""
+    key = RUN_NAME_LOOKUP.get(spec.strip().lower())
+    if key is None:
+        return None
+    info = RUN_INFO[key]
+    granularity = "char" if char_level else "byte"
+    t_value = info[granularity][threshold]
+    case_name = "raw_entropy" if threshold == "global" else "raw_monotonicity"
+    parts = [base_dir]
+    if char_level:
+        parts.append("char_level")
+    parts.append("t_anchor")
+    parts.append(key)
+    parts.append(f"step_{info['step']}")
+    parts.append(f"{key}_{case_name}_t_{t_value}_premiums_sorted.txt")
+    return os.path.join(*parts)
 
 
 def resolve_column_name(name, available_columns):
     """Maps a user-given column name (alias or literal header text,
     case-insensitive either way) to the actual key present in the merged
     row data (premiums file columns, plus whatever was merged in from
-    --langs-csv / --density-json). Raises a clear error listing what IS
-    available if it can't be resolved."""
+    --langs-csv / --density-json / --spread-json / --spread-customenc-json).
+    Raises a clear error listing what IS available if it can't be resolved."""
     key = name.strip().lower()
     resolved = COLUMN_ALIASES.get(key)
     if resolved is None:
@@ -156,8 +259,9 @@ def resolve_column_name(name, available_columns):
             f"Column '{name}' not found or not present in the available data. "
             f"Available columns: {sorted(available_columns)}. Known aliases: "
             f"{sorted(set(COLUMN_ALIASES.keys()))}. If you expected a "
-            f"--langs-csv or --density-json column, check those files were "
-            f"found and contain a matching language_code / top-level key."
+            f"--langs-csv, --density-json, --spread-json, or "
+            f"--spread-customenc-json column, check those files were found "
+            f"and contain a matching language_code / top-level key."
         )
     return resolved
 
@@ -181,12 +285,29 @@ def load_density_json(path):
         return json.load(f)
 
 
-def merge_external_columns(rows, langs_csv_data, density_data):
+def load_spread_json(path):
+    """Returns {language_code: {stat_name: value}} as produced by
+    byte_position_stats.py -- top-level keys are language codes (the
+    JSON file's stem per language, e.g. "eng_Latn"), same convention as
+    load_density_json. Values of None (1-byte-dominant languages -- see
+    spread_score()) are kept as None here; merge_external_columns skips
+    them so those rows simply don't get a spread value, same as any
+    other missing/blank field."""
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def merge_external_columns(rows, langs_csv_data, density_data,
+                            spread_data=None, spread_customenc_data=None):
     """Mutates each row dict in place, adding whichever of
-    LANGS_CSV_COLUMNS / DENSITY_JSON_COLUMNS are available for that row's
-    language. Returns the set of column names actually added (i.e. that
-    were found for at least one language), for available_columns."""
+    LANGS_CSV_COLUMNS / DENSITY_JSON_COLUMNS / SPREAD_JSON_FIELDS /
+    SPREAD_CUSTOMENC_JSON_FIELDS are available for that row's language.
+    Returns the set of column names actually added (i.e. that were found
+    for at least one language, with a non-null value), for
+    available_columns."""
     added = set()
+    spread_data = spread_data or {}
+    spread_customenc_data = spread_customenc_data or {}
     for row in rows:
         lang = row.get("Language", "")
         if lang in langs_csv_data:
@@ -201,6 +322,18 @@ def merge_external_columns(rows, langs_csv_data, density_data):
                 if col in src and src[col] is not None:
                     row[col] = str(src[col])
                     added.add(col)
+        if lang in spread_data:
+            src = spread_data[lang]
+            for src_field, out_col in SPREAD_JSON_FIELDS.items():
+                if src_field in src and src[src_field] is not None:
+                    row[out_col] = str(src[src_field])
+                    added.add(out_col)
+        if lang in spread_customenc_data:
+            src = spread_customenc_data[lang]
+            for src_field, out_col in SPREAD_CUSTOMENC_JSON_FIELDS.items():
+                if src_field in src and src[src_field] is not None:
+                    row[out_col] = str(src[src_field])
+                    added.add(out_col)
     return added
 
 
@@ -240,6 +373,41 @@ def add_rank_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
             if lang in rank_by_lang:
                 row[rank_col] = str(rank_by_lang[lang])
                 added.add(rank_col)
+    return added
+
+
+def add_log_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
+    """For each column name in source_columns, adds a companion
+    "<column>_log10" field (log base 10 of the raw value) to every row
+    with a positive numeric value for it. Unlike the _rank companions,
+    this PRESERVES relative magnitude -- appropriate when the underlying
+    values plausibly follow a geometric/power-law spread (as a
+    deliberately skewed training-data allocation typically does) and you
+    want to test whether each order-of-magnitude change has a roughly
+    constant effect, rather than only testing whether the relationship
+    is monotonic (which is what the _rank version tests -- rank
+    correlation is mathematically identical to Spearman's rho). Values
+    <= 0 are skipped (log undefined) with a note printed once. Returns
+    the set of log column names actually added."""
+    added = set()
+    for col in source_columns:
+        log_col = f"{col}_log10"
+        n_skipped = 0
+        for row in rows:
+            raw = row.get(col, "")
+            if raw == "":
+                continue
+            try:
+                v = float(raw)
+            except ValueError:
+                continue
+            if v <= 0:
+                n_skipped += 1
+                continue
+            row[log_col] = str(math.log10(v))
+            added.add(log_col)
+        if n_skipped:
+            print(f"Note: skipped {n_skipped} non-positive value(s) for {log_col} (log undefined)", file=sys.stderr)
     return added
 
 
@@ -294,23 +462,51 @@ def parse_premium_txt(path):
 
 
 def parse_col_spec(spec, available_columns):
-    """Parses one --cols/--control-for entry: either a plain column
-    name/alias, or a "A/B" ratio expression. Returns (kind, payload):
-    ("plain", column_name) or ("ratio", (numerator_name, denominator_name)).
+    """Parses one --cols/--control-for entry. Supports:
+      - a plain column name/alias
+      - a ratio A/B
+      - log(...) wrapping either of the above, e.g. log(imbalanced_allocation_bytes)
+        or log(mean/variance) -- computes log10 of the underlying values
+        (see add_log_columns for the precomputed training_data_log
+        shortcut, which is usually what you want instead of wrapping the
+        rank-based training_data alias in log() -- log of an already-
+        ordinal rank isn't a meaningful quantity).
+    Returns (kind, payload): ("plain", column_name), ("ratio",
+    (numerator_name, denominator_name)), or ("log", (inner_kind, inner_payload)).
     """
     spec = spec.strip()
-    m = re.match(r"^([^/]+)/([^/]+)$", spec)
-    if m:
-        num = resolve_column_name(m.group(1), available_columns)
-        den = resolve_column_name(m.group(2), available_columns)
+    m_log = re.match(r"^log\((.+)\)$", spec, re.IGNORECASE)
+    if m_log:
+        inner_kind, inner_payload = parse_col_spec(m_log.group(1), available_columns)
+        return "log", (inner_kind, inner_payload)
+    m_ratio = re.match(r"^([^/]+)/([^/]+)$", spec)
+    if m_ratio:
+        num = resolve_column_name(m_ratio.group(1), available_columns)
+        den = resolve_column_name(m_ratio.group(2), available_columns)
         return "ratio", (num, den)
     return "plain", resolve_column_name(spec, available_columns)
 
 
 def extract_values(kind, payload, rows):
     """Returns (values, display_label, langs) -- values as a list of
-    floats, skipping any row where the needed field(s) are blank/missing
-    or non-numeric. display_label is a human string for axis labels."""
+    floats, skipping any row where the needed field(s) are blank/missing,
+    non-numeric, or (for log) non-positive. display_label is a human
+    string for axis labels."""
+    if kind == "log":
+        inner_kind, inner_payload = payload
+        inner_values, inner_label, inner_langs = extract_values(inner_kind, inner_payload, rows)
+        values, langs = [], []
+        n_skipped = 0
+        for v, l in zip(inner_values, inner_langs):
+            if v <= 0:
+                n_skipped += 1
+                continue
+            values.append(math.log10(v))
+            langs.append(l)
+        if n_skipped:
+            print(f"Note: skipped {n_skipped} non-positive value(s) taking log10 of {inner_label}", file=sys.stderr)
+        return values, f"log10({inner_label})", langs
+
     values = []
     langs = []
     if kind == "plain":
@@ -408,6 +604,19 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0):
     ax.set_ylabel(ylabel, fontsize=9.5)
     ax.set_title(title, fontsize=10.5, fontweight="bold")
     ax.grid(True, linestyle="--", alpha=0.35, zorder=0)
+
+    # Autocorrelation reads more naturally decreasing left-to-right
+    # (more positive/persistent on the left, more negative/choppy on
+    # the right) rather than matplotlib's default increasing order.
+    # Checked as a substring so this also catches ratio components
+    # (e.g. "EntropyAutocorr1/EntropyVar") and residual-panel labels
+    # (e.g. "EntropyAutocorr1 residual") from the partial-correlation
+    # walkthrough, not just the plain column name.
+    if "EntropyAutocorr1" in xlabel:
+        ax.invert_xaxis()
+    if "EntropyAutocorr1" in ylabel:
+        ax.invert_yaxis()
+
     return r, p
 
 
@@ -463,12 +672,28 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("premium_file", help="A *_premiums_sorted.txt file")
+    parser.add_argument("premium_file",
+                         help="A *_premiums_sorted.txt file, OR a shorthand run name -- "
+                              "balanced / imbalanced / balanced-custom (case-insensitive). "
+                              "With a shorthand, --threshold is required and --char-level is "
+                              "used to pick which granularity; the full path (step folder, "
+                              "exact calibrated threshold value, etc.) is resolved automatically "
+                              "from RUN_INFO. A literal path is used exactly as given, unchanged.")
+    parser.add_argument("--threshold", choices=["mono", "global"], required=True,
+                         help="Which case to use when premium_file is a shorthand run name -- "
+                              "'global' = raw_entropy, 'mono' = raw_monotonicity. Required "
+                              "always (even for a literal path, where it's simply unused) to "
+                              "keep the interface consistent.")
+    parser.add_argument("--char-level", action="store_true",
+                         help="When premium_file is a shorthand run name, resolve to the "
+                              "char_level/ version instead of the byte-level (t_anchor) one. "
+                              "Ignored if premium_file is a literal path.")
     parser.add_argument("--cols", required=True,
                          help="Two comma-separated column specs, X,Y. Each can be a plain "
                               "column (name or alias) or a ratio A/B. E.g. mean,premium or "
                               "mean/variance,premium. Columns can come from the premiums file "
-                              "itself, --langs-csv, or --density-json -- see module docstring.")
+                              "itself, --langs-csv, --density-json, --spread-json, or "
+                              "--spread-customenc-json -- see module docstring.")
     parser.add_argument("--control-for", default=None,
                          help="A third column spec (same rules as --cols) to control for -- "
                               "if given, computes a partial correlation and shows the full "
@@ -486,13 +711,29 @@ def main():
                               "n_codepoints, codepoints_per_baseline_codepoint, density_index}}), "
                               "merged in by language code. Same not-found behavior as "
                               "--langs-csv. Pass an empty string to disable.")
+    parser.add_argument("--spread-json", default="byte_position_stats.json",
+                         help="JSON from byte_position_stats.py ({lang_code: {spread, "
+                              "main_length_entropy_sum, ...}}), merged in by language code as "
+                              "the 'spread' / 'spread_sum' columns (see COLUMN_ALIASES). Same "
+                              "not-found behavior as --langs-csv: silently skipped if missing. "
+                              "Pass an empty string to disable.")
+    parser.add_argument("--spread-customenc-json", default="byte_position_stats_customenc.json",
+                         help="Same as --spread-json, but for a custom (non-UTF-8) encoding run "
+                              "of byte_position_stats.py (--fixed-length), merged in as the "
+                              "'spread_customenc' / 'spread_customenc_sum' columns. Silently "
+                              "skipped if not found. Pass an empty string to disable.")
     parser.add_argument("--out", default=None, help="Output PNG path (overrides --out-dir entirely -- used exactly as given)")
     parser.add_argument("--out-dir", default="correlation_plots",
                          help="Directory the auto-derived output filename is saved into (default: correlation_plots/). "
                               "Created automatically if it doesn't exist. Ignored if --out is given.")
     args = parser.parse_args()
 
-    present_headers, rows = parse_premium_txt(args.premium_file)
+    resolved_path = resolve_premium_path(args.premium_file, args.char_level, args.threshold)
+    premium_path = resolved_path if resolved_path is not None else args.premium_file
+    if resolved_path is not None:
+        print(f"Resolved '{args.premium_file}' -> {premium_path}")
+
+    present_headers, rows = parse_premium_txt(premium_path)
     available_columns = set(present_headers)
 
     langs_csv_data = {}
@@ -501,9 +742,17 @@ def main():
     density_data = {}
     if args.density_json and os.path.exists(args.density_json):
         density_data = load_density_json(args.density_json)
+    spread_data = {}
+    if args.spread_json and os.path.exists(args.spread_json):
+        spread_data = load_spread_json(args.spread_json)
+    spread_customenc_data = {}
+    if args.spread_customenc_json and os.path.exists(args.spread_customenc_json):
+        spread_customenc_data = load_spread_json(args.spread_customenc_json)
 
-    available_columns |= merge_external_columns(rows, langs_csv_data, density_data)
+    available_columns |= merge_external_columns(
+        rows, langs_csv_data, density_data, spread_data, spread_customenc_data)
     available_columns |= add_rank_columns(rows)
+    available_columns |= add_log_columns(rows)
 
     col_specs = [s.strip() for s in args.cols.split(",")]
     if len(col_specs) != 2:
@@ -522,7 +771,7 @@ def main():
     y_by_lang = dict(zip(y_langs, y_vals))
     common_langs = [l for l in x_by_lang if l in y_by_lang]
 
-    stem = os.path.splitext(os.path.basename(args.premium_file))[0]
+    stem = os.path.splitext(os.path.basename(premium_path))[0]
 
     if args.control_for:
         c_kind, c_payload = parse_col_spec(args.control_for, available_columns)
