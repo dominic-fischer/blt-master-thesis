@@ -1,290 +1,167 @@
+#!/usr/bin/env python3
+"""
+char_density.py -- Information density (codepoints per language) from a
+directory of BLT bytes_entropies JSON files under a FIXED, always-N-bytes
+custom encoding.
+
+Since the custom encoding maps every codepoint to exactly N bytes (no
+UTF-8-style variable length), codepoint count can be read directly off
+total byte count:
+
+    n_codepoints = n_bytes_total / N
+
+This is EXACT, not an approximation -- but only if the encoding really
+is uniform-width with zero exceptions. The script checks this: if any
+language's total byte count isn't evenly divisible by N, that's a red
+flag that the "always N bytes" assumption doesn't hold for that
+language's data (some character handled differently, a stray malformed
+record, etc.), and it's reported as a warning rather than silently
+truncated.
+
+Total bytes per language is read directly from each record's "n_bytes"
+field (falling back to counting bytes_entropies entries only if that
+field happens to be missing from a given record).
+
+Assumes every language's .json in the given directory covers the SAME
+parallel corpus (i.e. n_docs should match across all files, and each
+record is a translation of the same underlying sentence) -- so the
+resulting codepoint counts are directly comparable: a language needing
+FEWER codepoints to express the same content is more information-dense
+per character, and vice versa.
+
+Reports two density framings, both relative to a baseline language
+(default: eng_Latn), so pick whichever reads more naturally for your
+writeup:
+  - codepoints_per_baseline_codepoint: how many of this language's
+    codepoints it takes to match ONE baseline codepoint's worth of
+    content. LOWER = denser than baseline.
+  - density_index: baseline_codepoints / this_language_codepoints.
+    HIGHER = denser than baseline (same direction as "premium" =1
+    baseline convention used elsewhere in this project).
+
+USAGE
+    python3 char_density.py --bytes-per-char 2 --only-20 \\
+        results/own_models/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3/step_0000006400/
+
+    # different baseline language
+    python3 char_density.py --bytes-per-char 2 --baseline deu_Latn --only-20 <dir>
+"""
+
+import argparse
 import json
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
+import os
+import sys
 
-# =====================================================================
-# EXACT DATASET FROM YOUR JSON AND CHART IMAGE
-# =====================================================================
 
-JSON_DATA = {
-    "amh_Ethi": {
-        "n_docs": 997,
-        "n_bytes_total": 170250,
-        "n_codepoints": 85125,
-        "codepoints_per_baseline_codepoint": 0.6799447257855807,
-        "density_index": 1.4707077826725403,
-    },
-    "arb_Arab": {
-        "n_docs": 997,
-        "n_bytes_total": 221148,
-        "n_codepoints": 110574,
-        "codepoints_per_baseline_codepoint": 0.8832212406345352,
-        "density_index": 1.13221914735833,
-    },
-    "cmn_Hans": {
-        "n_docs": 997,
-        "n_bytes_total": 84358,
-        "n_codepoints": 42179,
-        "codepoints_per_baseline_codepoint": 0.3369091170503379,
-        "density_index": 2.968159510656962,
-    },
-    "deu_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 293116,
-        "n_codepoints": 146558,
-        "codepoints_per_baseline_codepoint": 1.1706471556144864,
-        "density_index": 0.8542283601031674,
-    },
-    "eng_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 250388,
-        "n_codepoints": 125194,
-        "codepoints_per_baseline_codepoint": 1.0,
-        "density_index": 1.0,
-    },
-    "fin_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 267870,
-        "n_codepoints": 133935,
-        "codepoints_per_baseline_codepoint": 1.069819639918846,
-        "density_index": 0.9347369992907008,
-    },
-    "fra_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 297578,
-        "n_codepoints": 148789,
-        "codepoints_per_baseline_codepoint": 1.1884674984424173,
-        "density_index": 0.8414197286089697,
-    },
-    "heb_Hebr": {
-        "n_docs": 997,
-        "n_bytes_total": 195002,
-        "n_codepoints": 97501,
-        "codepoints_per_baseline_codepoint": 0.7787993034809975,
-        "density_index": 1.2840278561245526,
-    },
-    "hrv_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 247738,
-        "n_codepoints": 123869,
-        "codepoints_per_baseline_codepoint": 0.9894164257073023,
-        "density_index": 1.0106967845062123,
-    },
-    "ita_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 294180,
-        "n_codepoints": 147090,
-        "codepoints_per_baseline_codepoint": 1.174896560538045,
-        "density_index": 0.8511387585831803,
-    },
-    "jpn_Jpan": {
-        "n_docs": 997,
-        "n_bytes_total": 109316,
-        "n_codepoints": 54658,
-        "codepoints_per_baseline_codepoint": 0.43658641787945107,
-        "density_index": 2.2904972739580667,
-    },
-    "kat_Geor": {
-        "n_docs": 997,
-        "n_bytes_total": 275886,
-        "n_codepoints": 137943,
-        "codepoints_per_baseline_codepoint": 1.1018339537038517,
-        "density_index": 0.9075777676286582,
-    },
-    "kor_Hang": {
-        "n_docs": 997,
-        "n_bytes_total": 126022,
-        "n_codepoints": 63011,
-        "codepoints_per_baseline_codepoint": 0.5033068677412655,
-        "density_index": 1.9868594372411166,
-    },
-    "nya_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 282924,
-        "n_codepoints": 141462,
-        "codepoints_per_baseline_codepoint": 1.129942329504609,
-        "density_index": 0.885000918974707,
-    },
-    "ron_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 282084,
-        "n_codepoints": 141042,
-        "codepoints_per_baseline_codepoint": 1.1265875361439046,
-        "density_index": 0.8876363069156705,
-    },
-    "spa_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 298374,
-        "n_codepoints": 149187,
-        "codepoints_per_baseline_codepoint": 1.1916465645318466,
-        "density_index": 0.8391749951403272,
-    },
-    "srp_Cyrl": {
-        "n_docs": 997,
-        "n_bytes_total": 249010,
-        "n_codepoints": 124505,
-        "codepoints_per_baseline_codepoint": 0.9944965413677972,
-        "density_index": 1.0055339143006305,
-    },
-    "tam_Taml": {
-        "n_docs": 997,
-        "n_bytes_total": 292256,
-        "n_codepoints": 146128,
-        "codepoints_per_baseline_codepoint": 1.1672124862213844,
-        "density_index": 0.8567420343808169,
-    },
-    "tha_Thai": {
-        "n_docs": 997,
-        "n_bytes_total": 240536,
-        "n_codepoints": 120268,
-        "codepoints_per_baseline_codepoint": 0.9606530664408838,
-        "density_index": 1.0409585259586922,
-    },
-    "vie_Latn": {
-        "n_docs": 997,
-        "n_bytes_total": 263980,
-        "n_codepoints": 131990,
-        "codepoints_per_baseline_codepoint": 1.0542837516174897,
-        "density_index": 0.9485112508523373,
-    },
+OUR_20_LANGS = {
+    "eng_Latn", "cmn_Hans", "deu_Latn", "jpn_Jpan", "spa_Latn", "fra_Latn",
+    "ita_Latn", "vie_Latn", "arb_Arab", "tha_Thai", "kor_Hang", "ron_Latn",
+    "fin_Latn", "heb_Hebr", "tam_Taml", "hrv_Latn", "srp_Cyrl", "kat_Geor",
+    "amh_Ethi", "nya_Latn",
 }
 
-PREMIUMS_AND_TV = [
-    # (lang, raw_mono_premium, total_variation_tv)
-    ("heb_Hebr", 0.76, 0.380),
-    ("arb_Arab", 0.94, 0.420),
-    ("amh_Ethi", 0.77, 0.395),
-    ("tha_Thai", 1.11, 0.610),
-    ("tam_Taml", 1.06, 0.550),
-    ("jpn_Jpan", 0.65, 0.335),
-    ("cmn_Hans", 0.50, 0.284),
-    ("kat_Geor", 1.13, 0.580),
-    ("vie_Latn", 1.19, 0.640),
-    ("kor_Hang", 0.64, 0.312),
-    ("deu_Latn", 1.19, 0.620),
-    ("hrv_Latn", 1.02, 0.530),
-    ("ron_Latn", 1.08, 0.540),
-    ("srp_Cyrl", 1.01, 0.510),
-    ("spa_Latn", 1.14, 0.590),
-    ("ita_Latn", 1.09, 0.560),
-    ("fra_Latn", 1.11, 0.570),
-    ("fin_Latn", 1.01, 0.520),
-    ("nya_Latn", 1.15, 0.600),
-    ("eng_Latn", 1.00, 0.500),
-]
+
+def collect_files(inputs, only_20):
+    files = []
+    for inp in inputs:
+        if os.path.isdir(inp):
+            for fn in sorted(os.listdir(inp)):
+                if not fn.endswith(".json"):
+                    continue
+                stem = fn[:-5]
+                if only_20 and stem not in OUR_20_LANGS:
+                    continue
+                files.append(os.path.join(inp, fn))
+        else:
+            files.append(inp)
+    return files
 
 
-def plot_actual_density_relationships():
-    # Build Combined DataFrame
-    rows = []
-    for lang, mono_p, tv in PREMIUMS_AND_TV:
-        rows.append(
-            {
-                "lang": lang,
-                "short_lang": lang.split("_")[0],
-                "mono_premium": mono_p,
-                "total_variation": tv,
-                "density_index": JSON_DATA[lang]["density_index"],
-            }
+def main():
+    parser = argparse.ArgumentParser(
+        description="Compute codepoint counts and cross-language density from a fixed-width custom encoding.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("inputs", nargs="+", help="JSON file(s) and/or a directory of them")
+    parser.add_argument("--bytes-per-char", type=int, required=True,
+                         help="Fixed number of bytes per codepoint in this custom encoding (e.g. 2)")
+    parser.add_argument("--only-20", action="store_true",
+                         help="If an input is a directory, only process files whose name "
+                              "(minus .json) is one of the 20 known language codes")
+    parser.add_argument("--baseline", default="eng_Latn",
+                         help="Language code used as the density=1.0 / density_index=1.0 "
+                              "baseline (default: eng_Latn)")
+    parser.add_argument("--out-json", default="char_density.json",
+                         help="Path to write results as JSON. Empty string to skip writing.")
+    args = parser.parse_args()
+
+    files = collect_files(args.inputs, args.only_20)
+    if not files:
+        print("No matching .json files found.", file=sys.stderr)
+        sys.exit(1)
+
+    results = {}
+    n_docs_seen = set()
+    for path in files:
+        label = os.path.splitext(os.path.basename(path))[0]
+        with open(path, encoding="utf-8") as f:
+            records = json.load(f)
+        n_docs = len(records)
+        n_docs_seen.add(n_docs)
+        # Use the "n_bytes" field directly when present (already computed
+        # upstream, per record) -- falls back to counting bytes_entropies
+        # entries only if a record happens to be missing that field.
+        n_bytes_total = sum(
+            rec["n_bytes"] if "n_bytes" in rec else len(rec.get("bytes_entropies", []))
+            for rec in records
         )
 
-    df = pd.DataFrame(rows)
+        if n_bytes_total % args.bytes_per_char != 0:
+            print(f"WARNING: {label} total bytes ({n_bytes_total}) is NOT evenly "
+                  f"divisible by --bytes-per-char={args.bytes_per_char} -- the "
+                  f"'always {args.bytes_per_char} bytes/codepoint' assumption may "
+                  f"not hold for this language's data. Using integer division "
+                  f"(remainder {n_bytes_total % args.bytes_per_char} bytes discarded).",
+                  file=sys.stderr)
 
-    sns.set_theme(style="whitegrid")
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6), dpi=300)
+        n_codepoints = n_bytes_total // args.bytes_per_char
+        results[label] = {
+            "n_docs": n_docs,
+            "n_bytes_total": n_bytes_total,
+            "n_codepoints": n_codepoints,
+        }
 
-    # ----------------------------------------------------
-    # Plot 1: Character Density Index vs Step Volatility (TV)
-    # ----------------------------------------------------
-    r1 = np.corrcoef(df["density_index"], df["total_variation"])[0, 1]
-    sns.regplot(
-        data=df,
-        x="density_index",
-        y="total_variation",
-        scatter_kws={"s": 75, "color": "#d35400", "alpha": 0.85},
-        line_kws={"color": "#2980b9", "linewidth": 2},
-        ax=axes[0],
-    )
+    if len(n_docs_seen) > 1:
+        print(f"WARNING: languages have DIFFERENT numbers of documents ({sorted(n_docs_seen)}) -- "
+              f"if this isn't a fully parallel corpus, codepoint-count comparisons across "
+              f"languages may not be measuring the same underlying content.", file=sys.stderr)
 
-    for _, row in df.iterrows():
-        axes[0].text(
-            row["density_index"] + 0.03,
-            row["total_variation"] + 0.005,
-            row["short_lang"],
-            fontsize=9,
-            weight="bold",
-            alpha=0.85,
-        )
+    if args.baseline not in results:
+        print(f"Warning: baseline '{args.baseline}' not found among {sorted(results)}; "
+              f"density columns will be omitted.", file=sys.stderr)
+        baseline_n = None
+    else:
+        baseline_n = results[args.baseline]["n_codepoints"]
 
-    axes[0].set_title(
-        f"(A) Density Index vs. Step Volatility (TV)\n$r = {r1:.3f}$ | $R^2 = {r1**2:.3f}$",
-        fontsize=12,
-        weight="bold",
-        pad=12,
-    )
-    axes[0].set_xlabel(
-        "Character Density Index (English Baseline = 1.0)",
-        fontsize=10,
-        labelpad=10,
-    )
-    axes[0].set_ylabel(
-        "Step Volatility / Total Variation $\\mathrm{TV}_H$",
-        fontsize=10,
-        labelpad=10,
-    )
+    print(f"{'language':10s} {'n_docs':>7s} {'n_bytes':>10s} {'n_codepoints':>13s} "
+          f"{'cp_per_baseline_cp':>19s} {'density_index':>14s}")
+    for label in sorted(results):
+        r = results[label]
+        if baseline_n:
+            cp_per_baseline = r["n_codepoints"] / baseline_n
+            density_index = baseline_n / r["n_codepoints"]
+        else:
+            cp_per_baseline = density_index = float("nan")
+        r["codepoints_per_baseline_codepoint"] = cp_per_baseline
+        r["density_index"] = density_index
+        print(f"{label:10s} {r['n_docs']:7d} {r['n_bytes_total']:10d} {r['n_codepoints']:13d} "
+              f"{cp_per_baseline:19.4f} {density_index:14.4f}")
 
-    # ----------------------------------------------------
-    # Plot 2: Character Density Index vs Raw Monotonicity Premium
-    # ----------------------------------------------------
-    r2 = np.corrcoef(df["density_index"], df["mono_premium"])[0, 1]
-    sns.regplot(
-        data=df,
-        x="density_index",
-        y="mono_premium",
-        scatter_kws={"s": 75, "color": "#27ae60", "alpha": 0.85},
-        line_kws={"color": "#8e44ad", "linewidth": 2},
-        ax=axes[1],
-    )
-
-    for _, row in df.iterrows():
-        color = (
-            "#27ae60"
-            if row["short_lang"] in ["cmn", "jpn", "kor", "heb", "amh"]
-            else "black"
-        )
-        axes[1].text(
-            row["density_index"] + 0.03,
-            row["mono_premium"] + 0.005,
-            row["short_lang"],
-            fontsize=9,
-            weight="bold",
-            color=color,
-            alpha=0.85,
-        )
-
-    axes[1].set_title(
-        f"(B) Density Index vs. Raw Monotonicity Premium (T=0.6646)\n$r = {r2:.3f}$ | $R^2 = {r2**2:.3f}$",
-        fontsize=12,
-        weight="bold",
-        pad=12,
-    )
-    axes[1].set_xlabel(
-        "Character Density Index (English Baseline = 1.0)",
-        fontsize=10,
-        labelpad=10,
-    )
-    axes[1].set_ylabel(
-        "Raw Monotonicity Premium Multiplier", fontsize=10, labelpad=10
-    )
-
-    plt.tight_layout()
-    plt.savefig("density_index_analysis.png")
-    print(f"Plot A (Density -> TV):          r = {r1:.4f}, R^2 = {r1**2:.4f}")
-    print(f"Plot B (Density -> Mono Premium): r = {r2:.4f}, R^2 = {r2**2:.4f}")
-    plt.show()
+    if args.out_json:
+        with open(args.out_json, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=2)
+        print(f"\nSaved -> {args.out_json}")
 
 
 if __name__ == "__main__":
-    plot_actual_density_relationships()
+    main()

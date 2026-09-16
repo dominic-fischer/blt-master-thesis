@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 """
+
+
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/t_anchor/Balanced/step_0000007200/Balanced_raw_entropy_t_1.9458_premiums_sorted.txt results/txt_premiums/t_anchor/Balanced/step_0000007200/Balanced_raw_monotonicity_t_0.6664_premiums_sorted.txt &&
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/t_anchor/Balanced-Custom/step_0000006400/Balanced-Custom_raw_entropy_t_2.0176_premiums_sorted.txt results/txt_premiums/t_anchor/Balanced-Custom/step_0000006400/Balanced-Custom_raw_monotonicity_t_2.0371_premiums_sorted.txt &&
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/t_anchor/Imbalanced/step_0000002600/Imbalanced_raw_entropy_t_1.7510_premiums_sorted.txt results/txt_premiums/t_anchor/Imbalanced/step_0000002600/Imbalanced_raw_monotonicity_t_0.5531_premiums_sorted.txt &&
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/char_level/t_anchor/Balanced/step_0000007200/Balanced_raw_entropy_t_1.9448_premiums_sorted.txt results/txt_premiums/char_level/t_anchor/Balanced/step_0000007200/Balanced_raw_monotonicity_t_0.6646_premiums_sorted.txt &&
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/char_level/t_anchor/Balanced-Custom/step_0000006400/Balanced-Custom_raw_entropy_t_2.0630_premiums_sorted.txt results/txt_premiums/char_level/t_anchor/Balanced-Custom/step_0000006400/Balanced-Custom_raw_monotonicity_t_0.6877_premiums_sorted.txt &&
+python3 results/txt_premiums_to_chart_alternative.py results/txt_premiums/char_level/t_anchor/Imbalanced/step_0000002600/Imbalanced_raw_entropy_t_1.7488_premiums_sorted.txt results/txt_premiums/char_level/t_anchor/Imbalanced/step_0000002600/Imbalanced_raw_monotonicity_t_0.5552_premiums_sorted.txt
+
+
 Premium color-chart generator.
 
 Takes three input files:

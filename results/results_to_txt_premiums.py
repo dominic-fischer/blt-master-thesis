@@ -1,4 +1,15 @@
 """
+
+
+python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/base_model_results.csv --summary-csv calibrated_thresholds/base_model_thresholds_summary.csv --filename-prefix _Base-Model \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3_step_0000007200_results.csv --summary-csv calibrated_thresholds/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3_step_0000007200_thresholds_summary.csv --filename-prefix Balanced \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3_step_0000002600_results.csv --summary-csv calibrated_thresholds/entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3_step_0000002600_thresholds_summary.csv --filename-prefix Imbalanced \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3_step_0000006400_results.csv --summary-csv calibrated_thresholds/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3_step_0000006400_thresholds_summary.csv --filename-prefix Balanced-Custom \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3_step_0000007200_results.csv --summary-csv calibrated_thresholds/char_level/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3_step_0000007200_thresholds_summary.csv --score-source chars --filename-prefix Balanced \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3_step_0000002600_results.csv --summary-csv calibrated_thresholds/char_level/entropy_10M_20lang_4gpu_sourcesimbalanced_steps10000_ckpt200_lr4.5e-3_step_0000002600_thresholds_summary.csv --score-source chars --filename-prefix Imbalanced \
+&& python results/results_to_txt_premiums.py --csv-in-path results/results_CSV/char_level/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3_step_0000006400_results.csv --summary-csv calibrated_thresholds/char_level/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_customenc_lr4.5e-3_step_0000006400_thresholds_summary.csv --score-source chars --filename-prefix Balanced-Custom
+
+
 results_to_txt_premiums.py
 
 For each *_pps_premium column in --csv-in-path, writes a plain-text list
@@ -32,9 +43,43 @@ at the same --out-dir. This script does NOT chain both score sources
 automatically -- run it twice (once per --score-source), pointing at the
 matching --csv-in-path/--summary-csv pair each time (see Usage below).
 
-ENTROPY MEAN/VARIANCE: for each language, we additionally compute the
-mean and (population) variance of its entropy signal, giving a sense of
-how high and how oscillating that language's entropy signal is overall.
+ENTROPY CURVE-SHAPE STATISTICS: for each language, we additionally
+compute a set of summary statistics describing not just the LEVEL of its
+entropy signal but its SHAPE -- how it's distributed and how it moves
+from one byte/character to the next. Mean and variance alone describe
+only center and spread; two signals can share identical mean AND
+variance while looking completely different (e.g. [0,0,0,10,10,10] vs
+[0,10,0,10,0,10] -- same mean, same variance, but one plateaus and the
+other alternates every step). The additional statistics, all computed by
+compute_curve_stats():
+  - skewness (3rd standardized moment): asymmetry. Positive = a long
+    right tail (mostly low values, occasional high spikes); negative =
+    a long left tail.
+  - kurtosis (excess, normal distribution = 0): does the signal consist
+    of many small deviations from the mean, or a few big ones against an
+    otherwise calm baseline? Higher = a few extreme spikes
+    ("leptokurtic"); lower = deviations spread more evenly
+    ("platykurtic"). Invisible to mean/variance alone.
+  - autocorr_lag1: are high/low values sequentially clustered (positive
+    -- plateaus/persistence) or alternating (negative -- choppy)? Also
+    invisible to mean/variance/kurtosis. This is exactly what
+    distinguishes [0,0,0,10,10,10] (autocorr +0.50) from
+    [0,10,0,10,0,10] (autocorr -0.83) despite those two sharing
+    identical mean, variance, AND kurtosis.
+  - volatility (root-mean-square of first differences): the typical
+    MAGNITUDE of change from one byte/character to the next. Distinct
+    from variance (spread around the OVERALL mean, order-blind) and from
+    autocorr_lag1 (which normalizes by variance and captures the
+    sign/pattern of step-to-step change, not its raw size) -- e.g. the
+    two sequences above share identical variance but have volatility
+    4.47 vs 10.00, since choppy's steps are simply bigger on average
+    even though its overall spread from the mean is the same.
+compute_curve_stats() returns a plain dict keyed by these names (plus
+"mean" and "variance"), so adding another statistic later only requires
+adding it there AND to ENTROPY_STAT_COLUMNS below -- nothing else needs
+to change; the output columns and header labels are derived from that
+list automatically.
+
 These are read from the per-language JSON files under results/base_model/
 or results/own_models/<raw_run_stem>/<step>/ -- NOT from --csv-in-path,
 which only carries aggregate pps/bpp/premium columns. The JSON directory
@@ -54,8 +99,15 @@ granularity that mode's patch boundaries were actually thresholded over
     flattened across every character of every sentence. This is NOT the
     same quantity as flattening bytes_entropies in chars mode -- it is
     the actual per-character SUM that char-mode patching thresholds
-    over, so using it keeps EntropyMean/EntropyVar consistent with what
-    that mode's boundaries were computed from.
+    over, so using it keeps these statistics consistent with what that
+    mode's boundaries were computed from.
+NOTE: the signal is flattened ACROSS every sentence in the language's
+JSON (not computed per-sentence and averaged), so autocorr_lag1 and
+volatility treat the last byte/char of one sentence as adjacent to the
+first byte/char of the next. This is the same simplification already
+implicit in the pre-existing mean/variance computation (which already
+flattened across sentences); given hundreds of sentences per language
+the edge effect at each sentence boundary is negligible in aggregate.
 If no JSON directory is found, or the relevant key is absent for a
 language, entropy columns are simply omitted -- see load_entropy_stats /
 default_results_json_dir.
@@ -90,8 +142,9 @@ present in the CSV filename, it is additionally nested inside an extra
 step subfolder.
 
 Each file contains language code, sorted premium, and the absolute patches-per-sentence 
-(pps) and bytes-per-patch (bpp) values, followed by that language's entropy mean and
-variance (if the per-language JSON results could be located -- see ENTROPY MEAN/VARIANCE
+(pps) and bytes-per-patch (bpp) values, followed by that language's entropy curve-shape
+statistics -- mean, variance, skewness, kurtosis, lag-1 autocorrelation, and volatility
+(if the per-language JSON results could be located -- see ENTROPY CURVE-SHAPE STATISTICS
 above).
 
 Each file's FINAL LINE records English's own (non-premium) pps/bpp for
@@ -128,10 +181,24 @@ SCORE_SOURCES = ("bytes", "chars")
 COLUMN_PREFIX = {"bytes": "", "chars": "char_"}
 CHAR_LEVEL_FOLDER = "char_level"
 
-# Which top-level JSON key holds the per-unit entropy list to use for
-# EntropyMean/EntropyVar, per score source -- see ENTROPY MEAN/VARIANCE
-# in the module docstring for why these are NOT interchangeable.
+# Which top-level JSON key holds the per-unit entropy list to use for the
+# curve-shape statistics, per score source -- see ENTROPY CURVE-SHAPE
+# STATISTICS in the module docstring for why these are NOT interchangeable.
 ENTROPY_JSON_KEY = {"bytes": "bytes_entropies", "chars": "chars_entropies"}
+
+# Ordered (dict_key, header_label) pairs for every curve-shape statistic
+# computed by compute_curve_stats(). This list drives BOTH the output
+# column headers and the order values are written in -- add a statistic
+# to compute_curve_stats() and to this list, and it appears as an extra
+# column automatically; nothing else below needs to change.
+ENTROPY_STAT_COLUMNS = [
+    ("mean", "EntropyMean"),
+    ("variance", "EntropyVar"),
+    ("skewness", "EntropySkew"),
+    ("kurtosis", "EntropyKurtosis"),
+    ("autocorr_lag1", "EntropyAutocorr1"),
+    ("volatility", "EntropyVolatility"),
+]
 
 # Must match run_patching.py's CASES/COMBINED keys. Both bytes-mode and
 # chars-mode use the same KNOWN_CASES here since norm_entropy/combined
@@ -214,11 +281,68 @@ def default_results_json_dir(raw_run_stem: str, step_subfolder: str | None) -> s
     return os.path.join(*parts)
 
 
-def load_entropy_stats(results_json_dir: str, lang_codes: set[str], score_source: str) -> dict[str, tuple[float, float]]:
-    """Returns {lang_code: (mean_entropy, var_entropy)}.
+def _central_moment(values: list[float], mean: float, power: int) -> float:
+    return sum((v - mean) ** power for v in values) / len(values)
+
+
+def compute_curve_stats(values: list[float]) -> dict[str, float | None]:
+    """Computes the full set of curve-shape statistics described in the
+    module docstring's ENTROPY CURVE-SHAPE STATISTICS section, from a
+    single flat sequence of entropy values (already in their natural
+    byte/character order -- order matters for autocorr_lag1 and
+    volatility, so don't pass these in shuffled).
+
+    Returns a dict with keys "mean", "variance", "skewness", "kurtosis",
+    "autocorr_lag1", "volatility". Values are None wherever they're
+    undefined: everything is None if there are fewer than 2 points;
+    skewness/kurtosis are None specifically if variance is exactly 0
+    (a perfectly constant signal), since both divide by variance.
+    """
+    stat_keys = ("mean", "variance", "skewness", "kurtosis", "autocorr_lag1", "volatility")
+    n = len(values)
+    if n < 2:
+        return {k: None for k in stat_keys}
+
+    mean = sum(values) / n
+    variance = _central_moment(values, mean, 2)
+
+    if variance == 0:
+        skewness = None
+        kurtosis = None
+    else:
+        m3 = _central_moment(values, mean, 3)
+        m4 = _central_moment(values, mean, 4)
+        skewness = m3 / variance ** 1.5
+        kurtosis = m4 / variance ** 2 - 3.0
+
+    deviations = [v - mean for v in values]
+    autocorr_den = sum(d ** 2 for d in deviations)
+    if autocorr_den == 0:
+        autocorr_lag1 = None
+    else:
+        autocorr_num = sum(deviations[i] * deviations[i + 1] for i in range(n - 1))
+        autocorr_lag1 = autocorr_num / autocorr_den
+
+    diffs = [values[i + 1] - values[i] for i in range(n - 1)]
+    volatility = (sum(d ** 2 for d in diffs) / len(diffs)) ** 0.5
+
+    return {
+        "mean": mean,
+        "variance": variance,
+        "skewness": skewness,
+        "kurtosis": kurtosis,
+        "autocorr_lag1": autocorr_lag1,
+        "volatility": volatility,
+    }
+
+
+def load_entropy_stats(results_json_dir: str, lang_codes: set[str], score_source: str) -> dict[str, dict[str, float | None]]:
+    """Returns {lang_code: {"mean": ..., "variance": ..., "skewness": ...,
+    "kurtosis": ..., "autocorr_lag1": ..., "volatility": ...}} -- see
+    compute_curve_stats() for exactly what each statistic means.
 
     Which JSON key/quantity is used depends on score_source -- see
-    ENTROPY MEAN/VARIANCE in the module docstring:
+    ENTROPY CURVE-SHAPE STATISTICS in the module docstring:
       - 'bytes': flattens raw per-byte entropy (bytes_entropies[i][1],
         i.e. entropy_raw) across every byte of every sentence.
       - 'chars': flattens summed raw per-character entropy
@@ -244,7 +368,7 @@ def load_entropy_stats(results_json_dir: str, lang_codes: set[str], score_source
         ]
         if not all_entropies:
             continue
-        stats[lang] = (statistics.mean(all_entropies), statistics.pvariance(all_entropies))
+        stats[lang] = compute_curve_stats(all_entropies)
     return stats
 
 
@@ -348,8 +472,8 @@ def parse_args():
              "(results_to_CSV.py) and --summary-csv (calibrate_thresholds.py). "
              "'bytes' (default) expects unprefixed columns; 'chars' expects "
              "'char_'-prefixed columns, nests output under char_level/, and "
-             "computes EntropyMean/EntropyVar from chars_entropies instead "
-             "of bytes_entropies. See module docstring."
+             "computes the entropy curve-shape statistics from chars_entropies "
+             "instead of bytes_entropies. See module docstring."
     )
     parser.add_argument(
         "--filename-prefix", 
@@ -365,11 +489,11 @@ def parse_args():
         "--results-json-dir",
         default=None,
         help="Directory containing per-language {lang}.json result files, "
-             "used to compute per-language entropy mean/variance. If "
-             "omitted, auto-derived from the CSV filename / --filename-prefix "
+             "used to compute the per-language entropy curve-shape statistics. "
+             "If omitted, auto-derived from the CSV filename / --filename-prefix "
              "(reversed through RUN_NAME_ALIASES if needed) -- see ENTROPY "
-             "MEAN/VARIANCE in the module docstring. If the resulting "
-             "directory doesn't exist, entropy columns are simply omitted."
+             "CURVE-SHAPE STATISTICS in the module docstring. If the resulting "
+             "directory doesn't exist, these columns are simply omitted."
     )
     return parser.parse_args()
 
@@ -403,8 +527,9 @@ def main():
     prefix = apply_run_name_alias(raw_run_stem)
     subfolder_name = prefix
 
-    # Locate and load per-language entropy JSON, for the mean/variance
-    # columns -- see ENTROPY MEAN/VARIANCE in the module docstring.
+    # Locate and load per-language entropy JSON, for the curve-shape
+    # statistic columns -- see ENTROPY CURVE-SHAPE STATISTICS in the
+    # module docstring.
     results_json_dir = args.results_json_dir or default_results_json_dir(raw_run_stem, step_subfolder)
 
     entropy_stats = {}
@@ -417,7 +542,7 @@ def main():
                   f"{sorted(missing_entropy)}")
     else:
         print(f"  NOTE: results-json-dir {results_json_dir!r} not found -- "
-              f"entropy mean/variance columns will be omitted.")
+              f"entropy curve-shape statistic columns will be omitted.")
 
     filtered = df[df["Code_Orig"].astype(str).isin(chosen_langs)]
     missing = chosen_langs - set(filtered["Code_Orig"].astype(str))
@@ -487,13 +612,10 @@ def main():
                 values.append(f"{row[pps_col]:.4f}")
                 values.append(f"{row[bpp_col]:.4f}")
             if entropy_stats:
-                if lang in entropy_stats:
-                    mean_e, var_e = entropy_stats[lang]
-                    values.append(f"{mean_e:.4f}")
-                    values.append(f"{var_e:.4f}")
-                else:
-                    values.append("")
-                    values.append("")
+                lang_stats = entropy_stats.get(lang)
+                for stat_key, _ in ENTROPY_STAT_COLUMNS:
+                    val = lang_stats.get(stat_key) if lang_stats is not None else None
+                    values.append(f"{val:.4f}" if val is not None else "")
             formatted_rows.append(tuple(values))
 
         # Dynamic alignment: compute max width of each column (including safety margin of 2 spaces)
@@ -501,7 +623,7 @@ def main():
         if has_extra_cols:
             headers += ["PPS", "BPP"]
         if entropy_stats:
-            headers += ["EntropyMean", "EntropyVar"]
+            headers += [label for _, label in ENTROPY_STAT_COLUMNS]
 
         col_widths = []
         for i, header in enumerate(headers):

@@ -59,7 +59,9 @@ MERGED_MODELS = [
         "Imbalanced",
         [
             ("raw_entropy", BYTE_T_ANCHOR_DIR, False),
+            ("raw_entropy", CHAR_T_ANCHOR_DIR, True),
             ("raw_monotonicity", BYTE_T_ANCHOR_DIR, False),
+            ("raw_monotonicity", CHAR_T_ANCHOR_DIR, True),
         ],
     ),
     (
