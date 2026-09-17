@@ -633,17 +633,40 @@ def plot_plain(x, y, x_label, y_label, langs, stem, out_path):
     return r, p
 
 
-def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path):
+def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path, out_path_single=None):
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     c = np.asarray(ctrl, dtype=float)
 
+    # 1. Compute residuals
+    x_fit = np.polyfit(c, x, 1)
+    x_resid = x - np.polyval(x_fit, c)
+
+    y_fit = np.polyfit(c, y, 1)
+    y_resid = y - np.polyval(y_fit, c)
+
+    # --- SAVE SEPARATE LEFTOVER VS LEFTOVER PLOT ---
+    if out_path_single is None:
+        # Default name if not provided: replaces .png with _partial_only.png
+        base, ext = os.path.splitext(out_path)
+        out_path_single = f"{base}_partial_only{ext}"
+
+    fig_single, ax_single = plt.subplots(figsize=(9, 7))
+    scatter_with_fit(
+        ax_single, x_resid, y_resid, langs, 
+        f"{x_label} residual", f"{y_label} residual",
+        f"{stem}: Partial Correlation ({x_label} vs {y_label} | controlling for {ctrl_label})",
+        extra_df_used=1
+    )
+    plt.tight_layout()
+    plt.savefig(out_path_single, dpi=200, bbox_inches="tight", facecolor="white")
+    plt.close(fig_single)
+
+    # --- BUILD 6-PANEL WALKTHROUGH GRID ---
     fig, axes = plt.subplots(2, 3, figsize=(16, 10))
 
     scatter_with_fit(axes[0, 0], c, x, langs, ctrl_label, x_label,
                       f"(a) Step 1a: fit {x_label} ~ {ctrl_label}")
-    x_fit = np.polyfit(c, x, 1)
-    x_resid = x - np.polyval(x_fit, c)
     scatter_with_fit(axes[0, 1], c, x_resid, langs, ctrl_label, f"{x_label} residual",
                       f"(b) Step 2a: leftover {x_label}\n(should look flat vs. {ctrl_label})")
 
@@ -656,8 +679,6 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path
 
     scatter_with_fit(axes[1, 0], c, y, langs, ctrl_label, y_label,
                       f"(d) Step 1b: fit {y_label} ~ {ctrl_label}")
-    y_fit = np.polyfit(c, y, 1)
-    y_resid = y - np.polyval(y_fit, c)
     scatter_with_fit(axes[1, 1], c, y_resid, langs, ctrl_label, f"{y_label} residual",
                       f"(e) Step 2b: leftover {y_label}\n(should look flat vs. {ctrl_label})")
 
@@ -671,6 +692,11 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path
                  fontsize=13, fontweight="bold", y=1.04)
     plt.tight_layout()
     plt.savefig(out_path, dpi=180, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    print(f"Saved walkthrough grid: {out_path}")
+    print(f"Saved partial-only plot: {out_path_single}")
+
     return r_raw, p_raw, r_partial, p_partial
 
 
