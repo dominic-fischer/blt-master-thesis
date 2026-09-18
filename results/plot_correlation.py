@@ -18,6 +18,24 @@ COLUMN SPECS (--cols, --control-for)
 
     --cols takes exactly two comma-separated specs: X,Y.
 
+LANGUAGE FILTERS (--script-type, --bytes-per-char)
+    Restrict the plot / correlation to a subset of the languages, using
+    the 'Script_Type' and 'Approx_Bytes_Per_Char' columns of --langs-csv
+    (training_setup/langs/langs_chosen.csv). Both take one or more
+    comma-separated values; if both are given, a language must match
+    BOTH (AND across the two flags, OR within one flag).
+
+      --script-type     Alphabetic, Abjad, Abugida, Syllabary,
+                        Logosyllabary, Logographic   (case-insensitive)
+      --bytes-per-char  1, 1-2, 2, 2-3, 3            (exact CSV values;
+                        "1-2" = Vietnamese, "2-3" = Georgian)
+
+    Ranks (training_data / training_data_balanced) are always computed
+    over ALL languages BEFORE filtering, so a language keeps the same rank
+    it has in the unfiltered plots. Log10 columns are per-language and
+    therefore unaffected by filtering. The active filter is appended to
+    the output filename and the plot title.
+
 USAGE
     # plain correlation, literal file path (--threshold still required,
     # just unused when premium_file is a literal path)
@@ -46,6 +64,19 @@ USAGE
     # residual; Y~control, residual; then residual-vs-residual, with the
     # raw (uncontrolled) comparison shown separately for reference.
     python3 plot_correlation.py balanced --threshold global --cols mean,premium --control-for variance
+
+    # restrict to alphabetic scripts that use 1 byte per character
+    # (Latin-script languages except Vietnamese)
+    python3 plot_correlation.py imbalanced --threshold global \
+        --cols training_data_log,mean --script-type alphabetic --bytes-per-char 1
+
+    # all multi-byte languages (2, 2-3 and 3 bytes per character)
+    python3 plot_correlation.py imbalanced --threshold mono \
+        --cols spread,premium --bytes-per-char 2,2-3,3
+
+    # all abugidas and syllabaries, any byte length
+    python3 plot_correlation.py imbalanced --threshold mono \
+        --cols mean,premium --script-type abugida,syllabary
 
 PARSING THE INPUT FILE
     That file format is FIXED-WIDTH (built by left-justifying every
@@ -276,6 +307,66 @@ def load_langs_csv(path):
             if code:
                 result[code] = row
     return result
+
+
+def parse_filter_values(raw):
+    """Splits a comma-separated CLI filter string ("1,1-2") into a list
+    of stripped, non-empty values. Returns None if raw is None/empty
+    (i.e. the filter is not active)."""
+    if raw is None:
+        return None
+    vals = [v.strip() for v in raw.split(",") if v.strip()]
+    return vals or None
+
+
+def select_languages(langs_csv_data, script_types=None, bytes_per_char=None):
+    """Returns the set of language codes in langs_csv_data whose
+    'Script_Type' is in script_types (case-insensitive) AND whose
+    'Approx_Bytes_Per_Char' is in bytes_per_char (exact string match,
+    e.g. "1", "1-2", "2", "2-3", "3"). A filter that is None/empty is
+    not applied. Raises ValueError, listing the values that DO exist, if
+    a requested value doesn't occur anywhere in the CSV (catches typos
+    like "abugida " vs "abjad" instead of silently returning nothing)."""
+    known_types = sorted({(r.get("Script_Type") or "").strip()
+                          for r in langs_csv_data.values()} - {""})
+    known_bytes = sorted({(r.get("Approx_Bytes_Per_Char") or "").strip()
+                          for r in langs_csv_data.values()} - {""})
+
+    wanted_types = {v.lower() for v in script_types} if script_types else None
+    wanted_bytes = set(bytes_per_char) if bytes_per_char else None
+
+    if wanted_types:
+        unknown = wanted_types - {t.lower() for t in known_types}
+        if unknown:
+            raise ValueError(f"Unknown --script-type value(s) {sorted(unknown)}. "
+                             f"Available: {known_types}")
+    if wanted_bytes:
+        unknown = wanted_bytes - set(known_bytes)
+        if unknown:
+            raise ValueError(f"Unknown --bytes-per-char value(s) {sorted(unknown)}. "
+                             f"Available: {known_bytes}")
+
+    allowed = set()
+    for code, row in langs_csv_data.items():
+        st = (row.get("Script_Type") or "").strip().lower()
+        bpc = (row.get("Approx_Bytes_Per_Char") or "").strip()
+        if wanted_types and st not in wanted_types:
+            continue
+        if wanted_bytes and bpc not in wanted_bytes:
+            continue
+        allowed.add(code)
+    return allowed
+
+
+def make_filter_tag(script_types, bytes_per_char):
+    """Short, filename-safe description of the active language filters,
+    e.g. '_script-alphabetic_bytes-1' -- '' if no filter is active."""
+    tag = ""
+    if script_types:
+        tag += "_script-" + "+".join(sorted(v.lower() for v in script_types))
+    if bytes_per_char:
+        tag += "_bytes-" + "+".join(sorted(bytes_per_char))
+    return tag
 
 
 def load_density_json(path):
@@ -728,14 +819,27 @@ def main():
                          help="A third column spec (same rules as --cols) to control for -- "
                               "if given, computes a partial correlation and shows the full "
                               "6-panel step-by-step walkthrough instead of a plain scatter.")
+    parser.add_argument("--script-type", default=None,
+                         help="Restrict to languages whose 'Script_Type' in --langs-csv matches "
+                              "one of these comma-separated values (case-insensitive): "
+                              "Alphabetic, Abjad, Abugida, Syllabary, Logosyllabary, Logographic. "
+                              "E.g. --script-type alphabetic  or  --script-type abugida,syllabary. "
+                              "Combined with --bytes-per-char by AND. Requires --langs-csv.")
+    parser.add_argument("--bytes-per-char", default=None,
+                         help="Restrict to languages whose 'Approx_Bytes_Per_Char' in --langs-csv "
+                              "matches one of these comma-separated values (exact): "
+                              "1, 1-2, 2, 2-3, 3. E.g. --bytes-per-char 1  or  "
+                              "--bytes-per-char 2,2-3,3. Combined with --script-type by AND. "
+                              "Requires --langs-csv.")
     parser.add_argument("--langs-csv", default="training_setup/langs/langs_chosen.csv",
                          help="CSV with a 'language_code' column plus training-data/typology "
                               "columns (ratio_vs_english, documents, utf8_bytes, "
                               "balanced_allocation_bytes, imbalanced_allocation_bytes, "
                               "ratio_vs_english_imbalanced, Approx_Bytes_Per_Char), merged in by "
                               "language code. Silently skipped if not found -- only an error if "
-                              "you then reference a column that would have come from it. Pass "
-                              "an empty string to disable.")
+                              "you then reference a column that would have come from it (or use "
+                              "--script-type / --bytes-per-char, which need Script_Type / "
+                              "Approx_Bytes_Per_Char from it). Pass an empty string to disable.")
     parser.add_argument("--density-json", default="char_density.json",
                          help="JSON from char_density.py ({lang_code: {n_bytes_total, "
                               "n_codepoints, codepoints_per_baseline_codepoint, density_index}}), "
@@ -789,8 +893,43 @@ def main():
 
     available_columns |= merge_external_columns(
         rows, langs_csv_data, density_data, spread_data, spread_customenc_data)
+    # Ranks are computed over ALL languages here, BEFORE the language
+    # filter below is applied, so a language keeps the same
+    # training_data rank in filtered and unfiltered plots.
     available_columns |= add_rank_columns(rows)
     available_columns |= add_log_columns(rows)
+
+    # --- LANGUAGE FILTER (--script-type / --bytes-per-char) ---
+    script_types = parse_filter_values(args.script_type)
+    bytes_per_char = parse_filter_values(args.bytes_per_char)
+    filter_tag = make_filter_tag(script_types, bytes_per_char)
+    if script_types or bytes_per_char:
+        if not langs_csv_data:
+            print(f"--script-type / --bytes-per-char need Script_Type and Approx_Bytes_Per_Char "
+                  f"from --langs-csv, but no CSV was loaded (path: '{args.langs_csv}').",
+                  file=sys.stderr)
+            sys.exit(1)
+        try:
+            allowed = select_languages(langs_csv_data, script_types, bytes_per_char)
+        except ValueError as e:
+            print(str(e), file=sys.stderr)
+            sys.exit(1)
+        kept = [r.get("Language", "") for r in rows if r.get("Language", "") in allowed]
+        dropped = [r.get("Language", "") for r in rows if r.get("Language", "") not in allowed]
+        rows = [r for r in rows if r.get("Language", "") in allowed]
+        name = lambda c: CODE_TO_LANG_NAME.get(c, c)
+        crit = []
+        if script_types:
+            crit.append(f"Script_Type in {script_types}")
+        if bytes_per_char:
+            crit.append(f"Approx_Bytes_Per_Char in {bytes_per_char}")
+        print(f"Language filter ({' AND '.join(crit)}): keeping {len(kept)} of "
+              f"{len(kept) + len(dropped)} languages")
+        print(f"  kept:    {', '.join(name(c) for c in kept) or '(none)'}")
+        print(f"  dropped: {', '.join(name(c) for c in dropped) or '(none)'}")
+        if not rows:
+            print("No languages left after filtering.", file=sys.stderr)
+            sys.exit(1)
 
     col_specs = [s.strip() for s in args.cols.split(",")]
     if len(col_specs) != 2:
@@ -809,7 +948,12 @@ def main():
     y_by_lang = dict(zip(y_langs, y_vals))
     common_langs = [l for l in x_by_lang if l in y_by_lang]
 
-    stem = os.path.splitext(os.path.basename(premium_path))[0]
+    # filter_tag ('' if no filter is active) goes into the plot titles
+    # (via stem) and into the auto-derived output filename.
+    stem = os.path.splitext(os.path.basename(premium_path))[0] + filter_tag
+    run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())  # "Balanced", "Imbalanced", "Balanced-Custom", or None
+    setting_dir = run_key.lower() if run_key else "other"             # literal file paths land in .../other/...
+    out_dir = os.path.join(args.out_dir, setting_dir, args.threshold)
 
     if args.control_for:
         c_kind, c_payload = parse_col_spec(args.control_for, available_columns)
@@ -827,7 +971,8 @@ def main():
         c_final = [c_by_lang[l] for l in common_langs]
 
         auto_name = f"{stem}_partial_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}_ctrl_{c_label.replace('/','-')}.png"
-        out_path = args.out or os.path.join(args.out_dir, auto_name)
+        out_path = args.out or os.path.join(out_dir, auto_name)
+        print(f"output path: {out_path}")
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         r_raw, p_raw, r_partial, p_partial = plot_partial(
             x_final, y_final, c_final, x_label, y_label, c_label, common_langs, stem, out_path)
@@ -842,7 +987,8 @@ def main():
         y_final = [y_by_lang[l] for l in common_langs]
 
         auto_name = f"{stem}_corr_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}.png"
-        out_path = args.out or os.path.join(args.out_dir, auto_name)
+        out_path = args.out or os.path.join(out_dir, auto_name)
+        print(f"output path: {out_path}")
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         r, p = plot_plain(x_final, y_final, x_label, y_label, common_langs, stem, out_path)
         print(f"saved {out_path}")
