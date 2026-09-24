@@ -449,7 +449,29 @@ def wrap_col_header(col, width=9):
 # Drawing
 # --------------------------------------------------------------------------- #
 
-def draw_chart(table, title, display_cols, out_path):
+# Font sizes (fixed -- only column widths adapt to the number of columns)
+FS_TITLE = 13
+FS_LANG_HEADER = 10
+FS_COL_HEADER = 9
+FS_LANG = 9.5
+FS_CELL = 9.2
+FS_LEGEND_LABEL = 8.5
+FS_LEGEND_TICK = 8
+
+DEFAULT_FIG_WIDTH = 14.0   # inches; fixed total width of every chart
+
+
+def text_width_in(text, fontsize, fontweight="normal"):
+    """Rendered width of a (possibly multi-line) string, in inches."""
+    fig = plt.figure()
+    t = fig.text(0, 0, text, fontsize=fontsize, fontweight=fontweight)
+    fig.canvas.draw()
+    w = t.get_window_extent().width / fig.dpi
+    plt.close(fig)
+    return w
+
+
+def draw_chart(table, title, display_cols, out_path, fig_width=DEFAULT_FIG_WIDTH):
     langs = list(table.keys())  # file order (already sorted by premium)
     n = len(langs)
     half = (n + 1) // 2
@@ -466,39 +488,54 @@ def draw_chart(table, title, display_cols, out_path):
 
     # --- Labels -------------------------------------------------------------
     labels = {l: CODE_TO_LANG_NAME.get(l, l) for l in langs}
-    headers = {c: wrap_col_header(DISPLAY_NAMES.get(c, c)) for c in display_cols}
-    header_lines = max([h.count("\n") + 1 for h in headers.values()] + [1])
 
     # --- Geometry (x in inches, y in row units) -----------------------------
-    sq = 0.8                        # box width (inches)
-    box_h_in = 0.18                 # box height (inches)
+    # Horizontal layout: the figure has a fixed width. In each half, the
+    # language column is as wide as the longest language name; the premium
+    # column and the extra columns share the remaining width equally.
+    margin = 0.2                    # left/right margin (inches)
+    gap = 0.6                       # space between the two halves (inches)
+    lang_pad = 0.25                 # space between language names and first box
+    col_pad = 0.15                  # horizontal space between neighbouring boxes
+    min_col_w = 0.7                 # below this, cell values no longer fit
+
+    lang_w = max(text_width_in(s, FS_LANG, "medium") for s in list(labels.values()) + ["Language"]) + lang_pad
+    n_extra = len(display_cols)
+    n_cols = 1 + n_extra            # premium + extras
+
+    block_w = (fig_width - 2 * margin - gap) / 2
+    col_w = (block_w - lang_w) / n_cols
+    if col_w < min_col_w:           # too many columns for this width: grow the figure
+        col_w = min_col_w
+        block_w = lang_w + n_cols * col_w
+        fig_width = 2 * margin + 2 * block_w + gap
+        print(f"note: widened figure to {fig_width:.1f} in to fit {n_cols} columns")
+    sq = col_w - col_pad            # box width (inches)
+
+    # Column headers wrap to fit their column
+    chars_per_line = max(5, int(col_w / (0.62 * FS_COL_HEADER / 72)))
+    headers = {c: wrap_col_header(DISPLAY_NAMES.get(c, c), chars_per_line) for c in display_cols}
+    header_lines = max([h.count("\n") + 1 for h in headers.values()] + [1])
+
+    # Vertical layout
+    box_h_in = 0.2                 # box height (inches)
     row_gap_in = 0.08               # empty space between rows of boxes (inches)
     row_h = box_h_in + row_gap_in   # inches per row
     box_h = box_h_in / row_h        # box height as a fraction of the row (y is in row units)
     # y is in row units, so header/legend offsets are scaled by u to keep them
     # a fixed physical size no matter how tight the rows are.
     u = 0.55 / row_h
-    col_spacing = 1.0
-    max_label_len = max(len(s) for s in labels.values())
-    lang_w = max(1.7, 0.085 * max_label_len + 0.35)
-    extra_offset = sq + 0.4
-    n_extra = len(display_cols)
-    block_w = lang_w + extra_offset + n_extra * col_spacing + 0.1
-    gap = 0.8
 
-    blocks_w = 0.2 + 2 * block_w + gap
+    table_left = margin
+    table_right = fig_width - margin - col_pad / 2   # right edge of the last box
+
     # Legend row: one gradient per column (premium + extras), stretched so
     # together they span the full table width from the left edge to the right.
-    n_legends = 1 + n_extra
+    n_legends = n_cols
     legend_gap = 0.6
-    min_grad_w = 1.6
-    table_left = 0.2
-    table_right = blocks_w - 0.1 - (col_spacing - sq) if n_extra else blocks_w - 0.1  # right edge of last box
     grad_w = (table_right - table_left - (n_legends - 1) * legend_gap) / n_legends
-    grad_w = max(grad_w, min_grad_w)
     legend_spacing = grad_w + legend_gap
-    legend_w = table_left + n_legends * grad_w + (n_legends - 1) * legend_gap
-    fig_w = max(blocks_w, legend_w) + 0.2
+    fig_w = fig_width
 
     header_line_h = 0.35 * u
     extra_top = header_line_h * (header_lines - 1)
@@ -520,7 +557,7 @@ def draw_chart(table, title, display_cols, out_path):
             )
             ax.add_patch(rect)
             ax.text(x + sq / 2, y + box_h / 2, "N/A", ha="center", va="center",
-                    fontsize=7.2, color="#aaaaaa", fontweight="bold")
+                    fontsize=FS_CELL, color="#aaaaaa", fontweight="bold")
         else:
             rect = patches.FancyBboxPatch(
                 (x, y), sq, box_h,
@@ -529,31 +566,32 @@ def draw_chart(table, title, display_cols, out_path):
             )
             ax.add_patch(rect)
             ax.text(x + sq / 2, y + box_h / 2, text, ha="center", va="center",
-                    fontsize=7.2, color=text_color_for(color), fontweight="bold")
+                    fontsize=FS_CELL, color=text_color_for(color), fontweight="bold")
 
     # --- Title --------------------------------------------------------------
     ytop = half + 0.6 * u
-    ax.text(blocks_w / 2, ytop + extra_top + 0.75 * u, title, fontsize=13,
+    ax.text(fig_w / 2, ytop + extra_top + 0.75 * u, title, fontsize=FS_TITLE,
             fontweight="bold", ha="center", va="bottom", color="#333333")
 
     # --- Two blocks ---------------------------------------------------------
     for b, block_langs in enumerate(halves):
         if not block_langs:
             continue
-        x0 = 0.2 + b * (block_w + gap)
-        x_prem = x0 + lang_w
-        x_extra = {c: x_prem + extra_offset + i * col_spacing for i, c in enumerate(display_cols)}
+        x0 = margin + b * (block_w + gap)
+        # left edge of each box; every data column is col_w wide, box centered in it
+        x_prem = x0 + lang_w + col_pad / 2
+        x_extra = {c: x_prem + (i + 1) * col_w for i, c in enumerate(display_cols)}
 
-        ax.text(x0, ytop, "Language", fontsize=10, fontweight="bold", va="bottom")
-        ax.text(x_prem + sq / 2, ytop, "Premium", fontsize=9, fontweight="bold", ha="center", va="bottom")
+        ax.text(x0, ytop, "Language", fontsize=FS_LANG_HEADER, fontweight="bold", va="bottom")
+        ax.text(x_prem + sq / 2, ytop, "Premium", fontsize=FS_COL_HEADER, fontweight="bold", ha="center", va="bottom")
         for col in display_cols:
-            ax.text(x_extra[col] + sq / 2, ytop, headers[col], fontsize=9, fontweight="bold",
+            ax.text(x_extra[col] + sq / 2, ytop, headers[col], fontsize=FS_COL_HEADER, fontweight="bold",
                     ha="center", va="bottom", multialignment="center", linespacing=1.1)
 
         for r, lang in enumerate(block_langs):
             y = half - r - 0.3 - box_h / 2   # box vertically centered in its row
             premium, extras = table[lang]
-            ax.text(x0, y + box_h / 2, labels[lang], fontsize=9.5, va="center", fontweight="medium")
+            ax.text(x0, y + box_h / 2, labels[lang], fontsize=FS_LANG, va="center", fontweight="medium")
             draw_square(x_prem, y, premium_color(premium, p_min, p_max), f"{premium:.2f}")
             for col in display_cols:
                 val = extras[col]
@@ -563,12 +601,12 @@ def draw_chart(table, title, display_cols, out_path):
 
     # Divider between the two halves
     if halves[1]:
-        x_div = 0.2 + block_w + gap / 2
+        x_div = margin + block_w + gap / 2
         ax.plot([x_div, x_div], [0.2, ytop + 0.3 * u], color="#dddddd", lw=1)
 
     # --- Legends ------------------------------------------------------------
-    n_steps = 60
-    leg_y = -1.2 * u
+    n_steps = 200
+    leg_y = -0.8 * u
 
     def draw_gradient(x0, color_at_t):
         for k in range(n_steps):
@@ -584,10 +622,10 @@ def draw_chart(table, title, display_cols, out_path):
     # Premium legend (this chart's own scale)
     draw_gradient(leg_x0, green_red_gradient)
     ax.text(leg_x0 + grad_w / 2, leg_y + 0.35 * u, "Premium",
-            fontsize=8.5, ha="center", va="bottom")
-    ax.text(leg_x0, leg_y - 0.3 * u, f"{p_min:.2f}", fontsize=8, ha="left", fontweight="semibold")
-    ax.text(leg_x0 + grad_w, leg_y - 0.3 * u, f"{p_max:.2f}", fontsize=8, ha="right", fontweight="semibold")
-    ax.text(leg_x0 + grad_w / 2, leg_y - 0.3 * u, f"(\u0394 {p_max - p_min:.2f})", fontsize=7.5,
+            fontsize=FS_LEGEND_LABEL, ha="center", va="bottom")
+    ax.text(leg_x0, leg_y - 0.3 * u, f"{p_min:.2f}", fontsize=FS_LEGEND_TICK, ha="left", fontweight="semibold")
+    ax.text(leg_x0 + grad_w, leg_y - 0.3 * u, f"{p_max:.2f}", fontsize=FS_LEGEND_TICK, ha="right", fontweight="semibold")
+    ax.text(leg_x0 + grad_w / 2, leg_y - 0.3 * u, f"(\u0394 {p_max - p_min:.2f})", fontsize=FS_LEGEND_TICK - 0.5,
             ha="center", color="#555555", fontstyle="italic")
 
     # Extra-column legends
@@ -595,10 +633,10 @@ def draw_chart(table, title, display_cols, out_path):
         x0 = leg_x0 + (i + 1) * legend_spacing
         vmin, vmax = extra_minmax[col]
         draw_gradient(x0, lambda t, vmin=vmin, vmax=vmax: grey_color(vmin + t * (vmax - vmin), vmin, vmax))
-        ax.text(x0 + grad_w / 2, leg_y + 0.35 * u, DISPLAY_NAMES.get(col, col), fontsize=8.5,
+        ax.text(x0 + grad_w / 2, leg_y + 0.35 * u, DISPLAY_NAMES.get(col, col), fontsize=FS_LEGEND_LABEL,
                 ha="center", va="bottom")
-        ax.text(x0, leg_y - 0.3 * u, format_legend_value(col, vmin), fontsize=8, ha="left")
-        ax.text(x0 + grad_w, leg_y - 0.3 * u, format_legend_value(col, vmax), fontsize=8, ha="right")
+        ax.text(x0, leg_y - 0.3 * u, format_legend_value(col, vmin), fontsize=FS_LEGEND_TICK, ha="left")
+        ax.text(x0 + grad_w, leg_y - 0.3 * u, format_legend_value(col, vmax), fontsize=FS_LEGEND_TICK, ha="right")
 
     plt.tight_layout()
     plt.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
@@ -626,6 +664,9 @@ def main():
                         help="Extra columns for the global chart (overrides --cols)")
     parser.add_argument("--mono-cols", default=None,
                         help="Extra columns for the monotonicity chart (overrides --cols)")
+    parser.add_argument("--width", type=float, default=DEFAULT_FIG_WIDTH,
+                        help=f"Total chart width in inches (default {DEFAULT_FIG_WIDTH}). "
+                             "Fonts stay fixed; columns share the space left after the language column.")
     parser.add_argument("--spread-json", help="Path to byte position stats JSON file for standard spread")
     parser.add_argument("--spread-customenc-json", help="Path to byte position stats JSON file for custom encoding spread")
     args = parser.parse_args()
@@ -663,7 +704,7 @@ def main():
         m = re.search(r"_t_([0-9.]+)_", os.path.basename(path))
         title = f"{prefix} \u2014 {name.capitalize()} premium" + (f" (t = {m.group(1)})" if m else "")
         out_path = os.path.join(out_dir, f"{prefix}_{name}_premium_chart.png")
-        draw_chart(table, title, display_cols, out_path)
+        draw_chart(table, title, display_cols, out_path, fig_width=args.width)
 
 
 if __name__ == "__main__":
