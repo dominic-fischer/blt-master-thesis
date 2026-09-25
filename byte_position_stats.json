@@ -2,6 +2,7 @@
   "amh_Ethi": {
     "n_docs": 997,
     "n_bytes_total": 218396,
+    "avg_length": 2.565591776798825,
     "main_length": 3,
     "main_length_entropies": [
       0.01595967310065438,
@@ -14,6 +15,7 @@
   "arb_Arab": {
     "n_docs": 997,
     "n_bytes_total": 200576,
+    "avg_length": 1.8139526470960623,
     "main_length": 2,
     "main_length_entropies": [
       0.9971675210024387,
@@ -25,6 +27,7 @@
   "cmn_Hans": {
     "n_docs": 997,
     "n_bytes_total": 117254,
+    "avg_length": 2.779914175300505,
     "main_length": 3,
     "main_length_entropies": [
       2.777417549035074,
@@ -37,6 +40,7 @@
   "deu_Latn": {
     "n_docs": 997,
     "n_bytes_total": 148936,
+    "avg_length": 1.0162256581012294,
     "main_length": 1,
     "main_length_entropies": [
       4.498090085611573
@@ -47,6 +51,7 @@
   "eng_Latn": {
     "n_docs": 997,
     "n_bytes_total": 125290,
+    "avg_length": 1.000766809911018,
     "main_length": 1,
     "main_length_entropies": [
       4.456107461487207
@@ -57,6 +62,7 @@
   "fin_Latn": {
     "n_docs": 997,
     "n_bytes_total": 139165,
+    "avg_length": 1.039048792324635,
     "main_length": 1,
     "main_length_entropies": [
       4.2672841643082515
@@ -67,6 +73,7 @@
   "fra_Latn": {
     "n_docs": 997,
     "n_bytes_total": 154573,
+    "avg_length": 1.038873841480217,
     "main_length": 1,
     "main_length_entropies": [
       4.312150072422279
@@ -77,6 +84,7 @@
   "heb_Hebr": {
     "n_docs": 997,
     "n_bytes_total": 174464,
+    "avg_length": 1.7893560066050604,
     "main_length": 2,
     "main_length_entropies": [
       0.0026591675071933373,
@@ -88,6 +96,7 @@
   "hrv_Latn": {
     "n_docs": 997,
     "n_bytes_total": 127130,
+    "avg_length": 1.0263261994526476,
     "main_length": 1,
     "main_length_entropies": [
       4.42694516295385
@@ -98,6 +107,7 @@
   "ita_Latn": {
     "n_docs": 997,
     "n_bytes_total": 148188,
+    "avg_length": 1.0074648174586986,
     "main_length": 1,
     "main_length_entropies": [
       4.295493621133356
@@ -108,6 +118,7 @@
   "jpn_Jpan": {
     "n_docs": 997,
     "n_bytes_total": 160048,
+    "avg_length": 2.9281715393903913,
     "main_length": 3,
     "main_length_entropies": [
       1.7240966795595263,
@@ -120,6 +131,7 @@
   "kat_Geor": {
     "n_docs": 997,
     "n_bytes_total": 372658,
+    "avg_length": 2.701536141739704,
     "main_length": 3,
     "main_length_entropies": [
       0.020300556551173937,
@@ -132,6 +144,7 @@
   "kor_Hang": {
     "n_docs": 997,
     "n_bytes_total": 150918,
+    "avg_length": 2.3951056164796625,
     "main_length": 3,
     "main_length_entropies": [
       1.7709729860726564,
@@ -144,6 +157,7 @@
   "nya_Latn": {
     "n_docs": 997,
     "n_bytes_total": 141777,
+    "avg_length": 1.002226746405395,
     "main_length": 1,
     "main_length_entropies": [
       4.4339650427746715
@@ -154,6 +168,7 @@
   "ron_Latn": {
     "n_docs": 997,
     "n_bytes_total": 148896,
+    "avg_length": 1.0556855404773047,
     "main_length": 1,
     "main_length_entropies": [
       4.261402995284484
@@ -164,6 +179,7 @@
   "spa_Latn": {
     "n_docs": 997,
     "n_bytes_total": 152078,
+    "avg_length": 1.0193783640665741,
     "main_length": 1,
     "main_length_entropies": [
       4.273692550532512
@@ -174,6 +190,7 @@
   "srp_Cyrl": {
     "n_docs": 997,
     "n_bytes_total": 226435,
+    "avg_length": 1.8186819806433476,
     "main_length": 2,
     "main_length_entropies": [
       0.8486751294639338,
@@ -185,6 +202,7 @@
   "tam_Taml": {
     "n_docs": 997,
     "n_bytes_total": 398801,
+    "avg_length": 2.72912104456367,
     "main_length": 3,
     "main_length_entropies": [
       0.0026224543351319163,
@@ -197,6 +215,7 @@
   "tha_Thai": {
     "n_docs": 997,
     "n_bytes_total": 346502,
+    "avg_length": 2.881082249642465,
     "main_length": 3,
     "main_length_entropies": [
       0.0011982992917188339,
@@ -209,6 +228,7 @@
   "vie_Latn": {
     "n_docs": 997,
     "n_bytes_total": 174819,
+    "avg_length": 1.324486703538147,
     "main_length": 1,
     "main_length_entropies": [
       4.089253027468214

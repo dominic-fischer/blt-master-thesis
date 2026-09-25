@@ -36,6 +36,27 @@ LANGUAGE FILTERS (--script-type, --bytes-per-char)
     therefore unaffected by filtering. The active filter is appended to
     the output filename and the plot title.
 
+COLOUR CODING (--color-by)
+    Colours each point by a categorical property of its language, read
+    from --langs-csv. Default is 'none' (all points the same colour, as
+    before).
+
+      --color-by none            no colour coding (default)
+      --color-by script-type     Script_Type (Alphabetic, Abjad, ...)
+      --color-by bytes-per-char  Approx_Bytes_Per_Char (1, 1-2, 2, 2-3, 3)
+
+    Colours are FIXED per category (see CATEGORY_PALETTES), so e.g.
+    Abjad is the same colour in every figure you make, filtered or not.
+    Bytes-per-char uses a blue -> red sequential palette (1 byte = blue,
+    3 bytes = red); range values like "1-2" (Vietnamese) or "2-3"
+    (Georgian) are drawn as split markers, left half in the colour of
+    the lower end and right half in the colour of the upper end. The regression line and r/p values are unchanged --
+    they are still computed over all plotted languages together; colour
+    is purely visual. Can be combined freely with the language filters
+    and with --control-for (in the 6-panel walkthrough the category
+    legend is drawn once, below the grid). A '_color-<choice>' tag is
+    appended to the auto-derived output filename.
+
 USAGE
     # plain correlation, literal file path (--threshold still required,
     # just unused when premium_file is a literal path)
@@ -78,6 +99,12 @@ USAGE
     python3 plot_correlation.py imbalanced --threshold mono \
         --cols mean,premium --script-type abugida,syllabary
 
+    # colour points by script type / by bytes per character
+    python3 plot_correlation.py balanced --threshold global \
+        --cols mean,premium --color-by script-type
+    python3 plot_correlation.py imbalanced --threshold mono \
+        --cols spread,premium --control-for training_data_log --color-by bytes-per-char
+
 PARSING THE INPUT FILE
     That file format is FIXED-WIDTH (built by left-justifying every
     value to a per-column width, then right-stripping each row) -- NOT
@@ -103,10 +130,12 @@ import math
 import os
 import re
 import sys
+from collections import Counter, defaultdict
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 
 CODE_TO_LANG_NAME = {
@@ -215,6 +244,39 @@ SPREAD_CUSTOMENC_JSON_FIELDS = {
     "spread": "spread_customenc",
     "main_length_entropy_sum": "main_length_entropy_sum_customenc",
 }
+
+# --- COLOUR CODING (--color-by) ---
+# CLI choice -> (langs-csv column it reads, legend title).
+COLOR_BY_OPTIONS = {
+    "none": None,
+    "script-type": ("Script_Type", "Script type"),
+    "bytes-per-char": ("Approx_Bytes_Per_Char", "Bytes per char"),
+}
+# Fixed category -> colour maps, so a category keeps the same colour
+# across every figure. Dict order = legend order. Categories not listed
+# here (e.g. a new value added to the CSV later) fall back to
+# UNKNOWN_CATEGORY_COLOR and are still shown in the legend by name.
+CATEGORY_PALETTES = {
+    "Script_Type": {
+        "Alphabetic":    "#4C72B0",  # blue
+        "Abjad":         "#DD8452",  # orange
+        "Abugida":       "#55A868",  # green
+        "Syllabary":     "#C44E52",  # red
+        "Logosyllabary": "#8172B3",  # purple
+        "Logographic":   "#937860",  # brown
+    },
+    # Sequential blue (fewest bytes) -> red (most bytes). Range values
+    # like "1-2" / "2-3" are NOT listed: any "A-B" value whose two ends
+    # are both in the palette is drawn as a split marker, left half in
+    # A's colour, right half in B's -- see build_coloring.
+    "Approx_Bytes_Per_Char": {
+        "1": "#2166AC",
+        "2": "#F4A582",
+        "3": "#B2182B",
+    },
+}
+UNKNOWN_CATEGORY_COLOR = "#BBBBBB"
+DEFAULT_POINT_COLOR = "#4C72B0"
 
 # Shorthand run names -> canonical folder/filename-prefix, matching
 # results_to_txt_premiums.py's RUN_NAME_ALIASES output. Lets you write
@@ -367,6 +429,80 @@ def make_filter_tag(script_types, bytes_per_char):
     if bytes_per_char:
         tag += "_bytes-" + "+".join(sorted(bytes_per_char))
     return tag
+
+
+def build_coloring(langs, langs_csv_data, color_by):
+    """Returns None if color_by is 'none'; otherwise a dict describing
+    the per-point colouring for the given (already aligned) list of
+    language codes:
+        {"categories": [cat per point], "colors": [hex per point],
+         "title": legend title, "order": [categories in legend order]}
+    Category values are matched case-insensitively against
+    CATEGORY_PALETTES and reported with the palette's canonical
+    spelling; values missing from the palette get UNKNOWN_CATEGORY_COLOR
+    (languages with no CSV row / blank value are labelled 'unknown')."""
+    spec = COLOR_BY_OPTIONS.get(color_by)
+    if spec is None:
+        return None
+    csv_col, title = spec
+    palette = CATEGORY_PALETTES[csv_col]
+    canon_by_lower = {k.lower(): k for k in palette}
+
+    categories, colors = [], []
+    split_first = {}  # split category -> its left-hand palette key, for legend ordering
+    for lang in langs:
+        raw = (langs_csv_data.get(lang, {}).get(csv_col) or "").strip()
+        canon = canon_by_lower.get(raw.lower())
+        m_range = re.match(r"^\s*(.+?)\s*-\s*(.+?)\s*$", raw)
+        if canon is not None:
+            categories.append(canon)
+            colors.append(palette[canon])
+        elif (m_range and m_range.group(1).lower() in canon_by_lower
+              and m_range.group(2).lower() in canon_by_lower):
+            # Range value, e.g. "1-2": a (left, right) colour pair ->
+            # drawn as a half-and-half marker.
+            lo = canon_by_lower[m_range.group(1).lower()]
+            hi = canon_by_lower[m_range.group(2).lower()]
+            cat = f"{lo}-{hi}"
+            categories.append(cat)
+            colors.append((palette[lo], palette[hi]))
+            split_first[cat] = lo
+        else:
+            categories.append(raw or "unknown")
+            colors.append(UNKNOWN_CATEGORY_COLOR)
+
+    # Legend order: palette order, each split category placed right
+    # after its left-hand end (1, 1-2, 2, 2-3, 3), then anything unknown.
+    present = set(categories)
+    order = []
+    for k in palette:
+        if k in present:
+            order.append(k)
+        order += sorted(c for c in present if split_first.get(c) == k)
+    order += sorted(present - set(order))
+    return {"categories": categories, "colors": colors, "title": title, "order": order}
+
+
+def is_split_color(color):
+    """True for a (left, right) colour pair from a range category."""
+    return isinstance(color, tuple)
+
+
+def category_legend_handles(coloring):
+    """One round-marker legend entry per category present, labelled
+    with its point count, in the coloring's legend order. Range
+    categories get a half-and-half marker matching the plot."""
+    counts = Counter(coloring["categories"])
+    color_of = dict(zip(coloring["categories"], coloring["colors"]))
+    handles = []
+    for cat in coloring["order"]:
+        col = color_of[cat]
+        style = dict(markerfacecolor=col[0], markerfacecoloralt=col[1], fillstyle="left") \
+            if is_split_color(col) else dict(markerfacecolor=col)
+        handles.append(Line2D([0], [0], marker="o", linestyle="", markersize=8,
+                              markeredgecolor="#333333", markeredgewidth=0.8,
+                              label=f"{cat} (n={counts[cat]})", **style))
+    return handles
 
 
 def load_density_json(path):
@@ -668,21 +804,49 @@ def p_str(p):
     return f"{p:.3f}" if p >= 0.001 else f"{p:.1e}"
 
 
-def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0):
+def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
+                     coloring=None, show_category_legend=True):
+    """coloring: None (single colour) or the dict from build_coloring,
+    aligned point-for-point with x/y/langs. show_category_legend=False
+    colours the points but leaves the category legend to the caller
+    (used by the 6-panel grid, which draws one shared legend)."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     r, p = pearson_r_p(x, y, extra_df_used=extra_df_used)
 
-    ax.scatter(x, y, c="#4C72B0", s=90, edgecolors="#333333", linewidths=0.8, zorder=3)
+    if coloring is None:
+        ax.scatter(x, y, c=DEFAULT_POINT_COLOR, s=90, edgecolors="#333333", linewidths=0.8, zorder=3)
+    else:
+        cols = coloring["colors"]
+        solid = [i for i, col in enumerate(cols) if not is_split_color(col)]
+        if solid:
+            ax.scatter(x[solid], y[solid], c=[cols[i] for i in solid], s=90,
+                       edgecolors="#333333", linewidths=0.8, zorder=3)
+        # scatter() can't do two-colour markers, so range categories
+        # (e.g. "1-2") are drawn one by one with plot(): left half in
+        # the first colour, right half in the second. markersize=sqrt(s)
+        # keeps them the same size as the scatter points.
+        for i, col in enumerate(cols):
+            if is_split_color(col):
+                ax.plot(x[i], y[i], marker="o", linestyle="", markersize=math.sqrt(90),
+                        fillstyle="left", markerfacecolor=col[0], markerfacecoloralt=col[1],
+                        markeredgecolor="#333333", markeredgewidth=0.8, zorder=3)
+
+    fit_legend = None
     if len(x) >= 2:
         coefs = np.polyfit(x, y, 1)
         x_line = np.linspace(x.min(), x.max(), 100)
         fit_handle, = ax.plot(x_line, np.polyval(coefs, x_line), linestyle="--",
                                color="red", linewidth=1.6, zorder=2,
                                label=f"Linear fit (r={r:.2f}, p={p_str(p)})")
-        ax.legend(handles=[fit_handle], loc="lower left", fontsize=8.5, framealpha=0.9)
+        fit_legend = ax.legend(handles=[fit_handle], loc="lower left", fontsize=8.5, framealpha=0.9)
 
-    from collections import defaultdict
+    if coloring is not None and show_category_legend:
+        ax.legend(handles=category_legend_handles(coloring), title=coloring["title"],
+                  loc="best", fontsize=8, title_fontsize=8.5, framealpha=0.9)
+        if fit_legend is not None:
+            ax.add_artist(fit_legend)  # second ax.legend() call would otherwise replace it
+
     x_groups = defaultdict(list)
     for i, xv in enumerate(x):
         x_groups[round(float(xv), 2)].append(i)
@@ -715,16 +879,17 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0):
     return r, p
 
 
-def plot_plain(x, y, x_label, y_label, langs, stem, out_path):
+def plot_plain(x, y, x_label, y_label, langs, stem, out_path, coloring=None):
     fig, ax = plt.subplots(figsize=(9, 7))
     r, p = scatter_with_fit(ax, x, y, langs, x_label, y_label,
-                             f"{stem}: {x_label} vs. {y_label}")
+                             f"{stem}: {x_label} vs. {y_label}", coloring=coloring)
     plt.tight_layout()
     plt.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
     return r, p
 
 
-def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path, out_path_single=None):
+def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path,
+                 out_path_single=None, coloring=None):
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     c = np.asarray(ctrl, dtype=float)
@@ -744,44 +909,52 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, stem, out_path
 
     fig_single, ax_single = plt.subplots(figsize=(9, 7))
     scatter_with_fit(
-        ax_single, x_resid, y_resid, langs, 
+        ax_single, x_resid, y_resid, langs,
         f"{x_label} residual", f"{y_label} residual",
         f"{stem}: Partial Correlation ({x_label} vs {y_label} | controlling for {ctrl_label})",
-        extra_df_used=1
+        extra_df_used=1, coloring=coloring
     )
     plt.tight_layout()
     plt.savefig(out_path_single, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig_single)
 
     # --- BUILD 6-PANEL WALKTHROUGH GRID ---
+    # Points are coloured in every panel, but the category legend is
+    # drawn once for the whole figure (below the grid) instead of six times.
     fig, axes = plt.subplots(2, 3, figsize=(16, 10))
+    kw = dict(coloring=coloring, show_category_legend=False)
 
     scatter_with_fit(axes[0, 0], c, x, langs, ctrl_label, x_label,
-                      f"(a) Step 1a: fit {x_label} ~ {ctrl_label}")
+                      f"(a) Step 1a: fit {x_label} ~ {ctrl_label}", **kw)
     scatter_with_fit(axes[0, 1], c, x_resid, langs, ctrl_label, f"{x_label} residual",
-                      f"(b) Step 2a: leftover {x_label}\n(should look flat vs. {ctrl_label})")
+                      f"(b) Step 2a: leftover {x_label}\n(should look flat vs. {ctrl_label})", **kw)
 
     r_raw, p_raw = scatter_with_fit(axes[0, 2], x, y, langs, x_label, y_label,
-                                     f"(c) Reference only: RAW {x_label} vs. {y_label}")
+                                     f"(c) Reference only: RAW {x_label} vs. {y_label}", **kw)
     for spine in axes[0, 2].spines.values():
         spine.set_linestyle((0, (4, 3)))
         spine.set_color("#999999")
     axes[0, 2].set_facecolor("#f5f5f5")
 
     scatter_with_fit(axes[1, 0], c, y, langs, ctrl_label, y_label,
-                      f"(d) Step 1b: fit {y_label} ~ {ctrl_label}")
+                      f"(d) Step 1b: fit {y_label} ~ {ctrl_label}", **kw)
     scatter_with_fit(axes[1, 1], c, y_resid, langs, ctrl_label, f"{y_label} residual",
-                      f"(e) Step 2b: leftover {y_label}\n(should look flat vs. {ctrl_label})")
+                      f"(e) Step 2b: leftover {y_label}\n(should look flat vs. {ctrl_label})", **kw)
 
     r_partial, p_partial = scatter_with_fit(
         axes[1, 2], x_resid, y_resid, langs, f"{x_label} residual", f"{y_label} residual",
-        f"(f) Step 3: leftover vs. leftover\n= partial correlation", extra_df_used=1)
+        f"(f) Step 3: leftover vs. leftover\n= partial correlation", extra_df_used=1, **kw)
 
     fig.suptitle(f"{stem}: partial correlation walkthrough  --  "
                  f"raw r={r_raw:.3f} (p={p_str(p_raw)})  |  "
                  f"partial r={r_partial:.3f} (p={p_str(p_partial)})",
                  fontsize=13, fontweight="bold", y=1.04)
     plt.tight_layout()
+    if coloring is not None:
+        handles = category_legend_handles(coloring)
+        fig.legend(handles=handles, title=coloring["title"], loc="upper center",
+                   bbox_to_anchor=(0.5, 0.0), ncol=min(len(handles), 6),
+                   fontsize=9, title_fontsize=10, framealpha=0.9)
     plt.savefig(out_path, dpi=180, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
@@ -831,6 +1004,13 @@ def main():
                               "1, 1-2, 2, 2-3, 3. E.g. --bytes-per-char 1  or  "
                               "--bytes-per-char 2,2-3,3. Combined with --script-type by AND. "
                               "Requires --langs-csv.")
+    parser.add_argument("--color-by", default="none",
+                         type=lambda s: s.strip().lower().replace("_", "-"),
+                         choices=list(COLOR_BY_OPTIONS),
+                         help="Colour-code points by a language property from --langs-csv: "
+                              "'none' (default, single colour), 'script-type' (Script_Type), or "
+                              "'bytes-per-char' (Approx_Bytes_Per_Char). Colours are fixed per "
+                              "category across all plots (see CATEGORY_PALETTES). Requires --langs-csv.")
     parser.add_argument("--langs-csv", default="training_setup/langs/langs_chosen.csv",
                          help="CSV with a 'language_code' column plus training-data/typology "
                               "columns (ratio_vs_english, documents, utf8_bytes, "
@@ -838,8 +1018,9 @@ def main():
                               "ratio_vs_english_imbalanced, Approx_Bytes_Per_Char), merged in by "
                               "language code. Silently skipped if not found -- only an error if "
                               "you then reference a column that would have come from it (or use "
-                              "--script-type / --bytes-per-char, which need Script_Type / "
-                              "Approx_Bytes_Per_Char from it). Pass an empty string to disable.")
+                              "--script-type / --bytes-per-char / --color-by, which need "
+                              "Script_Type / Approx_Bytes_Per_Char from it). Pass an empty "
+                              "string to disable.")
     parser.add_argument("--density-json", default="char_density.json",
                          help="JSON from char_density.py ({lang_code: {n_bytes_total, "
                               "n_codepoints, codepoints_per_baseline_codepoint, density_index}}), "
@@ -899,6 +1080,11 @@ def main():
     available_columns |= add_rank_columns(rows)
     available_columns |= add_log_columns(rows)
 
+    if args.color_by != "none" and not langs_csv_data:
+        print(f"--color-by {args.color_by} needs Script_Type / Approx_Bytes_Per_Char from "
+              f"--langs-csv, but no CSV was loaded (path: '{args.langs_csv}').", file=sys.stderr)
+        sys.exit(1)
+
     # --- LANGUAGE FILTER (--script-type / --bytes-per-char) ---
     script_types = parse_filter_values(args.script_type)
     bytes_per_char = parse_filter_values(args.bytes_per_char)
@@ -949,8 +1135,10 @@ def main():
     common_langs = [l for l in x_by_lang if l in y_by_lang]
 
     # filter_tag ('' if no filter is active) goes into the plot titles
-    # (via stem) and into the auto-derived output filename.
+    # (via stem) and into the auto-derived output filename. color_tag
+    # only goes into the filename (the legend already shows it on the plot).
     stem = os.path.splitext(os.path.basename(premium_path))[0] + filter_tag
+    color_tag = "" if args.color_by == "none" else f"_color-{args.color_by}"
     run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())  # "Balanced", "Imbalanced", "Balanced-Custom", or None
     setting_dir = run_key.lower() if run_key else "other"             # literal file paths land in .../other/...
     out_dir = os.path.join(args.out_dir, setting_dir, args.threshold)
@@ -969,13 +1157,16 @@ def main():
         x_final = [x_by_lang[l] for l in common_langs]
         y_final = [y_by_lang[l] for l in common_langs]
         c_final = [c_by_lang[l] for l in common_langs]
+        coloring = build_coloring(common_langs, langs_csv_data, args.color_by)
 
-        auto_name = f"{stem}_partial_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}_ctrl_{c_label.replace('/','-')}.png"
+        auto_name = (f"{stem}_partial_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}"
+                     f"_ctrl_{c_label.replace('/','-')}{color_tag}.png")
         out_path = args.out or os.path.join(out_dir, auto_name)
         print(f"output path: {out_path}")
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         r_raw, p_raw, r_partial, p_partial = plot_partial(
-            x_final, y_final, c_final, x_label, y_label, c_label, common_langs, stem, out_path)
+            x_final, y_final, c_final, x_label, y_label, c_label, common_langs, stem, out_path,
+            coloring=coloring)
         print(f"saved {out_path}")
         print(f"raw r({x_label}, {y_label}) = {r_raw:.4f}  p = {p_str(p_raw)}  (n={len(common_langs)})")
         print(f"partial r({x_label}, {y_label} | {c_label}) = {r_partial:.4f}  p = {p_str(p_partial)}  (n={len(common_langs)})")
@@ -985,12 +1176,14 @@ def main():
             sys.exit(1)
         x_final = [x_by_lang[l] for l in common_langs]
         y_final = [y_by_lang[l] for l in common_langs]
+        coloring = build_coloring(common_langs, langs_csv_data, args.color_by)
 
-        auto_name = f"{stem}_corr_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}.png"
+        auto_name = f"{stem}_corr_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}{color_tag}.png"
         out_path = args.out or os.path.join(out_dir, auto_name)
         print(f"output path: {out_path}")
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-        r, p = plot_plain(x_final, y_final, x_label, y_label, common_langs, stem, out_path)
+        r, p = plot_plain(x_final, y_final, x_label, y_label, common_langs, stem, out_path,
+                          coloring=coloring)
         print(f"saved {out_path}")
         print(f"r({x_label}, {y_label}) = {r:.4f}  p = {p_str(p)}  (n={len(common_langs)})")
 

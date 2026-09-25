@@ -210,8 +210,9 @@ def analyze_file(path, label, top_n=15, fixed_length=None):
 
     lengths_present = sorted(set(l for l, p in value_buckets))
     total_chars = sum(sum(value_buckets[(l, 0)].values()) for l in lengths_present)
+    avg_length = total_bytes / total_chars if total_chars else 0.0
 
-    print(f"=== {label} (n={total_bytes} bytes across {n_docs} documents) ===")
+    print(f"=== {label} (n={total_bytes} bytes across {total_chars} in {n_docs} documents) ===")
 
     lengths_dict = {}  # built up here, attached to result LAST (see below)
 
@@ -299,6 +300,7 @@ def analyze_file(path, label, top_n=15, fixed_length=None):
     result = {
         "n_docs": n_docs,
         "n_bytes_total": total_bytes,
+        "avg_length": avg_length,
         "main_length": main_length,
         "main_length_entropies": main_length_entropies,
         "main_length_entropy_sum": main_length_entropy_sum,
@@ -307,7 +309,8 @@ def analyze_file(path, label, top_n=15, fixed_length=None):
     }
 
     spread_str = f"{spread:.3f}" if spread is not None else "n/a (1-byte language)"
-    print(f"  main_length: {main_length}  "
+    print(f"  avg_length: {avg_length:.3f} bytes/char  "
+          f"main_length: {main_length}  "
           f"main_length_entropies: {[round(e, 3) for e in main_length_entropies]}  "
           f"main_length_entropy_sum: {main_length_entropy_sum:.3f} bits  "
           f"spread: {spread_str}")
