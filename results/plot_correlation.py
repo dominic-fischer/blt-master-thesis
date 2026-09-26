@@ -1028,13 +1028,20 @@ def _signed(v, digits=2):
 
 
 def breakdown_legend_lines(bd):
-    """Compact summary of the breakdown for the in-plot legend."""
+    """Compact summary of the breakdown for the in-plot legend: each
+    group's share of the unexplained variance, split into offset (group
+    systematically above/below the line) + scatter (spread around the
+    group's own level). All four parts sum to 100%. One decimal, so the
+    parts visibly add up. Note that how the offset divides between the
+    two groups follows from the group sizes alone; the TOTAL offset and
+    the per-group scatter are the interpretable numbers."""
     s, m = bd["single"], bd["multi"]
     return [
         "Unexplained variance:",
-        f"   single-byte {s['share']:.0%} (RMSE {s['rmse']:.2f}, mean {_signed(s['mean_resid'])})",
-        f"   multi-byte {m['share']:.0%} (RMSE {m['rmse']:.2f}, mean {_signed(m['mean_resid'])})",
-        f"   group offset {bd['offset_share']:.0%}",
+        f"   single-byte {s['share']:.1%} = offset {s['offset_share']:.1%} "
+        f"+ scatter {s['scatter_share']:.1%}",
+        f"   multi-byte {m['share']:.1%} = offset {m['offset_share']:.1%} "
+        f"+ scatter {m['scatter_share']:.1%}",
     ]
 
 
