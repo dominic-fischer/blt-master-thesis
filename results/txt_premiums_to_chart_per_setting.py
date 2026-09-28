@@ -134,7 +134,7 @@ SPREAD_FIELD_SOURCE = {
 PRESET_DIRS = {
     "balanced": "results/txt_premiums/t_anchor/Balanced/step_0000007200",
     "imbalanced": "results/txt_premiums/t_anchor/Imbalanced/step_0000002600",
-    "balanced-custom": "results/txt_premiums/t_anchor/Balanced_customenc/step_0000006400",
+    "balanced-custom": "results/txt_premiums/t_anchor/Balanced-Custom/step_0000006400",
 }
 
 DEFAULT_COLS = "mean,var"
