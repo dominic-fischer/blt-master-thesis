@@ -1585,6 +1585,9 @@ def main():
     color_tag = "" if args.color_by == "none" else f"_color-{args.color_by}"
     run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())
     setting_dir = run_key.lower() if run_key else "other"
+
+    if args.char_level:
+        setting_dir = os.path.join("char_level", setting_dir)
     out_dir = os.path.join(args.out_dir, setting_dir, args.threshold)
 
     if args.control_for:
