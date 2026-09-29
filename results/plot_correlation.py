@@ -9,10 +9,12 @@ COLUMN SPECS (--cols, --control-for)
         kurtosis/kurt, autocorr/autocorrelation, volatility/vol,
         training_data/training_data_balanced (RANK by training-data
         size, 1=most -- not raw bytes, see COLUMN_ALIASES), density,
-        codepoints, cp_per_baseline, spread, spread_customenc
+        codepoints, cp_per_baseline, spread, spread_customenc,
+        word_length, n_words, n_char, char_ratio, word_ratio, dense
       - the exact header text from the file (case-insensitive): Premium,
         PPS, BPP, EntropyMean, EntropyVar, EntropySkew, EntropyKurtosis,
-        EntropyAutocorr1, EntropyVolatility
+        EntropyAutocorr1, EntropyVolatility -- or any merged-in column
+        (e.g. Dense_Script, Premium_global from --extra-premium)
       - a RATIO of two such names, e.g. mean/variance -- computed
         elementwise from the two underlying columns
 
@@ -31,8 +33,8 @@ LANGUAGE FILTERS (--script-type, --bytes-per-char)
                         "1-2" = Vietnamese, "2-3" = Georgian)
 
     Ranks (training_data / training_data_balanced) are always computed
-    over ALL languages BEFORE filtering, so a language keeps the same rank
-    it has in the unfiltered plots. Log10 columns are per-language and
+    over ALL languages BEFORE filtering, so a language keeps the same
+    rank it has in the unfiltered plots. Log10 columns are per-language and
     therefore unaffected by filtering. The active filter is appended to
     the output filename and the plot title.
 
@@ -49,20 +51,22 @@ COLOUR CODING (--color-by)
     Abjad is the same colour in every figure you make, filtered or not.
     Bytes-per-char uses blue (1 byte), green (2 bytes) and yellow-beige
     (3 bytes); range values like "1-2" (Vietnamese) or "2-3"
-    (Georgian) are drawn as split markers, left half in the colour of
-    the lower end and right half in the colour of the upper end. The regression line and r/p values are unchanged --
-    they are still computed over all plotted languages together; colour
-    is purely visual. Can be combined freely with the language filters
-    and with --control-for (in the 6-panel walkthrough the category
-    legend is drawn once, below the grid). A '_color-<choice>' tag is
-    appended to the auto-derived output filename.
+    (Georgian) are drawn as split markers. The regression line and r/p
+    values are unchanged -- colour is purely visual. A '_color-<choice>'
+    tag is appended to the auto-derived output filename.
 
-RESIDUAL BREAKDOWN (--breakdown)
-    For plain (non-partial) plots containing both single-byte and
-    multi-byte languages, the residuals of the regression line are
-    broken down by group -- single-byte = Approx_Bytes_Per_Char "1" or
-    "1-2" (dominant length 1, i.e. spread undefined), multi-byte = "2",
-    "2-3", "3":
+GROUPS (--group-by) AND RESIDUAL BREAKDOWN (--breakdown)
+    --group-by decides how languages are split into two groups for the
+    residual breakdown and for --group-fit:
+      bytes  (default) single-byte = Approx_Bytes_Per_Char "1" or "1-2",
+                       multi-byte  = "2", "2-3", "3"
+      dense            non-dense / dense, from the Dense_Script column of
+                       --langs-csv (1 = dense: abjads, syllabaries,
+                       logosyllabaries, logographic scripts)
+      none             no groups (no breakdown, no --group-fit)
+
+    For plain (non-partial) plots, the residuals of the single joint
+    regression line are broken down by group:
       - each group's share of the unexplained variance (sum of squared
         residuals), split into
           offset  = n_g * mean_residual_g^2   (group systematically
@@ -73,77 +77,41 @@ RESIDUAL BREAKDOWN (--breakdown)
     plot legend, --breakdown off disables it. Skipped automatically if
     either group has fewer than 3 languages.
 
-    Out-of-sample check (--oos): a line fitted to multi-byte languages
-    ONLY, and how well it predicts the single-byte languages. Only
-    needed when there is NO group offset -- then single-byte languages
-    lying close to the joint line could be an artefact of them pulling
-    the line towards themselves. With a clear offset that pull works
-    against the result (it shrinks the offset), so the check adds
-    nothing. By default ('auto') it is printed only when the group
-    offset is below OOS_OFFSET_THRESHOLD of the unexplained variance;
-    'always' / 'never' override. Never shown in the plot legend.
+    Out-of-sample check (--oos): a line fitted to the SECOND group only
+    (multi-byte / dense), and how well it predicts the first. Only
+    useful when there is NO group offset. By default ('auto') it is
+    printed only when the group offset is below OOS_OFFSET_THRESHOLD of
+    the unexplained variance; 'always' / 'never' override.
+
+COMMON SLOPE + GROUP OFFSET (--group-fit)
+    Fits y = b*x + a_g: ONE slope shared by both groups, a separate
+    intercept per group (i.e. the joint line plus a group offset). Draws
+    one parallel line per group, and reports:
+      - the common slope, each group's intercept and the offset between
+        them,
+      - R^2 of this model next to R^2 of the single joint line,
+      - the partial correlation of x and y controlling for the group
+        (= correlation within groups; one extra degree of freedom),
+      - the slopes each group would get if fitted SEPARATELY (to judge
+        whether a common slope is reasonable),
+      - how the remaining unexplained variance splits between groups.
+    Plain plots only (ignored with --control-for). Adds '_groupfit-<by>'
+    to the output filename.
 
 USAGE
-    # plain correlation, literal file path (--threshold still required,
-    # just unused when premium_file is a literal path)
-    python3 plot_correlation.py premiums_sorted.txt --threshold global --cols mean,premium
-
-    # shorthand run name instead of the full path -- resolves the step
-    # folder and exact calibrated threshold automatically via RUN_INFO
     python3 plot_correlation.py balanced --threshold global --cols mean,premium
-    python3 plot_correlation.py imbalanced --char-level --threshold mono --cols mean,premium
-    python3 plot_correlation.py balanced-custom --threshold global --cols density,premium
-
-    # ratio as one side
-    python3 plot_correlation.py balanced --threshold global --cols mean/variance,premium
-
-    # log10 of a skewed column instead of its rank -- see add_log_columns
-    # and the training_data_log alias, or wrap ANY column/ratio directly:
-    python3 plot_correlation.py imbalanced --threshold global --cols log(imbalanced_allocation_bytes),mean
-
-    # entropy spread (see byte_position_stats.py) instead of autocorrelation --
-    # merged in from byte_position_stats.json by default, see --spread-json
-    python3 plot_correlation.py balanced --threshold global --cols spread,premium
-
-    # partial correlation, controlling for a third column -- shows the
-    # full 6-panel step-by-step walkthrough (same construction used
-    # earlier for spread-vs-premium controlling for budget): X~control,
-    # residual; Y~control, residual; then residual-vs-residual, with the
-    # raw (uncontrolled) comparison shown separately for reference.
+    python3 plot_correlation.py balanced-custom --threshold global --cols word_ratio,premium \\
+        --color-by script-type --group-by dense --group-fit --breakdown legend
     python3 plot_correlation.py balanced --threshold global --cols mean,premium --control-for variance
-
-    # restrict to alphabetic scripts that use 1 byte per character
-    # (Latin-script languages except Vietnamese)
-    python3 plot_correlation.py imbalanced --threshold global \
-        --cols training_data_log,mean --script-type alphabetic --bytes-per-char 1
-
-    # all multi-byte languages (2, 2-3 and 3 bytes per character)
-    python3 plot_correlation.py imbalanced --threshold mono \
-        --cols spread,premium --bytes-per-char 2,2-3,3
-
-    # all abugidas and syllabaries, any byte length
-    python3 plot_correlation.py imbalanced --threshold mono \
-        --cols mean,premium --script-type abugida,syllabary
-
-    # colour points by script type / by bytes per character
-    python3 plot_correlation.py balanced --threshold global \
-        --cols mean,premium --color-by script-type
-    python3 plot_correlation.py imbalanced --threshold mono \
-        --cols spread,premium --control-for training_data_log --color-by bytes-per-char
+    python3 plot_correlation.py balanced-custom --threshold mono \\
+        --extra-premium global=balanced-custom:global \\
+        --cols spread_customenc,premium --control-for premium_global
 
 PARSING THE INPUT FILE
-    That file format is FIXED-WIDTH (built by left-justifying every
-    value to a per-column width, then right-stripping each row) -- NOT
-    safely splittable by naive whitespace-splitting, because a blank
-    entropy-stat field (a language whose curve had too few points, or a
-    zero-variance signal) still occupies its column's full width as
-    spaces, and if that blank happens to be the LAST field on a given
-    row, that row's line ends up literally shorter than others (nothing
-    left to rstrip). This script instead locates each header's start
-    column IN THE HEADER LINE ITSELF (searching for each known header
-    name, in order, so it works regardless of which columns are present
-    in this particular file) and slices every data row at those exact
-    character offsets -- correct regardless of where blanks fall.
+    That file format is FIXED-WIDTH. This script locates each header's
+    start column IN THE HEADER LINE ITSELF and slices every data row at
+    those exact character offsets -- correct regardless of where blank
+    fields fall.
 
 Requires: matplotlib, numpy
     pip install matplotlib numpy
@@ -197,12 +165,8 @@ COLUMN_ALIASES = {
     # --- from --langs-csv (default: training_setup/langs/langs_chosen.csv) ---
     # "training_data"/"training_data_imbalanced"/"training_data_balanced"
     # resolve to RANK columns (computed by add_rank_columns, not raw byte
-    # counts) -- raw allocation bytes span ~5 orders of magnitude
-    # (English ~9.7B down to the smallest language ~51K), which would
-    # completely dominate/skew any correlation plot if used directly.
-    # Rank 1 = most training data. Use the literal CSV column names
-    # (imbalanced_allocation_bytes / balanced_allocation_bytes) if you
-    # actually want the raw byte values instead.
+    # counts). Rank 1 = most training data. Use the literal CSV column
+    # names if you want the raw byte values instead.
     "training_data": "imbalanced_allocation_bytes_rank",
     "training_data_rank": "imbalanced_allocation_bytes_rank",
     "training_data_imbalanced": "imbalanced_allocation_bytes_rank",
@@ -210,19 +174,20 @@ COLUMN_ALIASES = {
     "training_data_log": "imbalanced_allocation_bytes_log10",
     "training_data_log10": "imbalanced_allocation_bytes_log10",
     "imbalanced_log": "imbalanced_allocation_bytes_log10",
-    "imbalanced_bytes": "imbalanced_allocation_bytes",  # raw bytes, unchanged
-    "imbalanced_allocation_bytes": "imbalanced_allocation_bytes",  # raw bytes, unchanged
+    "imbalanced_bytes": "imbalanced_allocation_bytes",
+    "imbalanced_allocation_bytes": "imbalanced_allocation_bytes",
     "training_data_balanced": "balanced_allocation_bytes_rank",
     "balanced_rank": "balanced_allocation_bytes_rank",
     "training_data_balanced_log": "balanced_allocation_bytes_log10",
     "balanced_log": "balanced_allocation_bytes_log10",
-    "balanced_bytes": "balanced_allocation_bytes",  # raw bytes, unchanged
-    "balanced_allocation_bytes": "balanced_allocation_bytes",  # raw bytes, unchanged
+    "balanced_bytes": "balanced_allocation_bytes",
+    "balanced_allocation_bytes": "balanced_allocation_bytes",
     "documents": "documents", "n_documents": "documents",
     "utf8_bytes": "utf8_bytes",
     "ratio_vs_english": "ratio_vs_english",
     "ratio_vs_english_imbalanced": "ratio_vs_english_imbalanced",
     "bytes_per_char": "Approx_Bytes_Per_Char", "approx_bytes_per_char": "Approx_Bytes_Per_Char",
+    "dense": "Dense_Script", "dense_script": "Dense_Script",
 
     # --- from --density-json (default: char_density.json) ---
     "density": "density_index", "density_index": "density_index",
@@ -231,37 +196,31 @@ COLUMN_ALIASES = {
     "codepoints_per_baseline_codepoint": "codepoints_per_baseline_codepoint",
     "customenc_bytes": "n_bytes_total",
 
-    # --- from --spread-json / --spread-customenc-json (default:
-    # byte_position_stats.json / byte_position_stats_customenc.json,
-    # produced by byte_position_stats.py) --- normalized [0, 1] balance
-    # of a language's per-character identity entropy across its
-    # dominant byte-length's positions (0 = concentrated in one byte,
-    # 1 = perfectly even). None/blank for languages whose dominant
-    # length is 1 byte -- see spread_score() in byte_position_stats.py.
+    # --- from --spread-json / --spread-customenc-json ---
     "spread": "spread", "entropy_spread": "spread",
     "spread_customenc": "spread_customenc", "custom_spread": "spread_customenc",
     "spread_custom_encoding": "spread_customenc",
-    # main_length_entropy_sum companions, merged in alongside spread --
-    # total identity-entropy (bits) of the dominant byte-length, useful
-    # to control for "how much information" while spread captures "how
-    # evenly spread out".
     "spread_sum": "main_length_entropy_sum", "entropy_sum": "main_length_entropy_sum",
     "spread_customenc_sum": "main_length_entropy_sum_customenc",
+
+    # --- from --wordlen-json (default: word_length_stats.json) ---
+    "word_length": "word_length", "avg_word_length": "word_length",
+    "n_words": "n_words", "words": "n_words",
+    "n_char": "n_char", "total_chars": "n_char",
+    "char_ratio": "char_ratio",
+    "word_ratio": "word_ratio",
 }
 
 # Which literal column names get pulled in from each optional external
-# source, if that source is loaded and has a matching language row --
-# see load_langs_csv / load_density_json / merge_external_columns.
+# source, if that source is loaded and has a matching language row.
 LANGS_CSV_COLUMNS = [
     "ratio_vs_english", "documents", "utf8_bytes", "balanced_allocation_bytes",
     "ratio_vs_english_imbalanced", "imbalanced_allocation_bytes", "Approx_Bytes_Per_Char",
+    "Dense_Script",
 ]
 DENSITY_JSON_COLUMNS = [
     "n_bytes_total", "n_codepoints", "codepoints_per_baseline_codepoint", "density_index",
 ]
-# Fields pulled per-language out of a byte_position_stats(.py)-style JSON
-# (keyed by language code at the top level, e.g. {"eng_Latn": {...}, ...}).
-# Mapped to the row-column names spread/spread_customenc resolve to above.
 SPREAD_JSON_FIELDS = {
     "spread": "spread",
     "main_length_entropy_sum": "main_length_entropy_sum",
@@ -270,18 +229,14 @@ SPREAD_CUSTOMENC_JSON_FIELDS = {
     "spread": "spread_customenc",
     "main_length_entropy_sum": "main_length_entropy_sum_customenc",
 }
+WORDLEN_COLUMNS = ["word_length", "n_words", "n_char", "char_ratio", "word_ratio"]
 
 # --- COLOUR CODING (--color-by) ---
-# CLI choice -> (langs-csv column it reads, legend title).
 COLOR_BY_OPTIONS = {
     "none": None,
     "script-type": ("Script_Type", "Script type"),
     "bytes-per-char": ("Approx_Bytes_Per_Char", "Bytes per char"),
 }
-# Fixed category -> colour maps, so a category keeps the same colour
-# across every figure. Dict order = legend order. Categories not listed
-# here (e.g. a new value added to the CSV later) fall back to
-# UNKNOWN_CATEGORY_COLOR and are still shown in the legend by name.
 CATEGORY_PALETTES = {
     "Script_Type": {
         "Alphabetic":    "#4C72B0",  # blue
@@ -291,11 +246,6 @@ CATEGORY_PALETTES = {
         "Logosyllabary": "#8172B3",  # purple
         "Logographic":   "#937860",  # brown
     },
-    # Blue (1 byte), green (2 bytes), yellow-beige (3 bytes) -- matched
-    # in darkness/saturation (seaborn "deep" palette).
-    # Range values like "1-2" / "2-3" are NOT listed: any "A-B" value
-    # whose two ends are both in the palette is drawn as a split marker,
-    # left half in A's colour, right half in B's -- see build_coloring.
     "Approx_Bytes_Per_Char": {
         "1": "#4C72B0",
         "2": "#55A868",
@@ -305,17 +255,28 @@ CATEGORY_PALETTES = {
 UNKNOWN_CATEGORY_COLOR = "#BBBBBB"
 DEFAULT_POINT_COLOR = "#4C72B0"
 
-# Bytes-per-char values counted as single-byte for the residual
-# breakdown (dominant character length 1 -- matches spread being
-# undefined for these languages). Everything else is multi-byte.
+# --- GROUPS (--group-by) ---
+# Bytes-per-char values counted as single-byte (dominant character
+# length 1 -- matches spread being undefined for these languages).
 SINGLE_BYTE_VALUES = {"1", "1-2"}
+# Script_Type values (case-insensitive) counted as DENSE: one character
+# carries more than one alphabetic letter's worth of information.
+DENSE_SCRIPT_TYPES = {"abjad", "syllabary", "logosyllabary", "logographic"}
+# group_by -> (label of first group, label of second group, footnote)
+GROUP_DEFS = {
+    "bytes": ("single-byte", "multi-byte",
+              "single-byte = Approx_Bytes_Per_Char 1 or 1-2; multi-byte = 2, 2-3, 3"),
+    "dense": ("non-dense", "dense",
+            "dense = Script_Type Abjad, Syllabary, Logosyllabary or Logographic"),
+}
+# Colours of the per-group lines drawn by --group-fit (first, second group).
+GROUP_LINE_COLORS = ("#2F4B7C", "#B5473A")
 
 # --oos auto: run the out-of-sample check only if the group offset is
-# below this share of the unexplained variance (see module docstring).
+# below this share of the unexplained variance.
 OOS_OFFSET_THRESHOLD = 0.10
 
-# Readable names for plot titles and axis labels. Filenames keep the
-# raw column names, so existing output paths don't change.
+# Readable names for plot titles and axis labels.
 DISPLAY_NAMES = {
     "Premium": "Premium",
     "EntropyMean": "Entropy mean",
@@ -342,10 +303,15 @@ DISPLAY_NAMES = {
     "n_codepoints": "Codepoints",
     "codepoints_per_baseline_codepoint": "Codepoints per English codepoint",
     "n_bytes_total": "Bytes (custom encoding)",
+    "Dense_Script": "Dense script (0/1)",
+    "word_length": "Average word length (characters)",
+    "n_words": "Words",
+    "n_char": "Characters",
+    "char_ratio": "Character ratio (rel. to English)",
+    "word_ratio": "Word ratio (rel. to English)",
 }
 
-# Font sizes (points). Raised so language names and numbers stay
-# readable when a figure is scaled down to column width in a paper.
+# Font sizes (points).
 FS_TITLE = 16
 FS_SUBTITLE = 12
 FS_AXIS_LABEL = 14
@@ -355,9 +321,7 @@ FS_LEGEND = 11
 FS_LEGEND_TITLE = 11.5
 POINT_SIZE = 140  # scatter marker area
 
-# Legend position inside the axes (matplotlib loc string). Default
-# bottom left; overridable with --legend-loc when a warning shows it
-# covers data (see warn_legend_overlap).
+# Legend position inside the axes (matplotlib loc string); --legend-loc.
 LEGEND_LOC = "lower left"
 
 
@@ -377,8 +341,7 @@ def pretty_label(label):
 
 
 def describe_filter(script_types, bytes_per_char):
-    """Readable description of the active language filter, e.g.
-    'multi-byte languages' -- '' if no filter is active."""
+    """Readable description of the active language filter, '' if none."""
     parts = []
     if bytes_per_char:
         b = set(bytes_per_char)
@@ -394,10 +357,7 @@ def describe_filter(script_types, bytes_per_char):
 
 
 def describe_run(stem, char_level=False):
-    """Readable run description from a premiums file stem, e.g.
-    'Balanced_raw_monotonicity_t_0.6664_premiums_sorted' ->
-    'Balanced, monotonicity threshold (t = 0.6664)'. Falls back to the
-    stem itself if it doesn't follow the usual naming pattern."""
+    """Readable run description from a premiums file stem."""
     m = re.match(r"^(?P<run>.+?)_raw_(?P<case>entropy|monotonicity)_t_(?P<t>[\d.]+)", stem)
     if not m:
         return stem
@@ -407,12 +367,7 @@ def describe_run(stem, char_level=False):
         desc += ", char-level"
     return desc
 
-# Shorthand run names -> canonical folder/filename-prefix, matching
-# results_to_txt_premiums.py's RUN_NAME_ALIASES output. Lets you write
-# "balanced" instead of the full premiums_sorted.txt path -- see
-# resolve_premium_path. Known checkpoint steps and calibrated thresholds
-# for each run, both granularities -- update here if a run is
-# recalibrated or a new one is added; everything else derives from this.
+
 RUN_NAME_LOOKUP = {
     "balanced": "Balanced",
     "imbalanced": "Imbalanced",
@@ -440,12 +395,8 @@ RUN_INFO = {
 
 
 def resolve_premium_path(spec, char_level, threshold, base_dir="results/txt_premiums"):
-    """If spec is a recognized shorthand (balanced / imbalanced /
-    balanced-custom, case-insensitive, hyphen or underscore), builds and
-    returns the full premiums_sorted.txt path for it using RUN_INFO.
-    Returns None if spec isn't a recognized shorthand -- caller should
-    then treat spec as a literal path, unchanged (so full paths still
-    work exactly as before)."""
+    """Full premiums_sorted.txt path for a shorthand run name, or None if
+    spec isn't a recognized shorthand (caller then uses it as a path)."""
     key = RUN_NAME_LOOKUP.get(spec.strip().lower())
     if key is None:
         return None
@@ -466,9 +417,7 @@ def resolve_premium_path(spec, char_level, threshold, base_dir="results/txt_prem
 def resolve_column_name(name, available_columns):
     """Maps a user-given column name (alias or literal header text,
     case-insensitive either way) to the actual key present in the merged
-    row data (premiums file columns, plus whatever was merged in from
-    --langs-csv / --density-json / --spread-json / --spread-customenc-json).
-    Raises a clear error listing what IS available if it can't be resolved."""
+    row data. Raises a clear error listing what IS available otherwise."""
     key = name.strip().lower()
     resolved = COLUMN_ALIASES.get(key)
     if resolved is None:
@@ -480,10 +429,10 @@ def resolve_column_name(name, available_columns):
         raise ValueError(
             f"Column '{name}' not found or not present in the available data. "
             f"Available columns: {sorted(available_columns)}. Known aliases: "
-            f"{sorted(set(COLUMN_ALIASES.keys()))}. If you expected a "
-            f"--langs-csv, --density-json, --spread-json, or "
-            f"--spread-customenc-json column, check those files were found "
-            f"and contain a matching language_code / top-level key."
+            f"{sorted(set(COLUMN_ALIASES.keys()))}. If you expected a column from "
+            f"--langs-csv, --density-json, --spread-json, --spread-customenc-json, "
+            f"--wordlen-json or --extra-premium, check those files were found and "
+            f"contain a matching language code."
         )
     return resolved
 
@@ -501,9 +450,7 @@ def load_langs_csv(path):
 
 
 def parse_filter_values(raw):
-    """Splits a comma-separated CLI filter string ("1,1-2") into a list
-    of stripped, non-empty values. Returns None if raw is None/empty
-    (i.e. the filter is not active)."""
+    """'1,1-2' -> ['1', '1-2']; None if raw is None/empty."""
     if raw is None:
         return None
     vals = [v.strip() for v in raw.split(",") if v.strip()]
@@ -511,13 +458,9 @@ def parse_filter_values(raw):
 
 
 def select_languages(langs_csv_data, script_types=None, bytes_per_char=None):
-    """Returns the set of language codes in langs_csv_data whose
-    'Script_Type' is in script_types (case-insensitive) AND whose
-    'Approx_Bytes_Per_Char' is in bytes_per_char (exact string match,
-    e.g. "1", "1-2", "2", "2-3", "3"). A filter that is None/empty is
-    not applied. Raises ValueError, listing the values that DO exist, if
-    a requested value doesn't occur anywhere in the CSV (catches typos
-    like "abugida " vs "abjad" instead of silently returning nothing)."""
+    """Language codes matching the --script-type / --bytes-per-char
+    filters (AND across flags, OR within one). Raises ValueError for
+    values that don't occur in the CSV."""
     known_types = sorted({(r.get("Script_Type") or "").strip()
                           for r in langs_csv_data.values()} - {""})
     known_bytes = sorted({(r.get("Approx_Bytes_Per_Char") or "").strip()
@@ -550,8 +493,7 @@ def select_languages(langs_csv_data, script_types=None, bytes_per_char=None):
 
 
 def make_filter_tag(script_types, bytes_per_char):
-    """Short, filename-safe description of the active language filters,
-    e.g. '_script-alphabetic_bytes-1' -- '' if no filter is active."""
+    """Filename-safe description of the active filters, '' if none."""
     tag = ""
     if script_types:
         tag += "_script-" + "+".join(sorted(v.lower() for v in script_types))
@@ -561,15 +503,8 @@ def make_filter_tag(script_types, bytes_per_char):
 
 
 def build_coloring(langs, langs_csv_data, color_by):
-    """Returns None if color_by is 'none'; otherwise a dict describing
-    the per-point colouring for the given (already aligned) list of
-    language codes:
-        {"categories": [cat per point], "colors": [hex per point],
-         "title": legend title, "order": [categories in legend order]}
-    Category values are matched case-insensitively against
-    CATEGORY_PALETTES and reported with the palette's canonical
-    spelling; values missing from the palette get UNKNOWN_CATEGORY_COLOR
-    (languages with no CSV row / blank value are labelled 'unknown')."""
+    """None for color_by 'none'; otherwise per-point categories/colours,
+    legend title and legend order (see module docstring)."""
     spec = COLOR_BY_OPTIONS.get(color_by)
     if spec is None:
         return None
@@ -578,7 +513,7 @@ def build_coloring(langs, langs_csv_data, color_by):
     canon_by_lower = {k.lower(): k for k in palette}
 
     categories, colors = [], []
-    split_first = {}  # split category -> its left-hand palette key, for legend ordering
+    split_first = {}
     for lang in langs:
         raw = (langs_csv_data.get(lang, {}).get(csv_col) or "").strip()
         canon = canon_by_lower.get(raw.lower())
@@ -588,8 +523,6 @@ def build_coloring(langs, langs_csv_data, color_by):
             colors.append(palette[canon])
         elif (m_range and m_range.group(1).lower() in canon_by_lower
               and m_range.group(2).lower() in canon_by_lower):
-            # Range value, e.g. "1-2": a (left, right) colour pair ->
-            # drawn as a half-and-half marker.
             lo = canon_by_lower[m_range.group(1).lower()]
             hi = canon_by_lower[m_range.group(2).lower()]
             cat = f"{lo}-{hi}"
@@ -600,8 +533,6 @@ def build_coloring(langs, langs_csv_data, color_by):
             categories.append(raw or "unknown")
             colors.append(UNKNOWN_CATEGORY_COLOR)
 
-    # Legend order: palette order, each split category placed right
-    # after its left-hand end (1, 1-2, 2, 2-3, 3), then anything unknown.
     present = set(categories)
     order = []
     for k in palette:
@@ -618,9 +549,7 @@ def is_split_color(color):
 
 
 def category_legend_handles(coloring):
-    """One round-marker legend entry per category present, labelled
-    with its point count, in the coloring's legend order. Range
-    categories get a half-and-half marker matching the plot."""
+    """One legend entry per category present, with its point count."""
     counts = Counter(coloring["categories"])
     color_of = dict(zip(coloring["categories"], coloring["colors"]))
     handles = []
@@ -635,8 +564,7 @@ def category_legend_handles(coloring):
 
 
 def load_density_json(path):
-    """Returns {language_code: {stat_name: value}} as already produced
-    by char_density.py."""
+    """{language_code: {stat_name: value}} as produced by char_density.py."""
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
@@ -659,12 +587,8 @@ def load_spread_json(path, fill_nulls=None):
 
 def merge_external_columns(rows, langs_csv_data, density_data,
                             spread_data=None, spread_customenc_data=None):
-    """Mutates each row dict in place, adding whichever of
-    LANGS_CSV_COLUMNS / DENSITY_JSON_COLUMNS / SPREAD_JSON_FIELDS /
-    SPREAD_CUSTOMENC_JSON_FIELDS are available for that row's language.
-    Returns the set of column names actually added (i.e. that were found
-    for at least one language, with a non-null value), for
-    available_columns."""
+    """Adds the external columns available for each row's language (in
+    place). Returns the set of column names actually added."""
     added = set()
     spread_data = spread_data or {}
     spread_customenc_data = spread_customenc_data or {}
@@ -673,7 +597,7 @@ def merge_external_columns(rows, langs_csv_data, density_data,
         if lang in langs_csv_data:
             src = langs_csv_data[lang]
             for col in LANGS_CSV_COLUMNS:
-                if col in src and src[col] != "":
+                if col in src and src[col] is not None and src[col] != "":
                     row[col] = src[col]
                     added.add(col)
         if lang in density_data:
@@ -697,21 +621,61 @@ def merge_external_columns(rows, langs_csv_data, density_data,
     return added
 
 
-# Raw byte-count columns that get a companion "<column>_rank" version
-# computed automatically -- see add_rank_columns.
+# --- from --wordlen-json (word_length_stats.py) ---
+# Languages with whitespace-delimited words (has_whitespace_words: true,
+# incl. Vietnamese and Korean) use the "whitespace" values; languages
+# without (Chinese, Japanese, Thai) use the MEAN over all their
+# segmenters, whitespace excluded.
+
+def _pick_word_value(method_values, has_whitespace_words):
+    vals = method_values or {}
+    if has_whitespace_words:
+        return vals.get("whitespace")
+    seg = [v for m, v in vals.items() if m != "whitespace" and v is not None]
+    return sum(seg) / len(seg) if seg else None
+
+
+def load_wordlen_json(path):
+    """{lang: {word_length, n_words, n_char, char_ratio, word_ratio, _source}}."""
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    out = {}
+    for lang, res in data.items():
+        if not isinstance(res, dict):
+            continue
+        ws = res.get("has_whitespace_words", True)
+        rel = res.get("rel_to_eng") or {}
+        segs = [m for m in (res.get("n_words") or {}) if m != "whitespace"]
+        out[lang] = {
+            "word_length": _pick_word_value(res.get("avg_word_length"), ws),
+            "n_words": _pick_word_value(res.get("n_words"), ws),
+            "n_char": res.get("n_char"),
+            "char_ratio": rel.get("n_char"),
+            "word_ratio": _pick_word_value(rel.get("n_words"), ws),
+            "_source": "whitespace" if ws else f"mean of {len(segs)} segmenter(s) ({', '.join(segs)})",
+        }
+    return out
+
+
+def merge_wordlen_columns(rows, wordlen_data):
+    """Adds WORDLEN_COLUMNS to each row; returns the columns added."""
+    added = set()
+    for row in rows:
+        src = wordlen_data.get(row.get("Language", ""))
+        if not src:
+            continue
+        for col in WORDLEN_COLUMNS:
+            if src.get(col) is not None:
+                row[col] = str(src[col])
+                added.add(col)
+    return added
+
+
 RANK_SOURCE_COLUMNS = ["imbalanced_allocation_bytes", "balanced_allocation_bytes"]
 
 
 def add_rank_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
-    """For each column name in source_columns, adds a companion
-    "<column>_rank" field to every row that has a numeric value for it:
-    rank 1 = the LARGEST value (e.g. most training data), matching this
-    project's established "#1 = most bytes" convention. This is what
-    training_data / training_data_balanced resolve to by default (see
-    COLUMN_ALIASES) -- raw byte counts span several orders of magnitude
-    across languages, which would dominate/skew a correlation plot far
-    more than reflecting anything meaningful about the relationship
-    being tested. Returns the set of rank column names actually added."""
+    """Adds '<column>_rank' (1 = largest value) for each source column."""
     added = set()
     for col in source_columns:
         pairs = []
@@ -725,7 +689,7 @@ def add_rank_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
                 continue
         if not pairs:
             continue
-        pairs.sort(key=lambda p: -p[1])  # descending: biggest value = rank 1
+        pairs.sort(key=lambda p: -p[1])
         rank_by_lang = {lang: i + 1 for i, (lang, _) in enumerate(pairs)}
         rank_col = f"{col}_rank"
         for row in rows:
@@ -737,18 +701,7 @@ def add_rank_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
 
 
 def add_log_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
-    """For each column name in source_columns, adds a companion
-    "<column>_log10" field (log base 10 of the raw value) to every row
-    with a positive numeric value for it. Unlike the _rank companions,
-    this PRESERVES relative magnitude -- appropriate when the underlying
-    values plausibly follow a geometric/power-law spread (as a
-    deliberately skewed training-data allocation typically does) and you
-    want to test whether each order-of-magnitude change has a roughly
-    constant effect, rather than only testing whether the relationship
-    is monotonic (which is what the _rank version tests -- rank
-    correlation is mathematically identical to Spearman's rho). Values
-    <= 0 are skipped (log undefined) with a note printed once. Returns
-    the set of log column names actually added."""
+    """Adds '<column>_log10' for each source column (positive values)."""
     added = set()
     for col in source_columns:
         log_col = f"{col}_log10"
@@ -772,11 +725,8 @@ def add_log_columns(rows, source_columns=RANK_SOURCE_COLUMNS):
 
 
 def parse_premium_txt(path):
-    """Returns (present_headers, rows) where rows is a list of
-    {header: value_string} dicts, in file order (Language is a string,
-    everything else is left as a string -- '' for a blank/missing
-    field). See module docstring for why this uses header-position
-    slicing rather than whitespace-splitting."""
+    """Returns (present_headers, rows) -- see module docstring for why
+    this uses header-position slicing rather than whitespace-splitting."""
     with open(path, encoding="utf-8") as f:
         lines = f.readlines()
 
@@ -809,7 +759,7 @@ def parse_premium_txt(path):
     rows = []
     for line in lines[header_idx + 1:]:
         if not line.strip():
-            break  # blank line marks end of data rows
+            break
         if line.lstrip().startswith("#"):
             break
         row = {}
@@ -824,11 +774,9 @@ def parse_premium_txt(path):
 def load_extra_premium_files(specs, char_level=False):
     """Loads additional premiums files given as NAME=FILE (repeatable
     --extra-premium). FILE is a literal path, or a shorthand
-    'run:threshold' / 'run:threshold:char' (e.g. balanced-custom:mono),
-    resolved via RUN_INFO like the positional argument. Every column
-    except Language is merged in with the suffix _NAME (e.g. Premium ->
-    Premium_mono), so it can be used in --cols / --control-for by that
-    name (case-insensitive). Returns {lang: {column: value}}."""
+    'run:threshold' / 'run:threshold:char' (e.g. balanced-custom:mono).
+    Every column except Language is merged in with the suffix _NAME
+    (e.g. Premium -> Premium_mono). Returns {lang: {column: value}}."""
     merged = defaultdict(dict)
     for spec in specs or []:
         if "=" not in spec:
@@ -859,18 +807,8 @@ def load_extra_premium_files(specs, char_level=False):
 
 
 def parse_col_spec(spec, available_columns):
-    """Parses one --cols/--control-for entry. Supports:
-      - a plain column name/alias
-      - a ratio A/B
-      - log(...) wrapping either of the above, e.g. log(imbalanced_allocation_bytes)
-        or log(mean/variance) -- computes log10 of the underlying values
-        (see add_log_columns for the precomputed training_data_log
-        shortcut, which is usually what you want instead of wrapping the
-        rank-based training_data alias in log() -- log of an already-
-        ordinal rank isn't a meaningful quantity).
-    Returns (kind, payload): ("plain", column_name), ("ratio",
-    (numerator_name, denominator_name)), or ("log", (inner_kind, inner_payload)).
-    """
+    """One --cols/--control-for entry: plain column, ratio A/B, or
+    log(...) around either. Returns (kind, payload)."""
     spec = spec.strip()
     m_log = re.match(r"^log\((.+)\)$", spec, re.IGNORECASE)
     if m_log:
@@ -885,10 +823,8 @@ def parse_col_spec(spec, available_columns):
 
 
 def extract_values(kind, payload, rows):
-    """Returns (values, display_label, langs) -- values as a list of
-    floats, skipping any row where the needed field(s) are blank/missing,
-    non-numeric, or (for log) non-positive. display_label is a human
-    string for axis labels."""
+    """Returns (values, label, langs), skipping rows with missing,
+    non-numeric or (for log) non-positive values."""
     if kind == "log":
         inner_kind, inner_payload = payload
         inner_values, inner_label, inner_langs = extract_values(inner_kind, inner_payload, rows)
@@ -937,11 +873,8 @@ def extract_values(kind, payload, rows):
 
 
 def pearson_r_p(x, y, extra_df_used=0):
-    """Pearson r and its two-tailed p-value. extra_df_used=1 for a
-    partial correlation computed from residuals (one degree of freedom
-    already spent fitting the control regression) -- see the spread/
-    premium/budget analysis earlier in this project for why this
-    correction matters."""
+    """Pearson r and two-tailed p. extra_df_used = degrees of freedom
+    already spent on control regressions (1 per control variable)."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     n = len(x)
@@ -965,27 +898,58 @@ def pearson_r_p(x, y, extra_df_used=0):
 
 
 def p_str(p):
-    if p != p:  # NaN check
+    if p != p:  # NaN
         return "n/a"
     return f"{p:.3f}" if p >= 0.001 else f"{p:.1e}"
 
 
-def residual_breakdown(x, y, langs, langs_csv_data, min_per_group=3):
-    """Breaks the residuals of the least-squares line y ~ x down by
-    single- vs. multi-byte languages (see SINGLE_BYTE_VALUES). Returns
-    None if either group has fewer than min_per_group languages (e.g.
-    a filtered plot); otherwise a dict with, per group, n, mean
-    residual, RMSE, largest deviation, and share of the unexplained
-    variance split into offset and scatter -- plus an out-of-sample
-    check (line fitted to multi-byte languages only, applied to the
-    single-byte ones). Languages with no Approx_Bytes_Per_Char value
-    count towards the fit but not towards either group."""
+# ---------------------------------------------------------------------------
+# Groups (--group-by), residual breakdown and common-slope fit
+# ---------------------------------------------------------------------------
+
+def assign_groups(langs, langs_csv_data, group_by):
+    """Per-language group label (or None if unknown) for --group-by
+    'bytes' / 'dense'. Returns (labels, (first_label, second_label),
+    footnote), or (None, None, None) for 'none'."""
+    if group_by not in GROUP_DEFS:
+        return None, None, None
+    first, second, note = GROUP_DEFS[group_by]
+    labels = []
+    for l in langs:
+        row = langs_csv_data.get(l, {})
+        if group_by == "bytes":
+            b = (row.get("Approx_Bytes_Per_Char") or "").strip()
+            labels.append(None if b == "" else (first if b in SINGLE_BYTE_VALUES else second))
+        else:
+            st = (row.get("Script_Type") or "").strip().lower()
+            labels.append(None if st == "" else (second if st in DENSE_SCRIPT_TYPES else first))
+    return labels, (first, second), note
+
+
+def _group_stats(resid, mask, langs, total_ss):
+    e = resid[mask]
+    m = float(e.mean())
+    idx_max = int(np.argmax(np.abs(e)))
+    return {
+        "n": int(mask.sum()),
+        "mean_resid": m,
+        "rmse": float(np.sqrt((e ** 2).mean())),
+        "max_abs": float(abs(e[idx_max])),
+        "max_lang": [l for l, k in zip(langs, mask) if k][idx_max],
+        "share": float((e ** 2).sum()) / total_ss,
+        "offset_share": len(e) * m ** 2 / total_ss,
+        "scatter_share": float(((e - m) ** 2).sum()) / total_ss,
+    }
+
+
+def residual_breakdown(x, y, langs, groups, order, min_per_group=3):
+    """Breaks the residuals of the single joint line y ~ x down by the two
+    groups in `order` (labels from assign_groups). Returns None if either
+    group has fewer than min_per_group languages."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
-    bpc = [(langs_csv_data.get(l, {}).get("Approx_Bytes_Per_Char") or "").strip() for l in langs]
-    single = np.array([b in SINGLE_BYTE_VALUES for b in bpc])
-    multi = np.array([b != "" and b not in SINGLE_BYTE_VALUES for b in bpc])
-    if single.sum() < min_per_group or multi.sum() < min_per_group:
+    masks = [np.array([g == lab for g in groups]) for lab in order]
+    if any(m.sum() < min_per_group for m in masks):
         return None
 
     coefs = np.polyfit(x, y, 1)
@@ -994,32 +958,19 @@ def residual_breakdown(x, y, langs, langs_csv_data, min_per_group=3):
     if total_ss <= 0:
         return None
 
-    def group_stats(mask):
-        e = resid[mask]
-        m = float(e.mean())
-        idx_max = int(np.argmax(np.abs(e)))
-        return {
-            "n": int(mask.sum()),
-            "mean_resid": m,
-            "rmse": float(np.sqrt((e ** 2).mean())),
-            "max_abs": float(abs(e[idx_max])),
-            "max_lang": [l for l, k in zip(langs, mask) if k][idx_max],
-            "share": float((e ** 2).sum()) / total_ss,
-            "offset_share": len(e) * m ** 2 / total_ss,
-            "scatter_share": float(((e - m) ** 2).sum()) / total_ss,
-        }
-
     out = {
         "slope_all": float(coefs[0]), "intercept_all": float(coefs[1]),
-        "single": group_stats(single), "multi": group_stats(multi),
+        "order": list(order),
+        "groups": [dict(label=lab, **_group_stats(resid, m, langs, total_ss))
+                   for lab, m in zip(order, masks)],
     }
-    out["offset_share"] = out["single"]["offset_share"] + out["multi"]["offset_share"]
+    out["offset_share"] = sum(g["offset_share"] for g in out["groups"])
 
-    # Out-of-sample: fit on multi-byte languages alone, predict single-byte.
-    coefs_mb = np.polyfit(x[multi], y[multi], 1)
-    e_oos = y[single] - np.polyval(coefs_mb, x[single])
+    # Out-of-sample: fit on the second group alone, predict the first.
+    coefs_b = np.polyfit(x[masks[1]], y[masks[1]], 1)
+    e_oos = y[masks[0]] - np.polyval(coefs_b, x[masks[0]])
     out["oos"] = {
-        "slope_multi": float(coefs_mb[0]), "intercept_multi": float(coefs_mb[1]),
+        "slope": float(coefs_b[0]), "intercept": float(coefs_b[1]),
         "mean_resid": float(e_oos.mean()),
         "rmse": float(np.sqrt((e_oos ** 2).mean())),
         "max_abs": float(np.abs(e_oos).max()),
@@ -1027,67 +978,130 @@ def residual_breakdown(x, y, langs, langs_csv_data, min_per_group=3):
     return out
 
 
-def print_breakdown(bd, oos="auto"):
-    """Full residual breakdown as a readable block on stdout. oos:
-    'auto' / 'always' / 'never' -- whether to include the out-of-sample
-    check (see module docstring)."""
+def print_breakdown(bd, oos="auto", note=""):
+    """Residual breakdown of the joint line as a readable block."""
     name = lambda c: CODE_TO_LANG_NAME.get(c, c)
-    print("\nResidual breakdown (line fitted to all plotted languages, "
+    print("\nResidual breakdown (single line fitted to all plotted languages, "
           f"slope {bd['slope_all']:.3f}, intercept {bd['intercept_all']:.3f}):")
-    print(f"  {'group':<12}{'n':>3}  {'mean res.':>9}  {'RMSE':>6}  {'max |res|':>18}  "
+    print(f"  {'group':<12}{'n':>3}  {'mean res.':>9}  {'RMSE':>6}  {'max |res|':>24}  "
           f"{'share':>6}  {'offset':>6}  {'scatter':>7}")
-    for key, label in (("single", "single-byte"), ("multi", "multi-byte")):
-        g = bd[key]
+    for g in bd["groups"]:
         max_str = f"{g['max_abs']:.3f} ({name(g['max_lang'])})"
-        print(f"  {label:<12}{g['n']:>3}  {g['mean_resid']:>+9.3f}  {g['rmse']:>6.3f}  {max_str:>18}  "
-              f"{g['share']:>6.1%}  {g['offset_share']:>6.1%}  {g['scatter_share']:>7.1%}")
+        print(f"  {g['label']:<12}{g['n']:>3}  {g['mean_resid']:>+9.3f}  {g['rmse']:>6.3f}  "
+              f"{max_str:>24}  {g['share']:>6.1%}  {g['offset_share']:>6.1%}  "
+              f"{g['scatter_share']:>7.1%}")
     print(f"  total group offset: {bd['offset_share']:.1%} of the unexplained variance")
     run_oos = oos == "always" or (oos == "auto" and bd["offset_share"] < OOS_OFFSET_THRESHOLD)
-    if not run_oos:
-        if oos == "auto":
-            print(f"  (out-of-sample check skipped: group offset >= {OOS_OFFSET_THRESHOLD:.0%}; "
-                  f"use --oos always to run it anyway)")
-        print("  (single-byte = Approx_Bytes_Per_Char 1 or 1-2; multi-byte = 2, 2-3, 3)")
-        return
-    o = bd["oos"]
-    print(f"  Out-of-sample: line fitted to multi-byte languages only "
-          f"(slope {o['slope_multi']:.3f}, intercept {o['intercept_multi']:.3f})")
-    print(f"    predicting single-byte languages: mean res. {o['mean_resid']:+.3f}, "
-          f"RMSE {o['rmse']:.3f}, max |res| {o['max_abs']:.3f}")
-    print("  (single-byte = Approx_Bytes_Per_Char 1 or 1-2; multi-byte = 2, 2-3, 3)")
-
-
-def _signed(v, digits=2):
-    """'+0.12' / '\u22120.12', and '0.00' instead of '-0.00'."""
-    if round(v, digits) == 0:
-        return f"{0:.{digits}f}"
-    return f"{v:+.{digits}f}".replace("-", "\u2212")
+    if run_oos:
+        o = bd["oos"]
+        a, b = bd["order"]
+        print(f"  Out-of-sample: line fitted to {b} languages only "
+              f"(slope {o['slope']:.3f}, intercept {o['intercept']:.3f})")
+        print(f"    predicting {a} languages: mean res. {o['mean_resid']:+.3f}, "
+              f"RMSE {o['rmse']:.3f}, max |res| {o['max_abs']:.3f}")
+    elif oos == "auto":
+        print(f"  (out-of-sample check skipped: group offset >= {OOS_OFFSET_THRESHOLD:.0%}; "
+              f"use --oos always to run it anyway)")
+    if note:
+        print(f"  ({note})")
 
 
 def breakdown_legend_lines(bd):
-    """Compact summary of the breakdown for the in-plot legend: each
-    group's share of the unexplained variance, split into offset (group
-    systematically above/below the line) + scatter (spread around the
-    group's own level). All four parts sum to 100%. One decimal, so the
-    parts visibly add up. Note that how the offset divides between the
-    two groups follows from the group sizes alone; the TOTAL offset and
-    the per-group scatter are the interpretable numbers."""
-    s, m = bd["single"], bd["multi"]
-    return [
-        "Unexplained variance:",
-        f"   single-byte {s['share']:.1%} = offset {s['offset_share']:.1%} "
-        f"+ scatter {s['scatter_share']:.1%}",
-        f"   multi-byte {m['share']:.1%} = offset {m['offset_share']:.1%} "
-        f"+ scatter {m['scatter_share']:.1%}",
-    ]
+    """Compact summary of the joint-line breakdown for the legend: each
+    group's share of the unexplained variance = offset + scatter."""
+    lines = ["Unexplained variance (joint line):"]
+    for g in bd["groups"]:
+        lines.append(f"   {g['label']} {g['share']:.1%} = offset {g['offset_share']:.1%} "
+                     f"+ scatter {g['scatter_share']:.1%}")
+    return lines
 
+
+def group_fit(x, y, langs, groups, order, min_per_group=3):
+    """Common slope + per-group intercept: y = b*x + a_g. Returns None if
+    either group has fewer than min_per_group languages (languages with
+    no group are left out of this fit)."""
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    keep = np.array([g in order for g in groups])
+    x, y = x[keep], y[keep]
+    g_arr = [g for g in groups if g in order]
+    l_arr = [l for l, k in zip(langs, keep) if k]
+    masks = [np.array([g == lab for g in g_arr]) for lab in order]
+    if any(m.sum() < min_per_group for m in masks):
+        return None
+
+    # Design: x plus one indicator per group (no separate intercept).
+    X = np.column_stack([x] + [m.astype(float) for m in masks])
+    coefs, *_ = np.linalg.lstsq(X, y, rcond=None)
+    slope, intercepts = float(coefs[0]), [float(c) for c in coefs[1:]]
+    pred = X @ coefs
+    resid = y - pred
+    ss_res = float((resid ** 2).sum())
+    ss_tot = float(((y - y.mean()) ** 2).sum())
+    joint = np.polyfit(x, y, 1)
+    ss_joint = float(((y - np.polyval(joint, x)) ** 2).sum())
+
+    # Partial r of x and y controlling for the group = correlation of
+    # the within-group deviations (one df spent on the group indicator).
+    x_w = x.copy()
+    y_w = y.copy()
+    for m in masks:
+        x_w[m] -= x[m].mean()
+        y_w[m] -= y[m].mean()
+    r_p, p_p = pearson_r_p(x_w, y_w, extra_df_used=len(order) - 1)
+
+    separate = []
+    for lab, m in zip(order, masks):
+        s, i = np.polyfit(x[m], y[m], 1)
+        separate.append({"label": lab, "slope": float(s), "intercept": float(i),
+                         "x_min": float(x[m].min()), "x_max": float(x[m].max())})
+
+    groups_out = []
+    for lab, m, a in zip(order, masks, intercepts):
+        e = resid[m]
+        idx_max = int(np.argmax(np.abs(e)))
+        groups_out.append({
+            "label": lab, "n": int(m.sum()), "intercept": a,
+            "rmse": float(np.sqrt((e ** 2).mean())),
+            "share": float((e ** 2).sum()) / ss_res if ss_res > 0 else float("nan"),
+            "max_abs": float(abs(e[idx_max])),
+            "max_lang": [l for l, k in zip(l_arr, m) if k][idx_max],
+            "x_min": float(x[m].min()), "x_max": float(x[m].max()),
+        })
+    return {
+        "slope": slope, "order": list(order), "groups": groups_out,
+        "offset": intercepts[1] - intercepts[0],
+        "r2": 1 - ss_res / ss_tot if ss_tot > 0 else float("nan"),
+        "r2_joint": 1 - ss_joint / ss_tot if ss_tot > 0 else float("nan"),
+        "partial_r": r_p, "partial_p": p_p,
+        "separate": separate,
+    }
+
+
+def print_group_fit(gf, note=""):
+    name = lambda c: CODE_TO_LANG_NAME.get(c, c)
+    a, b = gf["order"]
+    print(f"\nCommon slope + group offset (y = slope*x + intercept_group):")
+    print(f"  common slope {gf['slope']:.3f}; offset {b} vs. {a}: {gf['offset']:+.3f}")
+    for g in gf["groups"]:
+        print(f"    {g['label']:<12} n={g['n']:<3} intercept {g['intercept']:.3f}  "
+              f"RMSE {g['rmse']:.3f}  max |res| {g['max_abs']:.3f} ({name(g['max_lang'])})  "
+              f"share of remaining unexplained variance {g['share']:.1%}")
+    print(f"  R^2: {gf['r2']:.3f} (single joint line: {gf['r2_joint']:.3f})")
+    print(f"  partial r(x, y | group) = {gf['partial_r']:.4f}  r^2 = {gf['partial_r'] ** 2:.4f}  "
+          f"p = {p_str(gf['partial_p'])}")
+    sep = ", ".join(f"{s['label']} {s['slope']:.3f}" for s in gf["separate"])
+    print(f"  slopes if fitted separately: {sep}")
+    if note:
+        print(f"  ({note})")
+
+
+# ---------------------------------------------------------------------------
+# Plotting
+# ---------------------------------------------------------------------------
 
 def label_points(ax, x, y, langs, avoid=None):
-    """Language-name labels next to each point. Uses adjustText to
-    avoid overlaps (with each other, the points, and the artists in
-    'avoid', e.g. the legend) if it's installed (pip install
-    adjustText); otherwise falls back to stacking labels of points that
-    share an x value. Returns the list of label artists."""
+    """Language-name labels next to each point (adjustText if installed)."""
     names = [CODE_TO_LANG_NAME.get(l, l) for l in langs] if langs else []
     if not names:
         return []
@@ -1102,11 +1116,9 @@ def label_points(ax, x, y, langs, avoid=None):
         arrows = dict(arrowstyle="-", color="#999999", lw=0.6)
         objs = [a for a in (avoid or []) if a is not None]
         try:
-            # expand: keep labels clear of the (fairly large) markers;
-            # objects: push labels out from under the legend
             adjust_text(texts, x=list(x), y=list(y), ax=ax, expand=(1.4, 1.8),
                         objects=objs or None, arrowprops=arrows)
-        except TypeError:  # older adjustText versions: no 'expand'/'objects'
+        except TypeError:
             adjust_text(texts, x=list(x), y=list(y), ax=ax, arrowprops=arrows)
         return texts
 
@@ -1126,15 +1138,12 @@ def label_points(ax, x, y, langs, avoid=None):
 
 def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
                      coloring=None, show_category_legend=True, subtitle=None,
-                     breakdown=None, invert_x=False, invert_y=False, compact=False):
-    """coloring: None (single colour) or the dict from build_coloring,
-    aligned point-for-point with x/y/langs. show_category_legend=False
-    colours the points but leaves the category legend to the caller
-    (used by the 6-panel grid, which draws one shared legend).
-    breakdown: optional dict from residual_breakdown, summarised in the
-    legend below the fit line. xlabel/ylabel/title are used as given
-    (pass readable labels, see pretty_label). compact=True uses smaller
-    fonts, for the multi-panel grid."""
+                     breakdown=None, invert_x=False, invert_y=False, compact=False,
+                     groupfit=None):
+    """Scatter plot with regression line and one combined legend.
+    groupfit: optional dict from group_fit -- draws one parallel line per
+    group (common slope) and lists them in the legend; the joint line is
+    then drawn lighter for reference."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     r, p = pearson_r_p(x, y, extra_df_used=extra_df_used)
@@ -1149,19 +1158,12 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
         if solid:
             ax.scatter(x[solid], y[solid], c=[cols[i] for i in solid], s=POINT_SIZE,
                        edgecolors="#333333", linewidths=0.8, zorder=3)
-        # scatter() can't do two-colour markers, so range categories
-        # (e.g. "1-2") are drawn one by one with plot(): left half in
-        # the first colour, right half in the second. markersize=sqrt(s)
-        # keeps them the same size as the scatter points.
         for i, col in enumerate(cols):
             if is_split_color(col):
                 ax.plot(x[i], y[i], marker="o", linestyle="", markersize=math.sqrt(POINT_SIZE),
                         fillstyle="left", markerfacecolor=col[0], markerfacecoloralt=col[1],
                         markeredgecolor="#333333", markeredgewidth=0.8, zorder=3)
 
-    # One combined legend: category markers (if any), the fit line, and
-    # the residual breakdown (if any) -- a single box, so separate
-    # legends can't overlap each other.
     handles = []
     if coloring is not None and show_category_legend:
         handles += category_legend_handles(coloring)
@@ -1169,17 +1171,34 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
     if len(x) >= 2:
         coefs = np.polyfit(x, y, 1)
         x_line = np.linspace(x.min(), x.max(), 100)
-        fit_handle, = ax.plot(x_line, np.polyval(coefs, x_line), linestyle="--",
-                               color="red", linewidth=1.8, zorder=2,
-                               label=f"Linear fit: r = {0 if round(r, 2) == 0 else r:.2f}, "
-                                     f"r$^2$ = {r * r:.2f}, p = {p_str(p)}")
+        joint_kw = dict(color="red", linewidth=1.8, alpha=1.0)
+        if groupfit is not None:
+            joint_kw = dict(color="#999999", linewidth=1.4, alpha=0.8)
+        fit_handle, = ax.plot(x_line, np.polyval(coefs, x_line), linestyle="--", zorder=2,
+                               label=f"{'Joint fit' if groupfit else 'Linear fit'}: "
+                                     f"r = {0 if round(r, 2) == 0 else r:.2f}, "
+                                     f"r$^2$ = {r * r:.2f}, p = {p_str(p)}",
+                               **joint_kw)
         handles.append(fit_handle)
         fit_line = fit_handle
+    if groupfit is not None:
+        for g, col in zip(groupfit["groups"], GROUP_LINE_COLORS):
+            xs = np.linspace(g["x_min"], g["x_max"], 50)
+            h, = ax.plot(xs, groupfit["slope"] * xs + g["intercept"], linestyle="-",
+                         color=col, linewidth=2.2, zorder=2,
+                         label=f"{g['label']} (n={g['n']}): intercept {g['intercept']:.2f}")
+            handles.append(h)
+        rp = groupfit["partial_r"]
+        handles.append(Line2D([], [], linestyle="none", marker="none",
+                              label=f"Common slope {groupfit['slope']:.2f}, offset "
+                                    f"{groupfit['offset']:+.2f}: R$^2$ = {groupfit['r2']:.2f}"))
+        handles.append(Line2D([], [], linestyle="none", marker="none",
+                              label=f"Partial r (controlling for group) = {rp:.2f}, "
+                                    f"p = {p_str(groupfit['partial_p'])}"))
     if breakdown is not None:
         handles += [Line2D([], [], linestyle="none", marker="none", label=line)
                     for line in breakdown_legend_lines(breakdown)]
-    # Titles, labels and axis orientation first, so the legend and the
-    # point labels below are placed on the final layout.
+
     ax.set_xlabel(xlabel, fontsize=FS_AXIS_LABEL * scale)
     ax.set_ylabel(ylabel, fontsize=FS_AXIS_LABEL * scale)
     ax.tick_params(labelsize=FS_TICKS * scale)
@@ -1191,18 +1210,11 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
         ax.set_title(title, fontsize=FS_TITLE * scale, fontweight="bold")
     ax.grid(True, linestyle="--", alpha=0.35, zorder=0)
 
-    # Autocorrelation reads more naturally decreasing left-to-right
-    # (more positive/persistent on the left, more negative/choppy on
-    # the right) rather than matplotlib's default increasing order.
-    # Decided by the caller from the RAW column labels (see
-    # involves_autocorr), since the displayed labels are prettified.
     if invert_x:
         ax.invert_xaxis()
     if invert_y:
         ax.invert_yaxis()
 
-    # Legend always inside the axes, bottom left. It may cover data --
-    # warn_legend_overlap() reports that after the final layout.
     legend = None
     if handles:
         title_kw = {}
@@ -1214,11 +1226,10 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
             legend = ax.legend(alignment="left", **legend_kw)  # matplotlib >= 3.6
         except TypeError:
             legend = ax.legend(**legend_kw)
-        legend.set_zorder(5)  # drawn above points and labels
+        legend.set_zorder(5)
 
     texts = label_points(ax, x, y, langs, avoid=[legend])
 
-    # Kept for warn_legend_overlap(), which runs after tight_layout().
     ax._overlap_check = dict(legend=legend, x=x, y=y, langs=list(langs or []),
                              texts=texts, fit_line=fit_line, title=title)
 
@@ -1226,9 +1237,7 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
 
 
 def warn_legend_overlap(fig, ax, where=""):
-    """Prints a warning to stderr if the legend of ax (placed by
-    scatter_with_fit) covers any data point, point label, or part of
-    the regression line. Call after the final layout (tight_layout)."""
+    """Warns on stderr if the legend covers points, labels or the fit line."""
     info = getattr(ax, "_overlap_check", None)
     if not info or info["legend"] is None:
         return
@@ -1237,7 +1246,6 @@ def warn_legend_overlap(fig, ax, where=""):
     box = info["legend"].get_window_extent(renderer)
     name = lambda c: CODE_TO_LANG_NAME.get(c, c)
 
-    # points: circle of radius ~ marker size overlapping the box
     radius = math.sqrt(POINT_SIZE) / 2 * fig.dpi / 72
     pts = ax.transData.transform(np.column_stack([info["x"], info["y"]]))
     hit_points = [name(l) for (px, py), l in zip(pts, info["langs"])
@@ -1265,21 +1273,19 @@ def warn_legend_overlap(fig, ax, where=""):
 
 
 def involves_autocorr(raw_label):
-    """True if a raw column label (plain, ratio, log or residual)
-    involves lag-1 autocorrelation -- see the axis inversion note in
-    scatter_with_fit."""
+    """True if a raw column label involves lag-1 autocorrelation."""
     return "EntropyAutocorr1" in raw_label
 
 
 def plot_plain(x, y, x_label, y_label, langs, subtitle, out_path, coloring=None,
-               breakdown=None):
+               breakdown=None, groupfit=None):
     """x_label/y_label are the RAW column labels (prettified here)."""
     fig, ax = plt.subplots(figsize=(10.5, 8))
     r, p = scatter_with_fit(ax, x, y, langs, pretty_label(x_label), pretty_label(y_label),
                              f"{pretty_label(y_label)} vs. {pretty_label(x_label)}",
                              coloring=coloring, subtitle=subtitle, breakdown=breakdown,
                              invert_x=involves_autocorr(x_label),
-                             invert_y=involves_autocorr(y_label))
+                             invert_y=involves_autocorr(y_label), groupfit=groupfit)
     plt.tight_layout()
     warn_legend_overlap(fig, ax, os.path.basename(out_path))
     plt.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
@@ -1289,23 +1295,21 @@ def plot_plain(x, y, x_label, y_label, langs, subtitle, out_path, coloring=None,
 
 def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_path,
                  out_path_single=None, coloring=None):
-    """x_label/y_label/ctrl_label are the RAW column labels."""
+    """6-panel partial-correlation walkthrough plus a separate
+    residual-vs-residual plot. Labels are the RAW column labels."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     c = np.asarray(ctrl, dtype=float)
     px, py, pc = pretty_label(x_label), pretty_label(y_label), pretty_label(ctrl_label)
     inv_x, inv_y, inv_c = (involves_autocorr(l) for l in (x_label, y_label, ctrl_label))
 
-    # 1. Compute residuals
     x_fit = np.polyfit(c, x, 1)
     x_resid = x - np.polyval(x_fit, c)
 
     y_fit = np.polyfit(c, y, 1)
     y_resid = y - np.polyval(y_fit, c)
 
-    # --- SAVE SEPARATE LEFTOVER VS LEFTOVER PLOT ---
     if out_path_single is None:
-        # Default name if not provided: replaces .png with _partial_only.png
         base, ext = os.path.splitext(out_path)
         out_path_single = f"{base}_partial_only{ext}"
 
@@ -1322,9 +1326,6 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
     plt.savefig(out_path_single, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig_single)
 
-    # --- BUILD 6-PANEL WALKTHROUGH GRID ---
-    # Points are coloured in every panel, but the category legend is
-    # drawn once for the whole figure (below the grid) instead of six times.
     fig, axes = plt.subplots(2, 3, figsize=(20, 13))
     kw = dict(coloring=coloring, show_category_legend=False, compact=True)
 
@@ -1374,193 +1375,81 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
     return r_raw, p_raw, r_partial, p_partial
 
 
-
-# --- from --wordlen-json (default: word_length_stats.json, produced by
-# word_length_stats.py) ---
-# Languages with whitespace-delimited words (has_whitespace_words: true,
-# incl. Vietnamese and Korean) use the "whitespace" values; languages
-# without (Chinese, Japanese, Thai) use the MEAN over all their
-# segmenters, whitespace excluded.
-WORDLEN_COLUMNS = ["word_length", "n_words", "n_char", "char_ratio", "word_ratio"]
-COLUMN_ALIASES.update({
-    "word_length": "word_length", "avg_word_length": "word_length",
-    "n_words": "n_words", "words": "n_words",
-    "n_char": "n_char", "total_chars": "n_char",
-    "char_ratio": "char_ratio",
-    "word_ratio": "word_ratio",
-})
-DISPLAY_NAMES.update({
-    "word_length": "Average word length (characters)",
-    "n_words": "Words",
-    "n_char": "Characters",
-    "char_ratio": "Character ratio (rel. to English)",
-    "word_ratio": "Word ratio (rel. to English)",
-})
-
-
-def _pick_word_value(method_values, has_whitespace_words):
-    """'whitespace' value for whitespace languages, otherwise the mean
-    over all non-whitespace segmenters."""
-    vals = method_values or {}
-    if has_whitespace_words:
-        return vals.get("whitespace")
-    seg = [v for m, v in vals.items() if m != "whitespace" and v is not None]
-    return sum(seg) / len(seg) if seg else None
-
-
-def load_wordlen_json(path):
-    """Returns {lang: {word_length, n_words, n_char, char_ratio,
-    word_ratio, _source}} from a word_length_stats.py JSON."""
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-    out = {}
-    for lang, res in data.items():
-        if not isinstance(res, dict):
-            continue
-        ws = res.get("has_whitespace_words", True)
-        rel = res.get("rel_to_eng") or {}
-        segs = [m for m in (res.get("n_words") or {}) if m != "whitespace"]
-        out[lang] = {
-            "word_length": _pick_word_value(res.get("avg_word_length"), ws),
-            "n_words": _pick_word_value(res.get("n_words"), ws),
-            "n_char": res.get("n_char"),
-            "char_ratio": rel.get("n_char"),
-            "word_ratio": _pick_word_value(rel.get("n_words"), ws),
-            "_source": "whitespace" if ws else f"mean of {len(segs)} segmenters ({', '.join(segs)})",
-        }
-    return out
-
-
-def merge_wordlen_columns(rows, wordlen_data):
-    """Adds WORDLEN_COLUMNS to each row by language code; returns the
-    set of columns actually added."""
-    added = set()
-    for row in rows:
-        src = wordlen_data.get(row.get("Language", ""))
-        if not src:
-            continue
-        for col in WORDLEN_COLUMNS:
-            if src.get(col) is not None:
-                row[col] = str(src[col])
-                added.add(col)
-    return added
-
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("premium_file",
                          help="A *_premiums_sorted.txt file, OR a shorthand run name -- "
-                              "balanced / imbalanced / balanced-custom (case-insensitive). "
-                              "With a shorthand, --threshold is required and --char-level is "
-                              "used to pick which granularity; the full path (step folder, "
-                              "exact calibrated threshold value, etc.) is resolved automatically "
-                              "from RUN_INFO. A literal path is used exactly as given, unchanged.")
+                              "balanced / imbalanced / balanced-custom (case-insensitive), "
+                              "resolved via RUN_INFO together with --threshold / --char-level.")
     parser.add_argument("--threshold", choices=["mono", "global"], required=True,
-                         help="Which case to use when premium_file is a shorthand run name -- "
-                              "'global' = raw_entropy, 'mono' = raw_monotonicity. Required "
-                              "always (even for a literal path, where it's simply unused) to "
-                              "keep the interface consistent.")
+                         help="'global' = raw_entropy, 'mono' = raw_monotonicity. Required "
+                              "always (unused for a literal path).")
     parser.add_argument("--char-level", action="store_true",
-                         help="When premium_file is a shorthand run name, resolve to the "
-                              "char_level/ version instead of the byte-level (t_anchor) one. "
-                              "Ignored if premium_file is a literal path.")
+                         help="Resolve a shorthand run name to the char_level/ version.")
     parser.add_argument("--cols", required=True,
-                         help="Two comma-separated column specs, X,Y. Each can be a plain "
-                              "column (name or alias) or a ratio A/B. E.g. mean,premium or "
-                              "mean/variance,premium. Columns can come from the premiums file "
-                              "itself, --langs-csv, --density-json, --spread-json, or "
-                              "--spread-customenc-json -- see module docstring.")
+                         help="Two comma-separated column specs, X,Y (plain, ratio A/B, or log(...)).")
     parser.add_argument("--control-for", default=None,
-                         help="A third column spec (same rules as --cols) to control for -- "
-                              "if given, computes a partial correlation and shows the full "
-                              "6-panel step-by-step walkthrough instead of a plain scatter.")
+                         help="A third column spec to control for -- partial correlation with "
+                              "the 6-panel walkthrough instead of a plain scatter.")
     parser.add_argument("--script-type", default=None,
-                         help="Restrict to languages whose 'Script_Type' in --langs-csv matches "
-                              "one of these comma-separated values (case-insensitive): "
-                              "Alphabetic, Abjad, Abugida, Syllabary, Logosyllabary, Logographic. "
-                              "E.g. --script-type alphabetic  or  --script-type abugida,syllabary. "
-                              "Combined with --bytes-per-char by AND. Requires --langs-csv.")
+                         help="Restrict to these Script_Type values (comma-separated, "
+                              "case-insensitive). Requires --langs-csv.")
     parser.add_argument("--bytes-per-char", default=None,
-                         help="Restrict to languages whose 'Approx_Bytes_Per_Char' in --langs-csv "
-                              "matches one of these comma-separated values (exact): "
-                              "1, 1-2, 2, 2-3, 3. E.g. --bytes-per-char 1  or  "
-                              "--bytes-per-char 2,2-3,3. Combined with --script-type by AND. "
-                              "Requires --langs-csv.")
+                         help="Restrict to these Approx_Bytes_Per_Char values (comma-separated, "
+                              "exact). Requires --langs-csv.")
     parser.add_argument("--color-by", default=None,
                          type=lambda s: s.strip().lower().replace("_", "-"),
                          choices=list(COLOR_BY_OPTIONS),
-                         help="Colour-code points by a language property from --langs-csv: "
-                              "'bytes-per-char' (default, Approx_Bytes_Per_Char), 'script-type' "
-                              "(Script_Type), or 'none' (single colour). Colours are fixed per "
-                              "category across all plots (see CATEGORY_PALETTES). If left at the "
-                              "default and --langs-csv can't be loaded, falls back to 'none'.")
+                         help="Colour-code points: 'bytes-per-char' (default), 'script-type', "
+                              "or 'none'.")
+    parser.add_argument("--group-by", default="bytes", choices=["bytes", "dense", "none"],
+                         help="Grouping for the residual breakdown and --group-fit: 'bytes' "
+                              "(single- vs. multi-byte, default), 'dense' (Dense_Script column "
+                              "of --langs-csv), or 'none'.")
+    parser.add_argument("--group-fit", action="store_true",
+                         help="Plain plots: also fit a common slope with one intercept per group "
+                              "(see --group-by), draw the parallel group lines, and report R^2, "
+                              "the offset and the partial correlation controlling for the group.")
     parser.add_argument("--breakdown", default="print", choices=["print", "legend", "off"],
-                         help="Residual breakdown by single- vs. multi-byte languages for plain "
-                              "plots (see module docstring): 'print' (default) prints it, "
-                              "'legend' also summarises it in the plot legend, 'off' disables it. "
-                              "Skipped automatically if either group has < 3 languages.")
+                         help="Residual breakdown of the joint line by group (plain plots): "
+                              "'print' (default), 'legend' (also in the plot legend), or 'off'.")
     parser.add_argument("--legend-loc", default="lower-left",
                          type=lambda v: v.strip().lower().replace("_", "-").replace(" ", "-"),
                          choices=["lower-left", "lower-right", "upper-left", "upper-right",
                                   "lower-center", "upper-center", "center-left", "center-right"],
-                         help="Legend position inside the plot (default: lower-left), e.g. "
-                              "--legend-loc lower-right (a quoted 'lower right' works too). A "
-                              "warning is printed if the legend covers points, labels or the fit line.")
+                         help="Legend position inside the plot (default: lower-left).")
     parser.add_argument("--oos", default="auto", choices=["auto", "always", "never"],
-                         help="Out-of-sample check in the printed breakdown (line fitted to "
-                              "multi-byte languages only, applied to single-byte ones): 'auto' "
-                              "(default) runs it only when the group offset is small, see "
-                              "OOS_OFFSET_THRESHOLD; 'always' / 'never' override. Never shown "
-                              "in the plot legend.")
+                         help="Out-of-sample check in the printed breakdown: 'auto' (default), "
+                              "'always' or 'never'.")
     parser.add_argument("--langs-csv", default="training_setup/langs/langs_chosen.csv",
-                         help="CSV with a 'language_code' column plus training-data/typology "
-                              "columns (ratio_vs_english, documents, utf8_bytes, "
-                              "balanced_allocation_bytes, imbalanced_allocation_bytes, "
-                              "ratio_vs_english_imbalanced, Approx_Bytes_Per_Char), merged in by "
-                              "language code. Silently skipped if not found -- only an error if "
-                              "you then reference a column that would have come from it (or use "
-                              "--script-type / --bytes-per-char / --color-by, which need "
-                              "Script_Type / Approx_Bytes_Per_Char from it). Pass an empty "
-                              "string to disable.")
+                         help="CSV with a 'language_code' column plus typology/training-data "
+                              "columns (incl. Script_Type, Approx_Bytes_Per_Char, Dense_Script). "
+                              "Silently skipped if not found. Empty string disables it.")
     parser.add_argument("--density-json", default="char_density.json",
-                         help="JSON from char_density.py ({lang_code: {n_bytes_total, "
-                              "n_codepoints, codepoints_per_baseline_codepoint, density_index}}), "
-                              "merged in by language code. Same not-found behavior as "
-                              "--langs-csv. Pass an empty string to disable.")
+                         help="JSON from char_density.py. Silently skipped if not found.")
     parser.add_argument("--spread-json", default="byte_position_stats.json",
-                         help="JSON from byte_position_stats.py ({lang_code: {spread, "
-                              "main_length_entropy_sum, ...}}), merged in by language code as "
-                              "the 'spread' / 'spread_sum' columns (see COLUMN_ALIASES). Same "
-                              "not-found behavior as --langs-csv: silently skipped if missing. "
-                              "Pass an empty string to disable.")
+                         help="JSON from byte_position_stats.py ('spread' columns). "
+                              "Silently skipped if not found.")
     parser.add_argument("--spread-customenc-json", default="byte_position_stats_customenc.json",
-                         help="Same as --spread-json, but for a custom (non-UTF-8) encoding run "
-                              "of byte_position_stats.py (--fixed-length), merged in as the "
-                              "'spread_customenc' / 'spread_customenc_sum' columns. Silently "
-                              "skipped if not found. Pass an empty string to disable.")
+                         help="Same for the custom-encoding run ('spread_customenc' columns). "
+                              "Silently skipped if not found.")
     parser.add_argument("--wordlen-json", default="word_length_stats.json",
-                         help="JSON from word_length_stats.py, merged in as word_length, "
-                              "n_words, n_char, char_ratio and word_ratio. Whitespace "
-                              "languages use whitespace counts; Chinese, Japanese and Thai "
-                              "use the mean over their segmenters. Silently skipped if not "
-                              "found. Pass an empty string to disable.")
+                         help="JSON from word_length_stats.py, merged in as word_length, n_words, "
+                              "n_char, char_ratio and word_ratio. Silently skipped if not found.")
     parser.add_argument("--extra-premium", action="append", default=[], metavar="NAME=FILE",
                          help="Merge in another premiums file, with every column suffixed _NAME "
                               "(e.g. Premium_mono). FILE is a literal path or a shorthand like "
                               "balanced-custom:mono (add :char for char level). Repeatable.")
-    parser.add_argument(
-                            "--fill-spread-nulls",
-                            action="store_true",
-                            help="Replace null spread values (e.g. for 1-byte languages) with 1.0 to include all languages in charts.",
-                        )
-    parser.add_argument("--out", default=None, help="Output PNG path (overrides --out-dir entirely -- used exactly as given)")
+    parser.add_argument("--fill-spread-nulls", action="store_true",
+                         help="Replace null spread values (e.g. for 1-byte languages) with 1.0 "
+                              "to include all languages in charts.")
+    parser.add_argument("--out", default=None, help="Output PNG path (overrides --out-dir).")
     parser.add_argument("--out-dir", default="correlation_plots",
-                         help="Directory the auto-derived output filename is saved into (default: correlation_plots/). "
-                              "Created automatically if it doesn't exist. Ignored if --out is given.")
+                         help="Directory for the auto-derived output filename "
+                              "(default: correlation_plots/).")
     args = parser.parse_args()
     global LEGEND_LOC
-    LEGEND_LOC = args.legend_loc.replace("-", " ")  # matplotlib wants "lower right"
+    LEGEND_LOC = args.legend_loc.replace("-", " ")
 
     resolved_path = resolve_premium_path(args.premium_file, args.char_level, args.threshold)
     premium_path = resolved_path if resolved_path is not None else args.premium_file
@@ -1576,7 +1465,6 @@ def main():
     density_data = {}
     if args.density_json and os.path.exists(args.density_json):
         density_data = load_density_json(args.density_json)
-    # Define fallback value depending on flag state
     fill_value = 1.0 if args.fill_spread_nulls else None
 
     spread_data = {}
@@ -1598,7 +1486,6 @@ def main():
                     print(f"Word stats for {CODE_TO_LANG_NAME.get(lang, lang)}: {e['_source']}")
     available_columns |= merge_wordlen_columns(rows, wordlen_data)
 
-
     try:
         extra_data = load_extra_premium_files(args.extra_premium, args.char_level)
     except (ValueError, FileNotFoundError) as e:
@@ -1615,7 +1502,7 @@ def main():
     available_columns |= add_rank_columns(rows)
     available_columns |= add_log_columns(rows)
 
-    if args.color_by is None:  # default: colour by bytes per char if we can
+    if args.color_by is None:
         if langs_csv_data:
             args.color_by = "bytes-per-char"
         else:
@@ -1625,6 +1512,22 @@ def main():
     elif args.color_by != "none" and not langs_csv_data:
         print(f"--color-by {args.color_by} needs Script_Type / Approx_Bytes_Per_Char from "
               f"--langs-csv, but no CSV was loaded (path: '{args.langs_csv}').", file=sys.stderr)
+        sys.exit(1)
+
+    if args.group_by == "dense" and not any(
+            (r.get("Script_Type") or "").strip() for r in langs_csv_data.values()):
+        print(f"--group-by dense needs the Script_Type column of --langs-csv "
+              f"('{args.langs_csv}'), but none was found.", file=sys.stderr)
+        sys.exit(1)
+
+    # Derived 0/1 column, so --control-for dense still works as a control.
+    for row in rows:
+        st = (langs_csv_data.get(row.get("Language", ""), {}).get("Script_Type") or "").strip().lower()
+        if st:
+            row["Dense_Script"] = "1" if st in DENSE_SCRIPT_TYPES else "0"
+            available_columns.add("Dense_Script")
+    if args.group_fit and args.group_by == "none":
+        print("--group-fit needs --group-by bytes or dense.", file=sys.stderr)
         sys.exit(1)
 
     # --- LANGUAGE FILTER (--script-type / --bytes-per-char) ---
@@ -1670,29 +1573,24 @@ def main():
     x_vals, x_label, x_langs = extract_values(x_kind, x_payload, rows)
     y_vals, y_label, y_langs = extract_values(y_kind, y_payload, rows)
 
-    # align by language (some rows may have been dropped independently
-    # from each side due to blank/missing fields)
     x_by_lang = dict(zip(x_langs, x_vals))
     y_by_lang = dict(zip(y_langs, y_vals))
     common_langs = [l for l in x_by_lang if l in y_by_lang]
 
-    # filter_tag ('' if no filter is active) goes into the plot titles
-    # (via stem) and into the auto-derived output filename. color_tag
-    # only goes into the filename (the legend already shows it on the plot).
     stem = os.path.splitext(os.path.basename(premium_path))[0] + filter_tag
-    # Readable second title line, e.g. "Balanced, monotonicity threshold
-    # (t = 0.6664) -- multi-byte languages". The raw stem is still used
-    # for filenames.
     subtitle = describe_run(os.path.splitext(os.path.basename(premium_path))[0], args.char_level)
     filter_desc = describe_filter(script_types, bytes_per_char)
     if filter_desc:
         subtitle += f" \u2014 {filter_desc}"
     color_tag = "" if args.color_by == "none" else f"_color-{args.color_by}"
-    run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())  # "Balanced", "Imbalanced", "Balanced-Custom", or None
-    setting_dir = run_key.lower() if run_key else "other"             # literal file paths land in .../other/...
+    run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())
+    setting_dir = run_key.lower() if run_key else "other"
     out_dir = os.path.join(args.out_dir, setting_dir, args.threshold)
 
     if args.control_for:
+        if args.group_fit:
+            print("Note: --group-fit applies to plain plots only; ignored with --control-for.",
+                  file=sys.stderr)
         c_kind, c_payload = parse_col_spec(args.control_for, available_columns)
         c_vals, c_label, c_langs = extract_values(c_kind, c_payload, rows)
         c_by_lang = dict(zip(c_langs, c_vals))
@@ -1727,20 +1625,43 @@ def main():
         y_final = [y_by_lang[l] for l in common_langs]
         coloring = build_coloring(common_langs, langs_csv_data, args.color_by)
 
-        auto_name = f"{stem}_corr_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}{color_tag}.png"
+        groups, order, note = (None, None, None)
+        if langs_csv_data and args.group_by != "none":
+            groups, order, note = assign_groups(common_langs, langs_csv_data, args.group_by)
+            missing = [CODE_TO_LANG_NAME.get(l, l) for l, g in zip(common_langs, groups) if g is None]
+            if missing:
+                print(f"Note: no {args.group_by} group for {', '.join(missing)} -- counted in the "
+                      f"joint line, left out of the group statistics.", file=sys.stderr)
+
+        breakdown = None
+        if args.breakdown != "off" and groups is not None:
+            breakdown = residual_breakdown(x_final, y_final, common_langs, groups, order)
+        gf = None
+        if args.group_fit:
+            if groups is None:
+                print("--group-fit needs --langs-csv with the grouping column.", file=sys.stderr)
+                sys.exit(1)
+            gf = group_fit(x_final, y_final, common_langs, groups, order)
+            if gf is None:
+                print("Note: --group-fit skipped -- a group has fewer than 3 languages.",
+                      file=sys.stderr)
+
+        group_tag = f"_groupfit-{args.group_by}" if gf is not None else ""
+        auto_name = (f"{stem}_corr_{x_label.replace('/','-')}_vs_{y_label.replace('/','-')}"
+                     f"{color_tag}{group_tag}.png")
         out_path = args.out or os.path.join(out_dir, auto_name)
         print(f"output path: {out_path}")
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-        breakdown = None
-        if args.breakdown != "off" and langs_csv_data:
-            breakdown = residual_breakdown(x_final, y_final, common_langs, langs_csv_data)
         r, p = plot_plain(x_final, y_final, x_label, y_label, common_langs, subtitle, out_path,
                           coloring=coloring,
-                          breakdown=breakdown if args.breakdown == "legend" else None)
+                          breakdown=breakdown if args.breakdown == "legend" else None,
+                          groupfit=gf)
         print(f"saved {out_path}")
         print(f"r({x_label}, {y_label}) = {r:.4f}  r^2 = {r * r:.4f}  p = {p_str(p)}  (n={len(common_langs)})")
         if breakdown is not None:
-            print_breakdown(breakdown, oos=args.oos)
+            print_breakdown(breakdown, oos=args.oos, note=note)
+        if gf is not None:
+            print_group_fit(gf, note=note)
 
 
 if __name__ == "__main__":
