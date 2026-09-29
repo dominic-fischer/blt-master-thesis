@@ -1,0 +1,601 @@
+{
+  "amh_Ethi": {
+    "n_docs": 997,
+    "n_char": 85125,
+    "n_char_word": 66803,
+    "n_whitespace": 15895,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 16755
+    },
+    "avg_word_length": {
+      "whitespace": 3.9870486421963593
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.6799447257855807,
+      "n_char_word": 0.6530554387885779,
+      "n_words": {
+        "whitespace": 0.8004108345674295
+      }
+    }
+  },
+  "arb_Arab": {
+    "n_docs": 997,
+    "n_char": 110574,
+    "n_char_word": 90219,
+    "n_whitespace": 17762,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 18728
+    },
+    "avg_word_length": {
+      "whitespace": 4.817332336608287
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.8832212406345352,
+      "n_char_word": 0.8819665079721976,
+      "n_words": {
+        "whitespace": 0.8946639277695505
+      }
+    }
+  },
+  "cmn_Hans": {
+    "n_docs": 997,
+    "n_char": 42179,
+    "n_char_word": 37470,
+    "n_whitespace": 1044,
+    "has_whitespace_words": false,
+    "n_words": {
+      "whitespace": 2039,
+      "jieba": 19585,
+      "pkuseg": 20332,
+      "thulac": 21274,
+      "icu": 21912
+    },
+    "avg_word_length": {
+      "whitespace": 18.376655223148603,
+      "jieba": 1.9131988766913455,
+      "pkuseg": 1.8429077316545348,
+      "thulac": 1.761304879195262,
+      "icu": 1.7100219058050383
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0,
+      "jieba": 1.0,
+      "pkuseg": 1.0,
+      "thulac": 1.0,
+      "icu": 1.0
+    },
+    "segmenter_versions": {
+      "jieba": {
+        "jieba": "0.42.1"
+      },
+      "pkuseg": {
+        "spacy-pkuseg": "1.0.1"
+      },
+      "thulac": {
+        "thulac": "0.2.2"
+      },
+      "icu": {
+        "PyICU": "2.16.2"
+      }
+    },
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.3369091170503379,
+      "n_char_word": 0.3663007243897432,
+      "n_words": {
+        "whitespace": 0.09740600964983519,
+        "jieba": 0.9356040701285052,
+        "pkuseg": 0.9712893517412697,
+        "thulac": 1.0162900683131897,
+        "icu": 1.046768260641093
+      }
+    }
+  },
+  "deu_Latn": {
+    "n_docs": 997,
+    "n_char": 146558,
+    "n_char_word": 123130,
+    "n_whitespace": 19908,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 20864
+    },
+    "avg_word_length": {
+      "whitespace": 5.90155291411043
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1706471556144864,
+      "n_char_word": 1.2036991778518569,
+      "n_words": {
+        "whitespace": 0.9967037691682988
+      }
+    }
+  },
+  "eng_Latn": {
+    "n_docs": 997,
+    "n_char": 125194,
+    "n_char_word": 102293,
+    "n_whitespace": 19958,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 20933
+    },
+    "avg_word_length": {
+      "whitespace": 4.886686093727607
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.0,
+      "n_char_word": 1.0,
+      "n_words": {
+        "whitespace": 1.0
+      }
+    }
+  },
+  "fin_Latn": {
+    "n_docs": 997,
+    "n_char": 133935,
+    "n_char_word": 116791,
+    "n_whitespace": 14311,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 15283
+    },
+    "avg_word_length": {
+      "whitespace": 7.641889681345286
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.069819639918846,
+      "n_char_word": 1.1417301281612622,
+      "n_words": {
+        "whitespace": 0.7300912434911384
+      }
+    }
+  },
+  "fra_Latn": {
+    "n_docs": 997,
+    "n_char": 148789,
+    "n_char_word": 121354,
+    "n_whitespace": 23153,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 23918
+    },
+    "avg_word_length": {
+      "whitespace": 5.073751985952002
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1884674984424173,
+      "n_char_word": 1.1863372860313022,
+      "n_words": {
+        "whitespace": 1.1425978120670712
+      }
+    }
+  },
+  "heb_Hebr": {
+    "n_docs": 997,
+    "n_char": 97501,
+    "n_char_word": 78680,
+    "n_whitespace": 15761,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 16702
+    },
+    "avg_word_length": {
+      "whitespace": 4.71081307627829
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.7787993034809975,
+      "n_char_word": 0.7691630903385374,
+      "n_words": {
+        "whitespace": 0.7978789471169923
+      }
+    }
+  },
+  "hrv_Latn": {
+    "n_docs": 997,
+    "n_char": 123869,
+    "n_char_word": 103176,
+    "n_whitespace": 17855,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 18812
+    },
+    "avg_word_length": {
+      "whitespace": 5.484584307888582
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.9894164257073023,
+      "n_char_word": 1.0086320667103321,
+      "n_words": {
+        "whitespace": 0.8986767305211867
+      }
+    }
+  },
+  "ita_Latn": {
+    "n_docs": 997,
+    "n_char": 147090,
+    "n_char_word": 121599,
+    "n_whitespace": 21987,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 22979
+    },
+    "avg_word_length": {
+      "whitespace": 5.291744636407154
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.174896560538045,
+      "n_char_word": 1.1887323668286198,
+      "n_words": {
+        "whitespace": 1.0977404098791381
+      }
+    }
+  },
+  "jpn_Jpan": {
+    "n_docs": 997,
+    "n_char": 54658,
+    "n_char_word": 51189,
+    "n_whitespace": 66,
+    "has_whitespace_words": false,
+    "n_words": {
+      "whitespace": 1061,
+      "ginza_bunsetsu": 11216
+    },
+    "avg_word_length": {
+      "whitespace": 48.24599434495759,
+      "ginza_bunsetsu": 4.563926533523538
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0,
+      "ginza_bunsetsu": 1.0
+    },
+    "segmenter_versions": {
+      "ginza_bunsetsu": {
+        "ginza": "5.2.1",
+        "ja-ginza": "5.2.0"
+      }
+    },
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.43658641787945107,
+      "n_char_word": 0.5004154731995347,
+      "n_words": {
+        "whitespace": 0.05068552047007118,
+        "ginza_bunsetsu": 0.535804710266087
+      }
+    }
+  },
+  "kat_Geor": {
+    "n_docs": 997,
+    "n_char": 137943,
+    "n_char_word": 118950,
+    "n_whitespace": 15513,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 16480
+    },
+    "avg_word_length": {
+      "whitespace": 7.217839805825243
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1018339537038517,
+      "n_char_word": 1.1628361666976235,
+      "n_words": {
+        "whitespace": 0.7872736827019539
+      }
+    }
+  },
+  "kor_Hang": {
+    "n_docs": 997,
+    "n_char": 63011,
+    "n_char_word": 46672,
+    "n_whitespace": 13772,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 14742
+    },
+    "avg_word_length": {
+      "whitespace": 3.165920499253833
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.5033068677412655,
+      "n_char_word": 0.456258003968991,
+      "n_words": {
+        "whitespace": 0.7042468829121483
+      }
+    }
+  },
+  "nya_Latn": {
+    "n_docs": 997,
+    "n_char": 141462,
+    "n_char_word": 120736,
+    "n_whitespace": 17977,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 18931
+    },
+    "avg_word_length": {
+      "whitespace": 6.3776873910517144
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.129942329504609,
+      "n_char_word": 1.1802958169180686,
+      "n_words": {
+        "whitespace": 0.9043615344193379
+      }
+    }
+  },
+  "ron_Latn": {
+    "n_docs": 997,
+    "n_char": 141042,
+    "n_char_word": 115873,
+    "n_whitespace": 21720,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 22694
+    },
+    "avg_word_length": {
+      "whitespace": 5.105887018595223
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1265875361439046,
+      "n_char_word": 1.1327559070513133,
+      "n_words": {
+        "whitespace": 1.0841255434003727
+      }
+    }
+  },
+  "spa_Latn": {
+    "n_docs": 997,
+    "n_char": 149187,
+    "n_char_word": 122216,
+    "n_whitespace": 23822,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 24813
+    },
+    "avg_word_length": {
+      "whitespace": 4.925482609922218
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1916465645318466,
+      "n_char_word": 1.1947640601018643,
+      "n_words": {
+        "whitespace": 1.185353269956528
+      }
+    }
+  },
+  "srp_Cyrl": {
+    "n_docs": 997,
+    "n_char": 124505,
+    "n_char_word": 102869,
+    "n_whitespace": 18763,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 19720
+    },
+    "avg_word_length": {
+      "whitespace": 5.2164807302231235
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.9944965413677972,
+      "n_char_word": 1.0056308838336934,
+      "n_words": {
+        "whitespace": 0.9420532174079205
+      }
+    }
+  },
+  "tam_Taml": {
+    "n_docs": 997,
+    "n_char": 146128,
+    "n_char_word": 127716,
+    "n_whitespace": 15238,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 16090
+    },
+    "avg_word_length": {
+      "whitespace": 7.937600994406464
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0
+    },
+    "segmenter_versions": {},
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.1672124862213844,
+      "n_char_word": 1.248531180041645,
+      "n_words": {
+        "whitespace": 0.7686428127836431
+      }
+    }
+  },
+  "tha_Thai": {
+    "n_docs": 997,
+    "n_char": 120268,
+    "n_char_word": 116569,
+    "n_whitespace": 3127,
+    "has_whitespace_words": false,
+    "n_words": {
+      "whitespace": 4114,
+      "pythainlp_newmm": 24139,
+      "pythainlp_longest": 24461,
+      "pythainlp_attacut": 28364,
+      "pythainlp_deepcut": 28388,
+      "pythainlp_nlpo3": 24155,
+      "icu": 29839
+    },
+    "avg_word_length": {
+      "whitespace": 28.334710743801654,
+      "pythainlp_newmm": 4.8290732838974275,
+      "pythainlp_longest": 4.765504272106619,
+      "pythainlp_attacut": 4.109751798053871,
+      "pythainlp_deepcut": 4.106277300267719,
+      "pythainlp_nlpo3": 4.825874560132478,
+      "icu": 3.90659874660679
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0,
+      "pythainlp_newmm": 1.0,
+      "pythainlp_longest": 1.0,
+      "pythainlp_attacut": 1.0,
+      "pythainlp_deepcut": 1.0,
+      "pythainlp_nlpo3": 1.0,
+      "icu": 1.0
+    },
+    "segmenter_versions": {
+      "pythainlp_newmm": {
+        "pythainlp": "5.3.8"
+      },
+      "pythainlp_longest": {
+        "pythainlp": "5.3.8"
+      },
+      "pythainlp_attacut": {
+        "pythainlp": "5.3.8",
+        "attacut": "1.0.6"
+      },
+      "pythainlp_deepcut": {
+        "pythainlp": "5.3.8",
+        "deepcut": "0.7.0.0"
+      },
+      "pythainlp_nlpo3": {
+        "pythainlp": "5.3.8",
+        "nlpo3": "1.4.0"
+      },
+      "icu": {
+        "PyICU": "2.16.2"
+      }
+    },
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 0.9606530664408838,
+      "n_char_word": 1.1395598916836929,
+      "n_words": {
+        "whitespace": 0.19653179190751446,
+        "pythainlp_newmm": 1.1531553050207806,
+        "pythainlp_longest": 1.1685377155687193,
+        "pythainlp_attacut": 1.3549897291358142,
+        "pythainlp_deepcut": 1.3561362442077103,
+        "pythainlp_nlpo3": 1.1539196484020446,
+        "icu": 1.4254526345960923
+      }
+    }
+  },
+  "vie_Latn": {
+    "n_docs": 997,
+    "n_char": 131990,
+    "n_char_word": 101225,
+    "n_whitespace": 28196,
+    "has_whitespace_words": true,
+    "n_words": {
+      "whitespace": 29170,
+      "pyvi": 22654,
+      "underthesea": 22216
+    },
+    "avg_word_length": {
+      "whitespace": 3.4701748371614674,
+      "pyvi": 4.468305817957094,
+      "underthesea": 4.556400792221822
+    },
+    "word_char_coverage": {
+      "whitespace": 1.0,
+      "pyvi": 1.0,
+      "underthesea": 1.0
+    },
+    "segmenter_versions": {
+      "pyvi": {
+        "pyvi": "0.1.1"
+      },
+      "underthesea": {
+        "underthesea": "9.5.0"
+      }
+    },
+    "segmenters_failed": {},
+    "rel_to_eng": {
+      "n_char": 1.0542837516174897,
+      "n_char_word": 0.9895594028916934,
+      "n_words": {
+        "whitespace": 1.39349352696699,
+        "pyvi": 1.0822146849472125,
+        "underthesea": 1.0612907848851096
+      }
+    }
+  }
+}

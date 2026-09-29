@@ -821,6 +821,43 @@ def parse_premium_txt(path):
     return present_headers, rows
 
 
+def load_extra_premium_files(specs, char_level=False):
+    """Loads additional premiums files given as NAME=FILE (repeatable
+    --extra-premium). FILE is a literal path, or a shorthand
+    'run:threshold' / 'run:threshold:char' (e.g. balanced-custom:mono),
+    resolved via RUN_INFO like the positional argument. Every column
+    except Language is merged in with the suffix _NAME (e.g. Premium ->
+    Premium_mono), so it can be used in --cols / --control-for by that
+    name (case-insensitive). Returns {lang: {column: value}}."""
+    merged = defaultdict(dict)
+    for spec in specs or []:
+        if "=" not in spec:
+            raise ValueError(f"--extra-premium expects NAME=FILE, got '{spec}'")
+        name, file_spec = (s.strip() for s in spec.split("=", 1))
+        path = file_spec
+        if not os.path.exists(file_spec) and ":" in file_spec:
+            parts = file_spec.split(":")
+            run, thr = parts[0], parts[1]
+            char = char_level or (len(parts) > 2 and parts[2].lower() == "char")
+            if thr not in ("mono", "global"):
+                raise ValueError(f"Unknown threshold '{thr}' in '{file_spec}' (use mono/global)")
+            path = resolve_premium_path(run, char, thr)
+            if path is None:
+                raise ValueError(f"Unknown run '{run}' in '{file_spec}'")
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"--extra-premium {name}: file not found: {path}")
+        print(f"Extra premiums '{name}': {path}")
+        headers, extra_rows = parse_premium_txt(path)
+        for r in extra_rows:
+            lang = r.get("Language", "")
+            for h in headers:
+                if h == "Language" or r.get(h, "") == "":
+                    continue
+                merged[lang][f"{h}_{name}"] = r[h]
+                DISPLAY_NAMES.setdefault(f"{h}_{name}", f"{DISPLAY_NAMES.get(h, h)} ({name})")
+    return merged
+
+
 def parse_col_spec(spec, available_columns):
     """Parses one --cols/--control-for entry. Supports:
       - a plain column name/alias
@@ -1337,6 +1374,79 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
     return r_raw, p_raw, r_partial, p_partial
 
 
+
+# --- from --wordlen-json (default: word_length_stats.json, produced by
+# word_length_stats.py) ---
+# Languages with whitespace-delimited words (has_whitespace_words: true,
+# incl. Vietnamese and Korean) use the "whitespace" values; languages
+# without (Chinese, Japanese, Thai) use the MEAN over all their
+# segmenters, whitespace excluded.
+WORDLEN_COLUMNS = ["word_length", "n_words", "n_char", "char_ratio", "word_ratio"]
+COLUMN_ALIASES.update({
+    "word_length": "word_length", "avg_word_length": "word_length",
+    "n_words": "n_words", "words": "n_words",
+    "n_char": "n_char", "total_chars": "n_char",
+    "char_ratio": "char_ratio",
+    "word_ratio": "word_ratio",
+})
+DISPLAY_NAMES.update({
+    "word_length": "Average word length (characters)",
+    "n_words": "Words",
+    "n_char": "Characters",
+    "char_ratio": "Character ratio (rel. to English)",
+    "word_ratio": "Word ratio (rel. to English)",
+})
+
+
+def _pick_word_value(method_values, has_whitespace_words):
+    """'whitespace' value for whitespace languages, otherwise the mean
+    over all non-whitespace segmenters."""
+    vals = method_values or {}
+    if has_whitespace_words:
+        return vals.get("whitespace")
+    seg = [v for m, v in vals.items() if m != "whitespace" and v is not None]
+    return sum(seg) / len(seg) if seg else None
+
+
+def load_wordlen_json(path):
+    """Returns {lang: {word_length, n_words, n_char, char_ratio,
+    word_ratio, _source}} from a word_length_stats.py JSON."""
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    out = {}
+    for lang, res in data.items():
+        if not isinstance(res, dict):
+            continue
+        ws = res.get("has_whitespace_words", True)
+        rel = res.get("rel_to_eng") or {}
+        segs = [m for m in (res.get("n_words") or {}) if m != "whitespace"]
+        out[lang] = {
+            "word_length": _pick_word_value(res.get("avg_word_length"), ws),
+            "n_words": _pick_word_value(res.get("n_words"), ws),
+            "n_char": res.get("n_char"),
+            "char_ratio": rel.get("n_char"),
+            "word_ratio": _pick_word_value(rel.get("n_words"), ws),
+            "_source": "whitespace" if ws else f"mean of {len(segs)} segmenters ({', '.join(segs)})",
+        }
+    return out
+
+
+def merge_wordlen_columns(rows, wordlen_data):
+    """Adds WORDLEN_COLUMNS to each row by language code; returns the
+    set of columns actually added."""
+    added = set()
+    for row in rows:
+        src = wordlen_data.get(row.get("Language", ""))
+        if not src:
+            continue
+        for col in WORDLEN_COLUMNS:
+            if src.get(col) is not None:
+                row[col] = str(src[col])
+                added.add(col)
+    return added
+
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("premium_file",
@@ -1429,6 +1539,16 @@ def main():
                               "of byte_position_stats.py (--fixed-length), merged in as the "
                               "'spread_customenc' / 'spread_customenc_sum' columns. Silently "
                               "skipped if not found. Pass an empty string to disable.")
+    parser.add_argument("--wordlen-json", default="word_length_stats.json",
+                         help="JSON from word_length_stats.py, merged in as word_length, "
+                              "n_words, n_char, char_ratio and word_ratio. Whitespace "
+                              "languages use whitespace counts; Chinese, Japanese and Thai "
+                              "use the mean over their segmenters. Silently skipped if not "
+                              "found. Pass an empty string to disable.")
+    parser.add_argument("--extra-premium", action="append", default=[], metavar="NAME=FILE",
+                         help="Merge in another premiums file, with every column suffixed _NAME "
+                              "(e.g. Premium_mono). FILE is a literal path or a shorthand like "
+                              "balanced-custom:mono (add :char for char level). Repeatable.")
     parser.add_argument(
                             "--fill-spread-nulls",
                             action="store_true",
@@ -1468,6 +1588,27 @@ def main():
 
     available_columns |= merge_external_columns(
         rows, langs_csv_data, density_data, spread_data, spread_customenc_data)
+
+    wordlen_data = {}
+    if args.wordlen_json and os.path.exists(args.wordlen_json):
+        wordlen_data = load_wordlen_json(args.wordlen_json)
+        if "word" in (args.cols + (args.control_for or "")).lower():
+            for lang, e in wordlen_data.items():
+                if e["_source"] != "whitespace":
+                    print(f"Word stats for {CODE_TO_LANG_NAME.get(lang, lang)}: {e['_source']}")
+    available_columns |= merge_wordlen_columns(rows, wordlen_data)
+
+
+    try:
+        extra_data = load_extra_premium_files(args.extra_premium, args.char_level)
+    except (ValueError, FileNotFoundError) as e:
+        print(str(e), file=sys.stderr)
+        sys.exit(1)
+    for row in rows:
+        for col, val in extra_data.get(row.get("Language", ""), {}).items():
+            row[col] = val
+            available_columns.add(col)
+
     # Ranks are computed over ALL languages here, BEFORE the language
     # filter below is applied, so a language keeps the same
     # training_data rank in filtered and unfiltered plots.
