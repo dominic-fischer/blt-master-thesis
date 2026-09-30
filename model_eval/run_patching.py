@@ -134,7 +134,8 @@ MONOTONICITY = {
 BOUND_NAMES = ["low", "mid", "high", "anchor"]
 
 
-def load_cases(csv_path: str, score_source: str = "bytes") -> dict:
+def load_cases(csv_path: str, score_source: str = "bytes",
+               include_cumulative: bool = False) -> dict:
     """
     Returns a dict keyed by case name. Each value is a dict with:
       - score_idx:         int
@@ -155,6 +156,12 @@ def load_cases(csv_path: str, score_source: str = "bytes") -> dict:
         reader = csv.DictReader(f)
         for row in reader:
             name = row["case"]
+            if name.startswith("cumulative_") and include_cumulative:
+                cases[name] = {
+                    "score_idx": 1, "monotonicity": False, "fixed_threshold": None,
+                    "named_thresholds": {b: float(row[f"t_{b}"]) for b in BOUND_NAMES},
+                }
+                continue
             if name not in SCORE_IDX:
                 continue
             if score_source == "chars" and SCORE_IDX[name] not in CHAR_COMPATIBLE_SCORE_IDX:
@@ -314,7 +321,7 @@ def main():
                 sentence[modes_key] = {}
 
             # Level 1: remove stale CASES not present in the CSV at all.
-            stale_cases = [k for k in sentence[modes_key] if k not in valid_case_names]
+            stale_cases = [k for k in sentence[modes_key] if k in SCORE_IDX and k not in valid_case_names]
             for k in stale_cases:
                 del sentence[modes_key][k]
 

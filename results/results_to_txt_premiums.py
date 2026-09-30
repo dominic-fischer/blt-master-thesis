@@ -385,7 +385,7 @@ def build_key_to_bound(summary_csv: str, score_source: str) -> dict[tuple[str, s
     must match the --score-source that produced summary_csv, so
     load_cases() applies the same norm_entropy/combined exclusion for
     chars-mode that run_patching.py itself applied."""
-    cases = load_cases(summary_csv, score_source)
+    cases = load_cases(summary_csv, score_source, include_cumulative=True)
     key_to_bound = {}
     for case_name, case in cases.items():
         for bound_name in BOUND_NAMES:
@@ -409,11 +409,11 @@ def parse_premium_column(col: str, score_source: str) -> tuple[str, str] | None:
     if not col.startswith(prefix):
         return None
     mode_str = col[len(prefix): -len(PREMIUM_SUFFIX)]  # "{case}_t_{value}"
-    for case in KNOWN_CASES:
-        case_prefix = f"{case}_"
-        if mode_str.startswith(case_prefix):
-            t_key = mode_str[len(case_prefix):]  # "t_1.3340"
-            return case, t_key
+    if "_t_" not in mode_str:
+        return None
+    case, value = mode_str.rsplit("_t_", 1)
+    if case in KNOWN_CASES or case.startswith("cumulative_"):
+        return case, f"t_{value}"
     return None
 
 
