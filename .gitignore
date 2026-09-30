@@ -179,4 +179,4 @@ dumps/
 logs/
 notes.txt
 training_output.txt
-cumulative_diag/
+results/cumulative_diag/
