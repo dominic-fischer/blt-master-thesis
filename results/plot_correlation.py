@@ -410,7 +410,7 @@ RUN_INFO = {
     "Balanced-Custom": {
         "step": "0000006400",
         "byte": {"global": "2.0176", "mono": "2.0371"},
-        "char": {"global": "2.0630", "mono": "0.6877"},
+        "char": {"global": "2.0308", "mono": "0.7050"},
     },
 }
 
