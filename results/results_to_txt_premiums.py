@@ -261,7 +261,8 @@ def resolve_raw_run_stem(csv_stem: str, filename_prefix: str | None) -> str:
     CSV's own filename with the step suffix and a trailing '_results'
     trimmed off, which is the raw stem as-is."""
     if filename_prefix:
-        return REVERSE_RUN_NAME_ALIASES.get(filename_prefix, filename_prefix)
+        stem = REVERSE_RUN_NAME_ALIASES.get(filename_prefix, filename_prefix)
+        return re.sub(r"_step_\d+", "", stem)
     stem = re.sub(r"_step_\d+", "", csv_stem)
     if stem.endswith("_results"):
         stem = stem[: -len("_results")]

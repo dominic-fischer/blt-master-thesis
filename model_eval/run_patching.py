@@ -381,7 +381,7 @@ def main():
                         }
 
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(sentences, f, ensure_ascii=False, indent=2)
+            json.dump(sentences, f, ensure_ascii=False, separators=(",", ":"))
 
         stale_note = f" (removed {stale_threshold_count} stale threshold entr{'y' if stale_threshold_count == 1 else 'ies'})" if stale_threshold_count else ""
         print(f"  {lang_code}: done{stale_note}")

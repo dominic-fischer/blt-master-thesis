@@ -275,7 +275,7 @@ def main():
             continue
         out_path = os.path.join(output_dir, f"{lang_code}.json")
         with open(out_path, "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
+            json.dump(results, f, ensure_ascii=False, separators=(",", ":"))
         print(f"  Saved {len(results)} entries → {out_path}")
 
     print("\nDone.")

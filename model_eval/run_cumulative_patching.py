@@ -9,28 +9,40 @@ and writes the results into the same eval_modes / char_eval_modes keys
 run_patching.py uses, so results_to_CSV.py / results_to_JS.py /
 results_to_txt_premiums.py can consume them (see INTEGRATION below).
 
-BOUNDARY RULE (per unit i = one byte or one character, scores s_i = raw
-entropy, per-char summed raw entropy in chars mode):
+SCORES are used exactly as stored: H_i = bytes_entropies[i][1] in bytes
+mode, H_i = chars_entropies[i][1] in chars mode. H_i is the entropy of the
+prediction made AFTER unit i, i.e. the uncertainty about what comes next.
+As in BLT's find_entropy_patch_start_ids, a condition on H_i therefore
+places the cut AFTER unit i (= before unit i+1).
 
-    cum   = sum of s over the units already in the current patch
-    budget_reached(i)  :=  cum + s_i > T
-    rising(i)          :=  s_i - s_{i-1} > m          (m = None -> always True)
+BOUNDARY RULE (unit i = one byte or one character):
 
-    unit i STARTS a new patch  iff  current patch is non-empty
-                                    AND budget_reached(i) AND rising(i)
+    cum_i             = H over the current patch's units, up to and incl. i
+    budget_reached(i) :=  cum_i >= T
+    rising(i)         :=  H_i - H_{i-1} > m      (m = None -> always True)
 
-  - m = None ("nomono"): pure constant-information patching. A patch holds
-    at most T nats of (predicted) entropy; the unit that would overflow the
-    budget opens the next patch. So, as in plain BLT, surprising units tend
-    to START patches rather than end them.
-  - m set: once the budget is reached, the cut is DEFERRED to the next unit
-    where entropy rises by more than m. T acts as a minimum information
-    content per patch, m decides WHERE the cut lands.
-  - Limiting cases: at T=0 this is exactly raw_monotonicity with threshold
-    m; at m=None it is pure cumulative. The family interpolates between the
-    two. A larger m leaves fewer candidate cut points, so each m has a
-    maximum achievable pps (reached at T=0); targets above it are reported
-    as INFEASIBLE, not silently clamped.
+    cut AFTER unit i  iff  budget_reached(i) AND rising(i)
+
+  - m = None ("nomono"): pure constant-information patching. A patch closes
+    as soon as its accumulated uncertainty (including the uncertainty about
+    what follows it) exceeds T.
+  - m set: once the budget is reached, the cut is DEFERRED to the next
+    point where entropy rises by more than m. T acts as a minimum amount of
+    information per patch, m decides WHERE the cut lands.
+  - Limiting cases: at T=0 this is EXACTLY raw_monotonicity with threshold
+    m, including BLT's quirk that the first unit is always its own patch in
+    monotonicity mode (patch_start_mask_from_entropy_with_monotonicity sets
+    mask[:, 0] = True; mirrored here by rising(0) = True). So m_star at
+    each bound should equal raw_monotonicity's calibrated threshold for
+    that bound, up to search tolerance. At m=None it is pure cumulative.
+    A larger m leaves fewer candidate cut points, so each m has a maximum
+    achievable pps (reached at T=0); targets above it are reported as
+    INFEASIBLE, not silently clamped.
+  - chars mode: chars_entropies[i][1] is the uncertainty about the NEXT
+    character, i+1 (sum of the H values predicting its bytes; see
+    add_char_entropies.py), mirroring bytes_entropies one level up. So the
+    same rule applies unchanged: a patch accumulates whole characters'
+    information and closes after character i once it reaches T.
 
 MONOTONICITY VALUES (--mono): comma-separated, each one of
     none        no monotonicity condition
@@ -63,8 +75,10 @@ cumulative_mono_0p5 ... (dots -> "p" so the _t_<value> suffix stays
 parseable).
 
 EXTRA DIAGNOSTICS (--diag-csv), per language x case x bound:
-    pps, bpp, word_start_precision (share of cuts that land on a word
-    start), word_start_recall (share of word starts that get a cut), and
+    pps, bpp, word_boundary_precision (share of cuts that land on a word
+    boundary -- either just before the whitespace or just before the word,
+    so neither segmentation convention is favored), word_boundary_recall
+    (share of word boundaries that get a cut at either position), and
     entropy_sum_premium (mean summed entropy per sentence / English's).
 For pure cumulative patching, pps_premium should track entropy_sum_premium
 closely -- that is the whole "constant information" prediction. Word-start
@@ -112,24 +126,27 @@ PPS_TOL = 0.05
 # ── score extraction (same convention as run_patching.py) ─────────────────────
 
 def get_scores_and_byte_counts(sentence, source):
+    """(scores, byte_counts), one entry per unit, scores exactly as stored
+    (see SCORES in the module docstring)."""
     if source == "bytes":
         scores = [be[1] for be in sentence["bytes_entropies"]]
-        byte_counts = [1] * len(scores)
-    else:
-        scores = [ce[1] for ce in sentence["chars_entropies"]]
-        byte_counts = [ce[2] for ce in sentence["chars_entropies"]]
-    return scores, byte_counts
+        return scores, [1] * len(scores)
+    scores = [ce[1] for ce in sentence["chars_entropies"]]
+    widths = [ce[2] for ce in sentence["chars_entropies"]]
+    return scores, widths
 
 
-def word_start_units(sentence, source):
-    """Set of unit indices (bytes or chars) that begin a word, i.e. a
-    non-whitespace character preceded by whitespace. Index 0 excluded (it
-    always starts a patch). Returns None if byte widths can't be aligned."""
+def word_boundaries(sentence, source):
+    """Word boundaries as (space_unit, word_start_unit) pairs, in units of
+    the score source. A cut counts as word-aligned if it lands on EITHER
+    position -- before the whitespace ("the" | " cat", SentencePiece-style)
+    or before the word ("the " | "cat", BLT-style) -- so the metric doesn't
+    favor one convention. Returns None if byte widths can't be aligned."""
     text = sentence["text"]
-    starts_chars = {i for i in range(1, len(text))
-                    if not text[i].isspace() and text[i - 1].isspace()}
+    pairs_chars = [(i - 1, i) for i in range(1, len(text))
+                   if not text[i].isspace() and text[i - 1].isspace()]
     if source == "chars":
-        return starts_chars
+        return pairs_chars
     if "chars_entropies" in sentence:
         widths = [ce[2] for ce in sentence["chars_entropies"]]
     else:
@@ -140,25 +157,28 @@ def word_start_units(sentence, source):
     for w in widths:
         offsets.append(pos)
         pos += w
-    return {offsets[i] for i in starts_chars}
+    return [(offsets[a], offsets[b]) for a, b in pairs_chars]
 
 
 # ── the patcher ───────────────────────────────────────────────────────────────
 
 def cumulative_patch_lengths(scores, T, m):
-    """Patch lengths in units. See module docstring for the rule."""
+    """Patch lengths in units. See BOUNDARY RULE in the module docstring."""
     lengths = []
     cur_len = 0
     cum = 0.0
     prev = None
-    for s in scores:
-        if cur_len > 0 and cum + s > T and (m is None or s - prev > m):
+    last = len(scores) - 1
+    for i, h in enumerate(scores):
+        cur_len += 1
+        cum += h
+        # rising(0) = True mirrors BLT's mask[:, 0] = True in monotonicity mode
+        rising = m is None or prev is None or h - prev > m
+        if i < last and cum >= T and rising:
             lengths.append(cur_len)
             cur_len = 0
             cum = 0.0
-        cur_len += 1
-        cum += s
-        prev = s
+        prev = h
     if cur_len:
         lengths.append(cur_len)
     return lengths
@@ -339,7 +359,7 @@ def process_language(sentences, source, cases, write, diag):
     agg = {}  # (case, bound) -> counters
     for s in sentences:
         scores, byte_counts = get_scores_and_byte_counts(s, source)
-        ws = word_start_units(s, source)
+        wb = word_boundaries(s, source)
         if write:
             modes = s.setdefault(modes_key, {})
             for k in [k for k in modes if k.startswith(CASE_PREFIX) and k not in cases]:
@@ -367,15 +387,16 @@ def process_language(sentences, source, cases, write, diag):
                 a["n_sent"] += 1
                 a["n_patches"] += len(lu)
                 a["n_bytes"] += sum(lb)
-                if ws is not None:
-                    starts, pos = set(), 0
+                if wb is not None:
+                    cuts, pos = set(), 0
                     for pl in lu[:-1]:
                         pos += pl
-                        starts.add(pos)
-                    a["cuts"] += len(starts)
-                    a["cuts_at_ws"] += len(starts & ws)
-                    a["ws"] += len(ws)
-                    a["ws_cut"] += len(ws & starts)
+                        cuts.add(pos)
+                    aligned = {u for pair in wb for u in pair}
+                    a["cuts"] += len(cuts)
+                    a["cuts_at_ws"] += len(cuts & aligned)
+                    a["ws"] += len(wb)
+                    a["ws_cut"] += sum(1 for sp, st in wb if sp in cuts or st in cuts)
     ent_sum = sum(sum(get_scores_and_byte_counts(s, source)[0]) for s in sentences) / len(sentences)
     return agg, ent_sum
 
@@ -416,7 +437,7 @@ def run_source(source, args, mono_specs, paths):
         per_lang[path.stem] = (agg, ent)
         if not args.no_write:
             with open(path, "w", encoding="utf-8") as f:
-                json.dump(sentences, f, ensure_ascii=False, indent=2)
+                json.dump(sentences, f, ensure_ascii=False, separators=(",", ":"))
 
     eng_agg, eng_ent = per_lang[ENGLISH]
     for lang, (agg, ent) in per_lang.items():
@@ -432,8 +453,8 @@ def run_source(source, args, mono_specs, paths):
                 "bpp": round(a["n_bytes"] / a["n_patches"], 4),
                 "pps_premium": round(pps / eng_pps, 4),
                 "entropy_sum_premium": round(ent / eng_ent, 4),
-                "word_start_precision": round(a["cuts_at_ws"] / a["cuts"], 4) if a["cuts"] else "",
-                "word_start_recall": round(a["ws_cut"] / a["ws"], 4) if a["ws"] else "",
+                "word_boundary_precision": round(a["cuts_at_ws"] / a["cuts"], 4) if a["cuts"] else "",
+                "word_boundary_recall": round(a["ws_cut"] / a["ws"], 4) if a["ws"] else "",
             })
     return diag_rows
 

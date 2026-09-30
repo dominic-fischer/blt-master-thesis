@@ -1,16 +1,44 @@
 """
 add_char_entropies.py
 
-NEW STEP 2 of the pipeline (run after run_eval.py, before
+STEP 2 of the pipeline (run after run_eval.py, before
 calibrate_thresholds.py). Adds a "chars_entropies" key to every sentence
-in <results-dir>/{lang_code}.json, grouping each sentence's
-"bytes_entropies" (per-byte [byte, raw_entropy, norm_entropy]) into
-per-character entries:
+in <results-dir>/{lang_code}.json, one entry per character:
 
     chars_entropies: [
-        [char, summed_raw_entropy, n_bytes, [byte1, byte2, ...]],
+        [char, next_char_entropy, n_bytes, [byte1, byte2, ...]],
         ...
     ]
+
+CONVENTION -- "next character", mirroring bytes_entropies:
+run_eval.py stores bytes_entropies[i] = [byte_i, H_i, norm_i], where H_i is
+the entropy of the model's prediction AFTER reading byte i, i.e. the
+uncertainty about byte i+1 (the prediction for byte 0, from BOS, is not
+stored). chars_entropies keeps exactly this convention one level up:
+chars_entropies[c][1] is the uncertainty about character c+1, i.e. the sum
+of the H values that predict each of character c+1's bytes:
+
+    chars_entropies[c][1] = H[end(c)-1] + ... + H[end(c+1)-2]
+                            (last byte of c ... second-to-last byte of c+1)
+
+so every score covers the bytes of exactly ONE character. Downstream
+nothing changes: calibrate_thresholds.py / run_patching.py apply BLT's
+one-position shift (a high score at c cuts before c+1), which now means
+exactly "character c+1 is surprising, start a patch there".
+
+(An earlier version summed H over character c's OWN bytes, which is the
+uncertainty about c's continuation bytes plus c+1's first byte -- mixing
+two characters. For 1-byte characters the two are identical, so Latin
+script is essentially unaffected; multi-byte scripts and every character
+of the fixed-width custom encoding are.)
+
+EDGES:
+  - Last character: its score is only H at its last byte (the prediction
+    past the end of the sentence), like the last entry of bytes_entropies.
+  - First character: the H values predicting its continuation bytes
+    (H[0] .. H[end(0)-2]) have no preceding character slot and are
+    dropped, just as the BOS prediction for byte 0 is not stored. Nothing
+    is dropped when the first character is 1 byte.
 
 Only the RAW entropy (bytes_entropies[i][1]) is summed -- the normalized
 score (bytes_entropies[i][2]) is intentionally dropped, since summing
@@ -19,38 +47,34 @@ meaningful per-character quantity.
 
 GROUPING DEPENDS ON ENCODING:
   - UTF-8 (default): a byte starts a new character iff it is NOT a
-    continuation byte, i.e. (byte & 0xC0) != 0x80. All following
-    continuation bytes belong to that character. This matches how
-    patch_text/_text_to_raw_bytes in blt_patcher.py encodes plain text,
-    and needs no knowledge of the lead byte's declared sequence length --
-    only whether each byte is a continuation byte or not.
+    continuation byte, i.e. (byte & 0xC0) != 0x80.
   - Custom fixed-width encoding (e.g. --custom-encoding-path's 2-byte
-    scheme): grouped in fixed chunks of --bytes-per-char (default 2),
-    no byte inspection needed.
+    scheme): grouped in fixed chunks of --bytes-per-char (default 2).
 
-ENCODING AUTO-DETECTION: if --custom-encoding-path / --bytes-per-char is
-not passed explicitly, this script checks whether "_customenc" appears
-anywhere in --results-dir (matching the run-naming convention used
-elsewhere in this pipeline, e.g. results_to_txt_premiums.py's
-RUN_NAME_ALIASES). If found, assumes the fixed-width custom encoding
-(default 2 bytes/char). Pass --bytes-per-char or --force-utf8 explicitly
-to override auto-detection for a one-off results dir that doesn't follow
-the naming convention.
+ENCODING AUTO-DETECTION: if --bytes-per-char is not passed explicitly,
+this script checks whether "_customenc" appears anywhere in --results-dir.
+If found, assumes the fixed-width custom encoding (default 2 bytes/char).
+Pass --bytes-per-char or --force-utf8 explicitly to override.
 
-SANITY CHECKS (per sentence, raises on failure -- these should never
-fail for well-formed input, so a failure indicates a real bug in the
-grouping or a mismatch between the assumed encoding and the one actually
-used to produce bytes_entropies):
+VERSIONING / SKIPPING: each sentence processed with this convention gets
+"chars_entropies_convention": "next_char". Sentences that already carry
+that marker are skipped (unless --force); sentences with an older
+chars_entropies (no marker) are ALWAYS recomputed, so a plain re-run
+upgrades a results dir without needing --force.
+
+SANITY CHECKS (per sentence, raises on failure):
   1. len(chars_entropies) == len(text)         -- one entry per character
-  2. sum(summed_raw_entropy across chars) == sum(bytes_entropies[i][1])
-     (within floating-point tolerance)         -- no bytes dropped/duplicated
+  2. sum(char scores) + dropped first-char part == sum(bytes_entropies[i][1])
+     (within floating-point tolerance)         -- no bytes lost/duplicated
 
-Output: updates <results-dir>/{lang_code}.json in place (indented),
-adding "chars_entropies" to each sentence. Existing keys (including
-"eval_modes" if run_patching.py already ran) are left untouched.
+Output: updates <results-dir>/{lang_code}.json in place (compact JSON,
+no indentation, to keep files small).
+Existing keys are left untouched. After changing chars_entropies, the
+char-level calibration/patching (steps 3-7 with --score-source chars, and
+run_cumulative_patching.py --score-source chars) must be re-run.
 
 Usage:
-    python model_eval/add_char_entropies.py --results-dir results/own_models/entropy_..._lr4.5e-3/step_0000006000
+    python model_eval/add_char_entropies.py --results-dir results/own_models/<run>/step_<step>
     # Custom 2-bytes-per-character encoding, explicit override:
     python model_eval/add_char_entropies.py --results-dir <dir> --bytes-per-char 2
     # Force UTF-8 grouping even if "_customenc" appears in the path:
@@ -66,6 +90,8 @@ from tqdm import tqdm
 CUSTOM_ENC_MARKER = "_customenc"
 DEFAULT_CUSTOM_BYTES_PER_CHAR = 2
 FLOAT_TOLERANCE = 1e-3  # sum of many rounded (6dp) floats; allow small drift
+CONVENTION_KEY = "chars_entropies_convention"
+CONVENTION = "next_char"
 
 
 def is_continuation_byte(b: int) -> bool:
@@ -111,18 +137,33 @@ def build_chars_entropies(text: str, bytes_entropies: list, custom_bytes_per_cha
             f"{custom_bytes_per_char}) or malformed UTF-8 input. Text: {text!r}"
         )
 
-    chars_entropies = []
-    for ch, group in zip(text, groups):
-        raw_sum = sum(entry[1] for entry in group)
-        byte_list = [entry[0] for entry in group]
-        chars_entropies.append([ch, round(raw_sum, 6), len(byte_list), byte_list])
+    h = [entry[1] for entry in bytes_entropies]
+    ends, pos = [], 0
+    for group in groups:
+        pos += len(group)
+        ends.append(pos)          # end(c): exclusive byte end of character c
 
+    n_chars = len(groups)
+    chars_entropies = []
+    for c, (ch, group) in enumerate(zip(text, groups)):
+        if c < n_chars - 1:
+            # H values predicting the bytes of character c+1
+            score = sum(h[ends[c] - 1: ends[c + 1] - 1])
+        else:
+            # last character: only the prediction past the end of the sentence
+            score = h[ends[c] - 1]
+        byte_list = [entry[0] for entry in group]
+        chars_entropies.append([ch, round(score, 6), len(byte_list), byte_list])
+
+    # H predicting the first character's continuation bytes has no slot
+    dropped = sum(h[0: ends[0] - 1]) if n_chars else 0.0
     total_from_chars = sum(c[1] for c in chars_entropies)
-    total_from_bytes = sum(entry[1] for entry in bytes_entropies)
-    if abs(total_from_chars - total_from_bytes) > FLOAT_TOLERANCE:
+    total_from_bytes = sum(h)
+    if abs(total_from_chars + dropped - total_from_bytes) > FLOAT_TOLERANCE:
         raise ValueError(
-            f"Summed char entropy ({total_from_chars:.6f}) does not match summed "
-            f"byte entropy ({total_from_bytes:.6f}) for text: {text!r}"
+            f"Char scores ({total_from_chars:.6f}) + dropped first-char part "
+            f"({dropped:.6f}) do not match summed byte entropy "
+            f"({total_from_bytes:.6f}) for text: {text!r}"
         )
 
     return chars_entropies
@@ -152,8 +193,9 @@ def parse_args():
     )
     parser.add_argument(
         "--force", action="store_true",
-        help="Recompute chars_entropies even for sentences that already have "
-             "it (default: skip sentences that already have the key).",
+        help="Recompute chars_entropies even for sentences already computed "
+             f"with the current convention (default: skip those; sentences "
+             f"with an older chars_entropies are always recomputed).",
     )
     return parser.parse_args()
 
@@ -187,18 +229,19 @@ def main():
         n_done = 0
         n_skipped = 0
         for sentence in tqdm(sentences, desc=lang_code, leave=False):
-            if "chars_entropies" in sentence and not args.force:
+            if sentence.get(CONVENTION_KEY) == CONVENTION and not args.force:
                 n_skipped += 1
                 continue
             sentence["chars_entropies"] = build_chars_entropies(
                 sentence["text"], sentence["bytes_entropies"], custom_bytes_per_char
             )
+            sentence[CONVENTION_KEY] = CONVENTION
             n_done += 1
 
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(sentences, f, ensure_ascii=False, indent=2)
+            json.dump(sentences, f, ensure_ascii=False, separators=(",", ":"))
 
-        skip_note = f" ({n_skipped} already had chars_entropies, skipped)" if n_skipped else ""
+        skip_note = f" ({n_skipped} already up to date, skipped)" if n_skipped else ""
         print(f"  {lang_code}: added chars_entropies to {n_done} sentence(s){skip_note}")
 
     print("\nDone.")
