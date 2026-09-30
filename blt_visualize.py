@@ -12,25 +12,30 @@ Usage:
 Note: patches should be (chunk_str, chunk_bytes_list, byte_length) tuples
       as produced by blt_patcher.patch_text().
 
-CHAR-LEVEL SCORES (char_scores, new): by default the entropy chart is
+CHAR-LEVEL SCORES (char_scores): by default the entropy chart is
 BYTE-granular -- one point per byte, x-position = that byte's column,
 using `scores` (one value per byte, aligned with the flattened patch
-bytes). Pass `char_scores` (one value per CHARACTER, e.g. per-character
-SUMMED raw entropy from add_char_entropies.py's chars_entropies) to plot
-the chart at CHARACTER granularity instead: one point per character,
-x-position = that character's center (the SAME x used for the "char" row
-below, so the line's peaks land visually centered over their character,
-not over an arbitrary byte within it). This matters because plotting
-byte-level `scores` (even with char-mode patch boundary lines overlaid)
-just reproduces the same byte-by-byte zigzag as byte-mode -- it doesn't
-show the quantity that was actually thresholded to produce those
-boundaries. When char_scores is given, it takes over the chart entirely
-(scores is ignored for plotting purposes, though still accepted for
-backward compatibility with existing byte-mode callers). The underlying
-byte grid/table (idx/byte/char rows) is UNCHANGED either way -- only the
-entropy line's granularity differs. Patch boundary vertical lines are
-still drawn at their actual byte offsets (unchanged), since patches are
-always byte-spans regardless of which granularity determined them.
+bytes). Pass `char_scores` (one value per CHARACTER, i.e.
+chars_entropies[c][1] from add_char_entropies.py) to plot the chart at
+CHARACTER granularity instead: one point per character, x-position = that
+character's center (the SAME x used for the "char" row below). When
+char_scores is given, it takes over the chart entirely (scores is ignored
+for plotting purposes, though still accepted for backward compatibility
+with existing byte-mode callers). The underlying byte grid/table
+(idx/byte/char rows) is UNCHANGED either way -- only the entropy line's
+granularity differs. Patch boundary vertical lines are still drawn at
+their actual byte offsets, since patches are always byte-spans regardless
+of which granularity determined them.
+
+WHAT A POINT MEANS -- "next unit", at both granularities:
+  - byte chart: the point over byte i is the entropy of the prediction
+    made after byte i, i.e. the uncertainty about byte i+1.
+  - char chart: the point over character c is the uncertainty about
+    character c+1 (the summed entropies predicting each of c+1's bytes).
+Each point is drawn where its value is STORED (the unit after which the
+prediction is made), not over the unit it describes. So in both charts a
+high point over a unit is followed by a patch boundary right AFTER that
+unit -- the next unit was hard to predict, so a new patch starts there.
 """
 
 import html as html_lib
@@ -73,9 +78,9 @@ class PatchResult:
     scores: Optional[List[float]] = None
     threshold: Optional[float] = None
     char_lengths: Optional[List[int]] = None   # byte-length of each char in `text`, in order
-    char_scores: Optional[List[float]] = None  # NEW: one score per CHARACTER (e.g. summed raw entropy).
-                                                # When set, the chart plots at character granularity
-                                                # instead of byte granularity -- see module docstring.
+    char_scores: Optional[List[float]] = None  # one score per CHARACTER: uncertainty about the NEXT
+                                                # character (chars_entropies[c][1]). When set, the chart
+                                                # plots at character granularity -- see module docstring.
 
 
 class BLTPatchVisualizer:
@@ -329,7 +334,7 @@ class BLTPatchVisualizer:
                 )
 
         # Y-axis label
-        y_axis_label = "Summed entropy per CHARACTER" if use_char_scores else "Entropy of NEXT byte"
+        y_axis_label = "Entropy of NEXT character (summed over its bytes)" if use_char_scores else "Entropy of NEXT byte"
         elements.append(
             f'<text x="10" y="{chart_y + CHART_H//2}" '
             f'text-anchor="middle" font-size="10" fill="#444" '
