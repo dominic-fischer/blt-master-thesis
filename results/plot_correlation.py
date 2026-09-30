@@ -98,11 +98,28 @@ COMMON SLOPE + GROUP OFFSET (--group-fit)
     Plain plots only (ignored with --control-for). Adds '_groupfit-<by>'
     to the output filename.
 
+OUTLIERS (--ignore-outliers / --ignore_outliers)
+    Comma-separated languages that stay IN the plot but are left OUT of
+    every statistic: the regression line, r / r^2 / p, the residual
+    breakdown, --group-fit, and (with --control-for) the control
+    regressions used to form the residuals. Each language can be given
+    as its code (amh_Ethi), the code prefix (amh), its full name
+    (Mandarin Chinese) or any single word of the name (chinese) --
+    case-insensitive.
+
+    Ignored points keep their --color-by colour on the left half and
+    are filled black on the right half; their labels are grey italic,
+    and the legend gets an 'Excluded from fit' entry. Ranks are still
+    computed over all languages. Adds '_ignore-<codes>' to the output
+    filename and lists the excluded languages in the subtitle.
+
 USAGE
     python3 plot_correlation.py balanced --threshold global --cols mean,premium
     python3 plot_correlation.py balanced-custom --threshold global --cols word_ratio,premium \\
         --color-by script-type --group-by dense --group-fit --breakdown legend
     python3 plot_correlation.py balanced --threshold global --cols mean,premium --control-for variance
+    python3 plot_correlation.py balanced --char-level --threshold global --cols mean,premium \\
+        --color-by script-type --ignore-outliers amharic,japanese,chinese,korean
     python3 plot_correlation.py balanced-custom --threshold mono \\
         --extra-premium global=balanced-custom:global \\
         --cols spread_customenc,premium --control-for premium_global
@@ -254,6 +271,10 @@ CATEGORY_PALETTES = {
 }
 UNKNOWN_CATEGORY_COLOR = "#BBBBBB"
 DEFAULT_POINT_COLOR = "#4C72B0"
+# --ignore-outliers: right half of an excluded point is filled with this,
+# and its label is drawn in IGNORED_LABEL_COLOR (italic).
+IGNORED_FILL_COLOR = "#111111"
+IGNORED_LABEL_COLOR = "#777777"
 
 # --- GROUPS (--group-by) ---
 # Bytes-per-char values counted as single-byte (dominant character
@@ -492,6 +513,46 @@ def select_languages(langs_csv_data, script_types=None, bytes_per_char=None):
     return allowed
 
 
+def resolve_language_tokens(tokens, codes):
+    """Maps --ignore-outliers entries to language codes from `codes`.
+    Accepts a code (amh_Ethi), its prefix (amh), the full name (Mandarin
+    Chinese) or one word of the name (chinese), case-insensitive.
+    Raises ValueError for unknown or ambiguous entries."""
+    resolved = []
+    for tok in tokens:
+        t = tok.strip().lower()
+        exact, partial = [], []
+        for c in codes:
+            name = CODE_TO_LANG_NAME.get(c, c).lower()
+            if t in (c.lower(), c.split("_")[0].lower(), name):
+                exact.append(c)
+            elif t in name.split():
+                partial.append(c)
+        hits = exact or partial
+        if len(hits) != 1:
+            known = ", ".join(sorted(f"{CODE_TO_LANG_NAME.get(c, c)} ({c})" for c in codes))
+            what = "matches several languages" if hits else "matches no language"
+            raise ValueError(f"--ignore-outliers entry '{tok}' {what}. Available: {known}")
+        if hits[0] not in resolved:
+            resolved.append(hits[0])
+    return resolved
+
+
+def outlier_mask(langs, ignored_codes):
+    """Bool per plotted language: True = excluded from the fit. Prints
+    which languages are excluded, and notes requested ones not plotted."""
+    mask = [l in ignored_codes for l in langs]
+    if ignored_codes:
+        name = lambda c: CODE_TO_LANG_NAME.get(c, c)
+        shown = [c for c in ignored_codes if c in langs]
+        absent = [c for c in ignored_codes if c not in langs]
+        print(f"Excluded from fit (still plotted): {', '.join(name(c) for c in shown) or '(none)'}")
+        if absent:
+            print(f"Note: --ignore-outliers {', '.join(name(c) for c in absent)} not in the plot "
+                  f"(filtered out or missing values) -- nothing to exclude.", file=sys.stderr)
+    return mask
+
+
 def make_filter_tag(script_types, bytes_per_char):
     """Filename-safe description of the active filters, '' if none."""
     tag = ""
@@ -561,6 +622,14 @@ def category_legend_handles(coloring):
                               markeredgecolor="#333333", markeredgewidth=0.8,
                               label=f"{cat} (n={counts[cat]})", **style))
     return handles
+
+
+def ignored_legend_handle(n):
+    """Legend entry for points excluded via --ignore-outliers."""
+    return Line2D([0], [0], marker="o", linestyle="", markersize=10, fillstyle="left",
+                  markerfacecolor=UNKNOWN_CATEGORY_COLOR, markerfacecoloralt=IGNORED_FILL_COLOR,
+                  markeredgecolor="#333333", markeredgewidth=0.8,
+                  label=f"Excluded from fit (n={n})")
 
 
 def load_density_json(path):
@@ -981,7 +1050,7 @@ def residual_breakdown(x, y, langs, groups, order, min_per_group=3):
 def print_breakdown(bd, oos="auto", note=""):
     """Residual breakdown of the joint line as a readable block."""
     name = lambda c: CODE_TO_LANG_NAME.get(c, c)
-    print("\nResidual breakdown (single line fitted to all plotted languages, "
+    print("\nResidual breakdown (single line fitted to all languages in the fit, "
           f"slope {bd['slope_all']:.3f}, intercept {bd['intercept_all']:.3f}):")
     print(f"  {'group':<12}{'n':>3}  {'mean res.':>9}  {'RMSE':>6}  {'max |res|':>24}  "
           f"{'share':>6}  {'offset':>6}  {'scatter':>7}")
@@ -1100,19 +1169,23 @@ def print_group_fit(gf, note=""):
 # Plotting
 # ---------------------------------------------------------------------------
 
-def label_points(ax, x, y, langs, avoid=None):
-    """Language-name labels next to each point (adjustText if installed)."""
+def label_points(ax, x, y, langs, avoid=None, muted=None):
+    """Language-name labels next to each point (adjustText if installed).
+    muted: optional bool per point -- drawn grey italic (excluded points)."""
     names = [CODE_TO_LANG_NAME.get(l, l) for l in langs] if langs else []
     if not names:
         return []
+    muted = list(muted) if muted is not None else [False] * len(names)
+    style = lambda i: (dict(color=IGNORED_LABEL_COLOR, fontstyle="italic") if muted[i]
+                       else dict(color="#222222"))
     try:
         from adjustText import adjust_text
     except ImportError:
         adjust_text = None
 
     if adjust_text is not None:
-        texts = [ax.text(xv, yv, nm, fontsize=FS_POINT_LABEL, color="#222222", zorder=4)
-                 for xv, yv, nm in zip(x, y, names)]
+        texts = [ax.text(xv, yv, nm, fontsize=FS_POINT_LABEL, zorder=4, **style(i))
+                 for i, (xv, yv, nm) in enumerate(zip(x, y, names))]
         arrows = dict(arrowstyle="-", color="#999999", lw=0.6)
         objs = [a for a in (avoid or []) if a is not None]
         try:
@@ -1131,7 +1204,7 @@ def label_points(ax, x, y, langs, avoid=None):
         for rank, i in enumerate(idxs):
             texts.append(ax.annotate(
                 names[i], (x[i], y[i]), textcoords="offset points",
-                xytext=(8, 6 + rank * 14), fontsize=FS_POINT_LABEL, color="#222222",
+                xytext=(8, 6 + rank * 14), fontsize=FS_POINT_LABEL, **style(i),
                 arrowprops=dict(arrowstyle="-", color="#aaaaaa", lw=0.5, shrinkA=0, shrinkB=4)))
     return texts
 
@@ -1139,38 +1212,48 @@ def label_points(ax, x, y, langs, avoid=None):
 def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
                      coloring=None, show_category_legend=True, subtitle=None,
                      breakdown=None, invert_x=False, invert_y=False, compact=False,
-                     groupfit=None):
+                     groupfit=None, ignore_mask=None):
     """Scatter plot with regression line and one combined legend.
     groupfit: optional dict from group_fit -- draws one parallel line per
     group (common slope) and lists them in the legend; the joint line is
-    then drawn lighter for reference."""
+    then drawn lighter for reference.
+    ignore_mask: optional bool per point -- those points are drawn (half
+    black) but left out of the fit and of r / p."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
-    r, p = pearson_r_p(x, y, extra_df_used=extra_df_used)
+    ignored = (np.zeros(len(x), dtype=bool) if ignore_mask is None
+               else np.asarray(ignore_mask, dtype=bool))
+    keep = ~ignored
+    xk, yk = x[keep], y[keep]
+    r, p = pearson_r_p(xk, yk, extra_df_used=extra_df_used)
     scale = 0.85 if compact else 1.0
 
-    if coloring is None:
-        ax.scatter(x, y, c=DEFAULT_POINT_COLOR, s=POINT_SIZE, edgecolors="#333333",
-                   linewidths=0.8, zorder=3)
-    else:
-        cols = coloring["colors"]
-        solid = [i for i, col in enumerate(cols) if not is_split_color(col)]
-        if solid:
-            ax.scatter(x[solid], y[solid], c=[cols[i] for i in solid], s=POINT_SIZE,
-                       edgecolors="#333333", linewidths=0.8, zorder=3)
-        for i, col in enumerate(cols):
-            if is_split_color(col):
-                ax.plot(x[i], y[i], marker="o", linestyle="", markersize=math.sqrt(POINT_SIZE),
-                        fillstyle="left", markerfacecolor=col[0], markerfacecoloralt=col[1],
-                        markeredgecolor="#333333", markeredgewidth=0.8, zorder=3)
+    cols = coloring["colors"] if coloring is not None else [DEFAULT_POINT_COLOR] * len(x)
+    solid = [i for i, col in enumerate(cols) if keep[i] and not is_split_color(col)]
+    if solid:
+        ax.scatter(x[solid], y[solid], c=[cols[i] for i in solid], s=POINT_SIZE,
+                   edgecolors="#333333", linewidths=0.8, zorder=3)
+    for i, col in enumerate(cols):
+        if keep[i] and not is_split_color(col):
+            continue
+        if ignored[i]:
+            # Excluded point: own colour on the left, black on the right.
+            left, right = (col[0] if is_split_color(col) else col), IGNORED_FILL_COLOR
+        else:
+            left, right = col
+        ax.plot(x[i], y[i], marker="o", linestyle="", markersize=math.sqrt(POINT_SIZE),
+                fillstyle="left", markerfacecolor=left, markerfacecoloralt=right,
+                markeredgecolor="#333333", markeredgewidth=0.8, zorder=3)
 
     handles = []
     if coloring is not None and show_category_legend:
         handles += category_legend_handles(coloring)
+    if ignored.any() and show_category_legend:
+        handles.append(ignored_legend_handle(int(ignored.sum())))
     fit_line = None
-    if len(x) >= 2:
-        coefs = np.polyfit(x, y, 1)
-        x_line = np.linspace(x.min(), x.max(), 100)
+    if len(xk) >= 2:
+        coefs = np.polyfit(xk, yk, 1)
+        x_line = np.linspace(xk.min(), xk.max(), 100)
         joint_kw = dict(color="red", linewidth=1.8, alpha=1.0)
         if groupfit is not None:
             joint_kw = dict(color="#999999", linewidth=1.4, alpha=0.8)
@@ -1228,7 +1311,7 @@ def scatter_with_fit(ax, x, y, langs, xlabel, ylabel, title, extra_df_used=0,
             legend = ax.legend(**legend_kw)
         legend.set_zorder(5)
 
-    texts = label_points(ax, x, y, langs, avoid=[legend])
+    texts = label_points(ax, x, y, langs, avoid=[legend], muted=ignored)
 
     ax._overlap_check = dict(legend=legend, x=x, y=y, langs=list(langs or []),
                              texts=texts, fit_line=fit_line, title=title)
@@ -1278,14 +1361,15 @@ def involves_autocorr(raw_label):
 
 
 def plot_plain(x, y, x_label, y_label, langs, subtitle, out_path, coloring=None,
-               breakdown=None, groupfit=None):
+               breakdown=None, groupfit=None, ignore_mask=None):
     """x_label/y_label are the RAW column labels (prettified here)."""
     fig, ax = plt.subplots(figsize=(10.5, 8))
     r, p = scatter_with_fit(ax, x, y, langs, pretty_label(x_label), pretty_label(y_label),
                              f"{pretty_label(y_label)} vs. {pretty_label(x_label)}",
                              coloring=coloring, subtitle=subtitle, breakdown=breakdown,
                              invert_x=involves_autocorr(x_label),
-                             invert_y=involves_autocorr(y_label), groupfit=groupfit)
+                             invert_y=involves_autocorr(y_label), groupfit=groupfit,
+                             ignore_mask=ignore_mask)
     plt.tight_layout()
     warn_legend_overlap(fig, ax, os.path.basename(out_path))
     plt.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
@@ -1294,19 +1378,23 @@ def plot_plain(x, y, x_label, y_label, langs, subtitle, out_path, coloring=None,
 
 
 def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_path,
-                 out_path_single=None, coloring=None):
+                 out_path_single=None, coloring=None, ignore_mask=None):
     """6-panel partial-correlation walkthrough plus a separate
-    residual-vs-residual plot. Labels are the RAW column labels."""
+    residual-vs-residual plot. Labels are the RAW column labels.
+    ignore_mask: points excluded from all fits (incl. the control
+    regressions); their residuals are taken from the fits to the rest."""
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=float)
     c = np.asarray(ctrl, dtype=float)
     px, py, pc = pretty_label(x_label), pretty_label(y_label), pretty_label(ctrl_label)
     inv_x, inv_y, inv_c = (involves_autocorr(l) for l in (x_label, y_label, ctrl_label))
+    keep = (np.ones(len(x), dtype=bool) if ignore_mask is None
+            else ~np.asarray(ignore_mask, dtype=bool))
 
-    x_fit = np.polyfit(c, x, 1)
+    x_fit = np.polyfit(c[keep], x[keep], 1)
     x_resid = x - np.polyval(x_fit, c)
 
-    y_fit = np.polyfit(c, y, 1)
+    y_fit = np.polyfit(c[keep], y[keep], 1)
     y_resid = y - np.polyval(y_fit, c)
 
     if out_path_single is None:
@@ -1319,7 +1407,7 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
         pretty_label(f"{x_label} residual"), pretty_label(f"{y_label} residual"),
         f"{py} vs. {px}, controlling for {pc}",
         extra_df_used=1, coloring=coloring, subtitle=subtitle,
-        invert_x=inv_x, invert_y=inv_y,
+        invert_x=inv_x, invert_y=inv_y, ignore_mask=ignore_mask,
     )
     plt.tight_layout()
     warn_legend_overlap(fig_single, ax_single, os.path.basename(out_path_single))
@@ -1327,7 +1415,8 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
     plt.close(fig_single)
 
     fig, axes = plt.subplots(2, 3, figsize=(20, 13))
-    kw = dict(coloring=coloring, show_category_legend=False, compact=True)
+    kw = dict(coloring=coloring, show_category_legend=False, compact=True,
+              ignore_mask=ignore_mask)
 
     scatter_with_fit(axes[0, 0], c, x, langs, pc, px,
                       f"(a) Fit {px} ~ {pc}", invert_x=inv_c, invert_y=inv_x, **kw)
@@ -1361,9 +1450,13 @@ def plot_partial(x, y, ctrl, x_label, y_label, ctrl_label, langs, subtitle, out_
     plt.tight_layout()
     for panel, a in zip("abcdef", axes.flat):
         warn_legend_overlap(fig, a, f"{os.path.basename(out_path)}, panel ({panel})")
-    if coloring is not None:
-        handles = category_legend_handles(coloring)
-        fig.legend(handles=handles, title=coloring["title"], loc="upper center",
+    n_ignored = int(np.sum(~keep))
+    if coloring is not None or n_ignored:
+        handles = category_legend_handles(coloring) if coloring is not None else []
+        if n_ignored:
+            handles.append(ignored_legend_handle(n_ignored))
+        fig.legend(handles=handles, title=coloring["title"] if coloring else None,
+                   loc="upper center",
                    bbox_to_anchor=(0.5, 0.0), ncol=min(len(handles), 6),
                    fontsize=FS_LEGEND + 1, title_fontsize=FS_LEGEND_TITLE + 1, framealpha=0.9)
     plt.savefig(out_path, dpi=180, bbox_inches="tight", facecolor="white")
@@ -1418,6 +1511,12 @@ def main():
                          choices=["lower-left", "lower-right", "upper-left", "upper-right",
                                   "lower-center", "upper-center", "center-left", "center-right"],
                          help="Legend position inside the plot (default: lower-left).")
+    parser.add_argument("--ignore-outliers", "--ignore_outliers", dest="ignore_outliers",
+                         default=None, metavar="LANGS",
+                         help="Comma-separated languages to keep in the plot but leave out of the "
+                              "fit, r/p, breakdown and --group-fit (code, code prefix, full name "
+                              "or one word of it, e.g. amharic,japanese,chinese,korean). Drawn "
+                              "half black.")
     parser.add_argument("--oos", default="auto", choices=["auto", "always", "never"],
                          help="Out-of-sample check in the printed breakdown: 'auto' (default), "
                               "'always' or 'never'.")
@@ -1458,6 +1557,16 @@ def main():
 
     present_headers, rows = parse_premium_txt(premium_path)
     available_columns = set(present_headers)
+
+    ignored_codes = []
+    if args.ignore_outliers:
+        try:
+            ignored_codes = resolve_language_tokens(
+                parse_filter_values(args.ignore_outliers) or [],
+                [r.get("Language", "") for r in rows])
+        except ValueError as e:
+            print(str(e), file=sys.stderr)
+            sys.exit(1)
 
     langs_csv_data = {}
     if args.langs_csv and os.path.exists(args.langs_csv):
@@ -1582,7 +1691,13 @@ def main():
     filter_desc = describe_filter(script_types, bytes_per_char)
     if filter_desc:
         subtitle += f" \u2014 {filter_desc}"
+    if ignored_codes:
+        subtitle += (" \u2014 excluded from fit: "
+                     + ", ".join(CODE_TO_LANG_NAME.get(c, c) for c in ignored_codes))
+    ignore_tag = ("_ignore-" + "+".join(sorted(c.split("_")[0] for c in ignored_codes))
+                  if ignored_codes else "")
     color_tag = "" if args.color_by == "none" else f"_color-{args.color_by}"
+    color_tag += ignore_tag
     run_key = RUN_NAME_LOOKUP.get(args.premium_file.strip().lower())
     setting_dir = run_key.lower() if run_key else "other"
 
@@ -1599,9 +1714,11 @@ def main():
         c_by_lang = dict(zip(c_langs, c_vals))
         common_langs = [l for l in common_langs if l in c_by_lang]
 
-        if len(common_langs) < 4:
-            print(f"Not enough languages with all three fields present ({len(common_langs)}) "
-                  f"to compute a partial correlation.", file=sys.stderr)
+        ignore_mask = outlier_mask(common_langs, ignored_codes)
+        n_used = len(common_langs) - sum(ignore_mask)
+        if n_used < 4:
+            print(f"Not enough languages with all three fields present ({n_used}, after "
+                  f"--ignore-outliers) to compute a partial correlation.", file=sys.stderr)
             sys.exit(1)
 
         x_final = [x_by_lang[l] for l in common_langs]
@@ -1616,35 +1733,44 @@ def main():
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         r_raw, p_raw, r_partial, p_partial = plot_partial(
             x_final, y_final, c_final, x_label, y_label, c_label, common_langs, subtitle, out_path,
-            coloring=coloring)
+            coloring=coloring, ignore_mask=ignore_mask)
         print(f"saved {out_path}")
-        print(f"raw r({x_label}, {y_label}) = {r_raw:.4f}  r^2 = {r_raw ** 2:.4f}  p = {p_str(p_raw)}  (n={len(common_langs)})")
-        print(f"partial r({x_label}, {y_label} | {c_label}) = {r_partial:.4f}  r^2 = {r_partial ** 2:.4f}  p = {p_str(p_partial)}  (n={len(common_langs)})")
+        print(f"raw r({x_label}, {y_label}) = {r_raw:.4f}  r^2 = {r_raw ** 2:.4f}  p = {p_str(p_raw)}  (n={n_used})")
+        print(f"partial r({x_label}, {y_label} | {c_label}) = {r_partial:.4f}  r^2 = {r_partial ** 2:.4f}  p = {p_str(p_partial)}  (n={n_used})")
     else:
-        if len(common_langs) < 2:
-            print(f"Not enough languages with both fields present ({len(common_langs)}) to plot.", file=sys.stderr)
+        ignore_mask = outlier_mask(common_langs, ignored_codes)
+        n_used = len(common_langs) - sum(ignore_mask)
+        if n_used < 2:
+            print(f"Not enough languages with both fields present ({n_used}, after "
+                  f"--ignore-outliers) to plot.", file=sys.stderr)
             sys.exit(1)
         x_final = [x_by_lang[l] for l in common_langs]
         y_final = [y_by_lang[l] for l in common_langs]
         coloring = build_coloring(common_langs, langs_csv_data, args.color_by)
 
+        # Statistics below (breakdown, group fit) use the included languages only.
+        inc = [i for i, ig in enumerate(ignore_mask) if not ig]
+        x_inc = [x_final[i] for i in inc]
+        y_inc = [y_final[i] for i in inc]
+        langs_inc = [common_langs[i] for i in inc]
+
         groups, order, note = (None, None, None)
         if langs_csv_data and args.group_by != "none":
-            groups, order, note = assign_groups(common_langs, langs_csv_data, args.group_by)
-            missing = [CODE_TO_LANG_NAME.get(l, l) for l, g in zip(common_langs, groups) if g is None]
+            groups, order, note = assign_groups(langs_inc, langs_csv_data, args.group_by)
+            missing = [CODE_TO_LANG_NAME.get(l, l) for l, g in zip(langs_inc, groups) if g is None]
             if missing:
                 print(f"Note: no {args.group_by} group for {', '.join(missing)} -- counted in the "
                       f"joint line, left out of the group statistics.", file=sys.stderr)
 
         breakdown = None
         if args.breakdown != "off" and groups is not None:
-            breakdown = residual_breakdown(x_final, y_final, common_langs, groups, order)
+            breakdown = residual_breakdown(x_inc, y_inc, langs_inc, groups, order)
         gf = None
         if args.group_fit:
             if groups is None:
                 print("--group-fit needs --langs-csv with the grouping column.", file=sys.stderr)
                 sys.exit(1)
-            gf = group_fit(x_final, y_final, common_langs, groups, order)
+            gf = group_fit(x_inc, y_inc, langs_inc, groups, order)
             if gf is None:
                 print("Note: --group-fit skipped -- a group has fewer than 3 languages.",
                       file=sys.stderr)
@@ -1658,9 +1784,9 @@ def main():
         r, p = plot_plain(x_final, y_final, x_label, y_label, common_langs, subtitle, out_path,
                           coloring=coloring,
                           breakdown=breakdown if args.breakdown == "legend" else None,
-                          groupfit=gf)
+                          groupfit=gf, ignore_mask=ignore_mask)
         print(f"saved {out_path}")
-        print(f"r({x_label}, {y_label}) = {r:.4f}  r^2 = {r * r:.4f}  p = {p_str(p)}  (n={len(common_langs)})")
+        print(f"r({x_label}, {y_label}) = {r:.4f}  r^2 = {r * r:.4f}  p = {p_str(p)}  (n={n_used})")
         if breakdown is not None:
             print_breakdown(breakdown, oos=args.oos, note=note)
         if gf is not None:
