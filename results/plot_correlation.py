@@ -162,7 +162,7 @@ CODE_TO_LANG_NAME = {
 # Header names in the exact left-to-right order results_to_txt_premiums.py
 # writes them in (only whichever subset are actually present in a given
 # file are matched -- see parse_premium_txt).
-KNOWN_HEADERS = ["Language", "Premium", "PPS", "BPP", "EntropyMean",
+KNOWN_HEADERS = ["Language", "Premium", "PPS", "BPP", "EntropyTotal", "EntropyMean",
                  "EntropyVar", "EntropySkew", "EntropyKurtosis",
                  "EntropyAutocorr1", "EntropyVolatility"]
 
@@ -171,6 +171,7 @@ COLUMN_ALIASES = {
     "premium": "Premium",
     "pps": "PPS",
     "bpp": "BPP",
+    "total": "EntropyTotal", "entropytotal": "EntropyTotal",
     "mean": "EntropyMean", "entropymean": "EntropyMean",
     "var": "EntropyVar", "variance": "EntropyVar", "entropyvar": "EntropyVar",
     "skew": "EntropySkew", "skewness": "EntropySkew", "entropyskew": "EntropySkew",
@@ -302,6 +303,7 @@ DISPLAY_NAMES = {
     "Premium": "Premium",
     "EntropyMean": "Entropy mean",
     "EntropyVar": "Entropy variance",
+    "EntropyTotal": "Total entropy",
     "EntropySkew": "Entropy skewness",
     "EntropyKurtosis": "Entropy kurtosis",
     "EntropyAutocorr1": "Entropy autocorrelation (lag 1)",
