@@ -124,6 +124,7 @@ def plot_panel(ax, data, bins, normalize, logy, threshold=None, highlight=None):
                 va="top", fontsize=9)
     if logy:
         ax.set_yscale("log")
+    ax.set_xlim(bins[0], bins[-1])
     ax.grid(True, linestyle="--", alpha=0.4)
     ax.set_ylabel("Density")
 
@@ -145,6 +146,10 @@ def main():
     p.add_argument("--diff", action="store_true",
                    help="Plot jumps H(x_t) - H(x_{t-1}) instead of levels "
                         "(what the monotonicity criterion thresholds)")
+    p.add_argument("--xlim", type=float, nargs=2, metavar=("XMIN", "XMAX"), default=None,
+                   help="Fix x-range and bins (use the same values for runs you want to compare)")
+    p.add_argument("--ymax", type=float, default=None,
+                   help="Cap the y-axis (peaks above are truncated)")
     p.add_argument("--with-norm", action="store_true",
                    help="Also plot a second panel normalized by each language's mean")
     p.add_argument("--xmax-pct", type=float, default=99.5,
@@ -189,6 +194,8 @@ def main():
     # Per-language percentile, so dense scripts with long tails are not cut off
     raw_max = max(np.percentile(e, args.xmax_pct) for e in data.values())
     raw_min = min(np.percentile(e, 100 - args.xmax_pct) for e in data.values()) if args.diff else 0.0
+    if args.xlim:
+        raw_min, raw_max = args.xlim
     raw_bins = np.linspace(raw_min, raw_max, args.bins + 1)
     panels = [("raw", raw_bins)]
     if args.with_norm:
@@ -217,6 +224,9 @@ def main():
     handles = [Line2D([0], [0], color=SCRIPT_COLORS[s],
                       linestyle="-" if s in DENSE_SCRIPTS else "--", linewidth=2, label=s)
                for s in present]
+    if args.ymax is not None:
+        for ax in axes[0]:
+            ax.set_ylim(top=args.ymax)
     legend_loc = "lower left" if args.with_norm else "upper right"
     axes[0][-1].legend(handles=handles, title="Script type (solid = dense)", loc=legend_loc)
 
