@@ -114,6 +114,8 @@ def boundaries(ent, mode, t):
         b[1:] = ent[:-1] > t   # entropy at i predicts byte i+1
     else:
         b[2:] = (ent[1:-1] - ent[:-2]) > t
+    if len(b):
+        b[0] = True            # every document starts with a patch
     return b
 
 

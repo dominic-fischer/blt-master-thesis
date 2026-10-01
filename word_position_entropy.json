@@ -8,14 +8,14 @@
     "script_type": "Syllabary",
     "summary": {
       "n_chars": 85125,
-      "n_boundaries": 37723,
+      "n_boundaries": 38720,
       "categories": {
         "onset": {
           "n_chars": 16755,
-          "n_boundaries": 15363,
-          "n_boundaries_first_byte": 15205,
+          "n_boundaries": 16345,
+          "n_boundaries_first_byte": 16187,
           "n_boundaries_later_bytes": 158,
-          "crossing_rate": 0.9156669650850492
+          "crossing_rate": 0.9661593554162936
         },
         "internal": {
           "n_chars": 50048,
@@ -33,17 +33,17 @@
         },
         "other": {
           "n_chars": 2427,
-          "n_boundaries": 597,
-          "n_boundaries_first_byte": 589,
+          "n_boundaries": 612,
+          "n_boundaries_first_byte": 604,
           "n_boundaries_later_bytes": 8,
-          "crossing_rate": 0.2430984754841368
+          "crossing_rate": 0.24927894519983518
         }
       },
       "share_of_boundaries": {
-        "onset": 0.4072581714073642,
-        "internal": 0.5534289425549399,
-        "space": 0.02348699732258834,
-        "other": 0.015825888715107494
+        "onset": 0.4221332644628099,
+        "internal": 0.5391787190082644,
+        "space": 0.022882231404958677,
+        "other": 0.015805785123966944
       },
       "by_position": [
         {
@@ -51,7 +51,7 @@
           "n_chars": 16755,
           "n_words_reaching": 16755,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9156669650850492,
+          "crossing_rate": 0.9661593554162936,
           "mean_char_entropy": 3.469893842515721,
           "mean_first_byte_entropy": 3.3103971470234
         },
@@ -124,14 +124,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 85125,
-        "n_boundaries": 37723,
+        "n_boundaries": 38720,
         "categories": {
           "onset": {
             "n_chars": 16755,
-            "n_boundaries": 15363,
-            "n_boundaries_first_byte": 15205,
+            "n_boundaries": 16345,
+            "n_boundaries_first_byte": 16187,
             "n_boundaries_later_bytes": 158,
-            "crossing_rate": 0.9156669650850492
+            "crossing_rate": 0.9661593554162936
           },
           "internal": {
             "n_chars": 50048,
@@ -149,17 +149,17 @@
           },
           "other": {
             "n_chars": 2427,
-            "n_boundaries": 597,
-            "n_boundaries_first_byte": 589,
+            "n_boundaries": 612,
+            "n_boundaries_first_byte": 604,
             "n_boundaries_later_bytes": 8,
-            "crossing_rate": 0.2430984754841368
+            "crossing_rate": 0.24927894519983518
           }
         },
         "share_of_boundaries": {
-          "onset": 0.4072581714073642,
-          "internal": 0.5534289425549399,
-          "space": 0.02348699732258834,
-          "other": 0.015825888715107494
+          "onset": 0.4221332644628099,
+          "internal": 0.5391787190082644,
+          "space": 0.022882231404958677,
+          "other": 0.015805785123966944
         },
         "by_position": [
           {
@@ -167,7 +167,7 @@
             "n_chars": 16755,
             "n_words_reaching": 16755,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9156669650850492,
+            "crossing_rate": 0.9661593554162936,
             "mean_char_entropy": 3.469893842515721,
             "mean_first_byte_entropy": 3.3103971470234
           },
@@ -240,12 +240,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.1896997603128547,
+      "premium": 1.1839168322886409,
       "premium_parts": {
-        "onset": 0.4845149489087927,
-        "internal": 0.6584142803078088,
-        "space": 0.027942475085152012,
-        "other": 0.0188280560111013
+        "onset": 0.499770677266473,
+        "internal": 0.6383427610457116,
+        "space": 0.027090658920654334,
+        "other": 0.018712735055801864
       }
     }
   },
@@ -258,14 +258,14 @@
     "script_type": "Abjad",
     "summary": {
       "n_chars": 110574,
-      "n_boundaries": 42053,
+      "n_boundaries": 43050,
       "categories": {
         "onset": {
           "n_chars": 18728,
-          "n_boundaries": 14329,
-          "n_boundaries_first_byte": 14079,
+          "n_boundaries": 15317,
+          "n_boundaries_first_byte": 15067,
           "n_boundaries_later_bytes": 250,
-          "crossing_rate": 0.76473729175566
+          "crossing_rate": 0.8045173002990175
         },
         "internal": {
           "n_chars": 71491,
@@ -283,17 +283,17 @@
         },
         "other": {
           "n_chars": 2593,
-          "n_boundaries": 389,
-          "n_boundaries_first_byte": 385,
+          "n_boundaries": 398,
+          "n_boundaries_first_byte": 394,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.14886232163517163
+          "crossing_rate": 0.15233320478210566
         }
       },
       "share_of_boundaries": {
-        "onset": 0.34073668941573726,
-        "internal": 0.6334387558557059,
-        "space": 0.016574322878272655,
-        "other": 0.009250231850284165
+        "onset": 0.3557955865272938,
+        "internal": 0.6187688734030198,
+        "space": 0.01619047619047619,
+        "other": 0.009245063879210222
       },
       "by_position": [
         {
@@ -301,7 +301,7 @@
           "n_chars": 18728,
           "n_words_reaching": 18728,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.76473729175566,
+          "crossing_rate": 0.8045173002990175,
           "mean_char_entropy": 2.446362810823011,
           "mean_first_byte_entropy": 2.3041616881623446
         },
@@ -374,14 +374,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 110574,
-        "n_boundaries": 42053,
+        "n_boundaries": 43050,
         "categories": {
           "onset": {
             "n_chars": 18728,
-            "n_boundaries": 14329,
-            "n_boundaries_first_byte": 14079,
+            "n_boundaries": 15317,
+            "n_boundaries_first_byte": 15067,
             "n_boundaries_later_bytes": 250,
-            "crossing_rate": 0.76473729175566
+            "crossing_rate": 0.8045173002990175
           },
           "internal": {
             "n_chars": 71491,
@@ -399,17 +399,17 @@
           },
           "other": {
             "n_chars": 2593,
-            "n_boundaries": 389,
-            "n_boundaries_first_byte": 385,
+            "n_boundaries": 398,
+            "n_boundaries_first_byte": 394,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.14886232163517163
+            "crossing_rate": 0.15233320478210566
           }
         },
         "share_of_boundaries": {
-          "onset": 0.34073668941573726,
-          "internal": 0.6334387558557059,
-          "space": 0.016574322878272655,
-          "other": 0.009250231850284165
+          "onset": 0.3557955865272938,
+          "internal": 0.6187688734030198,
+          "space": 0.01619047619047619,
+          "other": 0.009245063879210222
         },
         "by_position": [
           {
@@ -417,7 +417,7 @@
             "n_chars": 18728,
             "n_words_reaching": 18728,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.76473729175566,
+            "crossing_rate": 0.8045173002990175,
             "mean_char_entropy": 2.446362810823011,
             "mean_first_byte_entropy": 2.3041616881623446
           },
@@ -490,12 +490,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.3262583575122997,
+      "premium": 1.3163124904448862,
       "premium_parts": {
-        "onset": 0.45190488204869433,
-        "internal": 0.8401034439258231,
-        "space": 0.021981834237416426,
-        "other": 0.012268197300365838
+        "onset": 0.4683381745910411,
+        "internal": 0.8144931967589054,
+        "space": 0.021311726035774345,
+        "other": 0.012169393059165265
       }
     }
   },
@@ -508,14 +508,14 @@
     "script_type": "Logographic",
     "summary": {
       "n_chars": 42179.0,
-      "n_boundaries": 43536.0,
+      "n_boundaries": 44533.0,
       "categories": {
         "onset": {
           "n_chars": 20775.75,
-          "n_boundaries": 23303.75,
-          "n_boundaries_first_byte": 19425.5,
+          "n_boundaries": 24283.75,
+          "n_boundaries_first_byte": 20405.5,
           "n_boundaries_later_bytes": 3878.25,
-          "crossing_rate": 0.9524805422616336
+          "crossing_rate": 0.9858015755869753
         },
         "internal": {
           "n_chars": 16694.25,
@@ -533,17 +533,17 @@
         },
         "other": {
           "n_chars": 3665.0,
-          "n_boundaries": 3542.0,
-          "n_boundaries_first_byte": 3408.0,
+          "n_boundaries": 3559.0,
+          "n_boundaries_first_byte": 3425.0,
           "n_boundaries_later_bytes": 134.0,
-          "crossing_rate": 0.9320600272851296
+          "crossing_rate": 0.9366984993178717
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5352754042631386,
-        "internal": 0.3636588110988607,
-        "space": 0.019707828004410143,
-        "other": 0.08135795663359059
+        "onset": 0.5452978689960254,
+        "internal": 0.35551725686569513,
+        "space": 0.019266611277030516,
+        "other": 0.07991826286124896
       },
       "by_position": [
         {
@@ -551,7 +551,7 @@
           "n_chars": 20775.75,
           "n_words_reaching": 20775.75,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9524805422616336,
+          "crossing_rate": 0.9858015755869753,
           "mean_char_entropy": 5.554361569078421,
           "mean_first_byte_entropy": 4.356352803439842
         },
@@ -624,14 +624,14 @@
     "methods": {
       "jieba": {
         "n_chars": 42179,
-        "n_boundaries": 43536,
+        "n_boundaries": 44533,
         "categories": {
           "onset": {
             "n_chars": 19585,
-            "n_boundaries": 21904,
-            "n_boundaries_first_byte": 18289,
+            "n_boundaries": 22884,
+            "n_boundaries_first_byte": 19269,
             "n_boundaries_later_bytes": 3615,
-            "crossing_rate": 0.9519530252744447
+            "crossing_rate": 0.9872351289251978
           },
           "internal": {
             "n_chars": 17885,
@@ -649,17 +649,17 @@
           },
           "other": {
             "n_chars": 3665,
-            "n_boundaries": 3542,
-            "n_boundaries_first_byte": 3408,
+            "n_boundaries": 3559,
+            "n_boundaries_first_byte": 3425,
             "n_boundaries_later_bytes": 134,
-            "crossing_rate": 0.9320600272851296
+            "crossing_rate": 0.9366984993178717
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5031238515251746,
-          "internal": 0.3958103638368247,
-          "space": 0.019707828004410143,
-          "other": 0.08135795663359059
+          "onset": 0.5138661217524083,
+          "internal": 0.3869490041093122,
+          "space": 0.019266611277030516,
+          "other": 0.07991826286124896
         },
         "by_position": [
           {
@@ -667,7 +667,7 @@
             "n_chars": 19585,
             "n_words_reaching": 19585,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9519530252744447,
+            "crossing_rate": 0.9872351289251978,
             "mean_char_entropy": 5.577899375544199,
             "mean_first_byte_entropy": 4.384793547648461
           },
@@ -739,14 +739,14 @@
       },
       "pkuseg": {
         "n_chars": 42179,
-        "n_boundaries": 43536,
+        "n_boundaries": 44533,
         "categories": {
           "onset": {
             "n_chars": 20332,
-            "n_boundaries": 22666,
-            "n_boundaries_first_byte": 19027,
+            "n_boundaries": 23646,
+            "n_boundaries_first_byte": 20007,
             "n_boundaries_later_bytes": 3639,
-            "crossing_rate": 0.9529805233130041
+            "crossing_rate": 0.9869663584497345
           },
           "internal": {
             "n_chars": 17138,
@@ -764,17 +764,17 @@
           },
           "other": {
             "n_chars": 3665,
-            "n_boundaries": 3542,
-            "n_boundaries_first_byte": 3408,
+            "n_boundaries": 3559,
+            "n_boundaries_first_byte": 3425,
             "n_boundaries_later_bytes": 134,
-            "crossing_rate": 0.9320600272851296
+            "crossing_rate": 0.9366984993178717
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5206266078647556,
-          "internal": 0.3783076074972437,
-          "space": 0.019707828004410143,
-          "other": 0.08135795663359059
+          "onset": 0.5309770282711697,
+          "internal": 0.3698380975905508,
+          "space": 0.019266611277030516,
+          "other": 0.07991826286124896
         },
         "by_position": [
           {
@@ -782,7 +782,7 @@
             "n_chars": 20332,
             "n_words_reaching": 20332,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9529805233130041,
+            "crossing_rate": 0.9869663584497345,
             "mean_char_entropy": 5.54183065233568,
             "mean_first_byte_entropy": 4.365992262918542
           },
@@ -854,14 +854,14 @@
       },
       "thulac": {
         "n_chars": 42179,
-        "n_boundaries": 43536,
+        "n_boundaries": 44533,
         "categories": {
           "onset": {
             "n_chars": 21274,
-            "n_boundaries": 23671,
-            "n_boundaries_first_byte": 19886,
+            "n_boundaries": 24651,
+            "n_boundaries_first_byte": 20866,
             "n_boundaries_later_bytes": 3785,
-            "crossing_rate": 0.9515840932593777
+            "crossing_rate": 0.9840650559368243
           },
           "internal": {
             "n_chars": 16196,
@@ -879,17 +879,17 @@
           },
           "other": {
             "n_chars": 3665,
-            "n_boundaries": 3542,
-            "n_boundaries_first_byte": 3408,
+            "n_boundaries": 3559,
+            "n_boundaries_first_byte": 3425,
             "n_boundaries_later_bytes": 134,
-            "crossing_rate": 0.9320600272851296
+            "crossing_rate": 0.9366984993178717
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5437109518559353,
-          "internal": 0.3552232635060639,
-          "space": 0.019707828004410143,
-          "other": 0.08135795663359059
+          "onset": 0.5535445624592998,
+          "internal": 0.3472705634024207,
+          "space": 0.019266611277030516,
+          "other": 0.07991826286124896
         },
         "by_position": [
           {
@@ -897,7 +897,7 @@
             "n_chars": 21274,
             "n_words_reaching": 21274,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9515840932593777,
+            "crossing_rate": 0.9840650559368243,
             "mean_char_entropy": 5.499999450182318,
             "mean_first_byte_entropy": 4.335964499408679
           },
@@ -969,14 +969,14 @@
       },
       "icu": {
         "n_chars": 42179,
-        "n_boundaries": 43536,
+        "n_boundaries": 44533,
         "categories": {
           "onset": {
             "n_chars": 21912,
-            "n_boundaries": 24974,
-            "n_boundaries_first_byte": 20500,
+            "n_boundaries": 25954,
+            "n_boundaries_first_byte": 21480,
             "n_boundaries_later_bytes": 4474,
-            "crossing_rate": 0.9534045271997079
+            "crossing_rate": 0.9849397590361446
           },
           "internal": {
             "n_chars": 15558,
@@ -994,17 +994,17 @@
           },
           "other": {
             "n_chars": 3665,
-            "n_boundaries": 3542,
-            "n_boundaries_first_byte": 3408,
+            "n_boundaries": 3559,
+            "n_boundaries_first_byte": 3425,
             "n_boundaries_later_bytes": 134,
-            "crossing_rate": 0.9320600272851296
+            "crossing_rate": 0.9366984993178717
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5736402058066887,
-          "internal": 0.32529400955531057,
-          "space": 0.019707828004410143,
-          "other": 0.08135795663359059
+          "onset": 0.5828037635012238,
+          "internal": 0.3180113623604967,
+          "space": 0.019266611277030516,
+          "other": 0.07991826286124896
         },
         "by_position": [
           {
@@ -1012,7 +1012,7 @@
             "n_chars": 21912,
             "n_words_reaching": 21912,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9534045271997079,
+            "crossing_rate": 0.9849397590361446,
             "mean_char_entropy": 5.597716798251487,
             "mean_first_byte_entropy": 4.338660903783686
           },
@@ -1085,12 +1085,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.373028888608553,
+      "premium": 1.3616572389542883,
       "premium_parts": {
-        "onset": 0.734948593414911,
-        "internal": 0.49931405323577643,
-        "space": 0.027059417181783778,
-        "other": 0.11170682477608175
+        "onset": 0.7425087907047851,
+        "internal": 0.4840926463843449,
+        "space": 0.026234520715486927,
+        "other": 0.10882128114967131
       }
     }
   },
@@ -1103,14 +1103,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 146558,
-      "n_boundaries": 34299,
+      "n_boundaries": 35296,
       "categories": {
         "onset": {
           "n_chars": 20864,
-          "n_boundaries": 19698,
-          "n_boundaries_first_byte": 19694,
+          "n_boundaries": 20658,
+          "n_boundaries_first_byte": 20654,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.9440663343558282
+          "crossing_rate": 0.9899348159509203
         },
         "internal": {
           "n_chars": 102266,
@@ -1128,17 +1128,17 @@
         },
         "other": {
           "n_chars": 3520,
-          "n_boundaries": 639,
-          "n_boundaries_first_byte": 635,
+          "n_boundaries": 676,
+          "n_boundaries_first_byte": 672,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.1806818181818182
+          "crossing_rate": 0.19119318181818182
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5743024577976035,
-        "internal": 0.3732470334412082,
-        "space": 0.033820227994985276,
-        "other": 0.018630280766203097
+        "onset": 0.5852787851314597,
+        "internal": 0.3627039891205802,
+        "space": 0.0328649138712602,
+        "other": 0.01915231187669991
       },
       "by_position": [
         {
@@ -1146,7 +1146,7 @@
           "n_chars": 20864,
           "n_words_reaching": 20864,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9440663343558282,
+          "crossing_rate": 0.9899348159509203,
           "mean_char_entropy": 3.2674355869674296,
           "mean_first_byte_entropy": 3.174770392383438
         },
@@ -1219,14 +1219,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 146558,
-        "n_boundaries": 34299,
+        "n_boundaries": 35296,
         "categories": {
           "onset": {
             "n_chars": 20864,
-            "n_boundaries": 19698,
-            "n_boundaries_first_byte": 19694,
+            "n_boundaries": 20658,
+            "n_boundaries_first_byte": 20654,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.9440663343558282
+            "crossing_rate": 0.9899348159509203
           },
           "internal": {
             "n_chars": 102266,
@@ -1244,17 +1244,17 @@
           },
           "other": {
             "n_chars": 3520,
-            "n_boundaries": 639,
-            "n_boundaries_first_byte": 635,
+            "n_boundaries": 676,
+            "n_boundaries_first_byte": 672,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.1806818181818182
+            "crossing_rate": 0.19119318181818182
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5743024577976035,
-          "internal": 0.3732470334412082,
-          "space": 0.033820227994985276,
-          "other": 0.018630280766203097
+          "onset": 0.5852787851314597,
+          "internal": 0.3627039891205802,
+          "space": 0.0328649138712602,
+          "other": 0.01915231187669991
         },
         "by_position": [
           {
@@ -1262,7 +1262,7 @@
             "n_chars": 20864,
             "n_words_reaching": 20864,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9440663343558282,
+            "crossing_rate": 0.9899348159509203,
             "mean_char_entropy": 3.2674355869674296,
             "mean_first_byte_entropy": 3.174770392383438
           },
@@ -1335,12 +1335,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.081714393843825,
+      "premium": 1.0792233603424553,
       "premium_parts": {
-        "onset": 0.6212312350195535,
-        "internal": 0.4037466885328624,
-        "space": 0.036583827425255455,
-        "other": 0.02015264286615365
+        "onset": 0.6316465372267237,
+        "internal": 0.39143861794832596,
+        "space": 0.035468582785506804,
+        "other": 0.020669622381898792
       }
     }
   },
@@ -1353,14 +1353,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 125194,
-      "n_boundaries": 31708,
+      "n_boundaries": 32705,
       "categories": {
         "onset": {
           "n_chars": 20933,
-          "n_boundaries": 19511,
-          "n_boundaries_first_byte": 19511,
+          "n_boundaries": 20496,
+          "n_boundaries_first_byte": 20496,
           "n_boundaries_later_bytes": 0,
-          "crossing_rate": 0.9320689819901591
+          "crossing_rate": 0.9791238713992261
         },
         "internal": {
           "n_chars": 81360,
@@ -1378,17 +1378,17 @@
         },
         "other": {
           "n_chars": 2943,
-          "n_boundaries": 443,
-          "n_boundaries_first_byte": 442,
+          "n_boundaries": 455,
+          "n_boundaries_first_byte": 454,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.15018688413183826
+          "crossing_rate": 0.15426435609921849
         }
       },
       "share_of_boundaries": {
-        "onset": 0.6153336697363442,
-        "internal": 0.34164879525671754,
-        "space": 0.029046297464362308,
-        "other": 0.013971237542576006
+        "onset": 0.6266931661825409,
+        "internal": 0.3312337563063752,
+        "space": 0.02816083167711359,
+        "other": 0.013912245833970341
       },
       "by_position": [
         {
@@ -1396,7 +1396,7 @@
           "n_chars": 20933,
           "n_words_reaching": 20933,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9320689819901591,
+          "crossing_rate": 0.9791238713992261,
           "mean_char_entropy": 3.0820247046320532,
           "mean_first_byte_entropy": 3.0313439622518583
         },
@@ -1469,14 +1469,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 125194,
-        "n_boundaries": 31708,
+        "n_boundaries": 32705,
         "categories": {
           "onset": {
             "n_chars": 20933,
-            "n_boundaries": 19511,
-            "n_boundaries_first_byte": 19511,
+            "n_boundaries": 20496,
+            "n_boundaries_first_byte": 20496,
             "n_boundaries_later_bytes": 0,
-            "crossing_rate": 0.9320689819901591
+            "crossing_rate": 0.9791238713992261
           },
           "internal": {
             "n_chars": 81360,
@@ -1494,17 +1494,17 @@
           },
           "other": {
             "n_chars": 2943,
-            "n_boundaries": 443,
-            "n_boundaries_first_byte": 442,
+            "n_boundaries": 455,
+            "n_boundaries_first_byte": 454,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.15018688413183826
+            "crossing_rate": 0.15426435609921849
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6153336697363442,
-          "internal": 0.34164879525671754,
-          "space": 0.029046297464362308,
-          "other": 0.013971237542576006
+          "onset": 0.6266931661825409,
+          "internal": 0.3312337563063752,
+          "space": 0.02816083167711359,
+          "other": 0.013912245833970341
         },
         "by_position": [
           {
@@ -1512,7 +1512,7 @@
             "n_chars": 20933,
             "n_words_reaching": 20933,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9320689819901591,
+            "crossing_rate": 0.9791238713992261,
             "mean_char_entropy": 3.0820247046320532,
             "mean_first_byte_entropy": 3.0313439622518583
           },
@@ -1587,10 +1587,10 @@
     "rel_to_eng": {
       "premium": 1.0,
       "premium_parts": {
-        "onset": 0.6153336697363442,
-        "internal": 0.34164879525671754,
-        "space": 0.029046297464362308,
-        "other": 0.013971237542576006
+        "onset": 0.6266931661825409,
+        "internal": 0.3312337563063752,
+        "space": 0.02816083167711359,
+        "other": 0.013912245833970341
       }
     }
   },
@@ -1603,14 +1603,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 133935,
-      "n_boundaries": 30786,
+      "n_boundaries": 31783,
       "categories": {
         "onset": {
           "n_chars": 15283,
-          "n_boundaries": 14107,
-          "n_boundaries_first_byte": 14106,
+          "n_boundaries": 15103,
+          "n_boundaries_first_byte": 15102,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.922986324674475
+          "crossing_rate": 0.9881567755021919
         },
         "internal": {
           "n_chars": 101508,
@@ -1628,17 +1628,17 @@
         },
         "other": {
           "n_chars": 2833,
-          "n_boundaries": 519,
-          "n_boundaries_first_byte": 517,
+          "n_boundaries": 520,
+          "n_boundaries_first_byte": 518,
           "n_boundaries_later_bytes": 2,
-          "crossing_rate": 0.18284504059301093
+          "crossing_rate": 0.18319802329685844
         }
       },
       "share_of_boundaries": {
-        "onset": 0.45822776586760217,
-        "internal": 0.4901578639641395,
-        "space": 0.034756057948418115,
-        "other": 0.016858312219840188
+        "onset": 0.475191139917566,
+        "internal": 0.47478211622565525,
+        "space": 0.033665796180347984,
+        "other": 0.016360947676430797
       },
       "by_position": [
         {
@@ -1646,7 +1646,7 @@
           "n_chars": 15283,
           "n_words_reaching": 15283,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.922986324674475,
+          "crossing_rate": 0.9881567755021919,
           "mean_char_entropy": 3.0623190142087213,
           "mean_first_byte_entropy": 3.0292674995450364
         },
@@ -1719,14 +1719,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 133935,
-        "n_boundaries": 30786,
+        "n_boundaries": 31783,
         "categories": {
           "onset": {
             "n_chars": 15283,
-            "n_boundaries": 14107,
-            "n_boundaries_first_byte": 14106,
+            "n_boundaries": 15103,
+            "n_boundaries_first_byte": 15102,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.922986324674475
+            "crossing_rate": 0.9881567755021919
           },
           "internal": {
             "n_chars": 101508,
@@ -1744,17 +1744,17 @@
           },
           "other": {
             "n_chars": 2833,
-            "n_boundaries": 519,
-            "n_boundaries_first_byte": 517,
+            "n_boundaries": 520,
+            "n_boundaries_first_byte": 518,
             "n_boundaries_later_bytes": 2,
-            "crossing_rate": 0.18284504059301093
+            "crossing_rate": 0.18319802329685844
           }
         },
         "share_of_boundaries": {
-          "onset": 0.45822776586760217,
-          "internal": 0.4901578639641395,
-          "space": 0.034756057948418115,
-          "other": 0.016858312219840188
+          "onset": 0.475191139917566,
+          "internal": 0.47478211622565525,
+          "space": 0.033665796180347984,
+          "other": 0.016360947676430797
         },
         "by_position": [
           {
@@ -1762,7 +1762,7 @@
             "n_chars": 15283,
             "n_words_reaching": 15283,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.922986324674475,
+            "crossing_rate": 0.9881567755021919,
             "mean_char_entropy": 3.0623190142087213,
             "mean_first_byte_entropy": 3.0292674995450364
           },
@@ -1835,12 +1835,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 0.9709221647533746,
+      "premium": 0.9718085919584162,
       "premium_parts": {
-        "onset": 0.44490349438627474,
-        "internal": 0.47590513435095244,
-        "space": 0.03374542702157184,
-        "other": 0.0163681089945755
+        "onset": 0.4617948325944045,
+        "internal": 0.4613973398562911,
+        "space": 0.032716709983183,
+        "other": 0.015899709524537533
       }
     }
   },
@@ -1853,14 +1853,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 148789,
-      "n_boundaries": 33099,
+      "n_boundaries": 34096,
       "categories": {
         "onset": {
           "n_chars": 23918,
-          "n_boundaries": 21487,
-          "n_boundaries_first_byte": 21435,
+          "n_boundaries": 22468,
+          "n_boundaries_first_byte": 22416,
           "n_boundaries_later_bytes": 52,
-          "crossing_rate": 0.8966886863450121
+          "crossing_rate": 0.9376620118739025
         },
         "internal": {
           "n_chars": 97436,
@@ -1878,17 +1878,17 @@
         },
         "other": {
           "n_chars": 4282,
-          "n_boundaries": 618,
-          "n_boundaries_first_byte": 602,
+          "n_boundaries": 634,
+          "n_boundaries_first_byte": 618,
           "n_boundaries_later_bytes": 16,
-          "crossing_rate": 0.1410555815039701
+          "crossing_rate": 0.14479215319943953
         }
       },
       "share_of_boundaries": {
-        "onset": 0.6491736910480679,
-        "internal": 0.30665579020514216,
-        "space": 0.02549925979636847,
-        "other": 0.018671258950421463
+        "onset": 0.6589629282027217,
+        "internal": 0.29768887846081654,
+        "space": 0.024753636790239324,
+        "other": 0.01859455654622243
       },
       "by_position": [
         {
@@ -1896,7 +1896,7 @@
           "n_chars": 23918,
           "n_words_reaching": 23918,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.8966886863450121,
+          "crossing_rate": 0.9376620118739025,
           "mean_char_entropy": 2.8255251982822385,
           "mean_first_byte_entropy": 2.787462563151266
         },
@@ -1969,14 +1969,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 148789,
-        "n_boundaries": 33099,
+        "n_boundaries": 34096,
         "categories": {
           "onset": {
             "n_chars": 23918,
-            "n_boundaries": 21487,
-            "n_boundaries_first_byte": 21435,
+            "n_boundaries": 22468,
+            "n_boundaries_first_byte": 22416,
             "n_boundaries_later_bytes": 52,
-            "crossing_rate": 0.8966886863450121
+            "crossing_rate": 0.9376620118739025
           },
           "internal": {
             "n_chars": 97436,
@@ -1994,17 +1994,17 @@
           },
           "other": {
             "n_chars": 4282,
-            "n_boundaries": 618,
-            "n_boundaries_first_byte": 602,
+            "n_boundaries": 634,
+            "n_boundaries_first_byte": 618,
             "n_boundaries_later_bytes": 16,
-            "crossing_rate": 0.1410555815039701
+            "crossing_rate": 0.14479215319943953
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6491736910480679,
-          "internal": 0.30665579020514216,
-          "space": 0.02549925979636847,
-          "other": 0.018671258950421463
+          "onset": 0.6589629282027217,
+          "internal": 0.29768887846081654,
+          "space": 0.024753636790239324,
+          "other": 0.01859455654622243
         },
         "by_position": [
           {
@@ -2012,7 +2012,7 @@
             "n_chars": 23918,
             "n_words_reaching": 23918,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8966886863450121,
+            "crossing_rate": 0.9376620118739025,
             "mean_char_entropy": 2.8255251982822385,
             "mean_first_byte_entropy": 2.787462563151266
           },
@@ -2085,12 +2085,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0438690551280434,
+      "premium": 1.042531722978138,
       "premium_parts": {
-        "onset": 0.677652327488331,
-        "internal": 0.32010848997098523,
-        "space": 0.02661788823009966,
-        "other": 0.019490349438627475
+        "onset": 0.6869897569179024,
+        "internal": 0.31035009937318453,
+        "space": 0.025806451612903226,
+        "other": 0.019385415074147684
       }
     }
   },
@@ -2103,14 +2103,14 @@
     "script_type": "Abjad",
     "summary": {
       "n_chars": 97501,
-      "n_boundaries": 42046,
+      "n_boundaries": 43043,
       "categories": {
         "onset": {
           "n_chars": 16702,
-          "n_boundaries": 13641,
-          "n_boundaries_first_byte": 13626,
+          "n_boundaries": 14509,
+          "n_boundaries_first_byte": 14494,
           "n_boundaries_later_bytes": 15,
-          "crossing_rate": 0.8163692970901688
+          "crossing_rate": 0.867800263441504
         },
         "internal": {
           "n_chars": 61978,
@@ -2128,17 +2128,17 @@
         },
         "other": {
           "n_chars": 3060,
-          "n_boundaries": 506,
-          "n_boundaries_first_byte": 505,
+          "n_boundaries": 635,
+          "n_boundaries_first_byte": 634,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.165359477124183
+          "crossing_rate": 0.20751633986928106
         }
       },
       "share_of_boundaries": {
-        "onset": 0.3244303857679684,
-        "internal": 0.6474813299719355,
-        "space": 0.016053845787946535,
-        "other": 0.01203443847214955
+        "onset": 0.33708152312803474,
+        "internal": 0.6324837952744929,
+        "space": 0.015681992426178473,
+        "other": 0.014752689171293822
       },
       "by_position": [
         {
@@ -2146,7 +2146,7 @@
           "n_chars": 16702,
           "n_words_reaching": 16702,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.8163692970901688,
+          "crossing_rate": 0.867800263441504,
           "mean_char_entropy": 2.5453591935076405,
           "mean_first_byte_entropy": 2.490451308639648
         },
@@ -2219,14 +2219,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 97501,
-        "n_boundaries": 42046,
+        "n_boundaries": 43043,
         "categories": {
           "onset": {
             "n_chars": 16702,
-            "n_boundaries": 13641,
-            "n_boundaries_first_byte": 13626,
+            "n_boundaries": 14509,
+            "n_boundaries_first_byte": 14494,
             "n_boundaries_later_bytes": 15,
-            "crossing_rate": 0.8163692970901688
+            "crossing_rate": 0.867800263441504
           },
           "internal": {
             "n_chars": 61978,
@@ -2244,17 +2244,17 @@
           },
           "other": {
             "n_chars": 3060,
-            "n_boundaries": 506,
-            "n_boundaries_first_byte": 505,
+            "n_boundaries": 635,
+            "n_boundaries_first_byte": 634,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.165359477124183
+            "crossing_rate": 0.20751633986928106
           }
         },
         "share_of_boundaries": {
-          "onset": 0.3244303857679684,
-          "internal": 0.6474813299719355,
-          "space": 0.016053845787946535,
-          "other": 0.01203443847214955
+          "onset": 0.33708152312803474,
+          "internal": 0.6324837952744929,
+          "space": 0.015681992426178473,
+          "other": 0.014752689171293822
         },
         "by_position": [
           {
@@ -2262,7 +2262,7 @@
             "n_chars": 16702,
             "n_words_reaching": 16702,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8163692970901688,
+            "crossing_rate": 0.867800263441504,
             "mean_char_entropy": 2.5453591935076405,
             "mean_first_byte_entropy": 2.490451308639648
           },
@@ -2335,12 +2335,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.3260375930364576,
+      "premium": 1.3160984558935942,
       "premium_parts": {
-        "onset": 0.4302068878516463,
-        "internal": 0.8585845843320298,
-        "space": 0.0212880030276271,
-        "other": 0.015958117825154536
+        "onset": 0.4436324720990674,
+        "internal": 0.8324109463384803,
+        "space": 0.02063904601742853,
+        "other": 0.019415991438617948
       }
     }
   },
@@ -2353,14 +2353,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 123869,
-      "n_boundaries": 33930,
+      "n_boundaries": 34927,
       "categories": {
         "onset": {
           "n_chars": 18812,
-          "n_boundaries": 17697,
-          "n_boundaries_first_byte": 17691,
+          "n_boundaries": 18620,
+          "n_boundaries_first_byte": 18614,
           "n_boundaries_later_bytes": 6,
-          "crossing_rate": 0.9405698490325324
+          "crossing_rate": 0.9894748033170316
         },
         "internal": {
           "n_chars": 84364,
@@ -2378,17 +2378,17 @@
         },
         "other": {
           "n_chars": 2838,
-          "n_boundaries": 537,
-          "n_boundaries_first_byte": 533,
+          "n_boundaries": 611,
+          "n_boundaries_first_byte": 607,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.18851303735024666
+          "crossing_rate": 0.21458773784355178
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5215738284703801,
-        "internal": 0.4155909224874742,
-        "space": 0.04700854700854701,
-        "other": 0.015826702033598584
+        "onset": 0.5331119191456466,
+        "internal": 0.4037277750737252,
+        "space": 0.04566667621038165,
+        "other": 0.017493629570246513
       },
       "by_position": [
         {
@@ -2396,7 +2396,7 @@
           "n_chars": 18812,
           "n_words_reaching": 18812,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9405698490325324,
+          "crossing_rate": 0.9894748033170316,
           "mean_char_entropy": 3.1960315516798263,
           "mean_first_byte_entropy": 3.105796388451002
         },
@@ -2469,14 +2469,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 123869,
-        "n_boundaries": 33930,
+        "n_boundaries": 34927,
         "categories": {
           "onset": {
             "n_chars": 18812,
-            "n_boundaries": 17697,
-            "n_boundaries_first_byte": 17691,
+            "n_boundaries": 18620,
+            "n_boundaries_first_byte": 18614,
             "n_boundaries_later_bytes": 6,
-            "crossing_rate": 0.9405698490325324
+            "crossing_rate": 0.9894748033170316
           },
           "internal": {
             "n_chars": 84364,
@@ -2494,17 +2494,17 @@
           },
           "other": {
             "n_chars": 2838,
-            "n_boundaries": 537,
-            "n_boundaries_first_byte": 533,
+            "n_boundaries": 611,
+            "n_boundaries_first_byte": 607,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.18851303735024666
+            "crossing_rate": 0.21458773784355178
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5215738284703801,
-          "internal": 0.4155909224874742,
-          "space": 0.04700854700854701,
-          "other": 0.015826702033598584
+          "onset": 0.5331119191456466,
+          "internal": 0.4037277750737252,
+          "space": 0.04566667621038165,
+          "other": 0.017493629570246513
         },
         "by_position": [
           {
@@ -2512,7 +2512,7 @@
             "n_chars": 18812,
             "n_words_reaching": 18812,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9405698490325324,
+            "crossing_rate": 0.9894748033170316,
             "mean_char_entropy": 3.1960315516798263,
             "mean_first_byte_entropy": 3.105796388451002
           },
@@ -2585,12 +2585,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0700769521887221,
+      "premium": 1.0679406818529278,
       "premium_parts": {
-        "onset": 0.5581241327109877,
-        "internal": 0.44471426769269584,
-        "space": 0.05030276270972625,
-        "other": 0.016935789075312225
+        "onset": 0.5693319064363247,
+        "internal": 0.4311573153951995,
+        "space": 0.04876930133007185,
+        "other": 0.0186821586913316
       }
     }
   },
@@ -2603,14 +2603,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 147090,
-      "n_boundaries": 34633,
+      "n_boundaries": 35630,
       "categories": {
         "onset": {
           "n_chars": 22979,
-          "n_boundaries": 21397,
-          "n_boundaries_first_byte": 21380,
+          "n_boundaries": 22387,
+          "n_boundaries_first_byte": 22370,
           "n_boundaries_later_bytes": 17,
-          "crossing_rate": 0.931154532399147
+          "crossing_rate": 0.9734975412333
         },
         "internal": {
           "n_chars": 98620,
@@ -2628,17 +2628,17 @@
         },
         "other": {
           "n_chars": 3504,
-          "n_boundaries": 506,
-          "n_boundaries_first_byte": 505,
+          "n_boundaries": 513,
+          "n_boundaries_first_byte": 512,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.14412100456621005
+          "crossing_rate": 0.1461187214611872
         }
       },
       "share_of_boundaries": {
-        "onset": 0.6178211532353536,
-        "internal": 0.3367597378223082,
-        "space": 0.03080876620564202,
-        "other": 0.014610342736696215
+        "onset": 0.6283188324445692,
+        "internal": 0.32733651417344933,
+        "space": 0.02994667415099635,
+        "other": 0.014397979230985125
       },
       "by_position": [
         {
@@ -2646,7 +2646,7 @@
           "n_chars": 22979,
           "n_words_reaching": 22979,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.931154532399147,
+          "crossing_rate": 0.9734975412333,
           "mean_char_entropy": 2.9134647584246562,
           "mean_first_byte_entropy": 2.8783652833689533
         },
@@ -2719,14 +2719,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 147090,
-        "n_boundaries": 34633,
+        "n_boundaries": 35630,
         "categories": {
           "onset": {
             "n_chars": 22979,
-            "n_boundaries": 21397,
-            "n_boundaries_first_byte": 21380,
+            "n_boundaries": 22387,
+            "n_boundaries_first_byte": 22370,
             "n_boundaries_later_bytes": 17,
-            "crossing_rate": 0.931154532399147
+            "crossing_rate": 0.9734975412333
           },
           "internal": {
             "n_chars": 98620,
@@ -2744,17 +2744,17 @@
           },
           "other": {
             "n_chars": 3504,
-            "n_boundaries": 506,
-            "n_boundaries_first_byte": 505,
+            "n_boundaries": 513,
+            "n_boundaries_first_byte": 512,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.14412100456621005
+            "crossing_rate": 0.1461187214611872
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6178211532353536,
-          "internal": 0.3367597378223082,
-          "space": 0.03080876620564202,
-          "other": 0.014610342736696215
+          "onset": 0.6283188324445692,
+          "internal": 0.32733651417344933,
+          "space": 0.02994667415099635,
+          "other": 0.014397979230985125
         },
         "by_position": [
           {
@@ -2762,7 +2762,7 @@
             "n_chars": 22979,
             "n_words_reaching": 22979,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.931154532399147,
+            "crossing_rate": 0.9734975412333,
             "mean_char_entropy": 2.9134647584246562,
             "mean_first_byte_entropy": 2.8783652833689533
           },
@@ -2835,12 +2835,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0922480131197174,
+      "premium": 1.0894358660755237,
       "premium_parts": {
-        "onset": 0.6748139270846474,
-        "internal": 0.3678251545351331,
-        "space": 0.03365081367478239,
-        "other": 0.015958117825154536
+        "onset": 0.6845130713958111,
+        "internal": 0.3566121388166947,
+        "space": 0.032624980889772205,
+        "other": 0.015685674973245682
       }
     }
   },
@@ -2853,14 +2853,14 @@
     "script_type": "Logosyllabary",
     "summary": {
       "n_chars": 54658.0,
-      "n_boundaries": 35862.0,
+      "n_boundaries": 36859.0,
       "categories": {
         "onset": {
           "n_chars": 11216.0,
-          "n_boundaries": 10713.0,
-          "n_boundaries_first_byte": 9946.0,
+          "n_boundaries": 11695.0,
+          "n_boundaries_first_byte": 10928.0,
           "n_boundaries_later_bytes": 767.0,
-          "crossing_rate": 0.9076319543509273
+          "crossing_rate": 0.9747681883024251
         },
         "internal": {
           "n_chars": 39973.0,
@@ -2878,17 +2878,17 @@
         },
         "other": {
           "n_chars": 3403.0,
-          "n_boundaries": 1783.0,
-          "n_boundaries_first_byte": 1775.0,
+          "n_boundaries": 1798.0,
+          "n_boundaries_first_byte": 1790.0,
           "n_boundaries_later_bytes": 8.0,
-          "crossing_rate": 0.5215985894798707
+          "crossing_rate": 0.526006464883926
         }
       },
       "share_of_boundaries": {
-        "onset": 0.29872845909319057,
-        "internal": 0.6505214433104679,
-        "space": 0.001031732753332218,
-        "other": 0.049718364843009316
+        "onset": 0.3172902140589815,
+        "internal": 0.6329254727474972,
+        "space": 0.001003825388643208,
+        "other": 0.04878048780487805
       },
       "by_position": [
         {
@@ -2896,7 +2896,7 @@
           "n_chars": 11216.0,
           "n_words_reaching": 11216.0,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9076319543509273,
+          "crossing_rate": 0.9747681883024251,
           "mean_char_entropy": 5.31222742153605,
           "mean_first_byte_entropy": 4.347227884307206
         },
@@ -2969,14 +2969,14 @@
     "methods": {
       "ginza_bunsetsu": {
         "n_chars": 54658,
-        "n_boundaries": 35862,
+        "n_boundaries": 36859,
         "categories": {
           "onset": {
             "n_chars": 11216,
-            "n_boundaries": 10713,
-            "n_boundaries_first_byte": 9946,
+            "n_boundaries": 11695,
+            "n_boundaries_first_byte": 10928,
             "n_boundaries_later_bytes": 767,
-            "crossing_rate": 0.9076319543509273
+            "crossing_rate": 0.9747681883024251
           },
           "internal": {
             "n_chars": 39973,
@@ -2994,17 +2994,17 @@
           },
           "other": {
             "n_chars": 3403,
-            "n_boundaries": 1783,
-            "n_boundaries_first_byte": 1775,
+            "n_boundaries": 1798,
+            "n_boundaries_first_byte": 1790,
             "n_boundaries_later_bytes": 8,
-            "crossing_rate": 0.5215985894798707
+            "crossing_rate": 0.526006464883926
           }
         },
         "share_of_boundaries": {
-          "onset": 0.29872845909319057,
-          "internal": 0.6505214433104679,
-          "space": 0.001031732753332218,
-          "other": 0.049718364843009316
+          "onset": 0.3172902140589815,
+          "internal": 0.6329254727474972,
+          "space": 0.001003825388643208,
+          "other": 0.04878048780487805
         },
         "by_position": [
           {
@@ -3012,7 +3012,7 @@
             "n_chars": 11216,
             "n_words_reaching": 11216,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9076319543509273,
+            "crossing_rate": 0.9747681883024251,
             "mean_char_entropy": 5.31222742153605,
             "mean_first_byte_entropy": 4.347227884307206
           },
@@ -3085,12 +3085,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.1310079475211303,
+      "premium": 1.1270142180094787,
       "premium_parts": {
-        "onset": 0.3378642613851394,
-        "internal": 0.7357449224170556,
-        "space": 0.0011668979437365965,
-        "other": 0.05623186577519869
+        "onset": 0.3575905824797432,
+        "internal": 0.7133160067268002,
+        "space": 0.001131325485399786,
+        "other": 0.054976303317535544
       }
     }
   },
@@ -3103,14 +3103,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 137943,
-      "n_boundaries": 29515,
+      "n_boundaries": 30512,
       "categories": {
         "onset": {
           "n_chars": 16480,
-          "n_boundaries": 15069,
-          "n_boundaries_first_byte": 15004,
+          "n_boundaries": 16049,
+          "n_boundaries_first_byte": 15984,
           "n_boundaries_later_bytes": 65,
-          "crossing_rate": 0.9141990291262136
+          "crossing_rate": 0.9699029126213592
         },
         "internal": {
           "n_chars": 102470,
@@ -3128,17 +3128,17 @@
         },
         "other": {
           "n_chars": 3480,
-          "n_boundaries": 436,
-          "n_boundaries_first_byte": 434,
+          "n_boundaries": 453,
+          "n_boundaries_first_byte": 451,
           "n_boundaries_later_bytes": 2,
-          "crossing_rate": 0.12471264367816091
+          "crossing_rate": 0.1295977011494253
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5105539556157885,
-        "internal": 0.45864814501101137,
-        "space": 0.01602574961883788,
-        "other": 0.014772149754362189
+        "onset": 0.5259897745149449,
+        "internal": 0.44366151022548506,
+        "space": 0.01550209753539591,
+        "other": 0.014846617724174095
       },
       "by_position": [
         {
@@ -3146,7 +3146,7 @@
           "n_chars": 16480,
           "n_words_reaching": 16480,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9141990291262136,
+          "crossing_rate": 0.9699029126213592,
           "mean_char_entropy": 3.009102416903218,
           "mean_first_byte_entropy": 2.942953393096783
         },
@@ -3219,14 +3219,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 137943,
-        "n_boundaries": 29515,
+        "n_boundaries": 30512,
         "categories": {
           "onset": {
             "n_chars": 16480,
-            "n_boundaries": 15069,
-            "n_boundaries_first_byte": 15004,
+            "n_boundaries": 16049,
+            "n_boundaries_first_byte": 15984,
             "n_boundaries_later_bytes": 65,
-            "crossing_rate": 0.9141990291262136
+            "crossing_rate": 0.9699029126213592
           },
           "internal": {
             "n_chars": 102470,
@@ -3244,17 +3244,17 @@
           },
           "other": {
             "n_chars": 3480,
-            "n_boundaries": 436,
-            "n_boundaries_first_byte": 434,
+            "n_boundaries": 453,
+            "n_boundaries_first_byte": 451,
             "n_boundaries_later_bytes": 2,
-            "crossing_rate": 0.12471264367816091
+            "crossing_rate": 0.1295977011494253
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5105539556157885,
-          "internal": 0.45864814501101137,
-          "space": 0.01602574961883788,
-          "other": 0.014772149754362189
+          "onset": 0.5259897745149449,
+          "internal": 0.44366151022548506,
+          "space": 0.01550209753539591,
+          "other": 0.014846617724174095
         },
         "by_position": [
           {
@@ -3262,7 +3262,7 @@
             "n_chars": 16480,
             "n_words_reaching": 16480,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9141990291262136,
+            "crossing_rate": 0.9699029126213592,
             "mean_char_entropy": 3.009102416903218,
             "mean_first_byte_entropy": 2.942953393096783
           },
@@ -3335,12 +3335,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 0.9308376434969093,
+      "premium": 0.93294603271671,
       "premium_parts": {
-        "onset": 0.4752428409234263,
-        "internal": 0.42692695849627854,
-        "space": 0.014917371010470543,
-        "other": 0.013750473066733947
+        "onset": 0.4907200733832747,
+        "internal": 0.41391224583397035,
+        "space": 0.014462620394435102,
+        "other": 0.013851093105029811
       }
     }
   },
@@ -3353,14 +3353,14 @@
     "script_type": "Syllabary",
     "summary": {
       "n_chars": 63011,
-      "n_boundaries": 37531,
+      "n_boundaries": 38528,
       "categories": {
         "onset": {
           "n_chars": 14742,
-          "n_boundaries": 13426,
-          "n_boundaries_first_byte": 13047,
+          "n_boundaries": 14353,
+          "n_boundaries_first_byte": 13974,
           "n_boundaries_later_bytes": 379,
-          "crossing_rate": 0.9008275674942342
+          "crossing_rate": 0.9479717813051146
         },
         "internal": {
           "n_chars": 31930,
@@ -3378,17 +3378,17 @@
         },
         "other": {
           "n_chars": 2567,
-          "n_boundaries": 736,
-          "n_boundaries_first_byte": 727,
+          "n_boundaries": 806,
+          "n_boundaries_first_byte": 797,
           "n_boundaries_later_bytes": 9,
-          "crossing_rate": 0.283989092325672
+          "crossing_rate": 0.31125827814569534
         }
       },
       "share_of_boundaries": {
-        "onset": 0.357730942420932,
-        "internal": 0.5530894460579254,
-        "space": 0.06956915616423756,
-        "other": 0.01961045535690496
+        "onset": 0.3725342607973422,
+        "internal": 0.5387769933554817,
+        "space": 0.0677688953488372,
+        "other": 0.02091985049833887
       },
       "by_position": [
         {
@@ -3396,7 +3396,7 @@
           "n_chars": 14742,
           "n_words_reaching": 14742,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9008275674942342,
+          "crossing_rate": 0.9479717813051146,
           "mean_char_entropy": 4.946546796742681,
           "mean_first_byte_entropy": 4.355593293014872
         },
@@ -3469,14 +3469,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 63011,
-        "n_boundaries": 37531,
+        "n_boundaries": 38528,
         "categories": {
           "onset": {
             "n_chars": 14742,
-            "n_boundaries": 13426,
-            "n_boundaries_first_byte": 13047,
+            "n_boundaries": 14353,
+            "n_boundaries_first_byte": 13974,
             "n_boundaries_later_bytes": 379,
-            "crossing_rate": 0.9008275674942342
+            "crossing_rate": 0.9479717813051146
           },
           "internal": {
             "n_chars": 31930,
@@ -3494,17 +3494,17 @@
           },
           "other": {
             "n_chars": 2567,
-            "n_boundaries": 736,
-            "n_boundaries_first_byte": 727,
+            "n_boundaries": 806,
+            "n_boundaries_first_byte": 797,
             "n_boundaries_later_bytes": 9,
-            "crossing_rate": 0.283989092325672
+            "crossing_rate": 0.31125827814569534
           }
         },
         "share_of_boundaries": {
-          "onset": 0.357730942420932,
-          "internal": 0.5530894460579254,
-          "space": 0.06956915616423756,
-          "other": 0.01961045535690496
+          "onset": 0.3725342607973422,
+          "internal": 0.5387769933554817,
+          "space": 0.0677688953488372,
+          "other": 0.02091985049833887
         },
         "by_position": [
           {
@@ -3512,7 +3512,7 @@
             "n_chars": 14742,
             "n_words_reaching": 14742,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9008275674942342,
+            "crossing_rate": 0.9479717813051146,
             "mean_char_entropy": 4.946546796742681,
             "mean_first_byte_entropy": 4.355593293014872
           },
@@ -3585,12 +3585,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.1836445061183298,
+      "premium": 1.1780461703103502,
       "premium_parts": {
-        "onset": 0.4234262646650688,
-        "internal": 0.6546612842184938,
-        "space": 0.08234514948908793,
-        "other": 0.023211807745679325
+        "onset": 0.43886255924170614,
+        "internal": 0.6347041736737502,
+        "space": 0.07983488763186057,
+        "other": 0.024644549763033177
       }
     }
   },
@@ -3603,14 +3603,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 141462,
-      "n_boundaries": 32605,
+      "n_boundaries": 33602,
       "categories": {
         "onset": {
           "n_chars": 18931,
-          "n_boundaries": 13125,
-          "n_boundaries_first_byte": 13121,
+          "n_boundaries": 14111,
+          "n_boundaries_first_byte": 14107,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.6932016269610691
+          "crossing_rate": 0.7451798637155987
         },
         "internal": {
           "n_chars": 101805,
@@ -3628,17 +3628,17 @@
         },
         "other": {
           "n_chars": 2749,
-          "n_boundaries": 472,
-          "n_boundaries_first_byte": 471,
+          "n_boundaries": 483,
+          "n_boundaries_first_byte": 482,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.17133503092033467
+          "crossing_rate": 0.17533648599490723
         }
       },
       "share_of_boundaries": {
-        "onset": 0.40254562183714154,
-        "internal": 0.537770280631805,
-        "space": 0.04520779021622451,
-        "other": 0.014476307314829014
+        "onset": 0.41994524135468125,
+        "internal": 0.5218141777275163,
+        "space": 0.04386643652163562,
+        "other": 0.014374144396166895
       },
       "by_position": [
         {
@@ -3646,7 +3646,7 @@
           "n_chars": 18931,
           "n_words_reaching": 18931,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.6932016269610691,
+          "crossing_rate": 0.7451798637155987,
           "mean_char_entropy": 2.456493021844521,
           "mean_first_byte_entropy": 2.413634000612956
         },
@@ -3719,14 +3719,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 141462,
-        "n_boundaries": 32605,
+        "n_boundaries": 33602,
         "categories": {
           "onset": {
             "n_chars": 18931,
-            "n_boundaries": 13125,
-            "n_boundaries_first_byte": 13121,
+            "n_boundaries": 14111,
+            "n_boundaries_first_byte": 14107,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6932016269610691
+            "crossing_rate": 0.7451798637155987
           },
           "internal": {
             "n_chars": 101805,
@@ -3744,17 +3744,17 @@
           },
           "other": {
             "n_chars": 2749,
-            "n_boundaries": 472,
-            "n_boundaries_first_byte": 471,
+            "n_boundaries": 483,
+            "n_boundaries_first_byte": 482,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.17133503092033467
+            "crossing_rate": 0.17533648599490723
           }
         },
         "share_of_boundaries": {
-          "onset": 0.40254562183714154,
-          "internal": 0.537770280631805,
-          "space": 0.04520779021622451,
-          "other": 0.014476307314829014
+          "onset": 0.41994524135468125,
+          "internal": 0.5218141777275163,
+          "space": 0.04386643652163562,
+          "other": 0.014374144396166895
         },
         "by_position": [
           {
@@ -3762,7 +3762,7 @@
             "n_chars": 18931,
             "n_words_reaching": 18931,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.6932016269610691,
+            "crossing_rate": 0.7451798637155987,
             "mean_char_entropy": 2.456493021844521,
             "mean_first_byte_entropy": 2.413634000612956
           },
@@ -3835,12 +3835,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0282893906900468,
+      "premium": 1.0274269989298273,
       "premium_parts": {
-        "onset": 0.4139333922038602,
-        "internal": 0.5529834742020941,
-        "space": 0.04648669105588495,
-        "other": 0.014885833228207393
+        "onset": 0.43146307903990216,
+        "internal": 0.5361259746216175,
+        "space": 0.04506956122916985,
+        "other": 0.014768384039137746
       }
     }
   },
@@ -3853,14 +3853,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 141042,
-      "n_boundaries": 34841,
+      "n_boundaries": 35838,
       "categories": {
         "onset": {
           "n_chars": 22694,
-          "n_boundaries": 21106,
-          "n_boundaries_first_byte": 21098,
+          "n_boundaries": 22034,
+          "n_boundaries_first_byte": 22026,
           "n_boundaries_later_bytes": 8,
-          "crossing_rate": 0.9299374283951706
+          "crossing_rate": 0.970564907023883
         },
         "internal": {
           "n_chars": 93179,
@@ -3878,17 +3878,17 @@
         },
         "other": {
           "n_chars": 3449,
-          "n_boundaries": 492,
-          "n_boundaries_first_byte": 488,
+          "n_boundaries": 561,
+          "n_boundaries_first_byte": 557,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.1423601043780806
+          "crossing_rate": 0.16236590316033633
         }
       },
       "share_of_boundaries": {
-        "onset": 0.605780545908556,
-        "internal": 0.3462874199936856,
-        "space": 0.03381074021985592,
-        "other": 0.014121293877902471
+        "onset": 0.6148222557062336,
+        "internal": 0.33665383112896924,
+        "space": 0.03287013784251353,
+        "other": 0.01565377532228361
       },
       "by_position": [
         {
@@ -3896,7 +3896,7 @@
           "n_chars": 22694,
           "n_words_reaching": 22694,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9299374283951706,
+          "crossing_rate": 0.970564907023883,
           "mean_char_entropy": 2.983215154598912,
           "mean_first_byte_entropy": 2.9406142739593935
         },
@@ -3969,14 +3969,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 141042,
-        "n_boundaries": 34841,
+        "n_boundaries": 35838,
         "categories": {
           "onset": {
             "n_chars": 22694,
-            "n_boundaries": 21106,
-            "n_boundaries_first_byte": 21098,
+            "n_boundaries": 22034,
+            "n_boundaries_first_byte": 22026,
             "n_boundaries_later_bytes": 8,
-            "crossing_rate": 0.9299374283951706
+            "crossing_rate": 0.970564907023883
           },
           "internal": {
             "n_chars": 93179,
@@ -3994,17 +3994,17 @@
           },
           "other": {
             "n_chars": 3449,
-            "n_boundaries": 492,
-            "n_boundaries_first_byte": 488,
+            "n_boundaries": 561,
+            "n_boundaries_first_byte": 557,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.1423601043780806
+            "crossing_rate": 0.16236590316033633
           }
         },
         "share_of_boundaries": {
-          "onset": 0.605780545908556,
-          "internal": 0.3462874199936856,
-          "space": 0.03381074021985592,
-          "other": 0.014121293877902471
+          "onset": 0.6148222557062336,
+          "internal": 0.33665383112896924,
+          "space": 0.03287013784251353,
+          "other": 0.01565377532228361
         },
         "by_position": [
           {
@@ -4012,7 +4012,7 @@
             "n_chars": 22694,
             "n_words_reaching": 22694,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9299374283951706,
+            "crossing_rate": 0.970564907023883,
             "mean_char_entropy": 2.983215154598912,
             "mean_first_byte_entropy": 2.9406142739593935
           },
@@ -4085,12 +4085,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0988078718304528,
+      "premium": 1.0957957498853386,
       "premium_parts": {
-        "onset": 0.6656364324460704,
-        "internal": 0.3805033430049199,
-        "space": 0.03715150750599218,
-        "other": 0.015516588873470417
+        "onset": 0.6737196147378077,
+        "internal": 0.368903837333741,
+        "space": 0.03601895734597156,
+        "other": 0.017153340467818377
       }
     }
   },
@@ -4103,14 +4103,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 149187,
-      "n_boundaries": 35095,
+      "n_boundaries": 36092,
       "categories": {
         "onset": {
           "n_chars": 24813,
-          "n_boundaries": 23141,
-          "n_boundaries_first_byte": 23141,
+          "n_boundaries": 24123,
+          "n_boundaries_first_byte": 24123,
           "n_boundaries_later_bytes": 0,
-          "crossing_rate": 0.9326159674364245
+          "crossing_rate": 0.9721919961310603
         },
         "internal": {
           "n_chars": 97403,
@@ -4128,17 +4128,17 @@
         },
         "other": {
           "n_chars": 3149,
-          "n_boundaries": 397,
-          "n_boundaries_first_byte": 393,
+          "n_boundaries": 412,
+          "n_boundaries_first_byte": 408,
           "n_boundaries_later_bytes": 4,
-          "crossing_rate": 0.12575420768497936
+          "crossing_rate": 0.12956494125119086
         }
       },
       "share_of_boundaries": {
-        "onset": 0.6593816783017524,
-        "internal": 0.3053426414019091,
-        "space": 0.023963527568029636,
-        "other": 0.011312152728308876
+        "onset": 0.6683752632162252,
+        "internal": 0.29690790202815026,
+        "space": 0.02330156267316857,
+        "other": 0.011415272082455945
       },
       "by_position": [
         {
@@ -4146,7 +4146,7 @@
           "n_chars": 24813,
           "n_words_reaching": 24813,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9326159674364245,
+          "crossing_rate": 0.9721919961310603,
           "mean_char_entropy": 2.8968859903487005,
           "mean_first_byte_entropy": 2.8622715185262684
         },
@@ -4219,14 +4219,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 149187,
-        "n_boundaries": 35095,
+        "n_boundaries": 36092,
         "categories": {
           "onset": {
             "n_chars": 24813,
-            "n_boundaries": 23141,
-            "n_boundaries_first_byte": 23141,
+            "n_boundaries": 24123,
+            "n_boundaries_first_byte": 24123,
             "n_boundaries_later_bytes": 0,
-            "crossing_rate": 0.9326159674364245
+            "crossing_rate": 0.9721919961310603
           },
           "internal": {
             "n_chars": 97403,
@@ -4244,17 +4244,17 @@
           },
           "other": {
             "n_chars": 3149,
-            "n_boundaries": 397,
-            "n_boundaries_first_byte": 393,
+            "n_boundaries": 412,
+            "n_boundaries_first_byte": 408,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.12575420768497936
+            "crossing_rate": 0.12956494125119086
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6593816783017524,
-          "internal": 0.3053426414019091,
-          "space": 0.023963527568029636,
-          "other": 0.011312152728308876
+          "onset": 0.6683752632162252,
+          "internal": 0.29690790202815026,
+          "space": 0.02330156267316857,
+          "other": 0.011415272082455945
         },
         "by_position": [
           {
@@ -4262,7 +4262,7 @@
             "n_chars": 24813,
             "n_words_reaching": 24813,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9326159674364245,
+            "crossing_rate": 0.9721919961310603,
             "mean_char_entropy": 2.8968859903487005,
             "mean_first_byte_entropy": 2.8622715185262684
           },
@@ -4335,12 +4335,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.1068184685252933,
+      "premium": 1.1035621464607859,
       "premium_parts": {
-        "onset": 0.7298158193515832,
-        "internal": 0.33795887473192887,
-        "space": 0.026523274883310206,
-        "other": 0.012520499558471048
+        "onset": 0.7375936401161902,
+        "internal": 0.32765632166335423,
+        "space": 0.025714722519492434,
+        "other": 0.012597462161748969
       }
     }
   },
@@ -4353,14 +4353,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 124505,
-      "n_boundaries": 30204,
+      "n_boundaries": 31201,
       "categories": {
         "onset": {
           "n_chars": 19720,
-          "n_boundaries": 18027,
-          "n_boundaries_first_byte": 17944,
+          "n_boundaries": 19010,
+          "n_boundaries_first_byte": 18927,
           "n_boundaries_later_bytes": 83,
-          "crossing_rate": 0.9136409736308316
+          "crossing_rate": 0.9597870182555781
         },
         "internal": {
           "n_chars": 83149,
@@ -4378,17 +4378,17 @@
         },
         "other": {
           "n_chars": 2873,
-          "n_boundaries": 413,
-          "n_boundaries_first_byte": 411,
+          "n_boundaries": 427,
+          "n_boundaries_first_byte": 425,
           "n_boundaries_later_bytes": 2,
-          "crossing_rate": 0.14340410720501218
+          "crossing_rate": 0.14827706230421162
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5968414779499404,
-        "internal": 0.35829691431598465,
-        "space": 0.03118792212951927,
-        "other": 0.013673685604555688
+        "onset": 0.6092753437389827,
+        "internal": 0.34684785744046664,
+        "space": 0.030191340021153167,
+        "other": 0.013685458799397456
       },
       "by_position": [
         {
@@ -4396,7 +4396,7 @@
           "n_chars": 19720,
           "n_words_reaching": 19720,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.9136409736308316,
+          "crossing_rate": 0.9597870182555781,
           "mean_char_entropy": 3.0063919178096636,
           "mean_first_byte_entropy": 2.9621433225169564
         },
@@ -4469,14 +4469,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 124505,
-        "n_boundaries": 30204,
+        "n_boundaries": 31201,
         "categories": {
           "onset": {
             "n_chars": 19720,
-            "n_boundaries": 18027,
-            "n_boundaries_first_byte": 17944,
+            "n_boundaries": 19010,
+            "n_boundaries_first_byte": 18927,
             "n_boundaries_later_bytes": 83,
-            "crossing_rate": 0.9136409736308316
+            "crossing_rate": 0.9597870182555781
           },
           "internal": {
             "n_chars": 83149,
@@ -4494,17 +4494,17 @@
           },
           "other": {
             "n_chars": 2873,
-            "n_boundaries": 413,
-            "n_boundaries_first_byte": 411,
+            "n_boundaries": 427,
+            "n_boundaries_first_byte": 425,
             "n_boundaries_later_bytes": 2,
-            "crossing_rate": 0.14340410720501218
+            "crossing_rate": 0.14827706230421162
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5968414779499404,
-          "internal": 0.35829691431598465,
-          "space": 0.03118792212951927,
-          "other": 0.013673685604555688
+          "onset": 0.6092753437389827,
+          "internal": 0.34684785744046664,
+          "space": 0.030191340021153167,
+          "other": 0.013685458799397456
         },
         "by_position": [
           {
@@ -4512,7 +4512,7 @@
             "n_chars": 19720,
             "n_words_reaching": 19720,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.9136409736308316,
+            "crossing_rate": 0.9597870182555781,
             "mean_char_entropy": 3.0063919178096636,
             "mean_first_byte_entropy": 2.9621433225169564
           },
@@ -4585,12 +4585,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 0.9525671754762205,
+      "premium": 0.9540131478367222,
       "premium_parts": {
-        "onset": 0.5685316008578277,
-        "internal": 0.3413018796518229,
-        "space": 0.029708590891888483,
-        "other": 0.013025104074681468
+        "onset": 0.5812566885797279,
+        "internal": 0.33089741629720226,
+        "space": 0.028802935330989144,
+        "other": 0.013056107628802936
       }
     }
   },
@@ -4603,14 +4603,14 @@
     "script_type": "Abugida",
     "summary": {
       "n_chars": 146128,
-      "n_boundaries": 31737,
+      "n_boundaries": 32734,
       "categories": {
         "onset": {
           "n_chars": 16090,
-          "n_boundaries": 13726,
-          "n_boundaries_first_byte": 13702,
+          "n_boundaries": 14651,
+          "n_boundaries_first_byte": 14627,
           "n_boundaries_later_bytes": 24,
-          "crossing_rate": 0.8520198881292729
+          "crossing_rate": 0.9090739589807334
         },
         "internal": {
           "n_chars": 111626,
@@ -4628,17 +4628,17 @@
         },
         "other": {
           "n_chars": 3174,
-          "n_boundaries": 419,
-          "n_boundaries_first_byte": 414,
+          "n_boundaries": 491,
+          "n_boundaries_first_byte": 486,
           "n_boundaries_later_bytes": 5,
-          "crossing_rate": 0.13201008191556396
+          "crossing_rate": 0.15469439193446755
         }
       },
       "share_of_boundaries": {
-        "onset": 0.43249204398651414,
-        "internal": 0.5354318303557362,
-        "space": 0.018873869615905724,
-        "other": 0.013202256041843904
+        "onset": 0.4475774424146148,
+        "internal": 0.5191238467648317,
+        "space": 0.018299016313313373,
+        "other": 0.014999694507240178
       },
       "by_position": [
         {
@@ -4646,7 +4646,7 @@
           "n_chars": 16090,
           "n_words_reaching": 16090,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.8520198881292729,
+          "crossing_rate": 0.9090739589807334,
           "mean_char_entropy": 2.569290339202111,
           "mean_first_byte_entropy": 2.5388159920870326
         },
@@ -4719,14 +4719,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 146128,
-        "n_boundaries": 31737,
+        "n_boundaries": 32734,
         "categories": {
           "onset": {
             "n_chars": 16090,
-            "n_boundaries": 13726,
-            "n_boundaries_first_byte": 13702,
+            "n_boundaries": 14651,
+            "n_boundaries_first_byte": 14627,
             "n_boundaries_later_bytes": 24,
-            "crossing_rate": 0.8520198881292729
+            "crossing_rate": 0.9090739589807334
           },
           "internal": {
             "n_chars": 111626,
@@ -4744,17 +4744,17 @@
           },
           "other": {
             "n_chars": 3174,
-            "n_boundaries": 419,
-            "n_boundaries_first_byte": 414,
+            "n_boundaries": 491,
+            "n_boundaries_first_byte": 486,
             "n_boundaries_later_bytes": 5,
-            "crossing_rate": 0.13201008191556396
+            "crossing_rate": 0.15469439193446755
           }
         },
         "share_of_boundaries": {
-          "onset": 0.43249204398651414,
-          "internal": 0.5354318303557362,
-          "space": 0.018873869615905724,
-          "other": 0.013202256041843904
+          "onset": 0.4475774424146148,
+          "internal": 0.5191238467648317,
+          "space": 0.018299016313313373,
+          "other": 0.014999694507240178
         },
         "by_position": [
           {
@@ -4762,7 +4762,7 @@
             "n_chars": 16090,
             "n_words_reaching": 16090,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8520198881292729,
+            "crossing_rate": 0.9090739589807334,
             "mean_char_entropy": 2.569290339202111,
             "mean_first_byte_entropy": 2.5388159920870326
           },
@@ -4835,12 +4835,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.0009145956856313,
+      "premium": 1.0008867145696376,
       "premium_parts": {
-        "onset": 0.4328875993440141,
-        "internal": 0.5359215339977292,
-        "space": 0.018891131575627603,
-        "other": 0.013214330768260375
+        "onset": 0.44797431585384495,
+        "internal": 0.5195841614432044,
+        "space": 0.018315242317688427,
+        "other": 0.015012994954899862
       }
     }
   },
@@ -4853,14 +4853,14 @@
     "script_type": "Abugida",
     "summary": {
       "n_chars": 120268.0,
-      "n_boundaries": 40559.0,
+      "n_boundaries": 41556.0,
       "categories": {
         "onset": {
           "n_chars": 26556.333333333332,
-          "n_boundaries": 22960.166666666668,
-          "n_boundaries_first_byte": 22945.666666666668,
+          "n_boundaries": 23956.166666666668,
+          "n_boundaries_first_byte": 23941.666666666668,
           "n_boundaries_later_bytes": 14.5,
-          "crossing_rate": 0.8656164623847072
+          "crossing_rate": 0.9030757622092952
         },
         "internal": {
           "n_chars": 90012.66666666667,
@@ -4878,17 +4878,17 @@
         },
         "other": {
           "n_chars": 572.0,
-          "n_boundaries": 362.0,
-          "n_boundaries_first_byte": 358.0,
+          "n_boundaries": 363.0,
+          "n_boundaries_first_byte": 359.0,
           "n_boundaries_later_bytes": 4.0,
-          "crossing_rate": 0.6258741258741258
+          "crossing_rate": 0.6276223776223776
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5660930167574808,
-        "internal": 0.3813662401275508,
-        "space": 0.04361547375428388,
-        "other": 0.008925269360684435
+        "onset": 0.5764791285654699,
+        "internal": 0.37221660730901274,
+        "space": 0.042569063432476656,
+        "other": 0.008735200693040715
       },
       "by_position": [
         {
@@ -4896,7 +4896,7 @@
           "n_chars": 26556.333333333332,
           "n_words_reaching": 26556.333333333332,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.8656164623847072,
+          "crossing_rate": 0.9030757622092952,
           "mean_char_entropy": 2.7713202953287777,
           "mean_first_byte_entropy": 2.6990821970698717
         },
@@ -4969,14 +4969,14 @@
     "methods": {
       "pythainlp_newmm": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 24139,
-            "n_boundaries": 21244,
-            "n_boundaries_first_byte": 21230,
+            "n_boundaries": 22240,
+            "n_boundaries_first_byte": 22226,
             "n_boundaries_later_bytes": 14,
-            "crossing_rate": 0.879903889970587
+            "crossing_rate": 0.9207920792079208
           },
           "internal": {
             "n_chars": 92430,
@@ -4994,17 +4994,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5237801720949727,
-          "internal": 0.42367908479005895,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.5351814419097122,
+          "internal": 0.4135142939647704,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5012,7 +5012,7 @@
             "n_chars": 24139,
             "n_words_reaching": 24139,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.879903889970587,
+            "crossing_rate": 0.9207920792079208,
             "mean_char_entropy": 2.8184081932765763,
             "mean_first_byte_entropy": 2.7432010453700872
           },
@@ -5084,14 +5084,14 @@
       },
       "pythainlp_longest": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 24453,
-            "n_boundaries": 21389,
-            "n_boundaries_first_byte": 21375,
+            "n_boundaries": 22385,
+            "n_boundaries_first_byte": 22371,
             "n_boundaries_later_bytes": 14,
-            "crossing_rate": 0.8745348219032429
+            "crossing_rate": 0.9148979675295464
           },
           "internal": {
             "n_chars": 92116,
@@ -5109,17 +5109,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5273552109272911,
-          "internal": 0.4201040459577406,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.5386707094041775,
+          "internal": 0.41002502647030514,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5127,7 +5127,7 @@
             "n_chars": 24453,
             "n_words_reaching": 24453,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8745348219032429,
+            "crossing_rate": 0.9148979675295464,
             "mean_char_entropy": 2.8026126303875114,
             "mean_first_byte_entropy": 2.7283588391098528
           },
@@ -5199,14 +5199,14 @@
       },
       "pythainlp_attacut": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 28364,
-            "n_boundaries": 24376,
-            "n_boundaries_first_byte": 24361,
+            "n_boundaries": 25372,
+            "n_boundaries_first_byte": 25357,
             "n_boundaries_later_bytes": 15,
-            "crossing_rate": 0.859222958680017
+            "crossing_rate": 0.894020589479622
           },
           "internal": {
             "n_chars": 88205,
@@ -5224,17 +5224,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6010010108730491,
-          "internal": 0.34645824601198255,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.6105496197901626,
+          "internal": 0.33814611608431994,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5242,7 +5242,7 @@
             "n_chars": 28364,
             "n_words_reaching": 28364,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.859222958680017,
+            "crossing_rate": 0.894020589479622,
             "mean_char_entropy": 2.7453067631174988,
             "mean_first_byte_entropy": 2.6745465824685732
           },
@@ -5314,14 +5314,14 @@
       },
       "pythainlp_deepcut": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 28388,
-            "n_boundaries": 24431,
-            "n_boundaries_first_byte": 24416,
+            "n_boundaries": 25427,
+            "n_boundaries_first_byte": 25412,
             "n_boundaries_later_bytes": 15,
-            "crossing_rate": 0.8604339861913485
+            "crossing_rate": 0.8952021981118783
           },
           "internal": {
             "n_chars": 88181,
@@ -5339,17 +5339,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6023570600853079,
-          "internal": 0.34510219679972387,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.611873135046684,
+          "internal": 0.33682260082779863,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5357,7 +5357,7 @@
             "n_chars": 28388,
             "n_words_reaching": 28388,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8604339861913485,
+            "crossing_rate": 0.8952021981118783,
             "mean_char_entropy": 2.7472897505840987,
             "mean_first_byte_entropy": 2.676474245728679
           },
@@ -5429,14 +5429,14 @@
       },
       "pythainlp_nlpo3": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 24155,
-            "n_boundaries": 21249,
-            "n_boundaries_first_byte": 21235,
+            "n_boundaries": 22245,
+            "n_boundaries_first_byte": 22231,
             "n_boundaries_later_bytes": 14,
-            "crossing_rate": 0.8795280480231836
+            "crossing_rate": 0.9203891533843924
           },
           "internal": {
             "n_chars": 92414,
@@ -5454,17 +5454,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5239034492960872,
-          "internal": 0.4235558075889445,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.5353017614784868,
+          "internal": 0.4133939743959958,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5472,7 +5472,7 @@
             "n_chars": 24155,
             "n_words_reaching": 24155,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8795280480231836,
+            "crossing_rate": 0.9203891533843924,
             "mean_char_entropy": 2.817721554428076,
             "mean_first_byte_entropy": 2.7424607232177522
           },
@@ -5544,14 +5544,14 @@
       },
       "icu": {
         "n_chars": 120268,
-        "n_boundaries": 40559,
+        "n_boundaries": 41556,
         "categories": {
           "onset": {
             "n_chars": 29839,
-            "n_boundaries": 25072,
-            "n_boundaries_first_byte": 25057,
+            "n_boundaries": 26068,
+            "n_boundaries_first_byte": 26053,
             "n_boundaries_later_bytes": 15,
-            "crossing_rate": 0.8400750695398639
+            "crossing_rate": 0.8731525855424109
           },
           "internal": {
             "n_chars": 86730,
@@ -5569,17 +5569,17 @@
           },
           "other": {
             "n_chars": 572,
-            "n_boundaries": 362,
-            "n_boundaries_first_byte": 358,
+            "n_boundaries": 363,
+            "n_boundaries_first_byte": 359,
             "n_boundaries_later_bytes": 4,
-            "crossing_rate": 0.6258741258741258
+            "crossing_rate": 0.6276223776223776
           }
         },
         "share_of_boundaries": {
-          "onset": 0.6181611972681772,
-          "internal": 0.32929805961685443,
-          "space": 0.04361547375428388,
-          "other": 0.008925269360684435
+          "onset": 0.6272981037635961,
+          "internal": 0.3213976321108865,
+          "space": 0.042569063432476656,
+          "other": 0.008735200693040715
         },
         "by_position": [
           {
@@ -5587,7 +5587,7 @@
             "n_chars": 29839,
             "n_words_reaching": 29839,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8400750695398639,
+            "crossing_rate": 0.8731525855424109,
             "mean_char_entropy": 2.696582880178906,
             "mean_first_byte_entropy": 2.6294517465242837
           },
@@ -5660,12 +5660,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.2791409108111518,
+      "premium": 1.270631401926311,
       "premium_parts": {
-        "onset": 0.7241127370589967,
-        "internal": 0.4878211597493798,
-        "space": 0.05579033682351457,
-        "other": 0.011416677179260754
+        "onset": 0.7324924833104011,
+        "internal": 0.47295010956530603,
+        "space": 0.054089588747897877,
+        "other": 0.011099220302706008
       }
     }
   },
@@ -5678,14 +5678,14 @@
     "script_type": "Alphabetic",
     "summary": {
       "n_chars": 131990,
-      "n_boundaries": 43885,
+      "n_boundaries": 44882,
       "categories": {
         "onset": {
           "n_chars": 29170,
-          "n_boundaries": 24373,
-          "n_boundaries_first_byte": 24355,
+          "n_boundaries": 25357,
+          "n_boundaries_first_byte": 25339,
           "n_boundaries_later_bytes": 18,
-          "crossing_rate": 0.8353102502571135
+          "crossing_rate": 0.8686664381213576
         },
         "internal": {
           "n_chars": 72055,
@@ -5703,17 +5703,17 @@
         },
         "other": {
           "n_chars": 2569,
-          "n_boundaries": 360,
-          "n_boundaries_first_byte": 359,
+          "n_boundaries": 373,
+          "n_boundaries_first_byte": 372,
           "n_boundaries_later_bytes": 1,
-          "crossing_rate": 0.13974309069676918
+          "crossing_rate": 0.1448034254573764
         }
       },
       "share_of_boundaries": {
-        "onset": 0.5553833884015039,
-        "internal": 0.42568075652272985,
-        "space": 0.01073259655918879,
-        "other": 0.008203258516577418
+        "onset": 0.5649703667394501,
+        "internal": 0.41622476716723855,
+        "space": 0.010494184751125173,
+        "other": 0.008310681342186177
       },
       "by_position": [
         {
@@ -5721,7 +5721,7 @@
           "n_chars": 29170,
           "n_words_reaching": 29170,
           "share_of_words_reaching": 1.0,
-          "crossing_rate": 0.8353102502571135,
+          "crossing_rate": 0.8686664381213576,
           "mean_char_entropy": 2.675177061236079,
           "mean_first_byte_entropy": 2.607651434222662
         },
@@ -5794,14 +5794,14 @@
     "methods": {
       "whitespace": {
         "n_chars": 131990,
-        "n_boundaries": 43885,
+        "n_boundaries": 44882,
         "categories": {
           "onset": {
             "n_chars": 29170,
-            "n_boundaries": 24373,
-            "n_boundaries_first_byte": 24355,
+            "n_boundaries": 25357,
+            "n_boundaries_first_byte": 25339,
             "n_boundaries_later_bytes": 18,
-            "crossing_rate": 0.8353102502571135
+            "crossing_rate": 0.8686664381213576
           },
           "internal": {
             "n_chars": 72055,
@@ -5819,17 +5819,17 @@
           },
           "other": {
             "n_chars": 2569,
-            "n_boundaries": 360,
-            "n_boundaries_first_byte": 359,
+            "n_boundaries": 373,
+            "n_boundaries_first_byte": 372,
             "n_boundaries_later_bytes": 1,
-            "crossing_rate": 0.13974309069676918
+            "crossing_rate": 0.1448034254573764
           }
         },
         "share_of_boundaries": {
-          "onset": 0.5553833884015039,
-          "internal": 0.42568075652272985,
-          "space": 0.01073259655918879,
-          "other": 0.008203258516577418
+          "onset": 0.5649703667394501,
+          "internal": 0.41622476716723855,
+          "space": 0.010494184751125173,
+          "other": 0.008310681342186177
         },
         "by_position": [
           {
@@ -5837,7 +5837,7 @@
             "n_chars": 29170,
             "n_words_reaching": 29170,
             "share_of_words_reaching": 1.0,
-            "crossing_rate": 0.8353102502571135,
+            "crossing_rate": 0.8686664381213576,
             "mean_char_entropy": 2.675177061236079,
             "mean_first_byte_entropy": 2.607651434222662
           },
@@ -5910,12 +5910,12 @@
     },
     "segmenters_failed": {},
     "rel_to_eng": {
-      "premium": 1.3840355746183928,
+      "premium": 1.3723283901544105,
       "premium_parts": {
-        "onset": 0.7686703670997855,
-        "internal": 0.5891573104579286,
-        "space": 0.014854295445944242,
-        "other": 0.011353601614734452
+        "onset": 0.7753248738724966,
+        "internal": 0.5711970646690109,
+        "space": 0.014401467665494572,
+        "other": 0.011404983947408654
       }
     }
   }
