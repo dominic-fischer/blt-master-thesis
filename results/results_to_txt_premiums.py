@@ -52,6 +52,13 @@ variance while looking completely different (e.g. [0,0,0,10,10,10] vs
 [0,10,0,10,0,10] -- same mean, same variance, but one plateaus and the
 other alternates every step). The additional statistics, all computed by
 compute_curve_stats():
+  - total: the plain SUM of the entropy signal over every byte/char of
+    every sentence in the language's JSON. Unlike mean (which divides by
+    sequence length, and so shifts with script/encoding length), this is
+    the language's total entropy over the whole evaluation set -- useful
+    for checking whether total entropy is roughly constant across
+    languages. Only meaningful as a cross-language comparison if every
+    language's JSON covers the same (parallel) sentences.
   - skewness (3rd standardized moment): asymmetry. Positive = a long
     right tail (mostly low values, occasional high spikes); negative =
     a long left tail.
@@ -143,7 +150,7 @@ step subfolder.
 
 Each file contains language code, sorted premium, and the absolute patches-per-sentence 
 (pps) and bytes-per-patch (bpp) values, followed by that language's entropy curve-shape
-statistics -- mean, variance, skewness, kurtosis, lag-1 autocorrelation, and volatility
+statistics -- total, mean, variance, skewness, kurtosis, lag-1 autocorrelation, and volatility
 (if the per-language JSON results could be located -- see ENTROPY CURVE-SHAPE STATISTICS
 above).
 
@@ -165,10 +172,10 @@ import re
 import statistics
 import sys
 from os import path
-
+print("[DEBUG] sys.path before append:", sys.path, flush=True)
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # noqa: E402
 from model_eval.run_patching import load_cases, threshold_key, BOUND_NAMES, DEFAULT_SUMMARY_CSV
-
+print("[DEBUG] sys.path after append:", sys.path, flush=True)
 import pandas as pd
 
 DEFAULT_LANGS_CSV = "training_setup/langs/langs_chosen.csv"
@@ -192,6 +199,7 @@ ENTROPY_JSON_KEY = {"bytes": "bytes_entropies", "chars": "chars_entropies"}
 # to compute_curve_stats() and to this list, and it appears as an extra
 # column automatically; nothing else below needs to change.
 ENTROPY_STAT_COLUMNS = [
+    ("total", "EntropyTotal"),
     ("mean", "EntropyMean"),
     ("variance", "EntropyVar"),
     ("skewness", "EntropySkew"),
@@ -293,17 +301,21 @@ def compute_curve_stats(values: list[float]) -> dict[str, float | None]:
     byte/character order -- order matters for autocorr_lag1 and
     volatility, so don't pass these in shuffled).
 
-    Returns a dict with keys "mean", "variance", "skewness", "kurtosis",
-    "autocorr_lag1", "volatility". Values are None wherever they're
-    undefined: everything is None if there are fewer than 2 points;
+    Returns a dict with keys "total", "mean", "variance", "skewness",
+    "kurtosis", "autocorr_lag1", "volatility". "total" is the plain sum
+    of every value (the language's total entropy over the whole JSON).
+    Values are None wherever they're undefined: everything except
+    "total" is None if there are fewer than 2 points;
     skewness/kurtosis are None specifically if variance is exactly 0
     (a perfectly constant signal), since both divide by variance.
     """
-    stat_keys = ("mean", "variance", "skewness", "kurtosis", "autocorr_lag1", "volatility")
+    print(f"[DEBUG] compute_curve_stats() called with {len(values)} values", flush=True)
+    stat_keys = ("total", "mean", "variance", "skewness", "kurtosis", "autocorr_lag1", "volatility")
     n = len(values)
+    total = sum(values)
     if n < 2:
-        return {k: None for k in stat_keys}
-
+        return {k: (total if k == "total" and n > 0 else None) for k in stat_keys}
+    print(f"[DEBUG] compute_curve_stats() computing mean/variance for {n} values", flush=True)
     mean = sum(values) / n
     variance = _central_moment(values, mean, 2)
 
@@ -328,6 +340,7 @@ def compute_curve_stats(values: list[float]) -> dict[str, float | None]:
     volatility = (sum(d ** 2 for d in diffs) / len(diffs)) ** 0.5
 
     return {
+        "total": total,
         "mean": mean,
         "variance": variance,
         "skewness": skewness,
@@ -338,7 +351,7 @@ def compute_curve_stats(values: list[float]) -> dict[str, float | None]:
 
 
 def load_entropy_stats(results_json_dir: str, lang_codes: set[str], score_source: str) -> dict[str, dict[str, float | None]]:
-    """Returns {lang_code: {"mean": ..., "variance": ..., "skewness": ...,
+    """Returns {lang_code: {"total": ..., "mean": ..., "variance": ..., "skewness": ...,
     "kurtosis": ..., "autocorr_lag1": ..., "volatility": ...}} -- see
     compute_curve_stats() for exactly what each statistic means.
 

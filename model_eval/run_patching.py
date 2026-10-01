@@ -94,16 +94,12 @@ import argparse
 import csv
 import json
 import os
-import torch
+
 from pathlib import Path
 from tqdm import tqdm
 import sys
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))  # noqa: E402
-from bytelatent.data.patcher import (
-    find_entropy_patch_start_ids,
-    patch_lengths_from_start_ids,
-)
 
 DEFAULT_SUMMARY_CSV = "calibrated_thresholds/base_model_thresholds_summary.csv"
 SCORE_SOURCES = ("bytes", "chars")
@@ -216,6 +212,12 @@ def compute_patch_lengths(
 ) -> list[int]:
     """Returns patch lengths in UNITS (one unit = one score entry, i.e.
     one byte in bytes-mode or one character in chars-mode)."""
+    import torch
+    from bytelatent.data.patcher import (
+        find_entropy_patch_start_ids,
+        patch_lengths_from_start_ids,
+    )
+    
     bos_score = 99.0
     scores_with_bos = torch.tensor([[bos_score] + scores])
     patch_start_ids = find_entropy_patch_start_ids(
