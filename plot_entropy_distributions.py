@@ -14,10 +14,18 @@ matching one via --threshold.
 Plots the raw entropy distribution with the patching threshold as a vertical line.
 Optional second panel (--with-norm): entropy divided by each language's own mean.
 
+Labels: --labels writes the language code next to each line at its highest
+peak above --label-xmin (default 0.3 bits, skipping the spike near 0), and
+never above --ymax. Give codes to label only those languages, or no codes to
+label all of them.
+
 Example:
   python results/plot_entropy_distributions.py \
       results/own_models/entropy_10M_20lang_4gpu_sourcesbalanced_steps10000_ckpt200_lr4.5e-3/step_0000007200 \
       --char-level --threshold 1.9448 --out results/entropy_distributions_char.png
+
+  python results/plot_entropy_distributions.py <results_dir> --threshold 1.9458 --ymax 1.5 \
+      --labels arb_Arab heb_Hebr kat_Geor tam_Taml srp_Cyrl
 """
 import argparse
 import json
@@ -97,7 +105,8 @@ def skewness(x):
     return (d ** 3).mean() / (d ** 2).mean() ** 1.5
 
 
-def plot_panel(ax, data, bins, normalize, logy, threshold=None, highlight=None):
+def plot_panel(ax, data, bins, normalize, logy, threshold=None, highlight=None,
+               labels=None, label_xmin=0.3, ymax=None):
     centers = (bins[:-1] + bins[1:]) / 2
     for lang, ents in data.items():
         script = SCRIPT_TYPE.get(lang, "Alphabetic")
@@ -114,10 +123,20 @@ def plot_panel(ax, data, bins, normalize, logy, threshold=None, highlight=None):
             alpha=0.6 if faded else 0.85,
             zorder=1 if faded else 2,
         )
-        if highlight and lang in highlight:
-            i = np.nanargmax(hist)
-            ax.annotate(lang.split("_")[0], (centers[i], hist[i]),
-                        textcoords="offset points", xytext=(4, 4), fontsize=9)
+        # Label at the highest peak above label_xmin (and below ymax, if set),
+        # so labels do not all land on the spike near 0 or outside the plot.
+        label_this = ((labels is not None and (not labels or lang in labels))
+                      or (highlight and lang in highlight))
+        if label_this:
+            m = (centers >= label_xmin) & np.isfinite(hist)
+            if ymax is not None:
+                m &= hist <= ymax
+            if m.any():
+                i = np.flatnonzero(m)[np.nanargmax(hist[m])]
+                ax.annotate(lang.split("_")[0], (centers[i], hist[i]),
+                            textcoords="offset points", xytext=(4, 4), fontsize=9,
+                            color="#333333" if faded else SCRIPT_COLORS[script],
+                            zorder=3)
     if threshold is not None:
         ax.axvline(threshold, color="black", linestyle=":", linewidth=1.2)
         ax.text(threshold, 0.98, f" t = {threshold}", transform=ax.get_xaxis_transform(),
@@ -138,6 +157,11 @@ def main():
     p.add_argument("--exclude-whitespace", action="store_true", help="Drop whitespace characters")
     p.add_argument("--highlight", nargs="*", default=None,
                    help="Language codes to highlight (others in gray), e.g. eng_Latn heb_Hebr cmn_Hans")
+    p.add_argument("--labels", nargs="*", default=None,
+                   help="Label lines with their language code at their highest peak; "
+                        "give codes to label only those, or no codes to label all")
+    p.add_argument("--label-xmin", type=float, default=0.3,
+                   help="Ignore peaks below this x when placing labels (skips the spike near 0)")
     p.add_argument("--char-level", action="store_true",
                    help="Use per-character entropies (summed over UTF-8 bytes). "
                         "Default: per-byte entropies as stored in the file")
@@ -176,6 +200,11 @@ def main():
         if f.stem not in SCRIPT_TYPE:
             print(f"Warning: no script type for {f.stem}, treating as Alphabetic")
 
+    if args.labels:
+        unknown = [l for l in args.labels if l not in data]
+        if unknown:
+            print(f"Warning: --labels codes not found in {args.results_dir}: {', '.join(unknown)}")
+
     # Cross-check against the EntropySkew numbers
     if args.diff:
         thr = args.threshold
@@ -207,7 +236,8 @@ def main():
         normalize = kind == "norm"
         plot_panel(ax, data, bins, normalize, args.logy,
                    threshold=None if normalize else args.threshold,
-                   highlight=set(args.highlight) if args.highlight else None)
+                   highlight=set(args.highlight) if args.highlight else None,
+                   labels=args.labels, label_xmin=args.label_xmin, ymax=args.ymax)
         if normalize:
             ax.set_xlabel(f"Per-{unit} entropy / language mean")
             ax.set_title("Shape (normalized by mean)")
