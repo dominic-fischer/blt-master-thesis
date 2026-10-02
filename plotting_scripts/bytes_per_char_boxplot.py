@@ -78,8 +78,10 @@ def make_boxplot(premium_col, mode_label, out_path):
     df["bytes"] = df["bytes"].astype(int)
 
     for b, grp in df.groupby("bytes"):
-        print(f"  {b} byte(s): {len(grp):3d} languages, scripts = "
+        print(f"\n  {b} byte(s): {len(grp):3d} languages, scripts = "
               + ", ".join(sorted(grp["script_tag"].unique())))
+        for _, row in grp.sort_values("premium").iterrows():
+            print(f"    {row['premium']:7.4f}  {row['language']:<28s} {row['code']}")
 
     counts = df["bytes"].value_counts()
     kept = [b for b in sorted(counts.index) if counts[b] >= MIN_GROUP_SIZE]
