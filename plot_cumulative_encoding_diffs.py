@@ -121,13 +121,20 @@ tot_u = sum(d[l][2] for l in langs); tot_c = sum(d[l][3] for l in langs)
 mean_al = np.mean([d[l][1] for l in langs])
 mean_pct = np.mean([(d[l][3]-d[l][2])/d[l][2]*100 for l in langs])
 tot_pct = (tot_c-tot_u)/tot_u*100
+
+# spread of entropy totals across languages: how much higher the highest
+# total is than the lowest, in %
+rng_u = (max(d[l][2] for l in langs) / min(d[l][2] for l in langs) - 1) * 100
+rng_c = (max(d[l][3] for l in langs) / min(d[l][3] for l in langs) - 1) * 100
+
 lines += [
     r"\midrule",
     f"Mean & {mean_al:.2f} & {CUSTOM_BYTES:.0f} & {fmt_signed(CUSTOM_BYTES-mean_al,2)} & & & {fmt_signed(mean_pct,2)} \\\\",
     f"Overall & & & & {tot_u:,.0f} & {tot_c:,.0f} & \\\\".replace(",", "{,}"),
+    f"$\\Delta$ (max vs.\\ min) & & & & {rng_u:.1f}\\,\\% & {rng_c:.1f}\\,\\% & \\\\",
     r"\bottomrule",
     r"\end{tabular}",
-    r"\caption{Entropy totals under UTF-8 and the custom 2-byte encoding. Byte $\Delta$ is custom minus UTF-8 bytes per character; $\Delta$\,(\%) is the custom entropy total relative to UTF-8.}",
+    r"\caption{Entropy totals under UTF-8 and the custom 2-byte encoding. Byte $\Delta$ is custom minus UTF-8 bytes per character; $\Delta$\,(\%) is the custom entropy total relative to UTF-8. $\Delta$\,(max vs.\ min) is how much higher the highest entropy total is than the lowest.}",
     r"\label{tab:entropy-delta}",
     r"\end{table}",
 ]
@@ -135,3 +142,4 @@ with open(OUT_TEX, "w", encoding="utf-8") as f:
     f.write("\n".join(lines) + "\n")
 print(f"saved {OUT_TEX}")
 print(f"saved {OUT_PNG}  (n={len(x)}, r={r:.3f}, p={p:.2g})")
+print(f"entropy-total spread (max vs. min): UTF-8 {rng_u:.1f}%, custom {rng_c:.1f}%")
