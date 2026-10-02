@@ -6,9 +6,13 @@ contains BOTH the BLT patch-premium results and the Common Crawl page counts
 in a single file — then plots BLT patch premium vs. Common Crawl page count
 with per-script colouring and a log-scale x-axis, for both raw entropy and
 monotonicity premiums.
+
+Optional: `pip install adjustText` for automatic, non-overlapping point labels
+with leader lines. Without it, labels fall back to a fixed offset.
 """
 
 import csv
+import re
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -43,12 +47,18 @@ TITLE_LABELS = {
     "norm_entropy":      "Normalisation",
 }
 
-# ── Style ─────────────────────────────────────────────────────────────────────
+# ── Style (matches the "Premium vs. Entropy mean" charts) ─────────────────────
 
-FONT_TITLE = {"fontsize": 13, "fontweight": "bold", "color": "#1a1a2e"}
-FONT_AXIS  = {"fontsize": 9,  "color": "#333333"}
-FONT_TICK  = {"labelsize": 8, "labelcolor": "#444444"}
+FIT_COLOR     = "#e8352b"
+EDGE_COLOR    = "#333333"
+LEADER_COLOR  = "#999999"
+SUBTITLE_GREY = "#555555"
+GRID_COLOR    = "#dddddd"
 
+# With many languages, full-size labels and markers would swamp the plot, so
+# they shrink once the point count passes this threshold.
+DENSE_THRESHOLD = 40
+SHOW_LABELS = False   # set True to label every point with its language name
 # ── 1. Load the master CSV ────────────────────────────────────────────────────
 
 def load_data(path, premium_col):
@@ -121,7 +131,34 @@ def build_matched(data):
 
 # ── 4 & 5. Regression + plot, per premium mode ─────────────────────────────────
 
-def make_chart(matched, mode_title, out_path):
+def _label_points(ax, matched, fontsize):
+    """Point labels with thin grey leader lines. Uses adjustText if installed;
+    otherwise falls back to a fixed offset."""
+    leader = dict(arrowstyle="-", color=LEADER_COLOR, lw=0.6)
+    try:
+        from adjustText import adjust_text
+    except ImportError:
+        adjust_text = None
+
+    if adjust_text is not None:
+        texts = [
+            ax.text(r["cc_pages"], r["premium"], r["language"],
+                    fontsize=fontsize, color="#222222", zorder=5)
+            for r in matched
+        ]
+        adjust_text(texts,
+                    x=np.array([r["cc_pages"] for r in matched]),
+                    y=np.array([r["premium"] for r in matched]),
+                    ax=ax, arrowprops=leader)
+    else:
+        for r in matched:
+            ax.annotate(r["language"], xy=(r["cc_pages"], r["premium"]),
+                        xytext=(8, 6), textcoords="offset points",
+                        fontsize=fontsize, color="#222222", zorder=5,
+                        arrowprops=leader)
+
+
+def make_chart(matched, mode_title, subtitle, out_path):
     log_x  = np.log10([r["cc_pages"] for r in matched])
     y      = np.array([r["premium"]  for r in matched])
     slope, intercept, r_val, p_val, _ = stats.linregress(log_x, y)
@@ -134,49 +171,74 @@ def make_chart(matched, mode_title, out_path):
     def get_color(script):
         return SCRIPT_COLORS.get(script, fallback.get(script, "#888888"))
 
-    fig, ax = plt.subplots(figsize=(13, 7))
-    fig.patch.set_facecolor("#f8f9fa")
-    ax.set_facecolor("#f8f9fa")
+    dense       = len(matched) > DENSE_THRESHOLD
+    marker_size = 70 if dense else 220
+    label_size  = 6.5 if dense else 11
 
+    fig, ax = plt.subplots(figsize=(13, 8.5))
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+
+    # points
     for script in scripts_present:
         pts = [r for r in matched if r["script"] == script]
         ax.scatter(
             [r["cc_pages"] for r in pts],
             [r["premium"]  for r in pts],
-            color=get_color(script), label=script,
-            s=55, zorder=4, alpha=0.85,
-            edgecolors="white", linewidths=0.4,
+            color=get_color(script),
+            s=marker_size, zorder=4,
+            edgecolors=EDGE_COLOR, linewidths=0.8 if dense else 1.0,
         )
+    if SHOW_LABELS:
+        _label_points(ax, matched, label_size)
 
-    for r in matched:
-        ax.annotate(
-            r["language"],
-            xy=(r["cc_pages"], r["premium"]),
-            xytext=(4, 3), textcoords="offset points",
-            fontsize=5, color="#444444", zorder=5,
-        )
-
+    # fit line
     x_range = np.linspace(log_x.min(), log_x.max(), 300)
-    ax.plot(
-        10**x_range, intercept + slope * x_range,
-        color="#c0392b", linewidth=1.6, linestyle="--", zorder=3,
-        label=f"Log fit  r={r_val:.2f}, p={p_val:.3f}",
-    )
+    fit_label = f"Log fit: r = {r_val:.2f}, r$^2$ = {r_val**2:.2f}, p = {p_val:.3f}"
+    ax.plot(10**x_range, intercept + slope * x_range,
+            color=FIT_COLOR, linewidth=2.5, linestyle="--", zorder=3)
 
+    # legend: one entry per script with counts, then the fit line
+    handles = []
+    for script in scripts_present:
+        n = sum(1 for r in matched if r["script"] == script)
+        handles.append(plt.Line2D(
+            [0], [0], marker="o", linestyle="None",
+            markerfacecolor=get_color(script), markeredgecolor=EDGE_COLOR,
+            markeredgewidth=1.0, markersize=11, label=f"{script} (n={n})",
+        ))
+    handles.append(plt.Line2D([0], [0], color=FIT_COLOR, linewidth=2.5,
+                              linestyle="--", label=fit_label))
+    n_cols = 2 if len(scripts_present) > 8 else 1
+    leg = ax.legend(handles=handles, title="Script", fontsize=10 if n_cols == 2 else 12,
+                    title_fontsize=12, loc="best", ncol=n_cols, frameon=True,
+                    framealpha=0.95, edgecolor="#cccccc", fancybox=True,
+                    borderpad=0.8, labelspacing=0.6)
+    leg._legend_box.align = "left"
+
+    # titles
+    ax.set_title("BLT Patch Premium vs. Common Crawl Presence",
+                 fontsize=17, fontweight="bold", pad=34)
+    ax.text(0.5, 1.02, subtitle, transform=ax.transAxes,
+            ha="center", va="bottom", fontsize=13, color=SUBTITLE_GREY)
+
+    # axes
     ax.set_xscale("log")
-    ax.set_xlabel(f"Pages in Common Crawl ({CC_CRAWL}, log scale)", **FONT_AXIS)
-    ax.set_ylabel("BLT Patch Premium vs. English", **FONT_AXIS)
-    ax.set_title(f"BLT Patch Premium vs. Common Crawl Presence ({mode_title})", **FONT_TITLE, pad=10)
-    ax.grid(axis="y", color="#cccccc", linewidth=0.6, linestyle=":", alpha=0.7, zorder=1)
-    ax.grid(axis="x", color="#cccccc", linewidth=0.4, linestyle=":", alpha=0.5, zorder=1)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.spines[["left", "bottom"]].set_color("#aaaaaa")
-    ax.tick_params(**FONT_TICK)
-    ax.legend(fontsize=7, framealpha=0.6, ncol=2, loc="lower left",
-              title="Script", title_fontsize=7)
+    ax.set_xlabel(f"Pages in Common Crawl ({CC_CRAWL}, log scale)", fontsize=15)
+    ax.set_ylabel("BLT Patch Premium vs. English", fontsize=15)
+    ax.tick_params(axis="both", labelsize=13)
+
+    ax.grid(True, which="major", linestyle="--", color=GRID_COLOR, linewidth=0.8)
+    ax.grid(False, which="minor")
+    ax.set_axisbelow(True)
+
+    for spine in ax.spines.values():
+        spine.set_visible(True)
+        spine.set_color("black")
+        spine.set_linewidth(1.0)
 
     plt.tight_layout()
-    fig.savefig(out_path, dpi=160, bbox_inches="tight")
+    fig.savefig(out_path, dpi=160, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print(f"Saved -> {out_path}\n")
 
@@ -196,5 +258,8 @@ for mode_label, premium_col in PREMIUM_COLS.items():
         continue
 
     mode_title = TITLE_LABELS.get(mode_label, mode_label)
+    m = re.search(r"_t_([\d.]+)", premium_col)
+    subtitle = f"{mode_title}" + (f" (t = {m.group(1)})" if m else "")
+
     out_path = OUT_DIR / f"premium_vs_cc_pages_{premium_col.replace('_pps_premium', '')}.png"
-    make_chart(matched, mode_title, out_path)
+    make_chart(matched, mode_title, subtitle, out_path)

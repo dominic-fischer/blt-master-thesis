@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 plot_llama2_correlation.py
+
+run in the "plots" conda environment (see README.md) to generate charts and a CSV table
+
 Plots BLT patch premium vs. Llama 2 training-data volume, in two variants:
   1) raw reported token counts (as published in Touvron et al. Table 10)
   2) content-adjusted token counts, correcting for the fact that different
@@ -20,13 +23,18 @@ across languages regardless of how verbose their tokenisation happens to be.
 Adjusted percentages (for the LaTeX table) are saved to ADJUSTED_OUT_CSV.
 Charts are saved to charts/, one raw-token and one content-adjusted chart per
 premium mode listed in PREMIUM_COLS.
+
+Optional: `pip install adjustText` for automatic, non-overlapping point labels
+with leader lines. Without it, labels fall back to a fixed offset.
 """
 
 import json
+import re
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import numpy as np
 from scipy import stats
 from pathlib import Path
@@ -56,6 +64,14 @@ TITLE_LABELS = {
     "raw_monotonicity": "Monotonicity",
     "norm_entropy":      "Normalisation",
 }
+
+# ── Plot style (matches the "Premium vs. Entropy mean" charts) ────────────────
+
+FIT_COLOR     = "#e8352b"
+EDGE_COLOR    = "#333333"
+LEADER_COLOR  = "#999999"
+SUBTITLE_GREY = "#555555"
+GRID_COLOR    = "#dddddd"
 
 # ── Llama 2 training data (billions of tokens), from the Llama 2 paper ────────
 
@@ -196,8 +212,6 @@ print(f"  {'Unknown':12s} {unknown_share_pct:7.3f}%   (unchanged, not content-ad
 
 # ── Save adjusted table (this is what feeds the LaTeX table's Percent' column) ─
 
-# ── Save adjusted table (this is what feeds the LaTeX table's Percent' column) ─
-
 adj_rows = []
 for iso, tokens_B in llama2_tokens.items():
     adj_rows.append({
@@ -267,52 +281,101 @@ def build_df(volume_by_iso, volume_col, prem_by_code):
     return df
 
 
-# ── Chart helper ────────────────────────────────────────────────────────────────
+# ── Chart helpers ───────────────────────────────────────────────────────────────
 
-def make_chart(df, volume_col, xlabel, title, out_path):
+def _label_points(ax, df, volume_col):
+    """Point labels with thin grey leader lines. Uses adjustText if installed
+    (non-overlapping placement, as in the reference charts); otherwise falls
+    back to a fixed offset."""
+    leader = dict(arrowstyle='-', color=LEADER_COLOR, lw=0.8)
+    try:
+        from adjustText import adjust_text
+    except ImportError:
+        adjust_text = None
+
+    if adjust_text is not None:
+        texts = [
+            ax.text(row[volume_col], row['premium'], row['language'],
+                    fontsize=11, color='#222222', zorder=4)
+            for _, row in df.iterrows()
+        ]
+        adjust_text(texts, x=df[volume_col].values, y=df['premium'].values,
+                    ax=ax, arrowprops=leader)
+    else:
+        for _, row in df.iterrows():
+            ax.annotate(row['language'], (row[volume_col], row['premium']),
+                        xytext=(12, 10), textcoords='offset points',
+                        fontsize=11, color='#222222', ha='left', va='bottom',
+                        arrowprops=leader, zorder=4)
+
+
+def make_chart(df, volume_col, xlabel, title, subtitle, out_path):
     log_vol = np.log(df[volume_col])
     slope, intercept, r, p, se = stats.linregress(log_vol, df['premium'])
     x_fit = np.linspace(df[volume_col].min(), df[volume_col].max(), 200)
     y_fit = slope * np.log(x_fit) + intercept
 
-    fig, ax = plt.subplots(figsize=(11, 7))
-    fig.patch.set_facecolor("#f8f9fa")
-    ax.set_facecolor("#f8f9fa")
+    fig, ax = plt.subplots(figsize=(11, 8.5))
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
 
+    # points
     for _, row in df.iterrows():
         ax.scatter(row[volume_col], row['premium'],
-                   color=row['color'], edgecolors='white',
-                   linewidths=0.6, s=75, zorder=3, alpha=0.9)
-        ax.annotate(row['language'], (row[volume_col], row['premium']),
-                    fontsize=6.5, ha='left', va='bottom',
-                    xytext=(4, 3), textcoords='offset points', color='#333')
+                   color=row['color'], edgecolors=EDGE_COLOR,
+                   linewidths=1.0, s=220, zorder=3)
+    _label_points(ax, df, volume_col)
 
-    ax.plot(x_fit, y_fit, color='tomato', linewidth=1.8,
-            linestyle='--', label=f'Log fit  (r={r:.2f}, p={p:.3f})', zorder=2)
+    # fit line
+    fit_label = f'Log fit: r = {r:.2f}, r$^2$ = {r**2:.2f}, p = {p:.3f}'
+    ax.plot(x_fit, y_fit, color=FIT_COLOR, linewidth=2.5,
+            linestyle='--', zorder=2)
 
-    present_scripts = df['script'].unique()
+    # legend: one entry per script with counts, then the fit line
+    script_counts = df['script'].value_counts()
     script_handles = [
-        plt.Line2D([0], [0], marker='o', color='w',
-                   markerfacecolor=SCRIPT_COLORS[s], markersize=8, label=s)
-        for s in present_scripts if s in SCRIPT_COLORS
+        plt.Line2D([0], [0], marker='o', linestyle='None',
+                   markerfacecolor=SCRIPT_COLORS[s], markeredgecolor=EDGE_COLOR,
+                   markeredgewidth=1.0, markersize=13,
+                   label=f'{s} (n={script_counts[s]})')
+        for s in df['script'].unique() if s in SCRIPT_COLORS
     ]
     script_handles.append(
-        plt.Line2D([0], [1], color='tomato', linewidth=1.8,
-                   linestyle='--', label=f'Log fit (r={r:.2f}, p={p:.3f})')
+        plt.Line2D([0], [0], color=FIT_COLOR, linewidth=2.5,
+                   linestyle='--', label=fit_label)
     )
-    ax.legend(handles=script_handles, title='Script', fontsize=8,
-              title_fontsize=9, loc='lower left', framealpha=0.9)
+    leg = ax.legend(handles=script_handles, title='Script', fontsize=12,
+                    title_fontsize=13, loc='best', frameon=True,
+                    framealpha=0.95, edgecolor='#cccccc', fancybox=True,
+                    borderpad=0.8, labelspacing=0.7)
+    leg._legend_box.align = "left"
 
-    ax.set_xlabel(xlabel, fontsize=11)
-    ax.set_ylabel('Tokenisation premium vs. English', fontsize=11)
-    ax.set_title(title, fontsize=12, fontweight='bold')
-    ax.grid(True, alpha=0.3, linestyle='--')
+    # titles
+    ax.set_title(title, fontsize=17, fontweight='bold', pad=34)
+    ax.text(0.5, 1.02, subtitle, transform=ax.transAxes,
+            ha='center', va='bottom', fontsize=13, color=SUBTITLE_GREY)
+
+    # axes
+    ax.set_xlabel(xlabel, fontsize=15)
+    ax.set_ylabel('Tokenisation premium vs. English', fontsize=15)
+    ax.tick_params(axis='both', labelsize=13)
+
     ax.set_xscale('log')
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.spines[["left", "bottom"]].set_color("#aaaaaa")
+    ax.xaxis.set_major_locator(mticker.LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f'{v:g}'))
+    ax.xaxis.set_minor_formatter(mticker.NullFormatter())
+
+    ax.grid(True, which='major', linestyle='--', color=GRID_COLOR, linewidth=0.8)
+    ax.grid(False, which='minor')
+    ax.set_axisbelow(True)
+
+    for spine in ax.spines.values():
+        spine.set_visible(True)
+        spine.set_color('black')
+        spine.set_linewidth(1.0)
 
     plt.tight_layout()
-    fig.savefig(out_path, dpi=150, bbox_inches='tight')
+    fig.savefig(out_path, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close(fig)
     print(f"Pearson r ({volume_col}, log): {r:.3f}, p={p:.4f}, N={len(df)}  -> {out_path}")
 
@@ -328,19 +391,24 @@ for mode_label, prem_col in PREMIUM_COLS.items():
     premium_stem = prem_col.replace("_pps_premium", "")
     mode_title   = TITLE_LABELS.get(mode_label, mode_label)
 
+    m = re.search(r"_t_([\d.]+)", prem_col)
+    thresh_str = f" (t = {m.group(1)})" if m else ""
+
     df_raw = build_df(llama2_tokens, 'tokens_B', prem_by_code)
     df_adj = build_df(adjusted_tokens_B, 'adj_tokens_B', prem_by_code)
 
     make_chart(
         df_raw, 'tokens_B',
         xlabel='Training data in Llama 2 (billions of tokens)',
-        title=f'BLT Patch Premium vs. Llama 2 Training Data (Raw Tokens, {mode_title})',
+        title='BLT Patch Premium vs. Llama 2 Training Data',
+        subtitle=f'{mode_title}, raw token counts{thresh_str}',
         out_path=f'charts/premium_vs_llama2_data_{premium_stem}.png',
     )
 
     make_chart(
         df_adj, 'adj_tokens_B',
         xlabel='Estimated training data in Llama 2 (billions of tokens, content-adjusted)',
-        title=f'BLT Patch Premium vs. Llama 2 Training Data (Content-Adjusted, {mode_title})',
+        title='BLT Patch Premium vs. Llama 2 Training Data',
+        subtitle=f'{mode_title}, content-adjusted token counts{thresh_str}',
         out_path=f'charts/premium_vs_llama2_data_adjusted_{premium_stem}.png',
     )
